@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="{trackPageView()}" width="197" height="155">
+<mx:Script>
+	<![CDATA[
+		import com.Adobe.analytics.google.GA_EventTracker_AS;
+		private var trackerOBj:GA_EventTracker_AS;
+		private var copied:Boolean = false;
+		private function sendGARequest():void
+		{
+			/*
+			if(!copied)
+			{
+				trackerOBj._cookiePathCopy("Inetpub/wwwroot/gatest");
+				copied = true;
+			}
+			*/
+			if(!trackerOBj)
+			{
+				trackerOBj = new GA_EventTracker_AS("UA-5-1");
+				trackerOBj._initData();
+			}
+			trackerOBj._trackEvent("button","click",b1.label,"");
+		}
+		
+		private function trackPageView():void
+		{
+			if(!trackerOBj)
+			{
+				trackerOBj = new GA_EventTracker_AS("UA-5-1");
+				trackerOBj._addOrganic("www.naughtycashew.com","query");
+				//trackerOBj._addIgnoredOrganic("keywords+to+ignore");
+    			//trackerOBj._addIgnoredOrganic("keywords to ignore");
+    			trackerOBj._initData();
+				
+			}
+			
+			trackerOBj._trackPageview("hellooooo");
+		}
+	]]>
+</mx:Script>
+<mx:Panel width="197" height="155">
+	<mx:VBox width="177" height="114">
+		<mx:Button click="sendGARequest()" label="Hello" id="b1"/>
+		<mx:TextInput />
+		<mx:Button label="Test" />
+	</mx:VBox>
+</mx:Panel>
+	
+</mx:Application>
