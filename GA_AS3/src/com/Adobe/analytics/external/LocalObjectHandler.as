@@ -27,7 +27,7 @@ package com.Adobe.analytics.external
 			
 		private static var googleVariable_:SharedObject;
 		private static var useLocalObject_:Boolean = true;
-	
+		private static var useSameObject_:Boolean = false;
 		
 		public function LocalObjectHandler()
 		{
@@ -44,27 +44,51 @@ package com.Adobe.analytics.external
 			useLocalObject_ = status;
 		}
 		
+	
+		public static function get useSameObject():Boolean
+		{
+			return useSameObject_;
+		}
+		public static function set useSameObject(flag:Boolean):void
+		{
+			useSameObject_ = flag;
+		}
+		
 		public static function init(localObjectPath:String):SharedObject
 		{
 			//if(!googleVariable_) // we need to always load fresh as 
 			// is possible that another instance of the application also can write the cookies.
 			// we need to get the latest.
-			var path:String;
-			if(localObjectPath != "/")
-				path = "/"+localObjectPath;
-			else	
-				path = "/";
-		
-			try
+			
+			// check whether we need to init the object
+			
+			var initObject:Boolean = false;
+			
+			if(!useSameObject_)
+				initObject = true;
+			else if(!googleVariable_)
+				initObject = true;
+			
+			
+			if( initObject)
 			{
-				googleVariable_ = SharedObject.getLocal(LOCAL_OBJ_NAME,path);
-			}		
-			catch (er:Error)
-			{
-				trace(er.message+" The path you mentioned  is not part of the complete swf path. Hence resetting to default");
-				path = "/";
-				googleVariable_ = SharedObject.getLocal(LOCAL_OBJ_NAME, path);
-				
+				var path:String;
+				if(localObjectPath != "/")
+					path = "/"+localObjectPath;
+				else	
+					path = "/";
+			
+				try
+				{
+					googleVariable_ = SharedObject.getLocal(LOCAL_OBJ_NAME,path);
+				}		
+				catch (er:Error)
+				{
+					trace(er.message+" The path you mentioned  is not part of the complete swf path. Hence resetting to default");
+					path = "/";
+					googleVariable_ = SharedObject.getLocal(LOCAL_OBJ_NAME, path);
+					
+				}
 			}
 			
 			return googleVariable_;

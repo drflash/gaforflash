@@ -1015,13 +1015,26 @@ package com.Adobe.analytics.google
 		public function getCompleteCookieValueFromFlash():String
 		{
 			var completeString:String = "";
-			completeString += (LocalObjectHandler.getUtmaValue(config.cookiePath_) != "")? nsCache.COOKIE_UTMA_ + LocalObjectHandler.getUtmaValue(config.cookiePath_) + ";":"";
-			completeString += (LocalObjectHandler.getUtmbValue(config.cookiePath_) != "")? nsCache.COOKIE_UTMB_ + LocalObjectHandler.getUtmbValue(config.cookiePath_) + ";":"";
-			completeString += (LocalObjectHandler.getUtmcValue(config.cookiePath_) != "")? nsCache.COOKIE_UTMC_ + LocalObjectHandler.getUtmcValue(config.cookiePath_) + ";":"";
-			completeString += (LocalObjectHandler.getUtmzValue(config.cookiePath_) != "")? nsCache.COOKIE_UTMZ_ + LocalObjectHandler.getUtmzValue(config.cookiePath_) + ";":"";
-			completeString += (LocalObjectHandler.getUtmxValue(config.cookiePath_) != "")? nsCache.COOKIE_UTMX_ + LocalObjectHandler.getUtmxValue(config.cookiePath_) + ";":"";
-			completeString += (LocalObjectHandler.getUtmvValue(config.cookiePath_) != "")? nsCache.COOKIE_UTMV_ + LocalObjectHandler.getUtmvValue(config.cookiePath_) + ";":"";
-			completeString += (LocalObjectHandler.getGASOValue(config.cookiePath_) != "")? nsCache.COOKIE_GASO_ + LocalObjectHandler.getGASOValue(config.cookiePath_) + ";":"";
+			LocalObjectHandler.init(config.cookiePath_);
+			var origObjectUsage:Boolean = LocalObjectHandler.useSameObject;
+			LocalObjectHandler.useSameObject = true;
+			
+			var utmaValue:String = LocalObjectHandler.getUtmaValue(config.cookiePath_);
+			var utmbValue:String = LocalObjectHandler.getUtmbValue(config.cookiePath_);
+			var utmcValue:String = LocalObjectHandler.getUtmcValue(config.cookiePath_);
+			var utmzValue:String = LocalObjectHandler.getUtmzValue(config.cookiePath_);
+			var utmxValue:String = LocalObjectHandler.getUtmxValue(config.cookiePath_);
+			var utmvValue:String = LocalObjectHandler.getUtmvValue(config.cookiePath_);
+			var gasoValue:String = LocalObjectHandler.getGASOValue(config.cookiePath_);
+			
+			completeString += (utmaValue != "")? nsCache.COOKIE_UTMA_ + utmaValue + ";":"";
+			completeString += (utmbValue != "")? nsCache.COOKIE_UTMB_ + utmbValue + ";":"";
+			completeString += (utmcValue != "")? nsCache.COOKIE_UTMC_ + utmcValue + ";":"";
+			completeString += (utmzValue != "")? nsCache.COOKIE_UTMZ_ + utmzValue + ";":"";
+			completeString += (utmxValue != "")? nsCache.COOKIE_UTMX_ + utmxValue + ";":"";
+			completeString += (utmvValue != "")? nsCache.COOKIE_UTMV_ + utmvValue + ";":"";
+			completeString += (gasoValue != "")? nsCache.COOKIE_GASO_ + gasoValue + ";":"";
+			LocalObjectHandler.useSameObject = origObjectUsage;
 	        return completeString;
 		}
 
