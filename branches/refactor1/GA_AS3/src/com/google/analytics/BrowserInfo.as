@@ -12,15 +12,15 @@
 package com.google.analytics
 {
 	
-	import com.google.analytics.external.HTMLDocumentDetails_AS;
-	import com.google.analytics.external.HTMLScreenDetails_AS;
-	import com.google.analytics.external.HTML_GeneralDetails_AS;
+	import com.google.analytics.external.HTMLDocumentDetails;
+	import com.google.analytics.external.HTMLScreenDetails;
+	import com.google.analytics.external.HTMLGeneralDetails;
 	
 	import flash.system.Capabilities;
 
 
 	
-	public class GA_Browser_Info_AS
+	public class BrowserInfo
 	{
 		
 		 /**
@@ -36,7 +36,7 @@ package com.google.analytics
 		  // PRIVATE VARIABLES
 		  // ---------------------------------------------------------------------------
 		  private var emptyField:String = "-";
-		  private var nsCache:GA_utils_AS;
+		  private var nsCache:Utils;
 		
 		  /**
 		   * Flash version detection option. (1=on | 0=off)
@@ -56,7 +56,7 @@ package com.google.analytics
 		   *
 		   * @type {Screen}
 		   */
-		  private var screenCache_:HTMLScreenDetails_AS; 
+		  private var screenCache_:HTMLScreenDetails; 
 
 		
 		  /**
@@ -65,7 +65,7 @@ package com.google.analytics
 		   * @type {HTMLDocument}
 		   * @ignore
 		   */
-			private var documentCache_:HTMLDocumentDetails_AS= GA_utils_AS.html_DocumentObj;
+			private var documentCache_:HTMLDocumentDetails= Utils.html_DocumentObj;
 		
 		
 		  // ~ Instance variables ------------------------------------------------------
@@ -123,9 +123,9 @@ package com.google.analytics
 		  private var flashVersion_:String = emptyField;
 
 
-		  public function GA_Browser_Info_AS(detectFlash:int)
+		  public function BrowserInfo(detectFlash:int)
 		  {
-			 nsCache = GA_utils_AS.getGAUTIS();
+			 nsCache = Utils.getGAUTIS();
  			 flashDetection = detectFlash;
 		  }
 		
@@ -157,7 +157,7 @@ package com.google.analytics
 		  {
 			if(!screenCache_)
 			{
-				screenCache_= GA_utils_AS.html_ScreenObj;
+				screenCache_= Utils.html_ScreenObj;
 			}
 		    // have a screen reference
 		     var screenInfoFromFlash:String = String(Capabilities.screenResolutionX) + "x" + String(Capabilities.screenResolutionY);
@@ -172,8 +172,8 @@ package com.google.analytics
 		    }
 
 
-		          language_ = HTML_GeneralDetails_AS.getBrowserLanguage();
-		          javaEnabled_ = HTML_GeneralDetails_AS.isJavaEnabled();
+		          language_ = HTMLGeneralDetails.getBrowserLanguage();
+		          javaEnabled_ = HTMLGeneralDetails.isJavaEnabled();
 		    
 	
 	    // flash detection is on

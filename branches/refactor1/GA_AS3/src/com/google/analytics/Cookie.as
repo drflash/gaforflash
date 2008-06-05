@@ -11,15 +11,15 @@
 
 package com.google.analytics
 {
-	import com.google.analytics.external.HTMLDocumentDetails_AS;
+	import com.google.analytics.external.HTMLDocumentDetails;
 	import com.google.analytics.external.LocalObjectHandler;
 	
 	
 	
-	public class GA_cookie_AS
+	public class Cookie
 	{
 	
-		include "globals/GA_cookie_globals.as";
+		include "globals/cookie_globals.as";
 		
 		/**
 		 * @fileoverview Google Analytics Tracker Code (GATC)'s cookie module.  This
@@ -42,7 +42,7 @@ package com.google.analytics
 	  private var utmvFields_:Array;              // user defined value
 	  private var gasoValue_:String;               // Site overlay
 	
-	  private var nsCache:GA_utils_AS = GA_utils_AS.getGAUTIS();           // namespace caching
+	  private var nsCache:Utils = Utils.getGAUTIS();           // namespace caching
 	  private var isEmpty:Function =                 // caching isEmpty function 
 	      nsCache.isEmptyField_;
 	  private var LENGTH:String = nsCache.LENGTH_; // caching length property name
@@ -95,7 +95,7 @@ package com.google.analytics
 	   *
 	   * @type {_gat.GA_Config_}
 	   */
-	  private var config:GA_config_AS;
+	  private var config:Config;
 	
 	
 	  // ---------------------------------------------------------------------------
@@ -109,7 +109,7 @@ package com.google.analytics
 	   * @type {HTMLDocument}
 	   * @ignore
 	   */
-	  private var documentCache_ :HTMLDocumentDetails_AS;
+	  private var documentCache_ :HTMLDocumentDetails;
 	
 	// var selfRef = this;
 
@@ -124,7 +124,7 @@ package com.google.analytics
 	 * @private
 	 * @constructor
 	 */
-		public function GA_cookie_AS(documentCache:HTMLDocumentDetails_AS, inConfig:GA_config_AS)
+		public function Cookie(documentCache:HTMLDocumentDetails, inConfig:Config)
 		{
 			//selfRef = this;           // caching for better post-compilation file size
 	  		config = inConfig;

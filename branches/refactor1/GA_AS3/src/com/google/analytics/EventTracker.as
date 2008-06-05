@@ -11,22 +11,22 @@
 
 package com.google.analytics
 {
-	import com.google.analytics.external.HTMLDocumentDetails_AS;
-	import com.google.analytics.external.HTML_LocationDetails_AS;
-	import com.google.analytics.campaign.GA_campaign_AS;
-	import com.google.analytics.ecomm.GA_EComm_AS;
-	import com.google.analytics.ecomm.GA_EComm_Transactions;
+	import com.google.analytics.external.HTMLDocumentDetails;
+	import com.google.analytics.external.HTMLLocationDetails;
+	import com.google.analytics.campaign.Campaign;
+	import com.google.analytics.ecomm.EComm;
+	import com.google.analytics.ecomm.ECommTransaction;
 	
-	public class GA_EventTracker_AS
+	public class EventTracker
 	{
-		include "globals/GA_cookie_globals.as"
-		include "globals/GA_utils_globals.as"
+		include "globals/cookie_globals.as"
+		include "globals/utils_globals.as"
 		
 		// ---------------------------------------------------------------------------
 		  // PRIVATE VARIABLES
 		  // ---------------------------------------------------------------------------
 		 
-		  private var nsCache:GA_utils_AS = GA_utils_AS.getGAUTIS();
+		  private var nsCache:Utils = Utils.getGAUTIS();
 		  private var undef:Object = nsCache.undef_;
 		  private var isEmpty:Function= nsCache.isEmptyField_;
 		  private var indexOfProxy:Function = nsCache.indexOfProxy_;
@@ -42,14 +42,14 @@ package com.google.analytics
 		   *
 		   * @type {_gat.GA_GIF_Request_}
 		   */
-		  private var gifRequester:GA_gif_request_AS = null;
+		  private var gifRequester:GIFRequest = null;
 		
 		  /**
 		   * Configuation for analytics tracker.
 		   *
 		   * @type {_gat.GA_Config_}
 		   */
- 		   private var config:GA_config_AS = GA_utils_AS.GA_Config;
+ 		   private var config:Config = Utils.GA_Config;
 		
 		  /**
 		   * Flag indicating whether data has been initialized.
@@ -70,7 +70,7 @@ package com.google.analytics
 		   * @type {HTMLDocument}
 		   * @ignore
 		   */
-		  private var documentCache_:HTMLDocumentDetails_AS = GA_utils_AS.html_DocumentObj;
+		  private var documentCache_:HTMLDocumentDetails = Utils.html_DocumentObj;
 		
 		  /**
 		   * Sets the window cache. (used for dependency injection)
@@ -116,7 +116,7 @@ package com.google.analytics
 		   * @type {GA_EComm}
 		   * @ignore
 		   */
-		  private var ecomm_ :GA_EComm_AS= null;
+		  private var ecomm_ :EComm= null;
 		
 		
 		  /**
@@ -154,7 +154,7 @@ package com.google.analytics
 		   * @type {_gat.GA_Browser_Info_}
 		   * @ignore
 		   */
-		  private var browserInfo_:GA_Browser_Info_AS = null;
+		  private var browserInfo_:BrowserInfo = null;
 		
 		
 		  /**
@@ -172,7 +172,7 @@ package com.google.analytics
 		   * @type {GA_X10}
 		   * @ignore
 		   */
-		  private var x10Module_ :GA_X10Son_AS= null;
+		  private var x10Module_ :X10= null;
 		
 		
 		  /**
@@ -181,7 +181,7 @@ package com.google.analytics
 		   * @type {GA_X10}
 		   * @ignore
 		   */
-		  private var eventTracker_:GA_X10Son_AS;  // changed =_undef (removed)
+		  private var eventTracker_:X10;  // changed =_undef (removed)
 		
 		
 		  /**
@@ -199,7 +199,7 @@ package com.google.analytics
 		   * @type {GA_Cookie}
 		   * @ignore
 		   */
-		  private var cookieWrapper_:GA_cookie_AS = null;
+		  private var cookieWrapper_:Cookie = null;
 		
 		/**
 		 * @fileoverview Google Analytic Tracker Code (GATC)'s main component.  This
@@ -215,7 +215,7 @@ package com.google.analytics
 		 *
 		 * @constructor
 		 */
-		public function GA_EventTracker_AS(urchinAccount:String)
+		public function EventTracker(urchinAccount:String)
 		{
 			uAccount_ = urchinAccount;
 			
@@ -564,7 +564,7 @@ package com.google.analytics
 	  public function renderMetricsSearchString_(opt_pageURL:String = ""):String
 	  {
 	    var searchString:String = "";
-	    var documentCache:HTMLDocumentDetails_AS = documentCache_;        // caches document object
+	    var documentCache:HTMLDocumentDetails = documentCache_;        // caches document object
 	
 	    // get client browser information
 	    searchString += browserInfo_ ?
@@ -602,7 +602,7 @@ package com.google.analytics
 	  public function renderPageURL_(opt_pageURL:String = "" ):String 
 	  {
 	   // var docLoc = documentCache_[LOCATION];     // location --changed as folllows
-	     var docLoc:HTML_LocationDetails_AS = documentCache_.locationObj;     // location 
+	     var docLoc:HTMLLocationDetails = documentCache_.locationObj;     // location 
 	
 	    // use page url if specified, else extract it from location object
 	    opt_pageURL = ((undef != opt_pageURL) && ("" != opt_pageURL)) ?
@@ -662,7 +662,7 @@ package com.google.analytics
 	 private function constructLinkerParams_ () :String
 	 {
 	    // parse cookie values
-	    var cookieParser:GA_cookie_AS = new  GA_cookie_AS(documentCache_, config);
+	    var cookieParser:Cookie = new  Cookie(documentCache_, config);
 	
 	    // parsed cookie value
 	    return cookieParser.parseCookieValues_(domainHash_) ?
@@ -797,7 +797,7 @@ package com.google.analytics
 			
 		    // caching for better size compression by compiler
 		    var timeStamp:String = String(timeStamp_);
-		    var cookieWrapper:GA_cookie_AS = cookieWrapper_;
+		    var cookieWrapper:Cookie = cookieWrapper_;
 		    
 		     // cookie in string form
 		    //var cookieString = documentCache_[nsCache.COOKIE_]; // changed as follows
@@ -1053,7 +1053,7 @@ package com.google.analytics
 	   */
 		  private function initGifRequester_() :void
 		  {
-		    gifRequester = new GA_gif_request_AS(config);
+		    gifRequester = new GIFRequest(config);
 		  }
 
 	  /**
@@ -1069,7 +1069,7 @@ package com.google.analytics
 	   //&&&&&&&&&&&&&&&&&&&&&&&&&&&
 	  public function _initData() :void
 	  {
-	     var campInfo:GA_campaign_AS;
+	     var campInfo:Campaign;
 	
 	     if (!hasInitData) 
 	     {
@@ -1080,7 +1080,7 @@ package com.google.analytics
 	       domainHash_ = String(getDomainHash_());
 	
 	       // init. cookie wrapper
-	       cookieWrapper_ =   GA_utils_AS.getCookieHandler(documentCache_,config);
+	       cookieWrapper_ =   Utils.getCookieHandler(documentCache_,config);
 	     }
 		    
 	      // no need if page is a google property
@@ -1105,7 +1105,7 @@ package com.google.analytics
 		        // caching browser info
 		        if (config.clientInfo_) 
 		        {
-		          browserInfo_ = new  GA_Browser_Info_AS(
+		          browserInfo_ = new  BrowserInfo(
 		              config.flashDetection_
 		          );
 		          browserInfo_.getBrowserInfo_();
@@ -1114,7 +1114,7 @@ package com.google.analytics
 		        // cache campaign info
 		        if (config.campaignTracking_) 
 		        {
-			          campInfo = new GA_campaign_AS(
+			          campInfo = new Campaign(
 			              domainHash_,
 			              documentCache_,
 			              formattedRef_,
@@ -1129,10 +1129,10 @@ package com.google.analytics
 	        	}
 	      }
 	      // Initialize X10 module.
-	      x10Module_ = new GA_X10Son_AS();
+	      x10Module_ = new X10();
 	
 	      // Initialize event tracker module
-	      eventTracker_ = new GA_X10Son_AS();
+	      eventTracker_ = new X10();
 	      hasInitData = true;
 	    }
 	
@@ -1433,7 +1433,7 @@ package com.google.analytics
 	    var domainHash:String = domainHash_;
 	    var searchStrings:Array = [];
 	    var tIdx:Number;
-	    var curTrans:GA_EComm_Transactions;
+	    var curTrans:ECommTransaction;
 	    var iIdx:Number;
 	    var searchIdx:Number;
 	
@@ -1482,13 +1482,13 @@ package com.google.analytics
 	 */
 	  	public function _setTrans() :void
 	  	{
-		    var docCache:HTMLDocumentDetails_AS = documentCache_;
+		    var docCache:HTMLDocumentDetails = documentCache_;
 		    var newECommInstance :Boolean= true;
 		    var lineNumber:Number;
 		    var transFields:Array;
 		    var transFieldIdx:Number;
 		    var lines:Array;
-		    var parentTrans:GA_EComm_Transactions;
+		    var parentTrans:ECommTransaction;
 		
 		    var element:Object = (docCache.getElementById != null) ?
 		        // get element by "getElementById"
@@ -1503,7 +1503,7 @@ package com.google.analytics
 	
 	    if (element && element.value) {
 	      // clear out old e-commerce values
-	      ecomm_ = new GA_EComm_AS();
+	      ecomm_ = new EComm();
 	
 	      lines = splitProxy(element.value, "UTM:");
 	
@@ -1598,10 +1598,10 @@ package com.google.analytics
 	                               shippingFee:String,
 	                               billingCity:String,
 	                               billingState:String,
-	                               billingCountry:String) :GA_EComm_Transactions
+	                               billingCountry:String) :ECommTransaction
 		 {
 		    // initialize e-comm instance if it hasn't been initialized yet.
-		    ecomm_ = ecomm_ ? ecomm_ : new GA_EComm_AS();
+		    ecomm_ = ecomm_ ? ecomm_ : new EComm();
 		
 		    // adding transaction
 		    return ecomm_.addTransaction_(
@@ -1656,10 +1656,10 @@ package com.google.analytics
 	                           quantity:String) :void
 		 {
 
-		    var parentTrans:GA_EComm_Transactions;
+		    var parentTrans:ECommTransaction;
 		    
 		    // initialize e-comm instance if it hasn't been initialized yet.
-		    ecomm_ = ecomm_ ? ecomm_ : new GA_EComm_AS();
+		    ecomm_ = ecomm_ ? ecomm_ : new EComm();
 		
 		    // get item's parent transaction
 		    parentTrans = ecomm_.getTransaction_(orderId);
@@ -1694,7 +1694,7 @@ package com.google.analytics
 		    if (newVal && ("" != newVal))	// && isNotGoogleSearch()) 
 		    {
 		      // cookie that we are going to use for writing new cookie value
-		      var newCookie:GA_cookie_AS = new GA_cookie_AS(documentCache_, config);
+		      var newCookie:Cookie = new Cookie(documentCache_, config);
 		
 		      // domain hash
 		      var domainHash:String = domainHash_;
@@ -1880,10 +1880,10 @@ package com.google.analytics
 		   *
 		   * @return {_gat.GA_X10_} new X10 object.
 		   */
-		  public function _createXObj():GA_X10Son_AS
+		  public function _createXObj():X10
 		  {
 		    _initData();
-		    return new GA_X10Son_AS();
+		    return new X10();
 		  }
 
 		 /**
@@ -1895,7 +1895,7 @@ package com.google.analytics
 		   *     augment to the persistent X10 data stored on the tracker object
 		   *     instance.
 		   */
-		  public function _sendXEvent(opt_xObj:GA_X10Son_AS) :void
+		  public function _sendXEvent(opt_xObj:X10) :void
 		  {
 		    var searchString:String = "";
 		
@@ -1966,7 +1966,7 @@ package com.google.analytics
 									  opt_value:String = "") :Boolean
 		  {
 		    var success :Boolean= true;
-		    var eventTracker:GA_X10Son_AS = eventTracker_;
+		    var eventTracker:X10 = eventTracker_;
 		
 		    // If event tracking call is valid
 		    if ((undef != objName) && (undef != eventType) && ("" != objName) &&
@@ -2038,7 +2038,7 @@ package com.google.analytics
 		    if (takeSample_())
 		     {
 		      // create new X10 object
-		      var outboundTracker:GA_X10Son_AS = new GA_X10Son_AS();
+		      var outboundTracker:X10 = new X10();
 		
 		      /**
 		       * Set project id to 6 (Outbound tracking project id)
@@ -2122,7 +2122,7 @@ package com.google.analytics
 		  	
 		    nsCache.arrayPush_(
 		        config.organicSources_,
-		        new GA_OrganicReferrer_AS(newOrganicEngine, newOrganicKeyword)
+		        new OrganicReferrer(newOrganicEngine, newOrganicKeyword)
 		    );
 		    
 		  }

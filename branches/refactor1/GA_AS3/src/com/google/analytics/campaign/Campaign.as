@@ -11,14 +11,14 @@
 
 package com.google.analytics.campaign
 {
-	import com.google.analytics.external.HTMLDocumentDetails_AS;
-	import com.google.analytics.external.HTML_LocationDetails_AS;
-	import com.google.analytics.GA_OrganicReferrer_AS;
-	import com.google.analytics.GA_config_AS;
-	import com.google.analytics.GA_cookie_AS;
-	import com.google.analytics.GA_utils_AS;
+	import com.google.analytics.external.HTMLDocumentDetails;
+	import com.google.analytics.external.HTMLLocationDetails;
+	import com.google.analytics.OrganicReferrer;
+	import com.google.analytics.Config;
+	import com.google.analytics.Cookie;
+	import com.google.analytics.Utils;
 	 
-	public class GA_campaign_AS
+	public class Campaign
 	{
 		 
 		
@@ -42,7 +42,7 @@ package com.google.analytics.campaign
 		   * @type {HTMLDocument}
 		   * @ignore
 		   */
-		  private var documentCache_:HTMLDocumentDetails_AS ;
+		  private var documentCache_:HTMLDocumentDetails ;
 		
 		  // ~ Instance variables ------------------------------------------------------
 		  /**
@@ -77,7 +77,7 @@ package com.google.analytics.campaign
 		   * @private
 		   * @type {_gat.GA_Config_}
 		   */
-		  private var config_:GA_config_AS;
+		  private var config_:Config;
   
   
 		  // ---------------------------------------------------------------------------
@@ -100,7 +100,7 @@ package com.google.analytics.campaign
 		  private var UTMCR_:String = "utmcr=";
 		  
 		
-		  private var nsCache:GA_utils_AS = GA_utils_AS.getGAUTIS();
+		  private var nsCache:Utils = Utils.getGAUTIS();
 		  private var isEmptyField:Function = nsCache.isEmptyField_;
 		  private var undef:* = nsCache.undef_;
 		  private var stringContains:Function =  nsCache.stringContains_;
@@ -110,7 +110,7 @@ package com.google.analytics.campaign
 		  private var LENGTH:String = nsCache.LENGTH_;
 
 
-		  private var cookieWrapper_:GA_cookie_AS = 	GA_utils_AS.getInitialisedCookieHandler();
+		  private var cookieWrapper_:Cookie = 	Utils.getInitialisedCookieHandler();
   
 		  /**
 			 * @class Google Analytics Tracker Code (GATC)  This class encompasses all the
@@ -126,11 +126,11 @@ package com.google.analytics.campaign
 			 * @param {_gat.GA_Config_} inConfig Tracker configuations.
 			 *
 		 */
-		public function GA_campaign_AS(domainHash:String,
-                             documentCache:HTMLDocumentDetails_AS,
+		public function Campaign(domainHash:String,
+                             documentCache:HTMLDocumentDetails,
                              referrer:String,
                              timeStamp:Number,
-                             inConfig:GA_config_AS)
+                             inConfig:Config)
 		{
 			documentCache_ = documentCache;
 			domainHash_ = domainHash;
@@ -172,12 +172,12 @@ package com.google.analytics.campaign
 		   *
 		   * @return {String} Return campaign tracker retrieved from search string.
 		   */
-		  public function getTrackerFromSearchString_ (searchString:String):GA_CampaignTracker_AS
+		  public function getTrackerFromSearchString_ (searchString:String):CampaignTracker
 		  { 
-			    var organicCampaign:GA_CampaignTracker_AS = getOrganicCampaignInfo_();
-			    var configCache:GA_config_AS = config_;
+			    var organicCampaign:CampaignTracker = getOrganicCampaignInfo_();
+			    var configCache:Config = config_;
 			
-			    return new  GA_CampaignTracker_AS(
+			    return new  CampaignTracker(
 			        parseNameValuePairs(                                         // id
 			            searchString,
 			            configCache.UCID_ + "=",
@@ -229,12 +229,12 @@ package com.google.analytics.campaign
 	   *     tracker object.
 	   *
 	   */
-	 public function getOrganicCampaignInfo_():GA_CampaignTracker_AS {
+	 public function getOrganicCampaignInfo_():CampaignTracker {
 	    var hostName:String;                                // referrer host name
 	    var keyword:String;                                 // matching keyword
 	    var docRef:String =referrer_;              		 // referrer
 	    var idx:Number;                                     // source index
-	    var curOrganicSource:GA_OrganicReferrer_AS;                        // current organic source
+	    var curOrganicSource:OrganicReferrer;                        // current organic source
 	    var organicSources:Array =                         // organic sources
 	        config_.organicSources_;
 	
@@ -275,7 +275,7 @@ package com.google.analytics.campaign
 	          }
 	
 	          // return campaign tracker
-	          return new  GA_CampaignTracker_AS
+	          return new  CampaignTracker
 	          (
 	              undef,                                               // id
 	              curOrganicSource.engine_,                            // source
@@ -343,7 +343,7 @@ package com.google.analytics.campaign
 		   *     organic campaign tracker, and the keyword is contained in the ignored
 		   *     watch list.
 		   */
-		 public function isIgnoredKeyword_ (campaignTracker:GA_CampaignTracker_AS):Boolean
+		 public function isIgnoredKeyword_ (campaignTracker:CampaignTracker):Boolean
 		 {
 		    var organicIgnore:Array = config_.organicIgnore_;
 		    var toBeIgnored:Boolean = false;
@@ -374,11 +374,11 @@ package com.google.analytics.campaign
 		   * @return {_gat.GA_Campaign_.Tracker_} Returns nothing if there is no
 		   *     referrer. Otherwise, return referrer campaign tracker.
 		   */
-		  public function getReferrerCampaignInfo_():GA_CampaignTracker_AS
+		  public function getReferrerCampaignInfo_():CampaignTracker
 		  {
 			    var hostName:String = "";                           // referrer host name
 			    var content:String = "";                            // campaign content description
-			    var campaignTracker:GA_CampaignTracker_AS;                         // campaign tracker
+			    var campaignTracker:CampaignTracker;                         // campaign tracker
 			    var docRef:String = referrer_;                 // referrer
 			
 			    // if there is no referrer, or referrer is not a valid URL,  return nothing
@@ -408,7 +408,7 @@ package com.google.analytics.campaign
 			        hostName = nsCache.substringProxy_(hostName, 4);
 			    }
 			
-			    return new GA_CampaignTracker_AS(
+			    return new CampaignTracker(
 			        undef,                                                     // id
 			        hostName,                                                  // source
 			        undef,                                                     // click id
@@ -432,7 +432,7 @@ package com.google.analytics.campaign
 		   *     an anchor in the URL, and allow anchor flag is set to true, then the
 		   *     anchor will be prepended to the search string.
 		   */
-		  public function formatCampaignSearchString_(inLocation:HTML_LocationDetails_AS):String
+		  public function formatCampaignSearchString_(inLocation:HTMLLocationDetails):String
 		  {
 		    var searchString:String = "";
 		
@@ -457,9 +457,9 @@ package com.google.analytics.campaign
 		   * @private
 		   * @return {_gat.GA_Campaign_.Tracker_} Direct campaign tracker object.
 		   */
-		  public function getDirectCampaign_():GA_CampaignTracker_AS 
+		  public function getDirectCampaign_():CampaignTracker 
 		  {
-		    return new  GA_CampaignTracker_AS(
+		    return new  CampaignTracker(
 		        undef,                                                     // id
 		        "(direct)",                                                // source
 		        undef,                                                     // click id
@@ -486,7 +486,7 @@ package com.google.analytics.campaign
 		   *     valid referral campaign tracker, and the domain is contained in the
 		   *     ignored watch list.
 		   */
-		 public function isIgnoredReferral_ (campaignTracker:GA_CampaignTracker_AS):Boolean 
+		 public function isIgnoredReferral_ (campaignTracker:CampaignTracker):Boolean 
 		 {
 		    var toBeIgnored:Boolean = false;
 		    var domainName:String;
@@ -524,7 +524,7 @@ package com.google.analytics.campaign
 		   * @return {Boolean} Return true if and only if the campaign tracker object is
 		   *     valid.
 		   */
-		  public function validTracker_(campaignTracker:GA_CampaignTracker_AS):Boolean
+		  public function validTracker_(campaignTracker:CampaignTracker):Boolean
 		  {
 		    return (undef != campaignTracker) && campaignTracker.isValid_();
 		  }
@@ -554,11 +554,11 @@ package com.google.analytics.campaign
 		   * @return {String} Gif hit key-value pair indicating wether this is a repeated
 		   *     click, or a brand new campaign for the visitor.
 		   */
-		  public function getCampaignInformation_(inCookie:GA_cookie_AS, noSession:Boolean):String 
+		  public function getCampaignInformation_(inCookie:Cookie, noSession:Boolean):String 
 		  {
 			    var searchString:String = "";
 			    var utmzValue:String = "-";                       // __utmz value
-			    var campaignTracker:GA_CampaignTracker_AS;                       // tracker object
+			    var campaignTracker:CampaignTracker;                       // tracker object
 			    var campNoOverride:String;                        // don't override campaign?
 			    var responseCount:Number = 0;                     // campaign response count
 			    var duplicateCampaign:Boolean;                     // is camapaign duplicated?
@@ -704,7 +704,7 @@ package com.google.analytics.campaign
      */
     if (!isEmptyField(utmzValue)) {
       var fields:Array = splitProxy(utmzValue, ".");
-      var oldTracker:GA_CampaignTracker_AS = new GA_CampaignTracker_AS("","","","","","","");
+      var oldTracker:CampaignTracker = new CampaignTracker("","","","","","","");
       oldTracker.fromTrackerString_(fields.slice(4).join("."));
 
       duplicateCampaign =

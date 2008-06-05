@@ -11,11 +11,11 @@
 
 package com.google.analytics
 {
-	public class GA_OrganicReferrer_AS
+	public class OrganicReferrer
 	{
 		public var engine_:String;
 		public var keyword_:String;
-		public function GA_OrganicReferrer_AS(engine:String, keyword:String)
+		public function OrganicReferrer(engine:String, keyword:String)
 		{
 			 /**
 		     * Organic source engine.

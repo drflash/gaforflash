@@ -11,11 +11,11 @@
 
 package com.google.analytics.campaign
 {
-    import com.google.analytics.GA_utils_AS;
+    import com.google.analytics.Utils;
     
-	public class GA_CampaignTracker_AS
+	public class CampaignTracker
 	{
-		  include "../globals/GA_utils_globals.as"
+		  include "../globals/utils_globals.as"
 		  
 		  // ---------------------------------------------------------------------------
 		  // PRIVILIGED VARIABLES
@@ -101,7 +101,7 @@ package com.google.analytics.campaign
 		 * @private
 		 * @constructor
 		 */
-		public function GA_CampaignTracker_AS(opt_id:String = "",
+		public function CampaignTracker(opt_id:String = "",
                                     opt_source:String = "",
                                     opt_clickId:String = "",
                                     opt_name:String = "",
@@ -135,7 +135,7 @@ package com.google.analytics.campaign
 		public  function toTrackerString_():String
 		{
 		  //var selfRef = this;
-		  var nsCache:GA_utils_AS = GA_utils_AS.getGAUTIS();
+		  var nsCache:Utils = Utils.getGAUTIS();
 		  var trackerFields:Array = [];
 		  var keyValues:Array = [
 		      [GA_CAMP_UTMCID_,   id_],
@@ -175,7 +175,7 @@ package com.google.analytics.campaign
 		    }
 		  }
 		
-		  return trackerFields.join(GA_campaign_AS.CAMPAIGN_TRACKING_DELIM);
+		  return trackerFields.join(Campaign.CAMPAIGN_TRACKING_DELIM);
 		}
 		
 		
@@ -190,7 +190,7 @@ package com.google.analytics.campaign
 		 */
 		public function isValid_() :Boolean
 		{
-		  var isEmptyCache:Function = GA_utils_AS.getGAUTIS().isEmptyField_;
+		  var isEmptyCache:Function = Utils.getGAUTIS().isEmptyField_;
 		
 		  return !(isEmptyCache(id_) && isEmptyCache(source_) &&
 		           isEmptyCache(clickId_));
@@ -207,7 +207,7 @@ package com.google.analytics.campaign
 		public function fromTrackerString_(trackerString:String) :void
 		{
 		  //var selfRef = this;
-		  var nsCache:GA_utils_AS = GA_utils_AS.getGAUTIS();
+		  var nsCache:Utils = Utils.getGAUTIS();
 		
 		  /**
 		   * Inner helper function.  Used for better compression by the JSCompiler.  It
@@ -230,11 +230,11 @@ package com.google.analytics.campaign
 		
 		private function innerDecodeHelper(trackerString:String,key:String):String
 		{
-		    return GA_utils_AS.getGAUTIS().decodeWrapper_(
-		        GA_utils_AS.getGAUTIS().parseNameValuePairs_(
+		    return Utils.getGAUTIS().decodeWrapper_(
+		        Utils.getGAUTIS().parseNameValuePairs_(
 		            trackerString,
 		            key,
-		            GA_campaign_AS.CAMPAIGN_TRACKING_DELIM
+		            Campaign.CAMPAIGN_TRACKING_DELIM
 		        )
 		    );
 		}

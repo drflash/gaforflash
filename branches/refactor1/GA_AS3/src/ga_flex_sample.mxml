@@ -2,8 +2,8 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="{trackPageView()}" width="197" height="155">
 <mx:Script>
 	<![CDATA[
-		import com.google.analytics.GA_EventTracker_AS;
-		private var trackerOBj:GA_EventTracker_AS;
+		import com.google.analytics.EventTracker;
+		private var trackerOBj:EventTracker;
 		private var copied:Boolean = false;
 		private function sendGARequest():void
 		{
@@ -16,7 +16,7 @@
 			*/
 			if(!trackerOBj)
 			{
-				trackerOBj = new GA_EventTracker_AS("UA-5-1");
+				trackerOBj = new EventTracker("UA-5-1");
 				trackerOBj._initData();
 			}
 			trackerOBj._trackEvent("button","click",b1.label,"");
@@ -26,7 +26,7 @@
 		{
 			if(!trackerOBj)
 			{
-				trackerOBj = new GA_EventTracker_AS("UA-5-1");
+				trackerOBj = new EventTracker("UA-5-1");
 				trackerOBj._addOrganic("www.naughtycashew.com","query");
 				//trackerOBj._addIgnoredOrganic("keywords+to+ignore");
     			//trackerOBj._addIgnoredOrganic("keywords to ignore");

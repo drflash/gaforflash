@@ -13,7 +13,7 @@ package com.google.analytics
 {	 
 
 
-	public class GA_config_AS
+	public class Config
 	{
 		
 		/**
@@ -22,9 +22,9 @@ package com.google.analytics
 	 	 */	
 		
 		
-		include "globals/GA_utils_globals.as"
+		include "globals/utils_globals.as"
 		  
-		public function GA_config_AS()
+		public function Config()
 		{}
 		
 	 /**
@@ -34,9 +34,9 @@ package com.google.analytics
 	   * @param {String} keyword Organic keyword name (query term for search)
 	   *
 	   */
-	  public function newOrganicReferrer(engine:String, keyword:String):GA_OrganicReferrer_AS
+	  public function newOrganicReferrer(engine:String, keyword:String):OrganicReferrer
 	  {
-	    return new GA_OrganicReferrer_AS(engine, keyword); 
+	    return new OrganicReferrer(engine, keyword); 
 	  }
 	
 	  /**
