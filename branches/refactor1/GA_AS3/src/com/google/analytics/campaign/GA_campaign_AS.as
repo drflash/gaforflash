@@ -102,7 +102,7 @@ package com.google.analytics.campaign
 		
 		  private var nsCache:GA_utils_AS = GA_utils_AS.getGAUTIS();
 		  private var isEmptyField:Function = nsCache.isEmptyField_;
-		  private var undef = nsCache.undef_;
+		  private var undef:* = nsCache.undef_;
 		  private var stringContains:Function =  nsCache.stringContains_;
 		  private var parseNameValuePairs:Function = nsCache.parseNameValuePairs_;
 		  private var toLowerCase:Function = nsCache.toLowerCaseProxy_;
@@ -110,7 +110,7 @@ package com.google.analytics.campaign
 		  private var LENGTH:String = nsCache.LENGTH_;
 
 
-		var cookieWrapper_:GA_cookie_AS = 	GA_utils_AS.getInitialisedCookieHandler();
+		  private var cookieWrapper_:GA_cookie_AS = 	GA_utils_AS.getInitialisedCookieHandler();
   
 		  /**
 			 * @class Google Analytics Tracker Code (GATC)  This class encompasses all the
