@@ -2,7 +2,7 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="{trackPageView()}" width="197" height="155">
 <mx:Script>
 	<![CDATA[
-		import com.Adobe.analytics.google.GA_EventTracker_AS;
+		import com.google.analytics.GA_EventTracker_AS;
 		private var trackerOBj:GA_EventTracker_AS;
 		private var copied:Boolean = false;
 		private function sendGARequest():void
