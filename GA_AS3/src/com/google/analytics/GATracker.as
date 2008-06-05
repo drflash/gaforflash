@@ -17,7 +17,7 @@ package com.google.analytics
 	import com.google.analytics.ecomm.EComm;
 	import com.google.analytics.ecomm.ECommTransaction;
 	
-	public class EventTracker
+	public class GATracker
 	{
 		include "globals/cookie_globals.as"
 		include "globals/utils_globals.as"
@@ -215,7 +215,7 @@ package com.google.analytics
 		 *
 		 * @constructor
 		 */
-		public function EventTracker(urchinAccount:String)
+		public function GATracker(urchinAccount:String)
 		{
 			uAccount_ = urchinAccount;
 			
