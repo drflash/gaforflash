@@ -11,9 +11,9 @@
 
 package com.google.analytics.ecomm
 {
-    import com.google.analytics.GA_utils_AS;
+    import com.google.analytics.Utils;
     
-	public class GA_EComm_Items_AS
+	public class ECommItem
 	{
 		
 		/**
@@ -142,7 +142,7 @@ package com.google.analytics.ecomm
 		   }
 
 
-			public function GA_EComm_Items_AS(transId:String,
+			public function ECommItem(transId:String,
 		                                 sku:String,
 		                                 name:String,
 		                                 category:String,
@@ -169,7 +169,7 @@ package com.google.analytics.ecomm
 		public function toGifParams_():String
 		{
 		  //var selfRef = this;
-		  var encoderCache:Function = GA_utils_AS.getGAUTIS().encodeWrapper_;
+		  var encoderCache:Function = Utils.getGAUTIS().encodeWrapper_;
 		  
 		  return "&" + [
 		      "utmt=item",

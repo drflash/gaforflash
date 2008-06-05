@@ -11,9 +11,9 @@
 
 package com.google.analytics.ecomm
 {
-	import com.google.analytics.GA_utils_AS;
+	import com.google.analytics.Utils;
 	
-	public class GA_EComm_Transactions
+	public class ECommTransaction
 	{
 		
 		 
@@ -209,7 +209,7 @@ package com.google.analytics.ecomm
 		   
 		   
   		   
-		public function GA_EComm_Transactions(orderId:String,
+		public function ECommTransaction(orderId:String,
                                         affiliation:String,
                                         total:String,
                                         tax:String,
@@ -260,15 +260,15 @@ package com.google.analytics.ecomm
                                 quantity:String) :void
        {
 		  //var selfRef = this;
-		  var dupItems:GA_EComm_Items_AS = getItem_(sku);
+		  var dupItems:ECommItem = getItem_(sku);
 		  var id:String = id_;
-		  var nsCache:GA_utils_AS = GA_utils_AS.getGAUTIS();
+		  var nsCache:Utils = Utils.getGAUTIS();
 		
 		  // add new transaction
 		  if (nsCache.undef_ == dupItems) {
 		    nsCache.arrayPush_(
 		        items_,
-		        new GA_EComm_Items_AS(id, sku, name, category, price, quantity)
+		        new ECommItem(id, sku, name, category, price, quantity)
 		    );
 		
 		  // duplicate / previously existing transaction
@@ -294,8 +294,8 @@ package com.google.analytics.ecomm
 	 *
 	 * @return {_gat.GA_EComm_.Items_} Item object with the specified sku. 
 	 */
-	public function getItem_(sku:String):GA_EComm_Items_AS {
-	  var returnItem:GA_EComm_Items_AS;
+	public function getItem_(sku:String):ECommItem {
+	  var returnItem:ECommItem;
 	  
 	  var items:Array = items_;
 	  var idx:Number;
@@ -318,7 +318,7 @@ package com.google.analytics.ecomm
 	public function toGifParams_():String 
 	{
 	  //var selfRef = this;
-	  var encoderCache:Function = GA_utils_AS.getGAUTIS().encodeWrapper_; 
+	  var encoderCache:Function = Utils.getGAUTIS().encodeWrapper_; 
   
 	  return "&" + [
 	      "utmt=tran",

@@ -13,13 +13,13 @@ package com.google.analytics
 {
     import  flash.display.Bitmap;
     
-	import com.google.analytics.external.HTMLDocumentDetails_AS;
-	import com.google.analytics.external.ExternalInterfaceMethods_AS;
+	import com.google.analytics.external.HTMLDocumentDetails;
+	import com.google.analytics.external.ExternalInterfaceMethods;
 	
-	public class GA_gif_request_AS
+	public class GIFRequest
 	{
-		include "globals/GA_cookie_globals.as"
-		include "globals/GA_utils_globals.as"
+		include "globals/cookie_globals.as"
+		include "globals/utils_globals.as"
 		
 		/**
 		 * @fileoverview Google Analytics Tracker Code (GATC)'s GIF request module. This
@@ -59,7 +59,7 @@ package com.google.analytics
 	  //private var remoteImage_:Image;
 	
 	  //var selfRef:;           // caching for better post-compilation file size
-	  private var nsCache:GA_utils_AS;           // namespace caching 
+	  private var nsCache:Utils;           // namespace caching 
 	
 	  /**
 	   * Application configurations
@@ -67,7 +67,7 @@ package com.google.analytics
 	   * @private
 	   * @type {String}
 	   */
-	  private var config_ :GA_config_AS;
+	  private var config_ :Config;
 	
 	
 	  /**
@@ -76,13 +76,13 @@ package com.google.analytics
 	   * @private
 	   * @type {_gat.GA_Cookie_}
 	   */
-	 private  var cookieHandler_:GA_cookie_AS ;
+	 private  var cookieHandler_:Cookie ;
 			  
-		public function GA_gif_request_AS(inConfig:GA_config_AS)
+		public function GIFRequest(inConfig:Config)
 		{
 					
 			  //selfRef = this;           // caching for better post-compilation file size
-			  nsCache = GA_utils_AS.getGAUTIS();           // namespace caching -- 
+			  nsCache = Utils.getGAUTIS();           // namespace caching -- 
 			  config_ = inConfig;			
 		}
 		
@@ -174,7 +174,7 @@ package com.google.analytics
    */
   public function sendGifRequest_(searchString:String,
                                      gaAccountId:String,
-                                     inDocument:HTMLDocumentDetails_AS,
+                                     inDocument:HTMLDocumentDetails,
                                      domainHash:String,
                                      opt_force:Boolean = false,
                                      opt_rateLimit:Boolean = false):void
@@ -194,7 +194,7 @@ package com.google.analytics
 	
     // if cookie handler hasn't been initialized yet
     if (!cookieHandler_) {
-      cookieHandler_ = GA_utils_AS.getCookieHandler(inDocument, config_); 
+      cookieHandler_ = Utils.getCookieHandler(inDocument, config_); 
     }
 
     // get tracker cookies
@@ -252,7 +252,7 @@ package com.google.analytics
           // create new image if needed
     
 			var sourceStrig:String = config_.gifPathLocal_ + searchString;
-			ExternalInterfaceMethods_AS.createImageinHTML(sourceStrig);
+			ExternalInterfaceMethods.createImageinHTML(sourceStrig);
           /**
            * We need this because on some browser, without assingning an onload
            * function, the image will not load.
@@ -304,7 +304,7 @@ package com.google.analytics
                   inDocument,
                   domainHash
               );
-			ExternalInterfaceMethods_AS.createImageinHTML(sourceString1);
+			ExternalInterfaceMethods.createImageinHTML(sourceString1);
           /**
            * We need this because on some browser, without assinging an onload
            * function, the image will not load.
@@ -332,7 +332,7 @@ package com.google.analytics
    *
    * @return {String} All cookies formatted for GABE GIF request parameters.
    */
-  private function getAllCookiesToSearchString_ (inDocument:HTMLDocumentDetails_AS, domainHash:String):String 
+  private function getAllCookiesToSearchString_ (inDocument:HTMLDocumentDetails, domainHash:String):String 
   {
     //  formatted (will not contain [<key>=-])
     var searchParams:Array = [];

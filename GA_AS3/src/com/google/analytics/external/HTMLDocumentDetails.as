@@ -11,7 +11,7 @@
 
 package com.google.analytics.external
 {
-	public class HTMLDocumentDetails_AS
+	public class HTMLDocumentDetails
 	{		
 		public static const TITLE_REQUEST_STRING:String = "document.title";
 		public static const DOMAIN_REQUEST_STRING:String = "document.domain";
@@ -37,7 +37,7 @@ package com.google.analytics.external
 		private var domain_:String;
 		public function get domain():String
 		{
-			domain_ = String(ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(DOMAIN_REQUEST_STRING));
+			domain_ = String(ExternalInterfaceMethods.getDetailsFromHtmlDOM(DOMAIN_REQUEST_STRING));
 			return domain_;
 		}
 		
@@ -73,13 +73,13 @@ package com.google.analytics.external
 		private var cookie_:String;
 		public function get cookie():String
 		{
-			cookie_ = String(ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(COOKIE_REQUEST_STRING));
+			cookie_ = String(ExternalInterfaceMethods.getDetailsFromHtmlDOM(COOKIE_REQUEST_STRING));
 			return cookie_;
 		}	
 		
 		public function set cookie(cookie_String:String):void
 		{
-			ExternalInterfaceMethods_AS.setDetailsOnHtmlDOM(COOKIE_REQUEST_STRING,cookie_String);
+			ExternalInterfaceMethods.setDetailsOnHtmlDOM(COOKIE_REQUEST_STRING,cookie_String);
 		}
 		
 		
@@ -111,8 +111,8 @@ package com.google.analytics.external
 		
 		
 		//*************************
-		private var locationObj_:HTML_LocationDetails_AS;
-		public function get locationObj():HTML_LocationDetails_AS
+		private var locationObj_:HTMLLocationDetails;
+		public function get locationObj():HTMLLocationDetails
 		{
 			return locationObj_;
 		}
@@ -141,7 +141,7 @@ package com.google.analytics.external
 		}
 		public function set location_href(href_String:String):void
 		{
-			ExternalInterfaceMethods_AS.setDetailsOnHtmlDOM(LOCATION_REF_STRING,href_String);
+			ExternalInterfaceMethods.setDetailsOnHtmlDOM(LOCATION_REF_STRING,href_String);
 		}
 		
 		
@@ -168,22 +168,22 @@ package com.google.analytics.external
 			return location_pathName_;
 		}
 	
-		public function HTMLDocumentDetails_AS()
+		public function HTMLDocumentDetails()
 		{
 			init();
 		}
 		
 		private function init():void
 		{
-			title_ = String(ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(TITLE_REQUEST_STRING));
-			domain_ = String(ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(DOMAIN_REQUEST_STRING));
-			links_ = ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(LINKS_REQUEST_STRING) as Array;
-			referrer_ = String(ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(REFERRER_REQUEST_STRING));
-			cookie_ = String(ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(COOKIE_REQUEST_STRING));
-			characterSet_ = String(ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(CHARACTERSET_REQUEST_STRING));
-			charset_ = String(ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(CHARASET_REQUEST_STRING));
-			utmform_ = ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(UTMFORM_REQUEST_STRING);
-			locationObj_ = new HTML_LocationDetails_AS();
+			title_ = String(ExternalInterfaceMethods.getDetailsFromHtmlDOM(TITLE_REQUEST_STRING));
+			domain_ = String(ExternalInterfaceMethods.getDetailsFromHtmlDOM(DOMAIN_REQUEST_STRING));
+			links_ = ExternalInterfaceMethods.getDetailsFromHtmlDOM(LINKS_REQUEST_STRING) as Array;
+			referrer_ = String(ExternalInterfaceMethods.getDetailsFromHtmlDOM(REFERRER_REQUEST_STRING));
+			cookie_ = String(ExternalInterfaceMethods.getDetailsFromHtmlDOM(COOKIE_REQUEST_STRING));
+			characterSet_ = String(ExternalInterfaceMethods.getDetailsFromHtmlDOM(CHARACTERSET_REQUEST_STRING));
+			charset_ = String(ExternalInterfaceMethods.getDetailsFromHtmlDOM(CHARASET_REQUEST_STRING));
+			utmform_ = ExternalInterfaceMethods.getDetailsFromHtmlDOM(UTMFORM_REQUEST_STRING);
+			locationObj_ = new HTMLLocationDetails();
 			location_search_ = locationObj.search;
 			location_hash_ = locationObj.hash;
 			location_href_ = locationObj.href;
@@ -194,7 +194,7 @@ package com.google.analytics.external
 		
 		public function getElementById(idString:String):Object
 		{
-			return ExternalInterfaceMethods_AS.getElementById(idString);
+			return ExternalInterfaceMethods.getElementById(idString);
 		} 
 		
 		

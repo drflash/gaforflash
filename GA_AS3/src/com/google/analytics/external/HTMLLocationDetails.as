@@ -11,7 +11,7 @@
 
 package com.google.analytics.external
 {
-	public class HTML_LocationDetails_AS
+	public class HTMLLocationDetails
 	{
 		public static const LOCATION_REQUEST_STRING:String = "document.location";
 		public static const LOCATION_SEARCH_STRING:String = "search";
@@ -82,9 +82,9 @@ package com.google.analytics.external
 
 			return pathname_;
 		}
-		public function HTML_LocationDetails_AS()
+		public function HTMLLocationDetails()
 		{
-			var locationObj:Object = ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(LOCATION_REQUEST_STRING);
+			var locationObj:Object = ExternalInterfaceMethods.getDetailsFromHtmlDOM(LOCATION_REQUEST_STRING);
 			if(locationObj)
 			{
 				search_ =locationObj[LOCATION_SEARCH_STRING];

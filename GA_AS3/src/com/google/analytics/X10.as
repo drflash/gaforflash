@@ -11,13 +11,13 @@
 
 package com.google.analytics
 {
-	public class GA_X10Son_AS
+	public class X10
 	{
 		  // ---------------------------------------------------------------------------
 		  // PRIVATE VARIABLES
 		  // ---------------------------------------------------------------------------
 		  //private var selfRef = this;
-		  private var nsCache:GA_utils_AS = GA_utils_AS.getGAUTIS();
+		  private var nsCache:Utils = Utils.getGAUTIS();
 		
 		  private var projectData:Object = {};
 		
@@ -56,7 +56,7 @@ package com.google.analytics
 		 * @private
 		 * @constructor
 		 */
-		public function GA_X10Son_AS()
+		public function X10()
 		{
 			  escapeCharMap[escapeChar] = "'0";
 			  escapeCharMap[typeDelimEnd] = "'1";
@@ -316,7 +316,7 @@ package com.google.analytics
 		   *     same project id is found in both opt_extObject and this object, then we
 		   *     will only render the data in opt_extObject.
 		   */
-		  public function renderMergedUrlString_(opt_extObject:GA_X10Son_AS = null):String 
+		  public function renderMergedUrlString_(opt_extObject:X10 = null):String 
 		  {
 		    if (opt_extObject ==  null) 
 		    {

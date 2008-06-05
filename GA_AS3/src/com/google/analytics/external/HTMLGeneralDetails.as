@@ -13,9 +13,9 @@ package com.google.analytics.external
 {
 	import flash.system.Capabilities;
 	
-	public class HTML_GeneralDetails_AS
+	public class HTMLGeneralDetails
 	{
-		public function HTML_GeneralDetails_AS()
+		public function HTMLGeneralDetails()
 		{
 		}
 		
@@ -27,7 +27,7 @@ package com.google.analytics.external
 		
 		public static function isJavaEnabled():Number
 		{
-			return Number( ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM("navigator.javaEnabled()"));
+			return Number( ExternalInterfaceMethods.getDetailsFromHtmlDOM("navigator.javaEnabled()"));
 		}
 
 	}

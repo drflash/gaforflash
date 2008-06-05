@@ -15,7 +15,7 @@ package com.google.analytics.external
 	import flash.net.URLRequest;
 	import flash.external.ExternalInterface;
 	
-	public class ExternalInterfaceMethods_AS
+	public class ExternalInterfaceMethods
 	{
 		
 		
@@ -75,7 +75,7 @@ package com.google.analytics.external
 			return functionString;
 		}	
 
-		public  function ExternalInterfaceMethods_AS()
+		public  function ExternalInterfaceMethods()
 		{
 		
 		}

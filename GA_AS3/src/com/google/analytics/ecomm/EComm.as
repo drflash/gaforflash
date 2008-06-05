@@ -11,9 +11,9 @@
 
 package com.google.analytics.ecomm
 {
-    import com.google.analytics.GA_utils_AS;
+    import com.google.analytics.Utils;
     
-	public class GA_EComm_AS
+	public class EComm
 	{
 		
   
@@ -25,7 +25,7 @@ package com.google.analytics.ecomm
 
 
 
-		public function GA_EComm_AS()
+		public function EComm()
 		{
 			/**
 		   * List of transation objects associated with this e-commerce instance.  Each
@@ -80,16 +80,16 @@ package com.google.analytics.ecomm
                                           shipping:String,
                                           city:String,
                                           state:String,
-                                          country:String):GA_EComm_Transactions
+                                          country:String):ECommTransaction
 		   {
 			  //var selfRef = this;
-			  var nsCache:GA_utils_AS = GA_utils_AS.getGAUTIS();
-			  var matchedTransaction :GA_EComm_Transactions= getTransaction_(orderId);
+			  var nsCache:Utils = Utils.getGAUTIS();
+			  var matchedTransaction :ECommTransaction= getTransaction_(orderId);
 			
 			  // add new transaction
 			  if (nsCache.undef_ == matchedTransaction) 
 			  {
-				    matchedTransaction = new  GA_EComm_Transactions(
+				    matchedTransaction = new  ECommTransaction(
 				        orderId,
 				        affiliation,
 				        total,
@@ -129,10 +129,10 @@ package com.google.analytics.ecomm
 		 * @return {_gat.GA_EComm_.Transactions_} Transaction object with the specified
 		 *     order Id.
 		 */
-		 public function getTransaction_ (orderId:String) :GA_EComm_Transactions
+		 public function getTransaction_ (orderId:String) :ECommTransaction
 		 {
 		 	
-			  var returnTransaction:GA_EComm_Transactions;
+			  var returnTransaction:ECommTransaction;
 			  var transactions:Array = transactions_;
 			  var idx:Number;
 			

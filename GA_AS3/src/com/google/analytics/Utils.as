@@ -11,20 +11,20 @@
 
 package com.google.analytics
 {
-	import com.google.analytics.external.HTMLDocumentDetails_AS;
-	import com.google.analytics.external.HTMLScreenDetails_AS;
-	import com.google.analytics.external.HTML_LocationDetails_AS;
+	import com.google.analytics.external.HTMLDocumentDetails;
+	import com.google.analytics.external.HTMLScreenDetails;
+	import com.google.analytics.external.HTMLLocationDetails;
 	
 	
-	public class GA_utils_AS
+	public class Utils
 	{
 		
-			include "globals/GA_utils_globals.as"; 
+			include "globals/utils_globals.as"; 
 				
-			private static  var GA_Config_:GA_config_AS;
-			private  static var GA_Cookie_:GA_cookie_AS;
-			private static var html_DocumentObj_:HTMLDocumentDetails_AS;	
-			private static var html_ScreenObj_:HTMLScreenDetails_AS;	
+			private static  var GA_Config_:Config;
+			private  static var GA_Cookie_:Cookie;
+			private static var html_DocumentObj_:HTMLDocumentDetails;	
+			private static var html_ScreenObj_:HTMLScreenDetails;	
 
 
 		  /**
@@ -45,51 +45,51 @@ package com.google.analytics
 		 public var  _gasoCPath:String = undefined;
 		
 		
-		private static var selfObject:GA_utils_AS;
+		private static var selfObject:Utils;
 		
-		public static function getGAUTIS():GA_utils_AS
+		public static function getGAUTIS():Utils
  		{
  			if(!selfObject)
- 				selfObject = new GA_utils_AS();
+ 				selfObject = new Utils();
  			
  			return selfObject;
  		} 
 		 
 		 
-		public function GA_utils_AS()
+		public function Utils()
 		{
-				GA_Config_ = new GA_config_AS();
+				GA_Config_ = new Config();
  		}
- 		public static function getCookieHandler(inDocument:HTMLDocumentDetails_AS,config:GA_config_AS):GA_cookie_AS
+ 		public static function getCookieHandler(inDocument:HTMLDocumentDetails,config:Config):Cookie
  		{
  			if(!GA_Cookie_)
  			{
- 				GA_Cookie_ = new GA_cookie_AS(inDocument,config);
+ 				GA_Cookie_ = new Cookie(inDocument,config);
  			}
  			return GA_Cookie_;
  		}
  		
- 		public static function getInitialisedCookieHandler():GA_cookie_AS
+ 		public static function getInitialisedCookieHandler():Cookie
  		{
  			return GA_Cookie_;
  		}
  		
- 		public static function get html_DocumentObj():HTMLDocumentDetails_AS
+ 		public static function get html_DocumentObj():HTMLDocumentDetails
  		{
  			if(!html_DocumentObj_)
  			{
- 				html_DocumentObj_ = new HTMLDocumentDetails_AS();
+ 				html_DocumentObj_ = new HTMLDocumentDetails();
  			}
  			
  			return html_DocumentObj_;
  				
  		}
  		
- 		public static function get html_ScreenObj():HTMLScreenDetails_AS
+ 		public static function get html_ScreenObj():HTMLScreenDetails
  		{
  			if(!html_ScreenObj_)
  			{
- 				html_ScreenObj_ = new HTMLScreenDetails_AS();
+ 				html_ScreenObj_ = new HTMLScreenDetails();
  			}
  			
  			return html_ScreenObj_;
@@ -97,11 +97,11 @@ package com.google.analytics
  		}
  		
  		
- 		public static function get GA_Config():GA_config_AS
+ 		public static function get GA_Config():Config
  		{
  			if(!GA_Config_)
  			{
- 				GA_Config_ = new GA_config_AS();
+ 				GA_Config_ = new Config();
  			}
  			
  			return GA_Config_;
@@ -369,7 +369,7 @@ package com.google.analytics
 	   * @return {String} If there is hash in the location object, return the anchor.
 	   *     Else return empty string.
 	   */
-	   public function getAnchor_ (inLocation:HTML_LocationDetails_AS):String {
+	   public function getAnchor_ (inLocation:HTMLLocationDetails):String {
 	    return (inLocation && inLocation.hash) ?
 	           substringProxy_(
 	               inLocation.href,
@@ -566,9 +566,9 @@ package com.google.analytics
 		 *
 		 * @return {_gat.GA_Tracker_}  
 		 */
-		public function _getTracker(urchinAccount:String) :GA_EventTracker_AS
+		public function _getTracker(urchinAccount:String) :EventTracker
 		{
-		  var newTracker:GA_EventTracker_AS = new GA_EventTracker_AS(urchinAccount);
+		  var newTracker:EventTracker = new EventTracker(urchinAccount);
 		
 		  return newTracker;
 		}

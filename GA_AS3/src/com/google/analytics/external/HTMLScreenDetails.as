@@ -13,7 +13,7 @@ package com.google.analytics.external
 {
 	import flash.system.Capabilities;
 
-	public class HTMLScreenDetails_AS
+	public class HTMLScreenDetails
 	{
 		
 		public static const SCREEN_OBJECT_REQUEST_STRING:String = "screen";
@@ -48,7 +48,7 @@ package com.google.analytics.external
 		
 		
 		
-		public function HTMLScreenDetails_AS()
+		public function HTMLScreenDetails()
 		{
 			//var tempObj:Object = ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(SCREEN_OBJECT_REQUEST_STRING);
 			//if(tempObj != null)
@@ -59,7 +59,7 @@ package com.google.analytics.external
 				
 				//width_ = Number(ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(SCREEN_WIDTH_REQUEST_STRING));
 				//height_ = Number(ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(SCREEN_HEIGHT_REQUEST_STRING));
-				colorDepth_ = Number(ExternalInterfaceMethods_AS.getDetailsFromHtmlDOM(SCREEN_COLORDEPTH_REQUEST_STRING));
+				colorDepth_ = Number(ExternalInterfaceMethods.getDetailsFromHtmlDOM(SCREEN_COLORDEPTH_REQUEST_STRING));
 			}
 		}
 
