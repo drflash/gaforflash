@@ -566,9 +566,9 @@ package com.google.analytics
 		 *
 		 * @return {_gat.GA_Tracker_}  
 		 */
-		public function _getTracker(urchinAccount:String) :EventTracker
+		public function _getTracker(urchinAccount:String) :GATracker
 		{
-		  var newTracker:EventTracker = new EventTracker(urchinAccount);
+		  var newTracker:GATracker = new GATracker(urchinAccount);
 		
 		  return newTracker;
 		}
