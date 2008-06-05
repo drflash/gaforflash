@@ -147,7 +147,7 @@ package com.google.analytics.campaign
 		      [GA_CAMP_UTMCCT_,   content_]
 		  ];
 		  var key:Number;
-		  var value;
+		  var value:String;
 		  // if this campaign is valid
 		  if (isValid_()) {
 		  	

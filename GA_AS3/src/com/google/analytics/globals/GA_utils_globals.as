@@ -113,7 +113,7 @@ public const EVENT_TRACKER_VALUE_VALUE_NUM:Number= 1;
 		   * Undefined literal.
 		   *
 		   */
-		  public const undef_ = undefined;
+		  public const undef_:* = undefined;
 
   
 		  /**
