@@ -1373,27 +1373,14 @@ package com.google.analytics
 	   */
 	  public function _trackPageview(opt_pageURL:String = "") :void
 	  {
-	    /**
-	     * Do nothing if we decided to not track this page.
-	     */
-	    if (doTracking()) {
+
 	      _initData();
-	      
-//	      /**
-//	       * If auto track outbound links is enabled, then auto decorate all
-//	       * outbound href anchor tags.
-//	       */
-//	      if (config.ignoredOutboundHosts_ &&
-//	          (config.ignoredOutboundHosts_.length > 0)) 
-//	      {
-//	        tagOutboundLinks_();
-//	      }
 	
 	      // track metrics (sent data to GABE)
 	      trackMetrics_(opt_pageURL);
 	
 	      noSession_ = false;
-	    }
+	    
 	  }
 
 
@@ -1673,7 +1660,7 @@ package com.google.analytics
 		      parentTrans = _addTrans(orderId, "", "", "", "", "", "", "");
 		    }
 		
-		    // add item to trnasaction
+		    // add item to transaction
 		    parentTrans.addItem_(sku, productName, variation, unitPrice, quantity);
 	 	 }
 

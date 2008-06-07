@@ -10,14 +10,10 @@
  */
 
 package com.google.analytics.ecomm
-{
-	import com.google.analytics.Utils;
-	
+{	
 	public class ECommTransaction
 	{
 		
-		 
-  
 		/**
 		 * @class Transaction object for e-commerce module.  This encapsulates all the
 		 *     necessary logic for manipulating a transaction.
@@ -37,7 +33,7 @@ package com.google.analytics.ecomm
 		 */
 			  
 		  
-		  //**********************
+		  //****************************************************************************************  
 		  /**
 		   * Internal unique order id number for this transaction.
 		   *
@@ -57,7 +53,7 @@ package com.google.analytics.ecomm
 		  
 		  
 		  
-		  //**********************
+		  //****************************************************************************************  
 		  /**
 		   * Optional partner or store affiliation. (undefined if absent)
 		   *
@@ -76,7 +72,7 @@ package com.google.analytics.ecomm
   
    		  
 		  
-		  //**********************
+		  //****************************************************************************************  
 		 /**
 		   * Total dollar amount of the transaction.
 		   *
@@ -95,7 +91,7 @@ package com.google.analytics.ecomm
 		  
 			  
 		  
-		  //**********************
+		  //****************************************************************************************  
 		/**
 		   * Tax amount of the transaction. (ie: "0.49")
 		   *
@@ -114,7 +110,7 @@ package com.google.analytics.ecomm
 		  
 			  
 		  
-		  //**********************
+		  //****************************************************************************************  
 		/**
 		   * Shipping charge for the transaction. (ie: "1.69")
 		   *
@@ -133,7 +129,7 @@ package com.google.analytics.ecomm
 		  
 			  
 		  
-		  //**********************
+		  //****************************************************************************************  
 		/**
 		   * City to associate with transaction.
 		   *
@@ -152,7 +148,7 @@ package com.google.analytics.ecomm
  	 		  
  	 		  
 		  
-		  //**********************
+		  //****************************************************************************************  
  		 /**
 		   * State to associate with transaction.
 		   *
@@ -170,7 +166,7 @@ package com.google.analytics.ecomm
 		   }
   				  
 		  
-		  //**********************   
+		  //****************************************************************************************  
 		/**
 		   * Country to associate with transaction.
 		   *
@@ -189,7 +185,7 @@ package com.google.analytics.ecomm
   		  	
   		  		  
 		  
-		  //********************** 
+		  //****************************************************************************************  
   		/**
 		   * Items associated with this transaction.  There could be 0 to many items per
 		   * transaction.
@@ -206,132 +202,128 @@ package com.google.analytics.ecomm
 		   {
 		   	 items_ = items;
 		   }
-		   
+		  //****************************************************************************************  
+
 		   
   		   
-		public function ECommTransaction(orderId:String,
-                                        affiliation:String,
-                                        total:String,
-                                        tax:String,
-                                        shipping:String,
-                                        city:String,
-                                        state:String,
-                                        country:String)
-		{
-			id_ = orderId;
-			affiliation_ = affiliation;
-			total_ = total;
-			tax_ = tax;
-			shipping_ = shipping;
-			city_ = city;
-			state_ = state;
-			country_ = country;
-		}
-
+			public function ECommTransaction(orderId:String,
+	                                        affiliation:String,
+	                                        total:String,
+	                                        tax:String,
+	                                        shipping:String,
+	                                        city:String,
+	                                        state:String,
+	                                        country:String)
+			{
+				id_ = orderId;
+				affiliation_ = affiliation;
+				total_ = total;
+				tax_ = tax;
+				shipping_ = shipping;
+				city_ = city;
+				state_ = state;
+				country_ = country;
+			}
+	
+			/**
+			 * Adds a transaction item to the parent transaction object. Requires the
+			 * trackTrans() method. Use this method to track items purchased by visitors to
+			 * your ecommerce site. If the item being added is a duplicate (by SKU) of an
+			 * existing item, then the old information is replaced with the new. If no
+			 * parent transaction object has been created, an empty transaction object is
+			 * created for the item to be added to.
+			 *
+			 * @example
+			 * pageTracker._addItem(
+			 *   "343212", //order ID
+			 *   "DD4444", //sku
+			 *   "Lava Lamp", // product name
+			 *   "Decor", // category or product variation
+			 *   "34.99", // price
+			 *   "1"  //quantity
+			 * );
+			 *
+			 * @private
+			 * @param {String} sku Item's SKU code.
+			 * @param {String} name Product name.
+			 * @param {String} category Product category.
+			 * @param {String} price Product price (required).
+			 * @param {String} quantity Purchase quantity (required).
+			 */
+			public function addItem_ (sku:String,
+	                                name:String,
+	                                category:String,
+	                                price:String,
+	                                quantity:String) :void
+	       {
+			  //var selfRef = this;
+			  var dupItems:ECommItem = getItem_(sku);
+			  var id:String = id_;
+			
+			  // add new transaction
+			  if (dupItems == null) {
+			  	var newEcommItem:ECommItem = new ECommItem(id, sku, name, category, price, quantity);		    
+			    items_.push(newEcommItem);
+			
+			  // duplicate / previously existing transaction
+			  } 
+			  else 
+			  {
+			    dupItems.transid = id;
+			    dupItems.sku = sku;
+			    dupItems.name = name;
+			    dupItems.category = category;
+			    dupItems.price = price;
+			    dupItems.quantity = quantity;
+			  }
+		 }
+	
+	
 		/**
-		 * Adds a transaction item to the parent transaction object. Requires the
-		 * trackTrans() method. Use this method to track items purchased by visitors to
-		 * your ecommerce site. If the item being added is a duplicate (by SKU) of an
-		 * existing item, then the old information is replaced with the new. If no
-		 * parent transaction object has been created, an empty transaction object is
-		 * created for the item to be added to.
-		 *
-		 * @example
-		 * pageTracker._addItem(
-		 *   "343212", //order ID
-		 *   "DD4444", //sku
-		 *   "Lava Lamp", // product name
-		 *   "Decor", // category or product variation
-		 *   "34.99", // price
-		 *   "1"  //quantity
-		 * );
+		 * Takes a sku, and returns the corresponding item object.  If the item is not
+		 * found, return null.
 		 *
 		 * @private
-		 * @param {String} sku Item's SKU code.
-		 * @param {String} name Product name.
-		 * @param {String} category Product category.
-		 * @param {String} price Product price (required).
-		 * @param {String} quantity Purchase quantity (required).
+		 * @param {String} sku SKU code for item.
+		 *
+		 * @return {_gat.GA_EComm_.Items_} Item object with the specified sku. 
 		 */
-		public function addItem_ (sku:String,
-                                name:String,
-                                category:String,
-                                price:String,
-                                quantity:String) :void
-       {
-		  //var selfRef = this;
-		  var dupItems:ECommItem = getItem_(sku);
-		  var id:String = id_;
-		  var nsCache:Utils = Utils.getGAUTIS();
+		public function getItem_(sku:String):ECommItem {
+		  var returnItem:ECommItem = null;
+		  
+		  var items:Array = items_;
+		  var idx:Number;
 		
-		  // add new transaction
-		  if (nsCache.undef_ == dupItems) {
-		    nsCache.arrayPush_(
-		        items_,
-		        new ECommItem(id, sku, name, category, price, quantity)
-		    );
-		
-		  // duplicate / previously existing transaction
-		  } 
-		  else 
+		  for (idx = 0; idx < items.length; idx++) 
 		  {
-		    dupItems.transid = id;
-		    dupItems.sku = sku;
-		    dupItems.name = name;
-		    dupItems.category = category;
-		    dupItems.price = price;
-		    dupItems.quantity = quantity;
+		    returnItem = (sku == items[idx].sku_) ? items[idx] : returnItem;
 		  }
-	 }
-
-
-	/**
-	 * Takes a sku, and returns the corresponding item object.  If the item is not
-	 * found, return undefined.
-	 *
-	 * @private
-	 * @param {String} sku SKU code for item.
-	 *
-	 * @return {_gat.GA_EComm_.Items_} Item object with the specified sku. 
-	 */
-	public function getItem_(sku:String):ECommItem {
-	  var returnItem:ECommItem;
+		
+		  return returnItem;
+		};
+	
+	
+		/**
+		 * Converts this transactions object to gif parameters.
+		 *
+		 * @private
+		 * @returns {String} GIF request parameters for this transaction.
+		 */
+		public function toGifParams_():String 
+		{
 	  
-	  var items:Array = items_;
-	  var idx:Number;
-	
-	  for (idx = 0; idx < items.length; idx++) 
-	  {
-	    returnItem = (sku == items[idx].sku_) ? items[idx] : returnItem;
-	  }
-	
-	  return returnItem;
-	};
-
-
-	/**
-	 * Converts this transactions object to gif parameters.
-	 *
-	 * @private
-	 * @returns {String} GIF request parameters for this transaction.
-	 */
-	public function toGifParams_():String 
-	{
-	  //var selfRef = this;
-	  var encoderCache:Function = Utils.getGAUTIS().encodeWrapper_; 
-  
-	  return "&" + [
-	      "utmt=tran",
-	      "utmtid=" + encoderCache(id_),
-	      "utmtst=" + encoderCache(affiliation_),
-	      "utmtto=" + encoderCache(total_),
-	      "utmttx=" + encoderCache(tax_),
-	      "utmtsp=" + encoderCache(shipping_),
-	      "utmtci=" + encoderCache(city_),
-	      "utmtrg=" + encoderCache(state_),
-	      "utmtco=" + encoderCache(country_)
-	  ].join("&");
-	}
+		  return "&" + [
+		      "utmt=tran",
+		      "utmtid=" + encodeURIComponent(id_),
+		      "utmtst=" + encodeURIComponent(affiliation_),
+		      "utmtto=" + encodeURIComponent(total_),
+		      "utmttx=" + encodeURIComponent(tax_),
+		      "utmtsp=" + encodeURIComponent(shipping_),
+		      "utmtci=" + encodeURIComponent(city_),
+		      "utmtrg=" + encodeURIComponent(state_),
+		      "utmtco=" + encodeURIComponent(country_)
+		  ].join("&");
+		}
 
 
 	}

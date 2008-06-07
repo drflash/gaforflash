@@ -10,9 +10,7 @@
  */
 
 package com.google.analytics.ecomm
-{
-    import com.google.analytics.Utils;
-    
+{    
 	public class ECommItem
 	{
 		
@@ -168,17 +166,15 @@ package com.google.analytics.ecomm
 		 */
 		public function toGifParams_():String
 		{
-		  //var selfRef = this;
-		  var encoderCache:Function = Utils.getGAUTIS().encodeWrapper_;
 		  
 		  return "&" + [
 		      "utmt=item",
-		      "utmtid=" + encoderCache(transid_),
-		      "utmipc=" + encoderCache(sku_),
-		      "utmipn=" + encoderCache(name_),
-		      "utmiva=" + encoderCache(category_),
-		      "utmipr=" + encoderCache(price_),
-		      "utmiqt=" + encoderCache(quantity_)
+		      "utmtid=" + encodeURIComponent(transid_),
+		      "utmipc=" + encodeURIComponent(sku_),
+		      "utmipn=" + encodeURIComponent(name_),
+		      "utmiva=" + encodeURIComponent(category_),
+		      "utmipr=" + encodeURIComponent(price_),
+		      "utmiqt=" + encodeURIComponent(quantity_)
 		  ].join("&");
 		};
 
