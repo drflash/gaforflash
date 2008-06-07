@@ -10,9 +10,7 @@
  */
 
 package com.google.analytics.ecomm
-{
-    import com.google.analytics.Utils;
-    
+{    
 	public class EComm
 	{
 		
@@ -72,7 +70,7 @@ package com.google.analytics.ecomm
 		 *
 		 * @return {_gat.GA_EComm_.Transactions_} The tranaction object that was
 		 *     modified.
-		 */
+		 */		 
 		public function addTransaction_ (orderId:String,
                                           affiliation:String,
                                           total:String,
@@ -83,11 +81,10 @@ package com.google.analytics.ecomm
                                           country:String):ECommTransaction
 		   {
 			  //var selfRef = this;
-			  var nsCache:Utils = Utils.getGAUTIS();
 			  var matchedTransaction :ECommTransaction= getTransaction_(orderId);
 			
 			  // add new transaction
-			  if (nsCache.undef_ == matchedTransaction) 
+			  if (matchedTransaction == null) 
 			  {
 				    matchedTransaction = new  ECommTransaction(
 				        orderId,
@@ -100,7 +97,8 @@ package com.google.analytics.ecomm
 				        country
 				    );
 	
-	    		nsCache.arrayPush_(transactions_, matchedTransaction);
+				transactions_.push(matchedTransaction);
+	
 	
 	  		// duplicate / previously existing transaction
 	  		} 
@@ -121,7 +119,7 @@ package com.google.analytics.ecomm
 
 		/**
 		 * Takes an order Id, and returns the corresponding transaction object.  If the
-		 * transaction is not found, return undefined.
+		 * transaction is not found, return null.
 		 *
 		 * @private
 		 * @param {String} orderId Internal unique order id number for this transaction.
@@ -130,16 +128,14 @@ package com.google.analytics.ecomm
 		 *     order Id.
 		 */
 		 public function getTransaction_ (orderId:String) :ECommTransaction
-		 {
-		 	
-			  var returnTransaction:ECommTransaction;
-			  var transactions:Array = transactions_;
+		 {	 	
+			  var returnTransaction:ECommTransaction = null;
 			  var idx:Number;
 			
-			  for (idx = 0; idx < transactions.length; idx++) 
+			  for (idx = 0; idx < transactions_.length; idx++) 
 			  { 
-			    returnTransaction = (orderId == transactions[idx].id_) ?
-			                        transactions[idx] :
+			    	returnTransaction = (orderId == transactions_[idx].id_) ?
+			                        transactions_[idx] :
 			                        returnTransaction;
 			  }
 			
