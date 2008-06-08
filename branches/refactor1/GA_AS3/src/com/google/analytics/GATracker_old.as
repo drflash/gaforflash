@@ -11,13 +11,13 @@
 
 package com.google.analytics
 {
-	import com.google.analytics.external.HTMLDocumentDetails;
-	import com.google.analytics.external.HTMLLocationDetails;
 	import com.google.analytics.campaign.Campaign;
 	import com.google.analytics.ecomm.EComm;
 	import com.google.analytics.ecomm.ECommTransaction;
+	import com.google.analytics.external.HTMLDocumentDetails;
+	import com.google.analytics.external.HTMLLocationDetails;
 	
-	public class GATracker
+	public class GATracker_old
 	{
 		include "globals/cookie_globals.as"
 		include "globals/utils_globals.as"
@@ -215,7 +215,7 @@ package com.google.analytics
 		 *
 		 * @constructor
 		 */
-		public function GATracker(urchinAccount:String)
+		public function GATracker_old(urchinAccount:String)
 		{
 			uAccount_ = urchinAccount;
 			
@@ -311,7 +311,7 @@ package com.google.analytics
 	    // extract __utma value
 	    var utmaValue:String = parseNameValuePairs(
 	        valueString,
-	        nsCache.COOKIE_UTMA_ + domainHash_,
+	        Strings.cookieUTMA + domainHash_,
 	        delim
 	    );
 	    var utmaFields:Array;
@@ -815,15 +815,15 @@ package com.google.analytics
 		    // position of cookie values in cookie string
 		    var hasUtma:Boolean = stringContains(
 		        cookieString,
-		        nsCache.COOKIE_UTMA_ + domainHash
+		        Strings.cookieUTMA + domainHash
 		    );
 		    var hasUtmb:Boolean = stringContains(
 		        cookieString,
-		        nsCache.COOKIE_UTMB_ + domainHash
+		        Strings.cookieUTMB + domainHash
 		    );
 		    var hasUtmc:Boolean = stringContains(
 		        cookieString,
-		        nsCache.COOKIE_UTMC_ + domainHash
+		        Strings.cookieUTMC + domainHash
 		    );
 		    var utma:String;
 		    var utmb:Array = [];
@@ -855,7 +855,7 @@ package com.google.analytics
 			
 		      // search string have __utma value
 		      if (!isEmpty(searchString) && stringContains(searchString,
-		          nsCache.COOKIE_UTMA_)) 
+		          Strings.cookieUTMA)) 
 		      {
 	
 		        // parse querystring for cookie values
@@ -942,13 +942,13 @@ package com.google.analytics
 			        {
 			          utma = parseNameValuePairs(
 			              cookieString,
-			              nsCache.COOKIE_UTMA_,
+			              Strings.cookieUTMA,
 			              ";"
 			          );
 			          utmb = splitProxy(
 			              parseNameValuePairs(
 			                  cookieString,
-			                  nsCache.COOKIE_UTMB_,
+			                  Strings.cookieUTMB,
 			                  ";"
 			              ),
 			              "."
@@ -1162,7 +1162,7 @@ package com.google.analytics
 	    );*/  //changed as follows
 	    var utmaValue:String = parseNameValuePairs(
 	        cookieWrapper_.getCookieOrFlashStoredDetails(), //before it was documentCache_.cookie,
-	        nsCache.COOKIE_UTMA_ + domainHash_,
+	        Strings.cookieUTMA + domainHash_,
 	        ";"
 	    );
     
@@ -2421,7 +2421,7 @@ package com.google.analytics
 		   */
 		   public function _setLocalServerMode():void 
 		   {
-		    	config.serviceMode_ = SERVICEMODE_LOCAL;
+		    	config.serviceMode = ServerOperationMode.local;
 		   }
 
 		  /**
@@ -2432,7 +2432,7 @@ package com.google.analytics
 		   */
 		   public function _setRemoteServerMode() :void
 		   {
-		    	config.serviceMode_ = SERVICEMODE_REMOTE;
+		    	config.serviceMode = ServerOperationMode.remote;
 		   }
 
 		  /**
@@ -2445,7 +2445,7 @@ package com.google.analytics
 		   */
 		   public function _setLocalRemoteServerMode():void
 		   {
-		    	config.serviceMode_ = SERVICEMODE_BOTH;
+		    	config.serviceMode = ServerOperationMode.both;
 		   }
 
 		  /**
@@ -2456,7 +2456,7 @@ package com.google.analytics
 		   */
 		   public function getLocalRemoteServerMode_() :Number
 		   {
-		    	return config.serviceMode_;
+		    	return int(config.serviceMode);
 		   }
 
 		  /**
@@ -2469,7 +2469,7 @@ package com.google.analytics
 		   */
 		   public function _getServiceMode() :Number
 		   {
-		    	return config.serviceMode_;
+		    	return int(config.serviceMode);
 		   }
 
 		  /**
