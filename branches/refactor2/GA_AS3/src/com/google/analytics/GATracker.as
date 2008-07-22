@@ -45,7 +45,7 @@ package com.google.analytics
         {
         }
         
-        public static var version:String = "0.2.0" + "$Rev$ ".split( " " )[1];
+        public static var version:String = "0.2.0." + "$Rev$ ".split( " " )[1];
         
         public static var localInfo:LocalInfo = new LocalInfo();
         
