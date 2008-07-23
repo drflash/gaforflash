@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +19,10 @@
 
 package com.google.analytics.core
 {
+    
     /**
-    * Server operation mode Enumeration.
-    */
+     * ServerOperationMode Enumeration
+     */
     public class ServerOperationMode
     {
         /**
@@ -34,6 +35,10 @@ package com.google.analytics.core
          */        
         private var _name:String;
         
+        /**
+         * Creates a new ServerOperationMode instance.
+         * @param value The 
+         */
         public function ServerOperationMode( value:int = 0, name:String = "" )
         {
             _value = value;
@@ -59,19 +64,18 @@ package com.google.analytics.core
         }
         
         /**
-        * Send data to the Urchin tracking software on your local servers.
-        */
+         * Send data to the Urchin tracking software on your local servers.
+         */
         public static const local:ServerOperationMode  = new ServerOperationMode( 0, "local" );
         
         /**
-        * Send tracking data to the Google Analytics server
-        * (Default installations of Google Analytics).
-        */
+         * Send tracking data to the Google Analytics server (Default installations of Google Analytics).
+         */
         public static const remote:ServerOperationMode = new ServerOperationMode( 1, "remote" );
         
         /**
-        * Send your tracking data both to a local server and to the Google Analytics backend servers.
-        */
+         * Send your tracking data both to a local server and to the Google Analytics backend servers.
+         */
         public static const both:ServerOperationMode   = new ServerOperationMode( 2, "both" );
         
         

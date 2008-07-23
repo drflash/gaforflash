@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,11 +19,27 @@
 
 package com.google.analytics.core
 {
+	/**
+	 * The OrganicReferrer class.
+	 */
 	public class OrganicReferrer
 	{
+		
+		/**
+		 * Indicates the "engine" String representation of this referrer.
+		 */
 		public var engine:String;
+		
+		/**
+		 * Indicates the "keyword" String representation of this referrer.
+		 */
 		public var keyword:String;
 		
+		/**
+		 * Creates a new OrganicReferrer instance.
+		 * @param engine The "engine" String representation of this referrer.
+		 * @param keyword The "keyword" String representation of this referrer.
+		 */
 		public function OrganicReferrer(engine:String, keyword:String)
 		{
 		    
@@ -36,17 +52,21 @@ package com.google.analytics.core
 		    this.engine = engine;  
               
 		    /**
-		    * Organic keyword.
-		    *
-		    * @type {String}
-		    * @ignore
-		    */
+		     * Organic keyword.
+		     *
+		     * @type {String}
+		     * @ignore
+		     */
 		   	this.keyword = keyword; 
 		}
         
+        /**
+         * Returns the String representation of the object.
+         * @return the String representation of the object.
+         */
         public function toString():String
         {
-            return engine+"?"+keyword;
+            return engine + "?" + keyword ;
         }
         
 	}

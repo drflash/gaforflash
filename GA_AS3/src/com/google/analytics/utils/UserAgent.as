@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,18 +23,35 @@ package com.google.analytics.utils
     import flash.system.System;
     
     /**
-    * User Agent
-    * Constructs a user agent string for Flash.
-    * 
-    */
+     * Constructs a user agent string for Flash.
+     */
     public class UserAgent
     {
+        /**
+         * @private
+         */
         private var _applicationProduct:String;
+        
+        /**
+         * @private
+         */
         private var _applicationVersion:String;
+        
+        /**
+         * @private
+         */
         private var _applicationComment:String;
         
+        /**
+         * @private
+         */
         private var _flashVersion:Object = LocalInfo.flashVersion;
         
+        /**
+         * Creates a new UserAgent instance.
+         * @param product The product String representation.
+         * @param version The version String representation.
+         */
         public function UserAgent( product:String = "Flash", version:String = "" )
         {
             if( (product == "Flash") && (version == "") )
@@ -44,41 +61,17 @@ package com.google.analytics.utils
             }
         }
         
-        public function get applicationProduct():String
-        {
-            return _applicationProduct;
-        }
-        
-        public function set applicationProduct( value:String ):void
-        {
-            _applicationProduct = value;
-        }
-        
-        public function get applicationVersion():String
-        {
-            return _applicationVersion;
-        }
-        
-        public function set applicationVersion( value:String ):void
-        {
-            _applicationVersion = value;
-        }
-        
-        public function get applicationProductToken():String
-        {
-            return applicationProduct+"/"+applicationVersion;
-        }
-        
         /* 
            ( Platform ;  PlayerType ;  OS ;  Localization information  ?[; DebugVersion ; PrereleaseVersion] )
         */
         public function get applicationComment():String
         {
             var comment:Array = [];
-                comment.push( LocalInfo.platform );
-                comment.push( LocalInfo.playerType );
-                comment.push( LocalInfo.operatingSystem );
-                comment.push( LocalInfo.language );
+                
+                comment.push( LocalInfo.platform ) ;
+                comment.push( LocalInfo.playerType ) ;
+                comment.push( LocalInfo.operatingSystem ) ;
+                comment.push( LocalInfo.language ) ;
                 
                 if( Capabilities.isDebugger )
                 {
@@ -91,30 +84,71 @@ package com.google.analytics.utils
             
             if( comment.length > 0 )
             {
-                return "(" + comment.join( "; " ) + ")";
+                return "(" + comment.join( "; " ) + ")" ;
             }
             
             return "";
+        }        
+        
+        /**
+         * Indicates the application product String representation.
+         */
+        public function get applicationProduct():String
+        {
+            return _applicationProduct ;
         }
         
-        /* Returns the Tamarin engine token.
-           or an empty string if vmVersion can not be found.
-           
-           ex:
-           Tamarin/1.0d684
-        */
+        /**
+         * @private
+         */
+        public function set applicationProduct( value:String ):void
+        {
+            _applicationProduct = value ;
+        }
+        
+        /**
+         * Indicates the application product token String representation.
+         */        
+        public function get applicationProductToken():String
+        {
+            return applicationProduct + "/" + applicationVersion ;
+        }        
+        
+        /**
+         * Indicates the application version String representation.
+         */        
+        public function get applicationVersion():String
+        {
+            return _applicationVersion;
+        }
+        
+        /**
+         * @private
+         */
+        public function set applicationVersion( value:String ):void
+        {
+            _applicationVersion = value;
+        }
+                
+        /**
+         * Indicates the Tamarin engine token or an empty string if vmVersion can not be found.
+         * <p><b>Example :</b> <code>Tamarin/1.0d684</code></p>
+         */
         public function get tamarinProductToken():String
         {
             if( System.vmVersion )
             {
-                return "Tamarin/" + trim( System.vmVersion, true );
+                return "Tamarin/" + trim( System.vmVersion, true ) ;
             }
             else
             {
-                return "";
+                return "" ;
             }
         }
         
+        /**
+         * Indicates the vendor production token String representation.
+         */
         public function get VendorProductToken():String
         {
             var vp:String = "";
@@ -131,6 +165,10 @@ package com.google.analytics.utils
             return vp;
         }
         
+        /**
+         * Returns the String representation of the object.
+         * @return the String representation of the object.
+         */
         public function toString():String
         {
             var UA:String = "";

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.utils
@@ -26,24 +27,40 @@ package com.google.analytics.utils
     import flash.system.Capabilities;
     
     /**
-    * Local Informations
-    * provide informations for the local environment.
-    */
+     * Local Informations provide informations for the local environment.
+     */
     public class LocalInfo
     {
-        private var _stage:Stage;
-        private var _protocol:Protocols = null;
         
+        /**
+         * @private
+         */	
+        private var _stage:Stage ;
+        
+        /**
+         * @private
+         */
+        private var _protocol:Protocols = null ;
+        
+        /**
+         * Creates a new LocalInfo instance.
+         * @param stage The Stage reference of the application.
+         */
         public function LocalInfo( stage:Stage = null )
         {
             _stage = stage;
         }
         
+        /**
+         * Sets the stage reference value of the application.
+         */
         ga_internal function set stage( value:Stage ):void
         {
             _stage = value;
         }
-        
+        /**
+         * @private
+         */
         private function _findProtocol():void
         {
             var p:Protocols = Protocols.none;
@@ -82,6 +99,9 @@ package com.google.analytics.utils
             _protocol = p;
         }
         
+        /**
+         * Indicates the Protocols object of this local info.
+         */
         public function get protocol():Protocols
         {
             if(_protocol == null)
@@ -92,10 +112,28 @@ package com.google.analytics.utils
             return _protocol;
         }
         
+        /**
+         * Returns the flash version object representation of the application. 
+         * <p>This object contains the attributes major, minor, build and revision :</p>
+         * <p><b>Example :</b></b>
+         * <pre>
+         * import com.google.analytics.utils.LocalInfo ;
+         * 
+         * var info:LocalInfo = new LocalInfo( this ) ;
+         * var version:Object = info.flashVersion ;
+         * 
+         * trace( version.major    ) ; // 9
+         * trace( version.minor    ) ; // 0
+         * trace( version.build    ) ; // 124
+         * trace( version.revision ) ; // 0
+         * </pre>
+         * @return the flash version object representation of the application.
+         */
         public static function get flashVersion():Object
         {
             var v:String = Capabilities.version;
                 v = v.split( " " )[1];
+            
             var o:Array = v.split( "," );
             
             var version:Object   = {};
@@ -107,36 +145,60 @@ package com.google.analytics.utils
            return version;
         }
         
+        /**
+         * Indicates the current language value of the application.
+         * @see Capabilities.language
+         */
         public static function get language():String
         {
-            return Capabilities.language;
+            return Capabilities.language ;
         }
         
+        /**
+         * Indicates the current operating system value of the application.
+         * @see Capabilities.os
+         */        
         public static function get operatingSystem():String
         {
-            return Capabilities.os;
+            return Capabilities.os ;
         }
         
+        /**
+         * Indicates the current player type value of the application.
+         * @see Capabilities.playerType
+         */                
         public static function get playerType():String
         {
             return Capabilities.playerType;
         }
         
+        /**
+         * Indicates the current platform value of the application.
+         * @see Capabilities.manufacturer
+         */            
         public static function get platform():String
         {
             var p:String = Capabilities.manufacturer;
             return p.split( "Adobe " )[1];
         }
         
+        /**
+         * Indicates if the application can be bridged with the external Javascript scripts.
+         * @return true if the application can be bridged with the external Javascript scripts.
+         */     
+        public function canBridgeToJS():Boolean
+        {
+            return ExternalInterface.available;
+        }        
+        
+        /**
+         * Indicates if the application is embed in a HTML application.
+         * @return true if the application is embed in a HTML application.
+         */
         public function isInHTML():Boolean
         {
             return Capabilities.playerType == "PlugIn";
         }
         
-        public function canBridgeToJS():Boolean
-        {
-            return ExternalInterface.available;
-        }
-
     }
 }

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@
 package com.google.analytics.core
 {
     /**
-    * Namespace used for the JavaScript bridge implementation.
-    */
+     * Namespace used for the JavaScript bridge implementation.
+     */
     public namespace js_bridge;
 }

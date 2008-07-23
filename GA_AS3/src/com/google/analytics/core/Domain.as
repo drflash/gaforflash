@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +20,26 @@
 package com.google.analytics.core
 {
     
+    /**
+     * 
+     */
     public class Domain
     {
+        /**
+         * @private
+         */    	
         private var _mode:DomainNameMode;
+        
+        /**
+         * @private
+         */        
         private var _name:String;
         
+        /**
+         * Creates a new Domain instance.
+         * @param mode
+         * @param name The name of the domain
+         */
         public function Domain( mode:DomainNameMode = null, name:String = "" )
         {
             if( mode == null )
@@ -41,23 +56,32 @@ package com.google.analytics.core
             
         }
         
+        /**
+         * Indicates the domain name mode of this domain.
+         */
         public function get mode():DomainNameMode
         {
             return _mode;
         }
         
+        /**
+         * Indicates the name of this domain.
+         */
         public function get name():String
         {
             return _name;
         }
         
+        /**
+         * @private
+         */
         public function set name( value:String ):void
         {
             if( value.charAt(0) != "." )
             {
-                trace( "## WARNING: missing leading period \".\", cookie will only be accessible on "+value );
+                trace( "## WARNING: missing leading period \".\", cookie will only be accessible on " + value );
             }
-            _name = value;
+            _name = value ;
         }
 
     }

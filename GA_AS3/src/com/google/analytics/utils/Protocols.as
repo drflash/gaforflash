@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +19,10 @@
 
 package com.google.analytics.utils
 {
+    
     /**
-    * Protocols Enumeration
-    */
+     * Protocols Enumeration
+     */
     public class Protocols
     {
         /**
@@ -34,6 +35,11 @@ package com.google.analytics.utils
          */        
         private var _name:String;
         
+        /**
+         * Creates a new Protocols instance.
+         * @param value The primitive value of the object.
+         * @param name The name value of the object.
+         */
         public function Protocols( value:int = 0, name:String = "" )
         {
             _value = value;
@@ -58,9 +64,24 @@ package com.google.analytics.utils
             return _name;
         }
         
+        /**
+         * The "none" Protocols object.
+         */
         public static const none:Protocols  = new Protocols( 0, "none" );
+        
+        /**
+         * The "file" Protocols object.
+         */
         public static const file:Protocols  = new Protocols( 1, "file" );
+        
+        /**
+         * The "HTTP" Protocols object.
+         */
         public static const HTTP:Protocols  = new Protocols( 2, "HTTP" );
+        
+        /**
+         * The "HTTPS" Protocols object.
+         */
         public static const HTTPS:Protocols = new Protocols( 3, "HTTPS" );
 
     }
