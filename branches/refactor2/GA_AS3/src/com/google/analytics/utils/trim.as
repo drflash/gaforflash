@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +20,9 @@
 package com.google.analytics.utils
 {
     /**
-    * This function takes a raw string, and removes all leading and trailing
-    * whitespaces (space, new line, CR, tab).
-    * 
-    * If the inner option is true, trim also whitespaces within the string
-    */
+     * This function takes a raw string, and removes all leading and trailing whitespaces (space, new line, CR, tab).
+     * If the inner option is <code>true</code>, trim also whitespaces within the string.
+     */
     public function trim( raw:String, everything:Boolean = false ):String
     {
         if( raw == "" )
