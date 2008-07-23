@@ -274,6 +274,9 @@ package com.google.analytics.v4
             _serverMode = mode;
         }        
         
+        /**
+         * Indicates if the track has a client info.
+         */
         public function get trackClientInfo():Boolean
         {
             return _trackClientInfo;
