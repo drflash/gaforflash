@@ -28,129 +28,225 @@ package com.google.analytics.v4
     import flash.events.EventDispatcher;
     
     /**
-     * The Configuration class.
+     * Dispatched when the configuration notify an info.
+     * @eventType com.google.analytics.events.MessageEvent.INFO
      */
+    [Event(name="info", type="com.google.analytics.events.MessageEvent")]       
     
     /**
-    * Google Analytic Tracker Code (GATC)'s configuration / state component.
-    * This encapsulates all the configurations for the entire GATC module.
-    */
+     * Dispatched when the configuration notify a warning.
+     * @eventType com.google.analytics.events.MessageEvent.WARNING
+     * @see #addOrganicSource
+     */
+    [Event(name="warning", type="com.google.analytics.events.MessageEvent")]    
+    
+    /**
+     * Google Analytic Tracker Code (GATC)'s configuration / state component.
+     * This encapsulates all the configurations for the entire GATC module.
+     */
     public class Configuration extends EventDispatcher
     {
         
+        /**
+         * @private
+         */
         private var _version:String          = "4.3as";
         
-        //Sampling percentage of visitors to track.
+        /**
+         * Sampling percentage of visitors to track.
+         * @private
+         */
         private var _sampleRate:Number       = 1; //100%
+
+        /**
+         * @private
+         */
         private var _domain:Domain = new Domain( DomainNameMode.auto );
         
+        /**
+         * @private
+         */
         private var _organicCache:Object  = {};
+
+        /**
+         * @private
+         */
         private var _organicSources:Array = [];
         
-        
-        //Automatic / Organic keyword to ignore.
+        /**
+         * Automatic / Organic keyword to ignore.
+         * @private
+         */
         private var _organicIgnore:Array = [];
         
-        //Referral domains to ignore.
+        /**
+         * Referral domains to ignore.
+         * @private
+         */
         private var _referralIgnore:Array = [];
         
-        //Substring of host names to ignore when auto decorating href anchor elements
-        //for outbound link tracking.
+        /**
+         * Substring of host names to ignore when auto decorating href anchor elements for outbound link tracking.
+         * @private
+         */
         private var _ignoredOutboundHosts:Array = [];
         
         
-        //This is the cse path that needs to be ignored for Google.
-        //All referers with path cse from google donmains will be ignored from
-        //organic and referrer campaigns.
+        /**
+         * This is the cse path that needs to be ignored for Google.
+         * All referers with path cse from google donmains will be ignored from organic and referrer campaigns.
+         * @private
+         */
         private var _googleCsePath:String = "cse";
         
-        //The parameter used by google for the search keyword.
+        /**
+         * The parameter used by google for the search keyword.
+         * @private
+         */
         private var _googleSearchParam:String = "q";
         
-        //Google.
+        /**
+         * Google string value.
+         * @private
+         */
         private var _google:String = "google";
         
         
-        //Unique domain hash for cookies.
+        /**
+         * Unique domain hash for cookies.
+         */
         public var allowDomainHash:Boolean  = true;
-        //Enable use of anchors for campaigns.
-        public var allowAnchor:Boolean      = false;
-        //Enable linker functionality.
-        public var allowLinker:Boolean      = false;
         
-        public var hasSiteOverlay:Boolean   = false;
+        /**
+         * Enable use of anchors for campaigns.
+         */
+        public var allowAnchor:Boolean      = false ;
         
-        //The rate of token being released into the token bucket.
-        //Unit for this parameter is number of token released per second.
-        //This is set to 0.20 right now, which translates to 1 token released every 5 seconds.
+        /**
+         * Enable linker functionality.
+         */
+        public var allowLinker:Boolean      = false ;
+        
+        /**
+         * Indicates if has site overlay.
+         */
+        public var hasSiteOverlay:Boolean   = false ;
+        
+        /**
+         * The rate of token being released into the token bucket.
+         * Unit for this parameter is number of token released per second.
+         * This is set to 0.20 right now, which translates to 1 token released every 5 seconds.
+         */
         public var tokenRate:Number        = 0.20;
         
-        //Default cookie expiration time in seconds. (6 months).
+        /**
+         * Default cookie expiration time in seconds. (6 months).
+         */
         public var conversionTimeout:Number = 15768000;
         
-        //Default inactive session timeout in seconds (30 minutes).
+        /**
+         * Default inactive session timeout in seconds (30 minutes).
+         */
         public var sessionTimeout:Number = 1800;
         
-        //Upper limit for number of href anchor tags to examine.  If this number is
-        //set to -1, then we will examine all the href anchor tags.  In other words,
-        //a -1 value indicates that there is no upper limit.
-        //note: maybe use Number.INFINITY instead of -1
+        /**
+         * Upper limit for number of href anchor tags to examine.  
+         * <p>If this number is set to -1, then we will examine all the href anchor tags.</p>
+         * <p>In other words, a -1 value indicates that there is no upper limit.</p>
+         * <p><b>Note:</b> maybe use Number.INFINITY instead of -1</p>
+         */
         public var maxOutboundLinkExamined:Number = 1000;
         
-        //The number of tokens available at the start of the session.
+        /**
+         * The number of tokens available at the start of the session.
+         */
         public var tokenCliff:Number = 10;
         
-        //Capacity of the token bucket.
+        /**
+         * Capacity of the token bucket.
+         */
         public var bucketCapacity:Number = 10;
-        
-
-        
-        //Detect client browser information flag.
+                
+        /**
+         * Detect client browser information flag.
+         */
         public var detectClientInfo:Boolean  = true;
         
-        //Flash version detection option.
+        /**
+         * Flash version detection option.
+         */
         public var detectFlash:Boolean = true;
         
-        //Set document title detection option.
+        /**
+         * Set document title detection option.
+         */
         public var detectTitle:Boolean = true;
         
-        //Track campaign information flag.
+        /**
+         * Track campaign information flag.
+         */
         public var campaignTracking:Boolean = true;
         
         
-        //Boolean flag to indicate if outbound links for subdomains of the current
-        //domain needs to be considered as outbound links.
-        //Default value is false.
+        /**
+         * Boolean flag to indicate if outbound links for subdomains of the current domain 
+         * needs to be considered as outbound links. Default value is false.
+         */
         public var isTrackOutboundSubdomains:Boolean = false;
         
-        //Actual service model.
-        //note "service" is wrong we name it server
+        /**
+         * Actual service model.
+         * <p><b>Note :</b> "service" is wrong we name it server</p>
+         */
         public var serverMode:ServerOperationMode = ServerOperationMode.remote;
         
-        //Local service mode GIF url..
-        public var localGIFpath:String        = "/__utm.gif";
-        public var remoteGIFpath:String       = "http://www.google-analytics.com/__utm.gif";
+        /**
+         * Local service mode GIF url.
+         */
+        public var localGIFpath:String = "/__utm.gif";
+        
+        /**
+         * The remote service mode GIF url.
+         */
+        public var remoteGIFpath:String = "http://www.google-analytics.com/__utm.gif";
+        
+        /**
+         * The secure remote service mode GIF url.
+         */
         public var secureRemoteGIFpath:String = "https://ssl.google-analytics.com/__utm.gif";
         
-        //Default cookie path to set in document header.
-        public var cookiePath:String = "/"; //SharedObjectPath
+        /**
+         * Default cookie path to set in document header.
+         */
+        public var cookiePath:String = "/" ; //SharedObjectPath
         
-        
-        //Delimiter for e-commerce transaction fields.
+        /**
+         * Delimiter for e-commerce transaction fields.
+         */
         public var transactionFieldDelim:String = "|";
         
+        /**
+         * The domain name value.
+         */
         public var domainName:String = "";
         
         
         //---- Not part of GA API ----
         
+        /**
+         * Indicates the debug mode activity.
+         */
         public var debug:Boolean = true;
         
+        /**
+         * Indicates if show infos in the debug mode.
+         */        
         public var showInfos:Boolean = true;
         
+        /**
+         * Indicates if show warnings in the debug mode.
+         */                
         public var showWarnings:Boolean = true;
-        
-        
         
         /**
          * Creates a new Configuration instance.
@@ -160,6 +256,9 @@ package com.google.analytics.v4
             _initOrganicSources();
         }
         
+        /**
+         * @private
+         */
         private function _initOrganicSources():void
         {
             addOrganicSource( _google,          _googleSearchParam );
