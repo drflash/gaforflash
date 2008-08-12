@@ -23,32 +23,26 @@ package com.google.analytics.utils
     import flash.system.System;
     
     /**
-    * User Agent
-    * Constructs a user agent string for Flash.
-    * 
-    * info:
-    * here we mimic a user-agent string for Flash
-    * based on
-    * http://www.mozilla.org/build/user-agent-strings.html
-    * http://www.mozilla.org/build/revised-user-agent-strings.html
-    * RFC 1945 - http://www.ietf.org/rfc/rfc1945.txt
-    * RFC 2068 - http://www.ietf.org/rfc/rfc2068.txt
-    * 
-    * User-Agent        = "User-Agent" ":" 1*( product | comment )
-    * product           = token ["/" product-version ]
-    * product-version   = token
-    * comment           = "(" *( ctext | comment ) ")"
-    * ctext             = <any TEXT excluding "(" and ")">
-    * token             = 1*<any CHAR except CTLs or tspecials>
-    * tspecials         = "(" | ")" | "<" | ">" | "@" | "," | ";" | ":" | "\" | <"> | "/" | "[" | "]" | "?" | "=" | "{" | "}" | SP | HT 
-    * 
-    * 
-    *
-    * Constructs a user agent string for Flash.
-    */
-    
+     * This class constructs an user agent string for Flash.
+     * <p><b>Information :</b></p>
+     * <p>Here we mimic a user-agent string for Flash based on :</p>
+     * <li>http://www.mozilla.org/build/user-agent-strings.html</li>
+     * <li>http://www.mozilla.org/build/revised-user-agent-strings.html</li>
+     * <li>RFC 1945 - http://www.ietf.org/rfc/rfc1945.txt</li>
+     * <li>RFC 2068 - http://www.ietf.org/rfc/rfc2068.txt</li>
+     * <pre>
+     * User-Agent        = "User-Agent" ":" 1*( product | comment )
+     * product           = token ["/" product-version ]
+     * product-version   = token
+     * comment           = "(" *( ctext | comment ) ")"
+     * ctext             = <any TEXT excluding "(" and ")">
+     * token             = 1*<any CHAR except CTLs or tspecials>
+     * tspecials         = "(" | ")" | "<" | ">" | "@" | "," | ";" | ":" | "\" | <"> | "/" | "[" | "]" | "?" | "=" | "{" | "}" | SP | HT 
+     * </pre>
+     */
     public class UserAgent
     {
+        
         /**
          * @private
          */
@@ -62,12 +56,12 @@ package com.google.analytics.utils
         /**
          * @private
          */
-        private var _applicationComment:String;
-        
         private var _localInfo:LocalInfo;
         
-        /* for privacy concern */
-        public static var minimal:Boolean = false;
+        /**
+         * For privacy concern.
+         */
+        public static var minimal:Boolean ;
         
         /**
          * Creates a new UserAgent instance.
@@ -90,49 +84,8 @@ package com.google.analytics.utils
         }
         
         /**
-         * Indicates the application product String representation.
-         */
-        public function get applicationProduct():String
-        {
-            return _applicationProduct;
-        }
-        
-        public function set applicationProduct( value:String ):void
-        {
-            _applicationProduct = value;
-        }
-        
-        /**
-         * Indicates the application version String representation.
-         */
-        public function get applicationVersion():String
-        {
-            return _applicationVersion;
-        }
-        
-        public function set applicationVersion( value:String ):void
-        {
-            _applicationVersion = value;
-        }
-        
-        /**
-         * Indicates the application product token String representation.
-         */
-        public function get applicationProductToken():String
-        {
-            var token:String = applicationProduct;
-            
-            if( applicationVersion != "" )
-            {
-                token += "/" + applicationVersion;
-            }
-            
-            return token;
-        }
-        
-        /* 
-           ( Platform ;  PlayerType ;  OS ;  Localization information  ?[; DebugVersion ; PrereleaseVersion] )
-        */
+         * Indicates the application comment String value. ( Platform ;  PlayerType ;  OS ;  Localization information  ?[; DebugVersion ; PrereleaseVersion] )
+         */ 
         public function get applicationComment():String
         {
             var comment:Array = [];
@@ -160,8 +113,54 @@ package com.google.analytics.utils
             }
             
             return "";
+        }         
+        
+        /**
+         * Indicates the application product String representation.
+         */
+        public function get applicationProduct():String
+        {
+            return _applicationProduct;
+        }
+        
+        /**
+         * @private
+         */
+        public function set applicationProduct( value:String ):void
+        {
+            _applicationProduct = value;
+        }
+        
+        /**
+         * Indicates the application product token String representation.
+         */
+        public function get applicationProductToken():String
+        {
+            var token:String = applicationProduct;
+            
+            if( applicationVersion != "" )
+            {
+                token += "/" + applicationVersion;
+            }
+            
+            return token;
         }        
         
+        /**
+         * Indicates the application version String representation.
+         */
+        public function get applicationVersion():String
+        {
+            return _applicationVersion;
+        }
+        
+        /**
+         * @private
+         */        
+        public function set applicationVersion( value:String ):void
+        {
+            _applicationVersion = value;
+        }
         
         /**
          * Indicates the Tamarin engine token or an empty string if vmVersion can not be found.
@@ -187,7 +186,7 @@ package com.google.analytics.utils
         /**
          * Indicates the vendor production token String representation.
          */
-        public function get VendorProductToken():String
+        public function get vendorProductToken():String
         {
             var vp:String = "";
             
@@ -223,9 +222,9 @@ package com.google.analytics.utils
                 UA += " " + tamarinProductToken;
             }
             
-            if( VendorProductToken != "" )
+            if( vendorProductToken != "" )
             {
-                UA += " " + VendorProductToken;
+                UA += " " + vendorProductToken;
             }
             
             return UA;

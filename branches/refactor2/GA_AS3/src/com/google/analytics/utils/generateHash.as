@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,19 +15,16 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.utils
 {
     /**
-    * Generate hash for input string.
-    * This is a global method, since it does not need
-    * to access any instance variables, and it is being
-    * used everywhere in the GATC module.
-    * 
-    * @param {String} input Input string to generate hash value on.
-    * @return {Number} Hash value of input string.
-    *                  If input string is undefined, or empty, return hash value of 1.
+    * Generate hash for input string. This is a global method, since it does not need 
+    * to access any instance variables, and it is being used everywhere in the GATC module.
+    * @param input Input string to generate hash value on.
+    * @return Hash value of input string. If input string is undefined, or empty, return hash value of 1.
     */
     public function generateHash(input:String):int
     {

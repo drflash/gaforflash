@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,23 +15,31 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.data
 {
     /**
-    * session tracking
-    * 
-    * note:
-    * expires when the browser exists.
-    */
+     * Session tracking
+     * <p><b>note:</b> Expires when the browser exists.</p>
+     */
     public class UTMC
     {
+    	
+    	/**
+    	 * @private
+    	 */
         private var _inURL:String = "__utmc";
         
-        //Field index for domain hash in session cookie (__utmc) value.
+        /**
+         * Field index for domain hash in session cookie (__utmc) value.
+         */
         public static const DOMAINHASH:int = 0;
         
+        /**
+         * Creates a new UTMC instance.
+         */
         public function UTMC()
         {
         }

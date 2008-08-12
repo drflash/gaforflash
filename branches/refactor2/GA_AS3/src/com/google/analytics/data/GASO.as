@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +15,20 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.data
 {
     /**
-    * Site overlay
-    * 
-    * note:
-    * expires when the browser exists.
-    */
+     * Site overlay
+     * <p><b>Note:</b> Expires when the browser exists.</p>
+     */
     public class GASO
     {
+    	/**
+    	 * Creates a new GASO instance.
+    	 */
         public function GASO()
         {
         }

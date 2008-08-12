@@ -15,12 +15,13 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.core
 {
     /**
-    * Namespace used for the ActionScript 3 API implementation.
-    */
-    public namespace as3_api;
+     * Namespace used for the ActionScript 3 API implementation.
+     */
+    public namespace as3_api ;
 }
