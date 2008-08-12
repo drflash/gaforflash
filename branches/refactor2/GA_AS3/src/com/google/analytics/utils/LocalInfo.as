@@ -31,31 +31,15 @@ package com.google.analytics.utils
      */
     public class LocalInfo
     {
-<<<<<<< .mine
         private var _stage:Stage;
         private var _protocol:Protocols;
-=======
->>>>>>> .r39
+        private var _userAgent:UserAgent;
         
-<<<<<<< .mine
-        private static var _userAgent:UserAgent;
-        
-=======
-        /**
-         * @private
-         */	
-        private var _stage:Stage ;
-        
-        /**
-         * @private
-         */
-        private var _protocol:Protocols = null ;
         
         /**
          * Creates a new LocalInfo instance.
          * @param stage The Stage reference of the application.
          */
->>>>>>> .r39
         public function LocalInfo( stage:Stage = null )
         {
             _stage = stage;
@@ -68,6 +52,7 @@ package com.google.analytics.utils
         {
             _stage = value;
         }
+        
         /**
          * @private
          */
@@ -122,30 +107,9 @@ package com.google.analytics.utils
             return _protocol;
         }
         
-<<<<<<< .mine
+        
         public function get domainName():String
-=======
-        /**
-         * Returns the flash version object representation of the application. 
-         * <p>This object contains the attributes major, minor, build and revision :</p>
-         * <p><b>Example :</b></b>
-         * <pre>
-         * import com.google.analytics.utils.LocalInfo ;
-         * 
-         * var info:LocalInfo = new LocalInfo( this ) ;
-         * var version:Object = info.flashVersion ;
-         * 
-         * trace( version.major    ) ; // 9
-         * trace( version.minor    ) ; // 0
-         * trace( version.build    ) ; // 124
-         * trace( version.revision ) ; // 0
-         * </pre>
-         * @return the flash version object representation of the application.
-         */
-        public static function get flashVersion():Object
->>>>>>> .r39
         {
-<<<<<<< .mine
             if( protocol == Protocols.HTTP ||
                 protocol == Protocols.HTTPS )
             {
@@ -167,31 +131,33 @@ package com.google.analytics.utils
                 
                 return str;
             }
-=======
-            var v:String = Capabilities.version;
-                v = v.split( " " )[1];
-            
-            var o:Array = v.split( "," );
->>>>>>> .r39
-            
+        
             return "";
         }
         
-<<<<<<< .mine
+        /**
+         * Returns the flash version object representation of the application. 
+         * <p>This object contains the attributes major, minor, build and revision :</p>
+         * <p><b>Example :</b></b>
+         * <pre>
+         * import com.google.analytics.utils.LocalInfo ;
+         * 
+         * var info:LocalInfo = new LocalInfo( this ) ;
+         * var version:Object = info.flashVersion ;
+         * 
+         * trace( version.major    ) ; // 9
+         * trace( version.minor    ) ; // 0
+         * trace( version.build    ) ; // 124
+         * trace( version.revision ) ; // 0
+         * </pre>
+         * @return the flash version object representation of the application.
+         */
         /* Returns the flash version as an Object
            with the following properties
            major, minor, build, revision
         */
         public function get flashVersion():Version
-=======
-        /**
-         * Indicates the current language value of the application.
-         * @see Capabilities.language
-         */
-        public static function get language():String
->>>>>>> .r39
         {
-<<<<<<< .mine
             var v:Version = Version.fromString( Capabilities.version.split( " " )[1], "," );
             
             return v;
@@ -204,15 +170,15 @@ package com.google.analytics.utils
            if we can bridge to JS we can return a more precise string
            from the browser as "en-GB" instead of "en".
         */
+        /**
+         * Indicates the current language value of the application.
+         * @see Capabilities.language
+         */
         public function get language():String
         {
-            return Capabilities.language;
-=======
             return Capabilities.language ;
->>>>>>> .r39
         }
         
-<<<<<<< .mine
         /* Returns the operating system string.
            
            note:
@@ -230,19 +196,16 @@ package com.google.analytics.utils
            "Mac OS 10.5.4"
            "Windows Vista"
         */
-        public function get operatingSystem():String
-=======
         /**
          * Indicates the current operating system value of the application.
          * @see Capabilities.os
          */        
-        public static function get operatingSystem():String
->>>>>>> .r39
+        public function get operatingSystem():String
         {
             return Capabilities.os ;
         }
         
-<<<<<<< .mine
+        
         /* Returns the player type.
            
            note:
@@ -265,36 +228,29 @@ package com.google.analytics.utils
            "StandAlone"
             for the stand-alone Flash Player
         */
-        public function get playerType():String
-=======
         /**
          * Indicates the current player type value of the application.
          * @see Capabilities.playerType
          */                
-        public static function get playerType():String
->>>>>>> .r39
+        public function get playerType():String
         {
             return Capabilities.playerType;
         }
         
-<<<<<<< .mine
+        
         /* Returns the platform.
            can be "Windows", "Macintosh" or "Linux"
         */
-        public function get platform():String
-=======
         /**
          * Indicates the current platform value of the application.
          * @see Capabilities.manufacturer
          */            
-        public static function get platform():String
->>>>>>> .r39
+        public function get platform():String
         {
             var p:String = Capabilities.manufacturer;
             return p.split( "Adobe " )[1];
         }
         
-<<<<<<< .mine
         /* Returns the user agent.
         */
         public function get userAgent():UserAgent
@@ -317,7 +273,6 @@ package com.google.analytics.utils
             _userAgent = custom;
         }
         
-=======
         /**
          * Indicates if the application can be bridged with the external Javascript scripts.
          * @return true if the application can be bridged with the external Javascript scripts.
@@ -331,7 +286,6 @@ package com.google.analytics.utils
          * Indicates if the application is embed in a HTML application.
          * @return true if the application is embed in a HTML application.
          */
->>>>>>> .r39
         public function isInHTML():Boolean
         {
             return Capabilities.playerType == "PlugIn";
