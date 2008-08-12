@@ -23,8 +23,32 @@ package com.google.analytics.utils
     import flash.system.System;
     
     /**
+<<<<<<< .mine
+    * User Agent
+    * Constructs a user agent string for Flash.
+    * 
+    * info:
+    * here we mimic a user-agent string for Flash
+    * based on
+    * http://www.mozilla.org/build/user-agent-strings.html
+    * http://www.mozilla.org/build/revised-user-agent-strings.html
+    * RFC 1945 - http://www.ietf.org/rfc/rfc1945.txt
+    * RFC 2068 - http://www.ietf.org/rfc/rfc2068.txt
+    * 
+    * User-Agent        = "User-Agent" ":" 1*( product | comment )
+    * product           = token ["/" product-version ]
+    * product-version   = token
+    * comment           = "(" *( ctext | comment ) ")"
+    * ctext             = <any TEXT excluding "(" and ")">
+    * token             = 1*<any CHAR except CTLs or tspecials>
+    * tspecials         = "(" | ")" | "<" | ">" | "@" | "," | ";" | ":" | "\" | <"> | "/" | "[" | "]" | "?" | "=" | "{" | "}" | SP | HT 
+    * 
+    * 
+    */
+=======
      * Constructs a user agent string for Flash.
      */
+>>>>>>> .r39
     public class UserAgent
     {
         /**
@@ -42,37 +66,103 @@ package com.google.analytics.utils
          */
         private var _applicationComment:String;
         
+<<<<<<< .mine
+        private var _localInfo:LocalInfo;
+=======
         /**
          * @private
          */
         private var _flashVersion:Object = LocalInfo.flashVersion;
+>>>>>>> .r39
         
+<<<<<<< .mine
+        /* for privacy concern */
+        public static var minimal:Boolean = false;
+        
+        public function UserAgent( localInfo:LocalInfo, product:String = "Flash", version:String = "" )
+=======
         /**
          * Creates a new UserAgent instance.
          * @param product The product String representation.
          * @param version The version String representation.
          */
         public function UserAgent( product:String = "Flash", version:String = "" )
+>>>>>>> .r39
         {
+            _localInfo = localInfo;
+            applicationProduct = product;
+            
             if( (product == "Flash") && (version == "") )
             {
-                applicationProduct = product;
-                applicationVersion = _flashVersion.major +"." + _flashVersion.minor;
+                applicationVersion = _localInfo.flashVersion.toString(2);
+            }
+            else
+            {
+                applicationVersion = version;
             }
         }
         
+<<<<<<< .mine
+        public function get applicationProduct():String
+        {
+            return _applicationProduct;
+        }
+        
+        public function set applicationProduct( value:String ):void
+        {
+            _applicationProduct = value;
+        }
+        
+        public function get applicationVersion():String
+        {
+            return _applicationVersion;
+        }
+        
+        public function set applicationVersion( value:String ):void
+        {
+            _applicationVersion = value;
+        }
+        
+        public function get applicationProductToken():String
+        {
+            var token:String = applicationProduct;
+            
+            if( applicationVersion != "" )
+            {
+                token += "/" + applicationVersion;
+            }
+            
+            return token;
+        }
+        
+=======
+>>>>>>> .r39
         /* 
            ( Platform ;  PlayerType ;  OS ;  Localization information  ?[; DebugVersion ; PrereleaseVersion] )
         */
         public function get applicationComment():String
         {
             var comment:Array = [];
+<<<<<<< .mine
+                comment.push( _localInfo.platform );
+                comment.push( _localInfo.playerType );
+                comment.push( _localInfo.operatingSystem );
+=======
+>>>>>>> .r39
                 
+<<<<<<< .mine
+                if( !UserAgent.minimal )
+                {
+                    comment.push( _localInfo.language );
+                }
+                
+=======
                 comment.push( LocalInfo.platform ) ;
                 comment.push( LocalInfo.playerType ) ;
                 comment.push( LocalInfo.operatingSystem ) ;
                 comment.push( LocalInfo.language ) ;
                 
+>>>>>>> .r39
                 if( Capabilities.isDebugger )
                 {
                     comment.push( "DEBUG" );
@@ -136,6 +226,11 @@ package com.google.analytics.utils
          */
         public function get tamarinProductToken():String
         {
+            if( UserAgent.minimal )
+            {
+                return "";
+            }
+            
             if( System.vmVersion )
             {
                 return "Tamarin/" + trim( System.vmVersion, true ) ;
@@ -160,7 +255,7 @@ package com.google.analytics.utils
             
                 vp += "FlashPlayer";
                 vp += "/";
-                vp += [_flashVersion.major,_flashVersion.minor,_flashVersion.build].join( "." );
+                vp += _localInfo.flashVersion.toString(3);
             
             return vp;
         }

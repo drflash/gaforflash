@@ -31,7 +31,16 @@ package com.google.analytics.utils
      */
     public class LocalInfo
     {
+<<<<<<< .mine
+        private var _stage:Stage;
+        private var _protocol:Protocols;
+=======
+>>>>>>> .r39
         
+<<<<<<< .mine
+        private static var _userAgent:UserAgent;
+        
+=======
         /**
          * @private
          */	
@@ -46,6 +55,7 @@ package com.google.analytics.utils
          * Creates a new LocalInfo instance.
          * @param stage The Stage reference of the application.
          */
+>>>>>>> .r39
         public function LocalInfo( stage:Stage = null )
         {
             _stage = stage;
@@ -72,7 +82,7 @@ package com.google.analytics.utils
                 // https://
                 var URL:String = _stage.loaderInfo.url.toLowerCase();
                 var test:String = URL.substr(0,5);
-                //trace( "protocol: " + test );
+                
                 switch( test )
                 {
                     case "file:":
@@ -86,7 +96,7 @@ package com.google.analytics.utils
                     case "https":
                     if(URL.charAt(6) == ":")
                     {
-                        p = Protocols.HTTP;
+                        p = Protocols.HTTPS;
                     }
                     break;
                     
@@ -104,7 +114,7 @@ package com.google.analytics.utils
          */
         public function get protocol():Protocols
         {
-            if(_protocol == null)
+            if(!_protocol)
             {
                 _findProtocol();
             }
@@ -112,6 +122,9 @@ package com.google.analytics.utils
             return _protocol;
         }
         
+<<<<<<< .mine
+        public function get domainName():String
+=======
         /**
          * Returns the flash version object representation of the application. 
          * <p>This object contains the attributes major, minor, build and revision :</p>
@@ -130,58 +143,181 @@ package com.google.analytics.utils
          * @return the flash version object representation of the application.
          */
         public static function get flashVersion():Object
+>>>>>>> .r39
         {
+<<<<<<< .mine
+            if( protocol == Protocols.HTTP ||
+                protocol == Protocols.HTTPS )
+            {
+                var URL:String = _stage.loaderInfo.url.toLowerCase();
+                var str:String;
+                var end:int;
+                
+                if( protocol == Protocols.HTTP )
+                {
+                    str = URL.split( "http://" ).join( "" );
+                }
+                else if( protocol == Protocols.HTTPS )
+                {
+                    str = URL.split( "https://" ).join( "" );
+                }
+                
+                end = str.indexOf( "/" );
+                str = str.substring(0,end);
+                
+                return str;
+            }
+=======
             var v:String = Capabilities.version;
                 v = v.split( " " )[1];
             
             var o:Array = v.split( "," );
+>>>>>>> .r39
             
-            var version:Object   = {};
-                version.major    = o[0];
-                version.minor    = o[1];
-                version.build    = o[2];
-                version.revision = o[3];
-           
-           return version;
+            return "";
         }
         
+<<<<<<< .mine
+        /* Returns the flash version as an Object
+           with the following properties
+           major, minor, build, revision
+        */
+        public function get flashVersion():Version
+=======
         /**
          * Indicates the current language value of the application.
          * @see Capabilities.language
          */
         public static function get language():String
+>>>>>>> .r39
         {
-            return Capabilities.language ;
+<<<<<<< .mine
+            var v:Version = Version.fromString( Capabilities.version.split( " " )[1], "," );
+            
+            return v;
         }
         
+        /* Returns the language string
+           as a lowercase two-letter language code from ISO 639-1.
+           
+           TODO:
+           if we can bridge to JS we can return a more precise string
+           from the browser as "en-GB" instead of "en".
+        */
+        public function get language():String
+        {
+            return Capabilities.language;
+=======
+            return Capabilities.language ;
+>>>>>>> .r39
+        }
+        
+<<<<<<< .mine
+        /* Returns the operating system string.
+           
+           note:
+           the flash documentation indicate those strings
+           "Windows XP"
+           "Windows 2000"
+           "Windows NT"
+           "Windows 98/ME"
+           "Windows 95"
+           "Windows CE" (available only in Flash Player SDK, not in the desktop version)
+           "Linux"
+           "MacOS"
+           
+           other strings we can obtain (not documented(
+           "Mac OS 10.5.4"
+           "Windows Vista"
+        */
+        public function get operatingSystem():String
+=======
         /**
          * Indicates the current operating system value of the application.
          * @see Capabilities.os
          */        
         public static function get operatingSystem():String
+>>>>>>> .r39
         {
             return Capabilities.os ;
         }
         
+<<<<<<< .mine
+        /* Returns the player type.
+           
+           note:
+           the flash documentation indicate those strings
+           
+           "ActiveX"
+            for the Flash Player ActiveX control used by Microsoft Internet Explorer
+           
+           "Desktop"
+            for the Adobe AIR runtime (except for SWF content loaded by an HTML page,
+            which has Capabilities.playerType set to "PlugIn")
+           
+           "External"
+            for the external Flash Player
+           
+           "PlugIn"
+            for the Flash Player browser plug-in
+            (and for SWF content loaded by an HTML page in an AIR application)
+           
+           "StandAlone"
+            for the stand-alone Flash Player
+        */
+        public function get playerType():String
+=======
         /**
          * Indicates the current player type value of the application.
          * @see Capabilities.playerType
          */                
         public static function get playerType():String
+>>>>>>> .r39
         {
             return Capabilities.playerType;
         }
         
+<<<<<<< .mine
+        /* Returns the platform.
+           can be "Windows", "Macintosh" or "Linux"
+        */
+        public function get platform():String
+=======
         /**
          * Indicates the current platform value of the application.
          * @see Capabilities.manufacturer
          */            
         public static function get platform():String
+>>>>>>> .r39
         {
             var p:String = Capabilities.manufacturer;
             return p.split( "Adobe " )[1];
         }
         
+<<<<<<< .mine
+        /* Returns the user agent.
+        */
+        public function get userAgent():UserAgent
+        {
+            if( !_userAgent )
+            {
+                 _userAgent = new UserAgent(this);
+            }
+            
+            return _userAgent;
+        }
+        
+        /* Define a custom user agent.
+           
+           For case where the user would want
+           to define its own application name and version.
+        */
+        public function set userAgent( custom:UserAgent ):void
+        {
+            _userAgent = custom;
+        }
+        
+=======
         /**
          * Indicates if the application can be bridged with the external Javascript scripts.
          * @return true if the application can be bridged with the external Javascript scripts.
@@ -195,6 +331,7 @@ package com.google.analytics.utils
          * Indicates if the application is embed in a HTML application.
          * @return true if the application is embed in a HTML application.
          */
+>>>>>>> .r39
         public function isInHTML():Boolean
         {
             return Capabilities.playerType == "PlugIn";
