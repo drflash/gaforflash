@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,17 +15,23 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
+
 
 package com.google.analytics.core
 {
     /**
-    * Google Analytics Tracker Code (GATC)'s GIF request module.
-    * This file encapsulates all the necessary components that are required to
-    * generate a GIF request to the Google Analytics Back End (GABE).
-    */
+     * Google Analytics Tracker Code (GATC)'s GIF request module.
+     * This file encapsulates all the necessary components that are required to
+     * generate a GIF request to the Google Analytics Back End (GABE).
+     */
     public class GIFRequest
     {
+    	
+    	/**
+    	 * Creates a new GIFRequest instance.
+    	 */
         public function GIFRequest()
         {
         }
