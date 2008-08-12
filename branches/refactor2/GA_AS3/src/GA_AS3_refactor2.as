@@ -55,8 +55,9 @@ package
             use namespace as3_api;
             _gat = new GATracker( this );
             pageTracker = _gat.getTracker( "UA-1234-5" );
-            pageTracker.setSampleRate( -0.5 );
-            pageTracker.addOrganic("google","q");
+            //pageTracker.setSampleRate( -0.5 );
+            //pageTracker.addOrganic("google","q");
+            pageTracker.setDomainName( ".zwetan.com" );
             
         }
         

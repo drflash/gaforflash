@@ -139,7 +139,7 @@ package com.google.analytics.v4
         //Delimiter for e-commerce transaction fields.
         public var transactionFieldDelim:String = "|";
         
-        
+        public var domainName:String = "";
         
         
         //---- Not part of GA API ----
@@ -207,20 +207,33 @@ package com.google.analytics.v4
         }
         
         /**
-         * Indicates the domain name String representation.
+         * Indicates the version String representation of the application.
          */
-        public function get domainName():String
+        public function get version():String
         {
-            return _domain.name;
+            return _version;
         }
         
         /**
-         * Indicates the event tracker project id value.
-         */
-        public function get eventTrackerProjectId():int
+        * Domain name for cookies.
+        * (auto | none | domain)
+        * If this variable is set to "auto",
+        * then we will try to resolve the domain name
+        * based on the HTMLDocument object.
+        * 
+        * note:
+        * for Flash we try to auto detect
+        * the domain name by using the URL info
+        * if we are in HTTP or HTTPS
+        * 
+        * if we can not detect the protocol or find file://
+        * then the "auto" domain is none.
+        */
+        public function get domain():Domain
         {
-            return 5;
+            return _domain;
         }
+        
         
         /**
          * Indicates the sample rate value of the application.
@@ -251,25 +264,6 @@ package com.google.analytics.v4
             _sampleRate = value;
         }        
         
-        /**
-        * Domain name for cookies.
-        * (auto | none | domain)
-        * If this variable is set to "auto",
-        * then we will try to resolve the domain name
-        * based on the HTMLDocument object.
-        * 
-        * note:
-        * for Flash we try to auto detect
-        * the domain name by using the URL info
-        * if we are in HTTP or HTTPS
-        * 
-        * if we can not detect the protocol or find file://
-        * then the "auto" domain is none.
-        */
-        public function get domain():Domain
-        {
-            return _domain;
-        }
         
         public function get organicSources():Array
         {
@@ -281,13 +275,6 @@ package com.google.analytics.v4
             _organicSources = sources;
         }
         
-        /**
-         * Indicates the version String representation of the application.
-         */
-        public function get version():String
-        {
-            return _version;
-        }        
         
         /**
          * Adds a new organic source.

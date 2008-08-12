@@ -68,6 +68,16 @@ package com.google.analytics.core
             return _mode;
         }
         
+        public function set mode( value:DomainNameMode ):void
+        {
+            _mode = value;
+            
+            if( _mode == DomainNameMode.none )
+            {
+                _name = "";
+            }
+        }
+        
         /**
          * Indicates the name of this domain.
          */
