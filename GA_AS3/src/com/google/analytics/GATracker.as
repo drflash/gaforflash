@@ -19,35 +19,79 @@
 
 package com.google.analytics
 {
-    import com.google.analytics.core.as3_api;
+    import com.google.analytics.core.Buffer;
     import com.google.analytics.core.ga_internal;
+    import com.google.analytics.core.as3_api;
     import com.google.analytics.core.js_bridge;
+    import com.google.analytics.events.MessageEvent;
     import com.google.analytics.utils.LocalInfo;
     import com.google.analytics.v4.Bridge;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
+    import com.google.ui.Layout;
     
-    import flash.display.Sprite;
+    import flash.display.DisplayObject;
+    
     
     /**
     * @fileoverview Google Analytic Tracker Code (GATC)'s main component.
     */
     
-    public class GATracker extends Sprite
+    public class GATracker
     {
+        
+        private var _display:DisplayObject;
+        private var _localInfo:LocalInfo;
+        private var _buffer:Buffer;
+        
+        private var _layout:Layout;
         
         /**
         * note:
         * the GATracker need to be instancied and added to the Stage
         * or at least being placed in a display list.
+        * 
+        * We mainly use it for internal test and it's basically a factory.
+        * 
         */
-        public function GATracker()
+        public function GATracker( display:DisplayObject )
         {
+            _display   = display;
+            _localInfo = new LocalInfo();
+            _buffer    = new Buffer();
+            
+            _layout    = new Layout( _display );
+            
+            if( config.debug )
+            {
+                _layout.createDebug();
+            }
+            
         }
         
+        /**
+        * version of our source code (not version of the GA API)
+        * 
+        * note:
+        * each components will have also their own version
+        */
         public static var version:String = "0.2.0." + "$Rev$ ".split( " " )[1];
         
-        public static var localInfo:LocalInfo = new LocalInfo();
+        private function _onInfo( event:MessageEvent ):void
+        {
+            if( config.showInfos )
+            {
+                _layout.createInfo( event.message );
+            }
+        }
+        
+        private function _onWarning( event:MessageEvent ):void
+        {
+            if( config.showWarnings )
+            {
+                _layout.createWarning( event.message );
+            }
+        }
         
         /**
         * Factory method for returning a tracker object.
@@ -57,6 +101,23 @@ package com.google.analytics
         */
         as3_api function getTracker( account:String ):GoogleAnalyticsAPI
         {
+            if( config.showInfos )
+            {
+                _layout.createInfo( "GATracker v" + version +"\naccount: " + account );
+            }
+            
+            config.addEventListener(MessageEvent.INFO, _onInfo );
+            config.addEventListener(MessageEvent.WARNING, _onWarning );
+            /*
+            _layout.debug.write( "A" );
+            _layout.debug.write( "B" );
+            _layout.debug.write( "C" );
+            _layout.debug.write( "D" );
+            _layout.debug.write( "E" );
+            _layout.debug.write( "F" );
+            _layout.debug.write( "G" );
+            _layout.debug.write( "H" );
+            */
             /* note:
                To be able to obtain the URL of the main SWF containing the GA API
                we need to be able to access the stage property of a DisplayObject,
@@ -66,8 +127,8 @@ package com.google.analytics
                We keep the implementation internal to be able to change it if required later.
             */
             use namespace ga_internal;
-            GATracker.localInfo.stage = this.stage;
-            return new Tracker( account );
+            _localInfo.stage = _display.stage;
+            return new Tracker( account, _localInfo, _buffer, _layout );
         }
         
         /**
