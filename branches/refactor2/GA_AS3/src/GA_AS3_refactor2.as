@@ -21,13 +21,15 @@ package
 {
     import com.google.analytics.GATracker;
     import com.google.analytics.core.as3_api;
+    import com.google.analytics.utils.LocalInfo;
     import com.google.analytics.utils.UserAgent;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     
     import flash.display.Sprite;
+    import flash.display.StageAlign;
+    import flash.display.StageScaleMode;
     import flash.events.Event;
-    import flash.text.TextField;
-    import flash.text.TextFormat;
+    
     
     /* note:
        for testing code we use GATracker
@@ -39,60 +41,22 @@ package
     {
         private var _gat:GATracker;
         public var pageTracker:GoogleAnalyticsAPI;
-        public var output:TextField;
         
         public function GA_AS3_refactor2()
         {
-            use namespace as3_api;
-            
-            _gat = new GATracker();
-            addChild( _gat );
-            pageTracker = _gat.getTracker( "UA-1234-5" );
-            //trace( "account: " + pageTracker.getAccount() );
-            //pageTracker.showURL();
+            this.stage.align = StageAlign.TOP_LEFT;
+            this.stage.scaleMode = StageScaleMode.NO_SCALE;
             
             addEventListener( Event.ADDED_TO_STAGE, onComplete );
         }
         
-        public function createDebug():void
-        {
-            output = new TextField();
-            output.autoSize = "left";
-            output.wordWrap = true;
-            output.border   = true;
-            output.borderColor = 0x000000;
-            output.defaultTextFormat = new TextFormat("Arial",10,0x000000,false);
-            output.width  = 800;
-            output.height = 600;
-            
-            addChild( output );
-            stage.addEventListener( Event.RESIZE, onStageResize );
-            
-        }
-        
-        public function onStageResize( evt:Event ):void
-        {
-            output.width  = stage.width;
-            output.height = stage.height;
-        }
-        
-        public function debug( message:String ):void
-        {
-            output.appendText( message + "\r\n");
-        }
-        
         public function onComplete( evt:Event ):void
         {
-            createDebug();
-            onStageResize( null );
-            debug( "-start-" );
-            debug( "GAT v" + GATracker.version );
-            debug( "protocol: " + GATracker.localInfo.protocol );
-            debug( "isInHTML: " + GATracker.localInfo.isInHTML() );
-            debug( "canBridgeToJS: " + GATracker.localInfo.canBridgeToJS() );
-            debug( "account: " + pageTracker.getAccount() );
-            debug( "user-agent: " + new UserAgent() );
-            debug( "-end-" );
+            use namespace as3_api;
+            _gat = new GATracker( this );
+            pageTracker = _gat.getTracker( "UA-1234-5" );
+            pageTracker.setSampleRate( -0.5 );
+            pageTracker.addOrganic("google","q");
             
         }
         
