@@ -19,9 +19,11 @@
 
 package com.google.analytics.v4
 {
-    import com.google.analytics.GATracker;
+    import com.google.analytics.config;
+    import com.google.analytics.core.Buffer;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.utils.LocalInfo;
+    import com.google.ui.Layout;
     
     /**
      * The Tracker class.
@@ -29,20 +31,55 @@ package com.google.analytics.v4
     public class Tracker implements GoogleAnalyticsAPI
     {
         private var _account:String;
-        private var _config:Configuration;
         private var _info:LocalInfo;
+        private var _buffer:Buffer;
+        private var _layout:Layout;
         
         /** 
          * Creates a new Tracker instance.
          * @param account Urchin Account to record metrics in.
          */
-        public function Tracker(account:String)
+        public function Tracker( account:String, info:LocalInfo, buffer:Buffer,
+                                 layout:Layout = null )
         {
             _account   = account;
-            _config    = new Configuration();
-            _info      = GATracker.localInfo;
+            _info      = info;
+            _buffer    = buffer;
+            _layout    = layout;
+            
+            _initData();
         }
         
+<<<<<<< .mine
+        private function _showInfo( message:String ):void
+        {
+            if( config.showInfos && _layout )
+            {
+                _layout.createInfo( message );
+            }
+        }
+        
+        private function _showWarning( message:String ):void
+        {
+            if( config.showWarnings && _layout )
+            {
+                _layout.createWarning( message );
+            }
+        }
+        
+        
+        private function _initData():void
+        {
+            var data:String = "";
+                data += "_initData";
+                data += "\nprotocol: " + _info.protocol;
+                data += "\ndomain name: " + _info.domainName;
+                data += "\nlanguage: " + _info.language;
+            _showInfo( data );
+            
+        }
+        
+=======
         // ----------------------------------------
         // Basic Configuration
         // Methods that you use for customizing all aspects of Google Analytics reporting.
@@ -55,6 +92,7 @@ package com.google.analytics.v4
          * with a particular tracker object.
          * @return the Account ID this tracker object is instantiated with.
          */
+>>>>>>> .r40
         public function getAccount():String
         {
             return _account;
@@ -66,7 +104,7 @@ package com.google.analytics.v4
          */       
         public function getVersion():String
         {
-            return _config.version;
+            return config.version;
         }
         
         /**
@@ -74,7 +112,11 @@ package com.google.analytics.v4
          */
         public function initData():void
         {
+<<<<<<< .mine
+            _initData();
+=======
             //
+>>>>>>> .r40
         }
         
         /**
@@ -90,7 +132,12 @@ package com.google.analytics.v4
          */        
         public function setSampleRate(newRate:Number):void
         {
-            _config.sampleRate = newRate;
+            if( newRate < 0 )
+            {
+                _showWarning( "sample rate can not be negative, using default value." );
+            }
+            config.sampleRate = newRate;
+            _showInfo( "sample rate = " + config.sampleRate );
         }
         
         /**
@@ -337,7 +384,7 @@ package com.google.analytics.v4
          */        
         public function setAllowHash(enable:Boolean=true):void
         {
-            _config.allowDomainHash = enable;
+            config.allowDomainHash = enable;
         }
         
         /**
@@ -515,7 +562,7 @@ package com.google.analytics.v4
          */        
         public function addOrganic(newOrganicEngine:String, newOrganicKeyword:String):void
         {
-            _config.addOrganicSource(newOrganicEngine, newOrganicKeyword);
+            config.addOrganicSource(newOrganicEngine, newOrganicKeyword);
         }
         
         /**
@@ -540,7 +587,7 @@ package com.google.analytics.v4
          */        
         public function clearOrganic():void
         {
-            _config.clearOrganicSources();
+            config.clearOrganicSources();
         }
         
         /**
@@ -551,7 +598,7 @@ package com.google.analytics.v4
          */        
         public function getClientInfo():Boolean
         {
-            return _config.trackClientInfo;
+            return config.detectClientInfo;
         }
         
         /**
@@ -562,7 +609,7 @@ package com.google.analytics.v4
          */        
         public function getDetectFlash():Boolean
         {
-            return _config.trackDetectFlash;
+            return config.detectFlash;
         }
         
         /**
@@ -572,7 +619,7 @@ package com.google.analytics.v4
          */        
         public function getDetectTitle():Boolean
         {
-            return _config.trackDetectTitle;
+            return config.detectTitle;
         }
         
         /**
@@ -587,7 +634,7 @@ package com.google.analytics.v4
          */        
         public function setClientInfo(enable:Boolean=true):void
         {
-            _config.trackClientInfo = enable;
+            config.detectClientInfo = enable;
         }
         
         /**
@@ -602,7 +649,7 @@ package com.google.analytics.v4
          */        
         public function setDetectFlash(enable:Boolean=true):void
         {
-            _config.trackDetectFlash = enable;
+            config.detectFlash = enable;
         }
         
         /**
@@ -621,7 +668,7 @@ package com.google.analytics.v4
          */        
         public function setDetectTitle(enable:Boolean=true):void
         {
-            _config.trackDetectTitle = enable;
+            config.detectTitle = enable;
         }
         
         // ----------------------------------------
@@ -637,7 +684,7 @@ package com.google.analytics.v4
          */        
         public function getLocalGifPath():String
         {
-            return _config.localGIFpath;
+            return config.localGIFpath;
         }
         
         /**
@@ -649,7 +696,7 @@ package com.google.analytics.v4
          */        
         public function getServiceMode():ServerOperationMode
         {
-            return _config.serverMode;
+            return config.serverMode;
         }
         
         /**
@@ -662,7 +709,7 @@ package com.google.analytics.v4
          */        
         public function setLocalGifPath(newLocalGifPath:String):void
         {
-            _config.localGIFpath = newLocalGifPath;
+            config.localGIFpath = newLocalGifPath;
         }
         
         /**
@@ -674,7 +721,7 @@ package com.google.analytics.v4
          */        
         public function setLocalRemoteServerMode():void
         {
-            _config.serverMode = ServerOperationMode.both;
+            config.serverMode = ServerOperationMode.both;
         }
         
         /**
@@ -685,7 +732,7 @@ package com.google.analytics.v4
          */        
         public function setLocalServerMode():void
         {
-            _config.serverMode = ServerOperationMode.local;
+            config.serverMode = ServerOperationMode.local;
         }
         
         /**
@@ -695,7 +742,7 @@ package com.google.analytics.v4
          */        
         public function setRemoteServerMode():void
         {
-            _config.serverMode = ServerOperationMode.remote;
+            config.serverMode = ServerOperationMode.remote;
         }
         
     }
