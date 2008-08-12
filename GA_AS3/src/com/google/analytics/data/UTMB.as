@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,46 +15,75 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.data
 {
     /**
-    * session timeout
-    * 
-    * note:
-    * persists for 30 min.
-    */
+     * Session timeout : persists for 30 min.
+     */
     public class UTMB
     {
-        private var _inURL:String = "__utmb";
         
-        //Field index for domain hash in session timeout cookie (__utmb) value.
+        /**
+         * @private
+         */
+        private var _inURL:String = "__utmb";
+
+        /**
+         * @private
+         */  
+        private var _lastTime:int;        
+        
+        /**
+         * @private
+         */  
+        private var _trackCount:int;
+
+        /**
+         * @private
+         */  
+        private var _token:String;
+                
+        /**
+         * Field index for domain hash in session timeout cookie (__utmb) value.
+         */
         public static const DOMAINHASH:int  = 0;
         
-        //Field index for tracking count in session timeout cookie (__utmb) value.
+        /**
+         * Field index for tracking count in session timeout cookie (__utmb) value.
+         */
         public static const TRACK_COUNT:int = 1;
         
-        //Number of token in bucket.
+        /**
+         * Number of token in bucket.
+         */
         public static const TOKEN:int       = 2;
         
-        //Time stamp for last time the token bucket was updated.
+        /**
+         * Time stamp for last time the token bucket was updated.
+         */
         public static const LAST_TIME:int   = 3;
         
-        
-        private var _trackCount:int;
-        private var _token:String;
-        private var _lastTime:int;
-        
+        /**
+         * Creates a new UTMB instance.
+         */        
         public function UTMB()
         {
         }
         
+        /**
+         * Indicates the track count value.
+         */
         public function get trackCount():int
         {
             return _trackCount;
         }
         
+        /**
+         * @private
+         */
         public function set trackCount( value:int ):void
         {
             _trackCount = value;

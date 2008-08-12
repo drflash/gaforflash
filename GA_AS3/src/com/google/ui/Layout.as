@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -87,7 +87,7 @@ package com.google.ui
             }
             
             _hasWarning = true;
-            var w:Warning = new Warning( message )
+            var w:Warning = new Warning( message );
             addToStage( w );
             bringToFront( w );
             w.addEventListener( Event.REMOVED_FROM_STAGE, _clearWarning );
@@ -107,7 +107,7 @@ package com.google.ui
             }
             
             _hasInfo = true;
-            var i:Info = new Info( message )
+            var i:Info = new Info( message );
             addToStage( i );
             bringToFront( i );
             i.addEventListener( Event.REMOVED_FROM_STAGE, _clearInfo );

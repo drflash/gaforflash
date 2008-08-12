@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +20,8 @@
 package com.google.ui
 {
     import flash.net.URLLoader;
-    import flash.net.URLRequest;
-    import flash.text.StyleSheet;
-    
+    import flash.text.StyleSheet;    
+
     public class _Style
     {
         private var _defaultSheet:String;

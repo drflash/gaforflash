@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,69 +15,116 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.data
 {
+
+     /* TODO: 
+      *  - need info for what can contain keys and values
+      *   are keys only alpha chars and value only numbers ?
+      * - maybe refactor so we have a X10Module composed of X10Objects
+      */
+     
     /**
      * Google Analytics Tracker Code (GATC)'s extensible data component.
      * This class encapsulates all logic for setting and clearing extensible
      * data and generating the resultant URL parameter.
-     * 
-     * TODO:
-     * - need info for what can contain keys and values
-     *   are keys only alpha chars and value only numbers ?
-     * - maybe refactor so we have a X10Module composed of X10Objects
      */
     public class X10
     {
+    	/**
+    	 * @private
+    	 */
         private var _projectData:Object;
         
         // Type qualifiers for each of the types.
+        
+        /**
+         * @private
+         */
         private var _key:String   = "k";
+        
+        /**
+         * @private
+         */        
         private var _value:String = "v";
+        
+        /**
+         * @private
+         */        
         private var _set:Array    = [ _key, _value ];
         
         // Delimiters for wrapping a set of values belonging to the same type.
+        
+        /**
+         * @private
+         */
         private var _delimBegin:String = "(";
+        
+        /**
+         * @private
+         */        
         private var _delimEnd:String   = ")";
         
         // Delimiter between two consecutive num/value pairs.
+        
+        /**
+         * @private
+         */        
         private var _delimSet:String = "*";
         
         // Delimiter between a num and its corresponding value.
+        
+        /**
+         * @private
+         */        
         private var _delimNumValue:String = "!";
         
         // Escape character. We're only escaping ), ,(comma), and :, but
         // we'll need an escape character as well, which we've chosen to be ~.
+        
+        /**
+         * @private
+         */        
         private var _escapeChar:String = "'";
         
         // Mapping of escapable characters to their escaped forms.
+        
+        /**
+         * @private
+         */        
         private var _escapeCharMap:Object;
         
+        /**
+         * @private
+         */        
         private var _minimum:int;
         
+        /**
+         * Creates a new X10 instance.
+         */
         public function X10()
         {
             _projectData = {};
             
             _escapeCharMap = {};
-            _escapeCharMap[_escapeChar]    = "'0";
-            _escapeCharMap[_delimEnd]      = "'1";
-            _escapeCharMap[_delimSet]      = "'2";
-            _escapeCharMap[_delimNumValue] = "'3";
+            _escapeCharMap[_escapeChar]    = "'0" ;
+            _escapeCharMap[_delimEnd]      = "'1" ;
+            _escapeCharMap[_delimSet]      = "'2" ;
+            _escapeCharMap[_delimNumValue] = "'3" ;
             
             _minimum = 1;
         }
         
         /**
          * Internal implementation for setting an X10 data type.
-         *
          * @private
-         * @param {Number} projectId The project ID for which to set a value.
-         * @param {String} type The data type for which to set a value.
-         * @param {Number} num The numeric index for which to set a value.
-         * @param {String} value The value to be set into the specified indices.
+         * @param projectId The project ID for which to set a value.
+         * @param type The data type for which to set a value.
+         * @param num The numeric index for which to set a value.
+         * @param value The value to be set into the specified indices.
          */
         private function _setInternal( projectId:Number, type:String, num:Number, value:String ):void
         {
@@ -98,11 +145,11 @@ package com.google.analytics.data
          * Internal implementation for getting an X10 data type.
          *
          * @private
-         * @param {Number} projectId The project ID for which to set a value.
-         * @param {String} type The data type for which to set a value.
-         * @param {Number} num The numeric index for which to set a value.
+         * @param projectId The project ID for which to set a value.
+         * @param type The data type for which to set a value.
+         * @param num The numeric index for which to set a value.
          *
-         * @return {Object} The stored object at the specified indices.
+         * @return The stored object at the specified indices.
          *     The value property of this object is the stored value, and
          *     the optional aggregationType property of this object is
          *     the specified custom aggregation type, if any.
@@ -125,8 +172,8 @@ package com.google.analytics.data
          * from a certain project.
          *
          * @private
-         * @param {Number} projectId The project ID for which to set a value.
-         * @param {String} type The data type for which to set a value.
+         * @param projectId The project ID for which to set a value.
+         * @param type The data type for which to set a value.
          */
         private function _clearInternal( projectId:Number, type:String ):void
         {
@@ -158,9 +205,9 @@ package com.google.analytics.data
          * See the escapeCharMap private member for more detail.
          *
          * @private
-         * @param {String} value The string value to be escaped.
+         * @param value The string value to be escaped.
          *
-         * @return {String} The escaped version of the passed-in value.
+         * @return The escaped version of the passed-in value.
          */
         private function _escapeExtensibleValue( value:String ):String
         {
@@ -191,9 +238,9 @@ package com.google.analytics.data
          * Given a data array for a certain type, render its string encoding.
          *
          * @private
-         * @param {Array} data An array of num/value pair data.
+         * @param data An array of num/value pair data.
          *
-         * @return {String} The string encoding for this array of data.
+         * @return The string encoding for this array of data.
          */
         private function _renderDataType( data:Array ):String
         {
@@ -229,9 +276,9 @@ package com.google.analytics.data
          * Given a project hashmap, render its string encoding.
          *
          * @private
-         * @param {Object} project A hashmap of project data keyed by data type.
+         * @param project A hashmap of project data keyed by data type.
          *
-         * @return {String} The string encoding for this project.
+         * @return The string encoding for this project.
          */
         private function _renderProject( project:Object ):String
         {
@@ -270,10 +317,9 @@ package com.google.analytics.data
         /**
          * Checking whether a project exists in the current data state.
          *
-         * @param {Number} projectId The identifier for the project.
+         * @param projectId The identifier for the project.
          *
-         * @return {Boolean} whether this X10 module contains the project at
-         *     the designated project ID.
+         * @return whether this X10 module contains the project at the designated project ID.
          */
         public function hasProject( projectId:Number ):Boolean
         {
@@ -283,11 +329,11 @@ package com.google.analytics.data
         /**
          * Wrapper for setting an X10 string key.
          *
-         * @param {Number} projectId The project ID for which to set a value.
-         * @param {Number} num The numeric index for which to set a value.
-         * @param {String} value The value to be set into the specified indices.
+         * @param projectId The project ID for which to set a value.
+         * @param num The numeric index for which to set a value.
+         * @param value The value to be set into the specified indices.
          *
-         * @return {Boolean} Whether the key was successfully set.
+         * @return Whether the key was successfully set.
          */
         public function setKey( projectId:Number, num:Number, value:String ):Boolean
         {
@@ -298,10 +344,10 @@ package com.google.analytics.data
         /**
          * Wrapper for getting an X10 string key.
          *
-         * @param {Number} projectId The project ID for which to get a value.
-         * @param {Number} num The numeric index for which to get a value.
+         * @param projectId The project ID for which to get a value.
+         * @param num The numeric index for which to get a value.
          *
-         * @return {String} The requested key, null if not found.
+         * @return The requested key, null if not found.
          */
         public function getKey( projectId:Number, num:Number ):String
         {
@@ -311,7 +357,7 @@ package com.google.analytics.data
         /**
          * Wrapper for clearing all X10 string keys for a given project ID.
          *
-         * @param {Number} projectId The project ID for which to clear all keys.
+         * @param projectId The project ID for which to clear all keys.
          */
         public function clearKey( projectId:Number ):void
         {
@@ -321,14 +367,14 @@ package com.google.analytics.data
         /**
          * Wrapper for setting an X10 integer value.
          *
-         * @param {Number} projectId The project ID for which to set a value.
-         * @param {Number} num The numeric index for which to set a value.
-         * @param {Number} value The value to be set into the specified indices.
+         * @param projectId The project ID for which to set a value.
+         * @param num The numeric index for which to set a value.
+         * @param value The value to be set into the specified indices.
          * 
          * note:
          * in JS value was {String}, maybe we should considered using * instead of type Number
          *
-         * @return {Boolean} whether the value was successfully set.
+         * @return whether the value was successfully set.
          */
         public function setValue( projectId:Number, num:Number, value:Number ):Boolean
         {
@@ -343,19 +389,18 @@ package com.google.analytics.data
         
         /**
          * Wrapper for getting an X10 integer value.
-         *
-         * @param {Number} projectId The project ID for which to get a value.
-         * @param {Number} num The numeric index for which to get a value.
-         *
-         * @return {Number} The requested value in number form, null if not found.
-         * 
-         * TODO:
-         * - problem here, if we return a type Number we cannot return null
-         *   (null will be automatically casted to a Number and then zero)
-         * - need to check the details why getValue can or have to return null
+         * @param projectId The project ID for which to get a value.
+         * @param num The numeric index for which to get a value.
+         * @return The requested value in number form, null if not found.
          */
         public function getValue( projectId:Number, num:Number ):*
         {
+        	/**
+        	 * TODO:
+             * - problem here, if we return a type Number we cannot return null
+             *   (null will be automatically casted to a Number and then zero)
+             * - need to check the details why getValue can or have to return null
+        	 */
             var value:* = _getInternal(projectId, _value, num);
             
             if( value == null )
@@ -368,8 +413,7 @@ package com.google.analytics.data
         
         /**
          * Wrapper for clearing all X10 integer values for a given project ID.
-         *
-         * @param {Number} projectId The project ID for which to clear all values.
+         * @param projectId The project ID for which to clear all values.
          */
         public function clearValue( projectId:Number ):void
         {
@@ -377,18 +421,18 @@ package com.google.analytics.data
         }
         
         /**
-         * Generates the URL parameter string for the current internal extensible
-         * data state.
-         *
-         * @return {String} Encoded extensible data string.
-         * 
-         * TODO:
-         * - rename to toURLString, better naming
-         * - add a static parseURLString method (even if it's only to help debugging,testing)
-         * - check if we need to sort the data, see X10Test.testRenderUrlString7()
+         * Generates the URL parameter string for the current internal extensible data state.
+         * @return Encoded extensible data string.
          */
         public function renderUrlString():String
         {
+        	
+        	/* TODO:
+             * - rename to toURLString, better naming
+             * - add a static parseURLString method (even if it's only to help debugging,testing)
+             * - check if we need to sort the data, see X10Test.testRenderUrlString7()
+        	 */
+        	
             var result:Array = [];
             var projectId:String;
             

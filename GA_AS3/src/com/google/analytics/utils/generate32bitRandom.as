@@ -15,15 +15,15 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
-
+ 
 package com.google.analytics.utils
 {
     /**
-    * Generates a 32bit random number.
-    * 
-    * @return {Number} 32bit random number.
-    */
+     * Generates a 32bit random number.
+     * @return 32bit random number.
+     */
     public function generate32bitRandom():int
     {
         return Math.round(Math.random() * 0x7fffffff);

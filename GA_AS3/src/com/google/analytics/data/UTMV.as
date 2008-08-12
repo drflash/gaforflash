@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,26 +15,35 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.data
 {
     /**
-    * user defined value
-    * 
-    * note:
-    * always persists for 2 years.
-    */
+     * User defined value : always persists for 2 years.
+     */
     public class UTMV
     {
+    	
+    	/**
+    	 * @private
+    	 */
         private var _inURL:String = "__utmv";
         
-        //Field index for domain hash in user defined cookie (__utmv) value.
+        /**
+         * Field index for domain hash in user defined cookie (__utmv) value.
+         */
         public static const DOMAINHASH:int = 0;
         
-        //Field index for user defined fields in user defined cookie (__utmv) value.
+        /**
+         * Field index for user defined fields in user defined cookie (__utmv) value.
+         */
         public static const VALUE:int      = 1;
         
+        /**
+         * Creates a new UTMV instance.
+         */
         public function UTMV()
         {
         }

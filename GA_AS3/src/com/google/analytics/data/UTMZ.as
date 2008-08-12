@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,37 +15,49 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.data
 {
     /**
-    * campaign tracking
-    * 
-    * note:
-    * persists for 6 months.
-    */
+     * Campaign tracking :persists for 6 months.
+     */
     public class UTMZ
     {
+    	/**
+    	 * @private
+    	 */
         private var _inURL:String = "__utmz";
         
-        //Field index for domain hash in campaign tracking cookie (__utmz) value.
+        /**
+         * Field index for domain hash in campaign tracking cookie (__utmz) value.
+         */
         public static const DOMAINHASH:int       = 0;
         
-        //Field index for campaign creation timestamp in campaign tracking cookie (__utmz) value.
+        /**
+         * Field index for campaign creation timestamp in campaign tracking cookie (__utmz) value.
+         */
         public static const CAMPAIGNCREATION:int = 1;
         
-        //Field index for campaign session count in campaign tracking cookie (__utmz) value.
+        /**
+         * Field index for campaign session count in campaign tracking cookie (__utmz) value.
+         */
         public static const CAMPAIGNSESSIONS:int = 2;
         
-        //Field index for response count in campaign tracking cookie (__utmz) value.
+        /**
+         * Field index for response count in campaign tracking cookie (__utmz) value.
+         */
         public static const RESPONSECOUNT:int    = 3;
         
-        //Field index for campaign tracker in campaign tracking cookie (__utmz) value.
+        /**
+         * Field index for campaign tracker in campaign tracking cookie (__utmz) value.
+         */
         public static const CAMPAIGNTRACKING:int = 4;
         
-        
-        
+        /**
+         * Creates a new UTMZ instance.
+         */
         public function UTMZ()
         {
         }
