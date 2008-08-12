@@ -53,6 +53,10 @@ package com.google.analytics.core
             {
                 this.name = name;
             }
+            else
+            {
+                _name = name;
+            }
             
         }
         
