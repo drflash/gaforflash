@@ -70,10 +70,12 @@ package com.google.analytics.v4
         
         private function _initData():void
         {
+            _updateDomainName();
+            
             var data:String = "";
                 data += "_initData";
                 data += "\nprotocol: " + _info.protocol;
-                data += "\ndomain name: " + _info.domainName;
+                data += "\ndefault domain name (auto): \"" + _info.domainName +"\"";
                 data += "\nlanguage: " + _info.language;
             _showInfo( data );
             
@@ -93,10 +95,12 @@ package com.google.analytics.v4
                     domainName = domainName.substring(4);
                 }
                 
-                config.domainName = domainName;
+                config.domain.name = domainName;
             }
             
-            config.domainName = config.domainName.toLowerCase();
+            config.domainName = config.domain.name.toLowerCase();
+            //_showInfo( "config.domain.name: " + config.domain.name );
+            //_showInfo( "domain name: " + config.domainName );
         }
         
         
@@ -458,7 +462,7 @@ package com.google.analytics.v4
             }
             
             _updateDomainName();
-            _showInfo( "domain name: " + config.domainName );
+            _showInfo( "setDomainName: " + config.domainName );
         }
         
         // ----------------------------------------
