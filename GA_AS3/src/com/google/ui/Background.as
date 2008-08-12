@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +15,22 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.ui
 {
-    import flash.display.Graphics;
-    
+    import flash.display.Graphics;    
+
+    /**
+     * The background class.
+     */
     public class Background
     {
-        public function Background()
-        {
-        }
-        
+    	
+        /**
+         * Draw the rounded background in the specified target.
+         */
         public static function drawRounded( target:*, g:Graphics, width:uint = 0, height:uint = 0 ):void
         {
             //var g:Graphics = _background.graphics;

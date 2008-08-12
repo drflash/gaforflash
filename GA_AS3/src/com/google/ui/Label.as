@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,8 +24,11 @@ package com.google.ui
     import flash.events.TextEvent;
     import flash.text.TextField;
     import flash.text.TextFieldAutoSize;
-    import flash.text.TextFieldType;
-    
+    import flash.text.TextFieldType;    
+
+    /**
+     * The label sprite.
+     */
     public class Label extends UISprite
     {
         private var _background:Shape;
@@ -40,6 +43,9 @@ package com.google.ui
         
         public var stickToEdge:Boolean;
         
+        /**
+         * Creates a new Label instance.
+         */
         public function Label( text:String = "", tag:String = "uiLabel",
                                color:uint = 0, alignement:Align = null, stickToEdge:Boolean = false )
         {

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,23 +15,44 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.ui
 {
     import flash.display.DisplayObject;
     import flash.display.Sprite;
-    import flash.events.Event;
+    import flash.events.Event;    
 
+    /**
+     * The core UISprite class.
+     */
     public class UISprite extends Sprite
     {
+    	
+    	/**
+    	 * Indicates the display object align target.
+    	 */
+    	protected var alignTarget:DisplayObject;
+    	
+    	/**
+    	 * Indicates if the resize process is listening. 
+    	 */
         protected var listenResize:Boolean;
         
+        /**
+         * Indicates the alignement reference of this sprite.
+         */
         public var alignement:Align;
-        protected var alignTarget:DisplayObject;
         
+        /**
+         * Indicates the margin reference of this sprite.
+         */
         public var margin:Margin;
         
+        /**
+         * Creates a new UISprite instance.
+         */
         public function UISprite()
         {
             super();
@@ -45,31 +66,35 @@ package com.google.ui
             
         }
         
+        /**
+         * @private
+         */
         private function _onAddedToStage( event:Event ):void
         {
             layout();
             resize();
         }
         
+        /**
+         * Layout the display.
+         */
+        protected function layout():void
+        {
+            //trace( "UISprite.layout" );
+        }        
+        
+        /**
+         * Invoked when the stage is resized.
+         */
         protected function onResize( event:Event ):void
         {
             //trace( "UISprite.onResize" );
             resize();
         }
         
-        public function resize():void
-        {
-            if( alignement != Align.none )
-            {
-                alignTo( alignement, alignTarget );
-            }
-        }
-        
-        protected function layout():void
-        {
-            //trace( "UISprite.layout" );
-        }
-        
+        /**
+         * Align the specified display with the specified alignement value.
+         */
         public function alignTo( alignement:Align, target:DisplayObject = null ):void
         {
             
@@ -155,6 +180,17 @@ package com.google.ui
             this.alignement  = alignement;
             this.alignTarget = target;
         }
+        
+        /**
+         * Resize the display.
+         */
+        public function resize():void
+        {
+            if( alignement != Align.none )
+            {
+                alignTo( alignement, alignTarget );
+            }
+        }        
         
     }
 }

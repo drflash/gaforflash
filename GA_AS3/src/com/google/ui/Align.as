@@ -15,6 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.ui
@@ -29,17 +30,28 @@ package com.google.ui
             _value = value;
             _name  = name;
         }
-        
-        public function valueOf():int
-        {
-            return _value;
-        }
-        
+                
+        /**
+         * Returns the String representation of the object.
+         * @return the String representation of the object.
+         */
         public function toString():String
         {
             return _name;
         }
         
+        /**
+         * Returns the primitive value of the object.
+         * @return the primitive value of the object.
+         */
+        public function valueOf():int
+        {
+            return _value;
+        }        
+        
+        /**
+         * 
+         */
         public static const none:Align        = new Align( 0x000, "none" );
         
         public static const top:Align         = new Align( 0x001, "top" );

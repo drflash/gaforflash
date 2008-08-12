@@ -15,6 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.ui
@@ -22,18 +23,50 @@ package com.google.ui
     import flash.display.DisplayObject;
     import flash.events.Event;
     
+    /**
+     * The Layout class is a helper who manages all information's displays in the application.
+     */
     public class Layout
     {
+    	
+    	/**
+    	 * @private
+    	 */
         private var _display:DisplayObject;
-        
+
+        /**
+         * @private
+         */        
         private var _hasWarning:Boolean;
+        
+        /**
+         * @private
+         */
         private var _hasInfo:Boolean;
+        
+        /**
+         * @private
+         */
         private var _hasDebug:Boolean;
+        
+        /**
+         * @private
+         */
         private var _warningQueue:Array;
+        
+        /**
+         * @private
+         */
         private var _infoQueue:Array;
         
+        /**
+         * The Debug reference of this Layout.
+         */
         public var debug:Debug;
         
+        /**
+         * Creates a new Layout instance.
+         */
         public function Layout( display:DisplayObject )
         {
             super();
