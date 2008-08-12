@@ -21,7 +21,7 @@ package com.google.analytics.core
 {
     
     /**
-     * 
+     * The Domain class
      */
     public class Domain
     {

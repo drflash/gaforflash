@@ -25,6 +25,11 @@ package com.google.ui
         private var _value:int;
         private var _name:String;
         
+        /**
+         * Creates a new Align instance.
+         * @param value The value of the enumeration.
+         * @param name The name key of the enumeration.
+         */
         public function Align( value:int = 0, name:String = "" )
         {
             _value = value;
