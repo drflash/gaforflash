@@ -179,7 +179,7 @@ package com.google.ui
             
             if( _hasDebug )
             {
-                debug.write( "## "+message+" ##" );
+                debug.write( "<b>"+message+"</b>" );
             }
         }
         
