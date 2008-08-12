@@ -15,6 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.ui
@@ -23,10 +24,20 @@ package com.google.ui
     import flash.events.TimerEvent;
     import flash.utils.Timer;    
 
+    /**
+     * The Warning class.
+     */
     public class Warning extends Label
     {
+    	
+    	/**
+    	 * @private
+    	 */
         private var _timer:Timer;
         
+        /**
+         * Creates a new Warning instance.
+         */
         public function Warning( text:String="", timeout:uint = 3000 )
         {
             super(text, "uiWarning", Style.warningColor, Align.top, false );
@@ -40,6 +51,20 @@ package com.google.ui
             }
         }
         
+        /**
+         * Close the warning message.
+         */
+        public function close():void
+        {
+        	if ( parent != null )
+        	{
+                parent.removeChild( this );
+        	}
+        }        
+        
+        /**
+         * Invoked when a link is selected in the text.
+         */
         public override function onLink( event:TextEvent ):void
         {
             switch( event.text )
@@ -50,15 +75,13 @@ package com.google.ui
             }
         }
         
+        /**
+         * Invoked when the process is complete.
+         */
         public function onComplete( event:TimerEvent ):void
         {
             close();
         }
-        
-        public function close():void
-        {
-            parent.removeChild( this );
-        }
-        
+                
     }
 }
