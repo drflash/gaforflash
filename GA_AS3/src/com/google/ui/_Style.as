@@ -15,26 +15,58 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.ui
 {
     import flash.net.URLLoader;
     import flash.text.StyleSheet;    
-
+    
+    /**
+     * The _Style class.
+     */
     public class _Style
     {
+    	
+    	/**
+    	 * @private
+    	 */
         private var _defaultSheet:String;
+
+        /**
+         * @private
+         */
         private var _sheet:StyleSheet;
+
+        /**
+         * @private
+         */
         private var _loader:URLLoader;
         
-        public var roundedCorner:uint;
+        /**
+         * The background color.
+         */
         public var backgroundColor:uint;
-        
-        public var warningColor:uint;
+
+        /**
+         * The info color value.
+         */
         public var infoColor:uint;
         
+        /**
+         * The rounded corner value.
+         */
+        public var roundedCorner:uint;
         
+        /**
+         * The warning color value.
+         */
+        public var warningColor:uint;
+        
+        /**
+         * Creates a new _Style class.
+         */
         public function _Style()
         {
             _sheet  = new StyleSheet();
@@ -43,6 +75,9 @@ package com.google.ui
             _init();
         }
         
+        /**
+         * @private
+         */
         private function _init():void
         {
             _defaultSheet  = "";
@@ -61,12 +96,17 @@ package com.google.ui
             _parseSheet( _defaultSheet );
         }
         
+        /**
+         * @private
+         */
         private function _parseSheet( data:String ):void
         {
             _sheet.parseCSS( data );
         }
         
-        
+        /**
+         * @private
+         */
         public function get sheet():StyleSheet
         {
             return _sheet;

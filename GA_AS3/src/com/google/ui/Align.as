@@ -50,19 +50,53 @@ package com.google.ui
         }        
         
         /**
-         * 
+         * Defines the "none" value (0x000).
          */
         public static const none:Align        = new Align( 0x000, "none" );
-        
+
+        /**
+         * Defines the "top" value (0x001).
+         */
         public static const top:Align         = new Align( 0x001, "top" );
+
+        /**
+         * Defines the "bottom" value (0x002).
+         */
         public static const bottom:Align      = new Align( 0x002, "bottom" );
+
+        /**
+         * Defines the "right" value (0x010).
+         */ 
         public static const right:Align       = new Align( 0x010, "right" );
+        
+        /**
+         * Defines the "left" value (0x020).
+         */
         public static const left:Align        = new Align( 0x020, "left" );
+        
+        /**
+         * Defines the "center" value (0x100).
+         */
         public static const center:Align      = new Align( 0x100, "center" );
         
+        /**
+         * Defines the "topLeft" value (0x021).
+         */        
         public static const topLeft:Align     = new Align( 0x021, "topLeft" );
+        
+        /**
+         * Defines the "topRight" value (0x011).
+         */        
         public static const topRight:Align    = new Align( 0x011, "topRight" );
+        
+        /**
+         * Defines the "bottomLeft" value (0x022).
+         */        
         public static const bottomLeft:Align  = new Align( 0x022, "bottomLeft" );
+
+        /**
+         * Defines the "bottomRight" value (0x012).
+         */
         public static const bottomRight:Align = new Align( 0x012, "bottomRight" );
         
     }

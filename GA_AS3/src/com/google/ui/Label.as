@@ -45,6 +45,10 @@ package com.google.ui
         
         /**
          * Creates a new Label instance.
+         * @param text The text of the label.
+         * @param tag The of the class used to render the text (default "uiLabel"). See <code>Style</code>.
+         * @param color The color of the label.
+         * @param stickToEdge The flag to defines the stickToEdge value.
          */
         public function Label( text:String = "", tag:String = "uiLabel",
                                color:uint = 0, alignement:Align = null, stickToEdge:Boolean = false )
