@@ -21,6 +21,7 @@ package com.google.analytics.v4
 {
     import com.google.analytics.config;
     import com.google.analytics.core.Buffer;
+    import com.google.analytics.core.DomainNameMode;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.utils.LocalInfo;
     import com.google.ui.Layout;
@@ -77,6 +78,27 @@ package com.google.analytics.v4
             _showInfo( data );
             
         }
+        
+        /**
+         * Resolves domain name from document object if domain name is set to "auto".
+         */
+        private function _updateDomainName():void
+        {
+            if( config.domain.mode == DomainNameMode.auto )
+            {
+                var domainName:String = _info.domainName;
+                
+                if( domainName.substring(0,4) == "www." )
+                {
+                    domainName = domainName.substring(4);
+                }
+                
+                config.domainName = domainName;
+            }
+            
+            config.domainName = config.domainName.toLowerCase();
+        }
+        
         
         // ----------------------------------------
         // Basic Configuration
@@ -421,7 +443,22 @@ package com.google.analytics.v4
          */        
         public function setDomainName(newDomainName:String="auto"):void
         {
-        	//
+            if( newDomainName == "auto" )
+            {
+                config.domain.mode = DomainNameMode.auto;
+            }
+            else if( newDomainName == "none" )
+            {
+                config.domain.mode = DomainNameMode.none;
+            }
+            else
+            {
+                config.domain.mode = DomainNameMode.custom;
+                config.domain.name = newDomainName;
+            }
+            
+            _updateDomainName();
+            _showInfo( "domain name: " + config.domainName );
         }
         
         // ----------------------------------------
@@ -526,7 +563,7 @@ package com.google.analytics.v4
          */        
         public function addIgnoredOrganic(newIgnoredOrganicKeyword:String):void
         {
-        	//
+            //
         }
         
         /**
@@ -542,7 +579,7 @@ package com.google.analytics.v4
          */        
         public function addIgnoredRef(newIgnoredReferrer:String):void
         {
-        	//
+            //
         }
         
         /**
@@ -552,7 +589,7 @@ package com.google.analytics.v4
          * 
          * @param newOrganicEngine Engine for new organic source.
          * @param newOrganicKeyword Keyword name for new organic source.
-         */        
+         */
         public function addOrganic(newOrganicEngine:String, newOrganicKeyword:String):void
         {
             config.addOrganicSource(newOrganicEngine, newOrganicKeyword);
@@ -563,7 +600,7 @@ package com.google.analytics.v4
          */        
         public function clearIgnoredOrganic():void
         {
-        	//
+            //
         }
         
         /**
@@ -571,7 +608,7 @@ package com.google.analytics.v4
          */
         public function clearIgnoredRef():void
         {
-        	//
+            //
         }
         
         /**

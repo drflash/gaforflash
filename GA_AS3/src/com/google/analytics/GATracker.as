@@ -62,7 +62,7 @@ package com.google.analytics
             
             _layout    = new Layout( _display );
             
-            if( config.debug )
+            if( config.debug && _layout )
             {
                 _layout.createDebug();
             }
@@ -79,7 +79,7 @@ package com.google.analytics
         
         private function _onInfo( event:MessageEvent ):void
         {
-            if( config.showInfos )
+            if( config.showInfos && _layout )
             {
                 _layout.createInfo( event.message );
             }
@@ -87,7 +87,7 @@ package com.google.analytics
         
         private function _onWarning( event:MessageEvent ):void
         {
-            if( config.showWarnings )
+            if( config.showWarnings && _layout )
             {
                 _layout.createWarning( event.message );
             }
@@ -101,7 +101,7 @@ package com.google.analytics
         */
         as3_api function getTracker( account:String ):GoogleAnalyticsAPI
         {
-            if( config.showInfos )
+            if( config.showInfos && _layout )
             {
                 _layout.createInfo( "GATracker v" + version +"\naccount: " + account );
             }
