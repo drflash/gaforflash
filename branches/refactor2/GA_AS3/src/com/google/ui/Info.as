@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,10 +23,22 @@ package com.google.ui
     import flash.events.TimerEvent;
     import flash.utils.Timer;
     
+    /**
+     * The Info label class.
+     */
     public class Info extends Label
     {
+    	
+    	/**
+    	 * @private
+    	 */
         private var _timer:Timer;
         
+        /**
+         * Creates a new Info instance.
+         * @param text The text of the label.
+         * @param timeout The timeout value of the info..
+         */
         public function Info( text:String="", timeout:uint = 3000 )
         {
             super(text, "uiInfo", Style.infoColor, Align.top, true );
@@ -39,6 +51,20 @@ package com.google.ui
             }
         }
         
+        /**
+         * Close the warning message.
+         */        
+        public function close():void
+        {
+            if ( parent != null )
+            {
+                parent.removeChild( this );
+            }
+        }        
+        
+        /**
+         * Invoked when a link is selected in the text.
+         */        
         public override function onLink( event:TextEvent ):void
         {
             switch( event.text )
@@ -49,15 +75,15 @@ package com.google.ui
             }
         }
         
+        /**
+         * Invoked when the process is complete.
+         */
         public function onComplete( event:TimerEvent ):void
         {
             close();
         }
         
-        public function close():void
-        {
-            parent.removeChild( this );
-        }
+
         
     }
 }

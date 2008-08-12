@@ -78,6 +78,9 @@ package com.google.ui
             _infoQueue    = [];
         }
         
+        /**
+         * @private
+         */
         private function _clearWarning( event:Event ):void
         {
             _hasWarning = false;
@@ -88,7 +91,10 @@ package com.google.ui
             }
             
         }
-        
+
+        /**
+         * @private
+         */
         private function _clearInfo( event:Event ):void
         {
             _hasInfo = false;
@@ -100,37 +106,40 @@ package com.google.ui
             
         }
         
-        
+        /**
+         * Adds to stage the specified visual display.
+         */
         public function addToStage( visual:DisplayObject ):void
         {
             _display.stage.addChild( visual );
         }
-        
+
+        /**
+         * Brings to front the specified visual display.
+         */
         public function bringToFront( visual:DisplayObject ):void
         {
             _display.stage.setChildIndex( visual, _display.stage.numChildren - 1 );
         }
         
-        public function createWarning( message:String ):void
+        /**
+         * Creates a debug message in the debug display.
+         */        
+        public function createDebug():void
         {
-            if( _hasWarning )
+            if( !debug )
             {
-                _warningQueue.push( message );
-                return;
-            }
-            
-            _hasWarning = true;
-            var w:Warning = new Warning( message );
-            addToStage( w );
-            bringToFront( w );
-            w.addEventListener( Event.REMOVED_FROM_STAGE, _clearWarning );
-            
-            if( _hasDebug )
-            {
-                debug.write( "## "+message+" ##" );
+                debug = new Debug();
+                debug.alignement = Align.bottom;
+                debug.stickToEdge = true;
+                addToStage( debug );
+                _hasDebug = true;
             }
         }
         
+        /**
+         * Creates an info message in the debug display.
+         */        
         public function createInfo( message:String ):void
         {
             if( _hasInfo )
@@ -151,17 +160,30 @@ package com.google.ui
             }
         }
         
-        public function createDebug():void
+        /**
+         * Creates a warning message in the debug display.
+         */
+        public function createWarning( message:String ):void
         {
-            if( !debug )
+            if( _hasWarning )
             {
-                debug = new Debug();
-                debug.alignement = Align.bottom;
-                debug.stickToEdge = true;
-                addToStage( debug );
-                _hasDebug = true;
+                _warningQueue.push( message );
+                return;
+            }
+            
+            _hasWarning = true;
+            var w:Warning = new Warning( message );
+            addToStage( w );
+            bringToFront( w );
+            w.addEventListener( Event.REMOVED_FROM_STAGE, _clearWarning );
+            
+            if( _hasDebug )
+            {
+                debug.write( "## "+message+" ##" );
             }
         }
+        
+
         
     }
 }
