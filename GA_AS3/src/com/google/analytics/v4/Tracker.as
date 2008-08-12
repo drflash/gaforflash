@@ -50,7 +50,6 @@ package com.google.analytics.v4
             _initData();
         }
         
-<<<<<<< .mine
         private function _showInfo( message:String ):void
         {
             if( config.showInfos && _layout )
@@ -79,7 +78,6 @@ package com.google.analytics.v4
             
         }
         
-=======
         // ----------------------------------------
         // Basic Configuration
         // Methods that you use for customizing all aspects of Google Analytics reporting.
@@ -92,7 +90,6 @@ package com.google.analytics.v4
          * with a particular tracker object.
          * @return the Account ID this tracker object is instantiated with.
          */
->>>>>>> .r40
         public function getAccount():String
         {
             return _account;
@@ -112,11 +109,7 @@ package com.google.analytics.v4
          */
         public function initData():void
         {
-<<<<<<< .mine
             _initData();
-=======
-            //
->>>>>>> .r40
         }
         
         /**

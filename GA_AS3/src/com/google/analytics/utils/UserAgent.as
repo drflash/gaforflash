@@ -23,7 +23,6 @@ package com.google.analytics.utils
     import flash.system.System;
     
     /**
-<<<<<<< .mine
     * User Agent
     * Constructs a user agent string for Flash.
     * 
@@ -44,11 +43,10 @@ package com.google.analytics.utils
     * tspecials         = "(" | ")" | "<" | ">" | "@" | "," | ";" | ":" | "\" | <"> | "/" | "[" | "]" | "?" | "=" | "{" | "}" | SP | HT 
     * 
     * 
+    *
+    * Constructs a user agent string for Flash.
     */
-=======
-     * Constructs a user agent string for Flash.
-     */
->>>>>>> .r39
+    
     public class UserAgent
     {
         /**
@@ -66,28 +64,17 @@ package com.google.analytics.utils
          */
         private var _applicationComment:String;
         
-<<<<<<< .mine
         private var _localInfo:LocalInfo;
-=======
-        /**
-         * @private
-         */
-        private var _flashVersion:Object = LocalInfo.flashVersion;
->>>>>>> .r39
         
-<<<<<<< .mine
         /* for privacy concern */
         public static var minimal:Boolean = false;
         
-        public function UserAgent( localInfo:LocalInfo, product:String = "Flash", version:String = "" )
-=======
         /**
          * Creates a new UserAgent instance.
          * @param product The product String representation.
          * @param version The version String representation.
          */
-        public function UserAgent( product:String = "Flash", version:String = "" )
->>>>>>> .r39
+        public function UserAgent( localInfo:LocalInfo, product:String = "Flash", version:String = "" )
         {
             _localInfo = localInfo;
             applicationProduct = product;
@@ -102,7 +89,9 @@ package com.google.analytics.utils
             }
         }
         
-<<<<<<< .mine
+        /**
+         * Indicates the application product String representation.
+         */
         public function get applicationProduct():String
         {
             return _applicationProduct;
@@ -113,6 +102,9 @@ package com.google.analytics.utils
             _applicationProduct = value;
         }
         
+        /**
+         * Indicates the application version String representation.
+         */
         public function get applicationVersion():String
         {
             return _applicationVersion;
@@ -123,6 +115,9 @@ package com.google.analytics.utils
             _applicationVersion = value;
         }
         
+        /**
+         * Indicates the application product token String representation.
+         */
         public function get applicationProductToken():String
         {
             var token:String = applicationProduct;
@@ -135,34 +130,21 @@ package com.google.analytics.utils
             return token;
         }
         
-=======
->>>>>>> .r39
         /* 
            ( Platform ;  PlayerType ;  OS ;  Localization information  ?[; DebugVersion ; PrereleaseVersion] )
         */
         public function get applicationComment():String
         {
             var comment:Array = [];
-<<<<<<< .mine
                 comment.push( _localInfo.platform );
                 comment.push( _localInfo.playerType );
                 comment.push( _localInfo.operatingSystem );
-=======
->>>>>>> .r39
                 
-<<<<<<< .mine
                 if( !UserAgent.minimal )
                 {
                     comment.push( _localInfo.language );
                 }
                 
-=======
-                comment.push( LocalInfo.platform ) ;
-                comment.push( LocalInfo.playerType ) ;
-                comment.push( LocalInfo.operatingSystem ) ;
-                comment.push( LocalInfo.language ) ;
-                
->>>>>>> .r39
                 if( Capabilities.isDebugger )
                 {
                     comment.push( "DEBUG" );
@@ -180,46 +162,7 @@ package com.google.analytics.utils
             return "";
         }        
         
-        /**
-         * Indicates the application product String representation.
-         */
-        public function get applicationProduct():String
-        {
-            return _applicationProduct ;
-        }
         
-        /**
-         * @private
-         */
-        public function set applicationProduct( value:String ):void
-        {
-            _applicationProduct = value ;
-        }
-        
-        /**
-         * Indicates the application product token String representation.
-         */        
-        public function get applicationProductToken():String
-        {
-            return applicationProduct + "/" + applicationVersion ;
-        }        
-        
-        /**
-         * Indicates the application version String representation.
-         */        
-        public function get applicationVersion():String
-        {
-            return _applicationVersion;
-        }
-        
-        /**
-         * @private
-         */
-        public function set applicationVersion( value:String ):void
-        {
-            _applicationVersion = value;
-        }
-                
         /**
          * Indicates the Tamarin engine token or an empty string if vmVersion can not be found.
          * <p><b>Example :</b> <code>Tamarin/1.0d684</code></p>
