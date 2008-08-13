@@ -15,7 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
- *   
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.core

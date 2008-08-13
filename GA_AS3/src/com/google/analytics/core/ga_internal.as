@@ -20,8 +20,8 @@
 package com.google.analytics.core
 {
     /**
-    * @private
-    * Namespace used internally for special setup and/or non-supported features.
-    */
+     * Namespace used internally for special setup and/or non-supported features.
+     * @private
+     */
     public namespace ga_internal;
 }
