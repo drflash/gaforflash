@@ -15,6 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.core
@@ -25,16 +26,17 @@ package com.google.analytics.core
      */
     public class ServerOperationMode
     {
-        /**
-         * @private
-         */
-        private var _value:int;
-        
+
         /**
          * @private
          */        
         private var _name:String;
         
+        /**
+         * @private
+         */
+        private var _value:int;
+                
         /**
          * Creates a new ServerOperationMode instance.
          * @param value The 
@@ -44,16 +46,7 @@ package com.google.analytics.core
             _value = value;
             _name  = name;
         }
-        
-        /**
-         * Returns the primitive value of the object.
-         * @return the primitive value of the object.
-         */
-        public function valueOf():int
-        {
-            return _value;
-        }
-        
+                
         /**
          * Returns the String representation of the object.
          * @return the String representation of the object.
@@ -62,6 +55,15 @@ package com.google.analytics.core
         {
             return _name;
         }
+        
+        /**
+         * Returns the primitive value of the object.
+         * @return the primitive value of the object.
+         */
+        public function valueOf():int
+        {
+            return _value;
+        }        
         
         /**
          * Send data to the Urchin tracking software on your local servers.

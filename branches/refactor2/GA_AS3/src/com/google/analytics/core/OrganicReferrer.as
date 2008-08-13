@@ -15,6 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.core
@@ -26,38 +27,24 @@ package com.google.analytics.core
 	{
 		
 		/**
-		 * Indicates the "engine" String representation of this referrer.
+		 * Indicates the organic source engine value.
 		 */
 		public var engine:String;
 		
 		/**
-		 * Indicates the "keyword" String representation of this referrer.
+		 * Indicates the organic keyword value.
 		 */
 		public var keyword:String;
 		
 		/**
 		 * Creates a new OrganicReferrer instance.
-		 * @param engine The "engine" String representation of this referrer.
-		 * @param keyword The "keyword" String representation of this referrer.
+		 * @param engine The the organic source engine value.
+		 * @param keyword The the organic keyword value.
 		 */
-		public function OrganicReferrer(engine:String, keyword:String)
+		public function OrganicReferrer( engine:String , keyword:String )
 		{
-		    
-			/**
-		    * Organic source engine.
-		    *
-		    * @type {String}
-		    * @ignore
-		    */
-		    this.engine = engine;  
-              
-		    /**
-		     * Organic keyword.
-		     *
-		     * @type {String}
-		     * @ignore
-		     */
-		   	this.keyword = keyword; 
+		    this.engine  = engine  ;  
+		   	this.keyword = keyword ; 
 		}
         
         /**

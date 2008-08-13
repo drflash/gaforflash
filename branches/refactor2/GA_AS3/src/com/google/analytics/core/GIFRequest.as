@@ -18,7 +18,6 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-
 package com.google.analytics.core
 {
     /**
