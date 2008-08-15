@@ -22,7 +22,6 @@ package com.google.analytics.utils
 {
     import com.google.analytics.core.ga_internal;
     
-    import flash.display.Stage;
     import flash.external.ExternalInterface;
     import flash.system.Capabilities;
     
@@ -31,7 +30,7 @@ package com.google.analytics.utils
      */
     public class LocalInfo
     {
-        private var _stage:Stage;
+        private var _url:String;
         private var _protocol:Protocols;
         private var _userAgent:UserAgent;
         
@@ -40,17 +39,17 @@ package com.google.analytics.utils
          * Creates a new LocalInfo instance.
          * @param stage The Stage reference of the application.
          */
-        public function LocalInfo( stage:Stage = null )
+        public function LocalInfo( url:String = "" )
         {
-            _stage = stage;
+            _url = url;
         }
         
         /**
          * Sets the stage reference value of the application.
          */
-        ga_internal function set stage( value:Stage ):void
+        ga_internal function set url( value:String ):void
         {
-            _stage = value;
+            _url = value;
         }
         
         /**
@@ -60,12 +59,12 @@ package com.google.analytics.utils
         {
             var p:Protocols = Protocols.none;
             
-            if(_stage)
+            if(_url != "")
             {
                 // file://
                 // http://
                 // https://
-                var URL:String = _stage.loaderInfo.url.toLowerCase();
+                var URL:String = _url.toLowerCase();
                 var test:String = URL.substr(0,5);
                 
                 switch( test )
@@ -79,7 +78,7 @@ package com.google.analytics.utils
                     break;
                     
                     case "https":
-                    if(URL.charAt(6) == ":")
+                    if(URL.charAt(5) == ":")
                     {
                         p = Protocols.HTTPS;
                     }
@@ -113,7 +112,7 @@ package com.google.analytics.utils
             if( protocol == Protocols.HTTP ||
                 protocol == Protocols.HTTPS )
             {
-                var URL:String = _stage.loaderInfo.url.toLowerCase();
+                var URL:String = _url.toLowerCase();
                 var str:String;
                 var end:int;
                 

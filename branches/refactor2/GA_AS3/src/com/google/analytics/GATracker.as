@@ -127,7 +127,7 @@ package com.google.analytics
                We keep the implementation internal to be able to change it if required later.
             */
             use namespace ga_internal;
-            _localInfo.stage = _display.stage;
+            _localInfo.url = _display.stage.loaderInfo.url;
             return new Tracker( account, _localInfo, _buffer, _layout );
         }
         
