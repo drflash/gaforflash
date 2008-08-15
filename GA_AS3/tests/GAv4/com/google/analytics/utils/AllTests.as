@@ -17,13 +17,9 @@
  *   Zwetan Kjukov <zwetan@gmail.com>.
  */
 
-package com.google.analytics
+package com.google.analytics.utils
 {
     import buRRRn.ASTUce.framework.*;
-    
-    import com.google.analytics.core.AllTests;
-    import com.google.analytics.data.AllTests;
-    import com.google.analytics.utils.AllTests;
     
     public class AllTests
         {
@@ -35,15 +31,9 @@ package com.google.analytics
         
         static public function suite():ITest
             {
-            var suite:TestSuite = new TestSuite( "Google Analytics tests" );
+            var suite:TestSuite = new TestSuite( "Google Analytics utils tests" );
             
-            suite.addTestSuite( UtilitiesTest );
-            suite.addTestSuite( ConfigurationTest );
-            
-            /* packages */
-            suite.addTest( com.google.analytics.core.AllTests.suite() );
-            suite.addTest( com.google.analytics.data.AllTests.suite() );
-            suite.addTest( com.google.analytics.utils.AllTests.suite() );
+            suite.addTestSuite( LocalInfoTest );
             
             return suite;
             }
