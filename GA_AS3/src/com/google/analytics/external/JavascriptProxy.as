@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,14 +20,25 @@
 
 package com.google.analytics.external
 {
-    import flash.external.ExternalInterface;
-    
+    import flash.external.ExternalInterface;    
+
+    /**
+     * Javascript proxy access class.
+     */
     public class JavascriptProxy
     {
+    	
+    	/**
+    	 * Creates a new JavascriptProxy instance.
+    	 */
         public function JavascriptProxy()
         {
         }
         
+        /**
+         * Returns the value property defines with the passed-in name value.
+         * @return the value property defines with the passed-in name value.
+         */        
         protected function getProperty( name:String ):*
         {
             /* note:
@@ -40,11 +51,18 @@ package com.google.analytics.external
             return ExternalInterface.call( name + ".valueOf" );
         }
         
+        /**
+         * Returns the String property defines with the passed-in name value.
+         * @return the String property defines with the passed-in name value.
+         */
         protected function getPropertyString( name:String ):String
         {
             return ExternalInterface.call( name + ".toString" );
         }
         
+        /**
+         * Indicates if the javascript proxy is available.
+         */
         public function isAvailable():Boolean
         {
             return ExternalInterface.available;

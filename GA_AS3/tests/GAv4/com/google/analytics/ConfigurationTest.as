@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.Licensed under the Apache License, 
  * Version 2.0 (the "License");you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at    
@@ -42,7 +42,7 @@ package com.google.analytics
         public function testClearOrganicSources():void
         {
             _conf.clearOrganicSources();
-            assertEquals(0, _conf.organicSources.length)
+            assertEquals(0, _conf.organicSources.length);
         }
         
         public function testSampleRate():void

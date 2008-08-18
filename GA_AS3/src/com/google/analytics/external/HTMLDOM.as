@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,13 +20,36 @@
 
 package com.google.analytics.external
 {
+	
+	/**
+	 * Proxy access to HTML Document Object Model.
+	 */
     public class HTMLDOM extends JavascriptProxy
     {
         
+        /**
+         * Creates a new HTMLDOM instance.
+         */
         public function HTMLDOM()
         {
         }
         
+        /**
+         * Determinates the 'host' String value from the HTML DOM.
+         */
+        public function get host():String
+        {
+            if( !isAvailable() )
+            {
+                return null;
+            }
+            
+            return getProperty( "document.location.host" );
+        }
+        
+        /**
+         * Determinates the 'langage' String value from the HTML DOM.
+         */
         public function get language():String
         {
             if( !isAvailable() )
@@ -44,43 +67,39 @@ package com.google.analytics.external
             return lang;
         }
         
+        /**
+         * Determinates the 'location' String value from the HTML DOM.
+         */     
         public function get location():String
         {
             if( !isAvailable() )
             {
                 return null;
             }
-            
             return getPropertyString( "document.location" );
         }
         
+        /**
+         * Determinates the 'protocol' String value from the HTML DOM.
+         */       
         public function get protocol():String
         {
             if( !isAvailable() )
             {
                 return null;
             }
-            
             return getProperty( "document.location.protocol" );
         }
         
-        public function get host():String
-        {
-            if( !isAvailable() )
-            {
-                return null;
-            }
-            
-            return getProperty( "document.location.host" );
-        }
-        
+        /**
+         * Determinates the 'search' String value from the HTML DOM.
+         */        
         public function get search():String
         {
             if( !isAvailable() )
             {
                 return null;
             }
-            
             return getProperty( "document.location.search" );
         }
         
