@@ -21,56 +21,60 @@ package com.google.analytics.utils
 {
     import buRRRn.ASTUce.framework.TestCase;
     
+    import com.google.analytics.external.HTMLDOM;
+    import com.google.analytics.utils.samples.HTMLDOM_set1;
+    import com.google.analytics.utils.samples.HTMLDOM_set2;
+    
     public class LocalInfoTest extends TestCase
     {
-        private var _li_empty:LocalInfo;
-        private var _li_local:LocalInfo;
-        private var _li_http:LocalInfo;
-        private var _li_https:LocalInfo;
         
         public function LocalInfoTest(name:String="")
         {
             super(name);
         }
         
-        public function setUp():void
-        {
-            _li_empty = new LocalInfo();
-            _li_local = new LocalInfo( "file://someFolder/someFile.swf" );
-            _li_http  = new LocalInfo( "http://www.domain.com/file.swf" );
-            _li_https = new LocalInfo( "https://www.domain.com/secure/file.swf" );
-        }
-        
-        public function tearDown():void
-        {
-            _li_empty = null;
-            _li_local = null;
-            _li_http  = null;
-            _li_https = null;
-        }
-        
         public function testBasicEmpty():void
         {
-            assertEquals( Protocols.none, _li_empty.protocol );
-            assertEquals( "", _li_empty.domainName );
+            var li_empty:LocalInfo = new LocalInfo();
+            
+            assertEquals( Protocols.none, li_empty.protocol );
+            assertEquals( "", li_empty.domainName );
         }
         
         public function testBasicLocal():void
         {
-            assertEquals( Protocols.file, _li_local.protocol );
-            assertEquals( "", _li_local.domainName );
+            var li_local:LocalInfo = new LocalInfo( "file://someFolder/someFile.swf" );
+            
+            assertEquals( Protocols.file, li_local.protocol );
+            assertEquals( "", li_local.domainName );
         }
         
         public function testBasicHTTP():void
         {
-            assertEquals( Protocols.HTTP, _li_http.protocol );
-            assertEquals( "www.domain.com", _li_http.domainName );
+            var li_http:LocalInfo = new LocalInfo( "http://www.domain.com/file.swf" );
+            
+            assertEquals( Protocols.HTTP, li_http.protocol );
+            assertEquals( "www.domain.com", li_http.domainName );
         }
         
         public function testBasicHTTPS():void
         {
-            assertEquals( Protocols.HTTPS, _li_https.protocol );
-            assertEquals( "www.domain.com", _li_https.domainName );
+            var li_https:LocalInfo = new LocalInfo( "https://www.domain.com/secure/file.swf" );
+            
+            assertEquals( Protocols.HTTPS, li_https.protocol );
+            assertEquals( "www.domain.com", li_https.domainName );
+        }
+        
+        public function testLanguageUpgrade():void
+        {
+            // THIS TEST WILL NOT WORK ON A NON-UK MACHINE
+            var set1:HTMLDOM = new HTMLDOM_set1(); //downcast trick
+            var set2:HTMLDOM = new HTMLDOM_set2(); //downcast trick
+            var li1:LocalInfo = new LocalInfo( "", set1 ); //en-GB
+            var li2:LocalInfo = new LocalInfo( "", set2 ); //fr-FR
+            
+            assertEquals( "en-GB", li1.language ); //match, upgrade
+            assertEquals( "en", li2.language );    //no match, no upgrade
         }
         
     }

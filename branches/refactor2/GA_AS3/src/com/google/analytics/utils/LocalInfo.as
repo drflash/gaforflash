@@ -21,6 +21,8 @@
 package com.google.analytics.utils
 {
     import com.google.analytics.core.ga_internal;
+    import com.google.analytics.external.HTMLDOM;
+    import com.google.ui.Layout;
     
     import flash.external.ExternalInterface;
     import flash.system.Capabilities;
@@ -33,15 +35,25 @@ package com.google.analytics.utils
         private var _url:String;
         private var _protocol:Protocols;
         private var _userAgent:UserAgent;
-        
+        private var _dom:HTMLDOM;
+        private var _layout:Layout;
         
         /**
          * Creates a new LocalInfo instance.
          * @param stage The Stage reference of the application.
          */
-        public function LocalInfo( url:String = "" )
+        public function LocalInfo( url:String = "", dom:HTMLDOM = null, layout:Layout = null )
         {
+            if( dom == null )
+            {
+                dom = new HTMLDOM();
+            }
+            
             _url = url;
+            _dom = dom;
+            
+            _layout = layout; //optional
+            
         }
         
         /**
@@ -86,6 +98,21 @@ package com.google.analytics.utils
                     
                     default:
                     _protocol = Protocols.none;
+                }
+                
+            }
+            
+            var _proto:String = _dom.protocol;
+            
+            //debug
+            if( _layout )
+            {
+                _layout.createInfo( "dom.protocol: " + _proto );
+                var proto:String = (p.toString()+":").toLowerCase();
+                
+                if( _proto && _proto != proto )
+                {
+                    _layout.createWarning( "Protocol mismatch: SWF="+proto+", DOM="+_proto );
                 }
                 
             }
@@ -141,7 +168,7 @@ package com.google.analytics.utils
          * <pre>
          * import com.google.analytics.utils.LocalInfo ;
          * 
-         * var info:LocalInfo = new LocalInfo( this ) ;
+         * var info:LocalInfo = new LocalInfo( "http://www.domain.com" ) ;
          * var version:Object = info.flashVersion ;
          * 
          * trace( version.major    ) ; // 9
@@ -175,7 +202,28 @@ package com.google.analytics.utils
          */
         public function get language():String
         {
-            return Capabilities.language ;
+            var _lang:String = _dom.language;
+            var lang:String  = Capabilities.language;
+            
+            var tmp:String = "flash.language: " + lang;
+            
+            if( _lang )
+            {
+                if( (_lang.length > lang.length) &&
+                    (_lang.substr(0,lang.length) == lang) )
+                {
+                    lang = _lang;
+                }
+            }
+            
+            //debug
+            if( _layout )
+            {
+                tmp += "\ndom.language: " + _lang;
+                _layout.createInfo( tmp );
+            }
+            
+            return lang;
         }
         
         /* Returns the operating system string.
@@ -273,17 +321,8 @@ package com.google.analytics.utils
         }
         
         /**
-         * Indicates if the application can be bridged with the external Javascript scripts.
-         * @return true if the application can be bridged with the external Javascript scripts.
-         */     
-        public function canBridgeToJS():Boolean
-        {
-            return ExternalInterface.available;
-        }        
-        
-        /**
-         * Indicates if the application is embed in a HTML application.
-         * @return true if the application is embed in a HTML application.
+         * Indicates if the SWF is embeded in an HTML page.
+         * @return true if the SWF is embeded in an HTML page.
          */
         public function isInHTML():Boolean
         {
