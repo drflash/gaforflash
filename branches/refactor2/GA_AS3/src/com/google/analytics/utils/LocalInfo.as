@@ -109,8 +109,14 @@ package com.google.analytics.utils
                     default:
                     _protocol = Protocols.none;
                 }
-                
             }
+            
+            /*TODO:
+              if _url is not found (if someone forgot to add the tracker to the display list)
+              we could use the alternative to get the dom.location and find the protocol from that string
+              off course only if we have access to ExternalInterface
+            */
+            
             
             var _proto:String = _dom.protocol;
             
