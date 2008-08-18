@@ -24,7 +24,6 @@ package com.google.analytics.utils
     import com.google.analytics.external.HTMLDOM;
     import com.google.ui.Layout;
     
-    import flash.external.ExternalInterface;
     import flash.system.Capabilities;
     
     /**
@@ -53,6 +52,17 @@ package com.google.analytics.utils
             _dom = dom;
             
             _layout = layout; //optional
+            
+            if( _layout )
+            {
+                var data:String = "";
+                    data       += "dom.language: " + _dom.language + "\n";
+                    data       += "dom.location: " + _dom.location + "\n";
+                    data       += "dom.protocol: " + _dom.protocol + "\n";
+                    data       += "dom.host:     " + _dom.host + "\n";
+                    data       += "dom.search:   " + _dom.search + "\n";
+                _layout.createInfo( data );
+            }
             
         }
         
@@ -107,7 +117,6 @@ package com.google.analytics.utils
             //debug
             if( _layout )
             {
-                _layout.createInfo( "dom.protocol: " + _proto );
                 var proto:String = (p.toString()+":").toLowerCase();
                 
                 if( _proto && _proto != proto )
@@ -205,8 +214,6 @@ package com.google.analytics.utils
             var _lang:String = _dom.language;
             var lang:String  = Capabilities.language;
             
-            var tmp:String = "flash.language: " + lang;
-            
             if( _lang )
             {
                 if( (_lang.length > lang.length) &&
@@ -214,13 +221,6 @@ package com.google.analytics.utils
                 {
                     lang = _lang;
                 }
-            }
-            
-            //debug
-            if( _layout )
-            {
-                tmp += "\ndom.language: " + _lang;
-                _layout.createInfo( tmp );
             }
             
             return lang;

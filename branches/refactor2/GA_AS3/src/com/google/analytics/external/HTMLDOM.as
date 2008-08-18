@@ -20,24 +20,11 @@
 
 package com.google.analytics.external
 {
-    public class HTMLDOM
+    public class HTMLDOM extends JavascriptProxy
     {
-        import flash.external.ExternalInterface;
         
         public function HTMLDOM()
         {
-        }
-        
-        private function _getJSproperty( name:String ):*
-        {
-            /* note:
-               we use a little trick here
-               we can not diretly get a property from JS
-               we can only call a function
-               so we use valueOf() to automatically get the property
-               and yes it will work only with primitives
-            */
-            return ExternalInterface.call( name + ".valueOf" );
         }
         
         public function get language():String
@@ -47,14 +34,24 @@ package com.google.analytics.external
                 return null;
             }
             
-            var lang:String = _getJSproperty( "navigator.language" );
+            var lang:String = getProperty( "navigator.language" );
             
             if( lang == null )
             {
-                lang = _getJSproperty( "navigator.browserLanguage" );
+                lang = getProperty( "navigator.browserLanguage" );
             }
             
             return lang;
+        }
+        
+        public function get location():String
+        {
+            if( !isAvailable() )
+            {
+                return null;
+            }
+            
+            return getPropertyString( "document.location" );
         }
         
         public function get protocol():String
@@ -64,15 +61,28 @@ package com.google.analytics.external
                 return null;
             }
             
-            return _getJSproperty( "document.location.protocol" );
+            return getProperty( "document.location.protocol" );
         }
         
-        
-        
-        public function isAvailable():Boolean
+        public function get host():String
         {
-            return ExternalInterface.available;
+            if( !isAvailable() )
+            {
+                return null;
+            }
+            
+            return getProperty( "document.location.host" );
         }
-
+        
+        public function get search():String
+        {
+            if( !isAvailable() )
+            {
+                return null;
+            }
+            
+            return getProperty( "document.location.search" );
+        }
+        
     }
 }
