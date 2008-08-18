@@ -20,22 +20,42 @@
 
 package com.google.analytics.utils
 {
-    import com.google.analytics.core.ga_internal;
-    import com.google.analytics.external.HTMLDOM;
-    import com.google.ui.Layout;
-    
     import flash.system.Capabilities;
     
+    import com.google.analytics.core.ga_internal;
+    import com.google.analytics.external.HTMLDOM;
+    import com.google.ui.Layout;    
+
     /**
      * Local Informations provide informations for the local environment.
      */
     public class LocalInfo
     {
-        private var _url:String;
-        private var _protocol:Protocols;
-        private var _userAgent:UserAgent;
+    	
+        /**
+         * @private
+         */        
         private var _dom:HTMLDOM;
-        private var _layout:Layout;
+        
+        /**
+         * @private
+         */        
+        private var _layout:Layout;    	
+    	
+        /**
+         * @private
+         */        
+        private var _protocol:Protocols;
+        
+        /**
+         * @private
+         */        
+        private var _userAgent:UserAgent;
+
+        /**
+         * @private
+         */
+        private var _url:String;
         
         /**
          * Creates a new LocalInfo instance.
@@ -56,11 +76,11 @@ package com.google.analytics.utils
             if( _layout )
             {
                 var data:String = "";
-                    data       += "dom.language: " + _dom.language + "\n";
-                    data       += "dom.location: " + _dom.location + "\n";
-                    data       += "dom.protocol: " + _dom.protocol + "\n";
-                    data       += "dom.host:     " + _dom.host + "\n";
-                    data       += "dom.search:   " + _dom.search + "\n";
+                    data       += "dom.language: " + _dom.language + "\n" ;
+                    data       += "dom.location: " + _dom.location + "\n" ;
+                    data       += "dom.protocol: " + _dom.protocol + "\n" ;
+                    data       += "dom.host:     " + _dom.host     + "\n" ;
+                    data       += "dom.search:   " + _dom.search   + "\n" ;
                 _layout.createInfo( data );
             }
             
@@ -134,21 +154,10 @@ package com.google.analytics.utils
             
             _protocol = p;
         }
-        
+                
         /**
-         * Indicates the Protocols object of this local info.
+         * Indicates the local domain name value.
          */
-        public function get protocol():Protocols
-        {
-            if(!_protocol)
-            {
-                _findProtocol();
-            }
-            
-            return _protocol;
-        }
-        
-        
         public function get domainName():String
         {
             if( protocol == Protocols.HTTP ||
@@ -193,30 +202,34 @@ package com.google.analytics.utils
          * </pre>
          * @return the flash version object representation of the application.
          */
-        /* Returns the flash version as an Object
-           with the following properties
-           major, minor, build, revision
-        */
         public function get flashVersion():Version
         {
-            var v:Version = Version.fromString( Capabilities.version.split( " " )[1], "," );
-            
-            return v;
+        	var v:Version = Version.fromString( Capabilities.version.split( " " )[1], "," ) ;
+            return v ;
         }
         
-        /* Returns the language string
-           as a lowercase two-letter language code from ISO 639-1.
-           
-           TODO:
-           if we can bridge to JS we can return a more precise string
-           from the browser as "en-GB" instead of "en".
-        */
         /**
-         * Indicates the current language value of the application.
+         * Indicates if the SWF is embeded in an HTML page.
+         * @return true if the SWF is embeded in an HTML page.
+         */
+        public function isInHTML():Boolean
+        {
+            return Capabilities.playerType == "PlugIn" ;
+        }        
+        
+        /**
+         * Returns the language string as a lowercase two-letter language code from ISO 639-1.
          * @see Capabilities.language
          */
         public function get language():String
         {
+
+            /* 
+                TODO:
+                if we can bridge to JS we can return a more precise string
+                from the browser as "en-GB" instead of "en".
+            */
+
             var _lang:String = _dom.language;
             var lang:String  = Capabilities.language;
             
@@ -231,71 +244,42 @@ package com.google.analytics.utils
             
             return lang;
         }
-        
-        /* Returns the operating system string.
-           
-           note:
-           the flash documentation indicate those strings
-           "Windows XP"
-           "Windows 2000"
-           "Windows NT"
-           "Windows 98/ME"
-           "Windows 95"
-           "Windows CE" (available only in Flash Player SDK, not in the desktop version)
-           "Linux"
-           "MacOS"
-           
-           other strings we can obtain (not documented(
-           "Mac OS 10.5.4"
-           "Windows Vista"
-        */
+                
         /**
-         * Indicates the current operating system value of the application.
+         * Returns the operating system string.
+         * <p><b>Note:</b> The flash documentation indicate those strings</p>
+         * <li>"Windows XP"</li>
+         * <li>"Windows 2000"</li>
+         * <li>"Windows NT"</li>
+         * <li>"Windows 98/ME"</li>
+         * <li>"Windows 95"</li>
+         * <li>"Windows CE" (available only in Flash Player SDK, not in the desktop version)</li>
+         * <li>"Linux"</li>
+         * <li>"MacOS"</li>
+         * <p>Other strings we can obtain ( not documented : "Mac OS 10.5.4" , "Windows Vista")</p> 
          * @see Capabilities.os
          */        
         public function get operatingSystem():String
         {
             return Capabilities.os ;
         }
-        
-        
-        /* Returns the player type.
-           
-           note:
-           the flash documentation indicate those strings
-           
-           "ActiveX"
-            for the Flash Player ActiveX control used by Microsoft Internet Explorer
-           
-           "Desktop"
-            for the Adobe AIR runtime (except for SWF content loaded by an HTML page,
-            which has Capabilities.playerType set to "PlugIn")
-           
-           "External"
-            for the external Flash Player
-           
-           "PlugIn"
-            for the Flash Player browser plug-in
-            (and for SWF content loaded by an HTML page in an AIR application)
-           
-           "StandAlone"
-            for the stand-alone Flash Player
-        */
+                        
         /**
-         * Indicates the current player type value of the application.
+         * Returns the player type.
+         * <p><b>Note :</b> The flash documentation indicate those strings.</p>
+         * <li><b>"ActiveX"</b>    : for the Flash Player ActiveX control used by Microsoft Internet Explorer.</li>
+         * <li><b>"Desktop"</b>    : for the Adobe AIR runtime (except for SWF content loaded by an HTML page, which has Capabilities.playerType set to "PlugIn").</li>
+         * <li><b>"External"</b>   : for the external Flash Player "PlugIn" for the Flash Player browser plug-in (and for SWF content loaded by an HTML page in an AIR application).</li>
+         * <li><b>"StandAlone"</b> : for the stand-alone Flash Player.</li>
          * @see Capabilities.playerType
-         */                
+         */                       
         public function get playerType():String
         {
             return Capabilities.playerType;
         }
         
-        
-        /* Returns the platform.
-           can be "Windows", "Macintosh" or "Linux"
-        */
         /**
-         * Indicates the current platform value of the application.
+         * Returns the platform, can be "Windows", "Macintosh" or "Linux"
          * @see Capabilities.manufacturer
          */            
         public function get platform():String
@@ -304,8 +288,22 @@ package com.google.analytics.utils
             return p.split( "Adobe " )[1];
         }
         
-        /* Returns the user agent.
-        */
+        /**
+         * Indicates the Protocols object of this local info.
+         */
+        public function get protocol():Protocols
+        {
+            if(!_protocol)
+            {
+                _findProtocol();
+            }
+            
+            return _protocol;
+        }        
+        
+        /**
+         * Defines a custom user agent. For case where the user would want to define its own application name and version.
+         */
         public function get userAgent():UserAgent
         {
             if( !_userAgent )
@@ -316,24 +314,15 @@ package com.google.analytics.utils
             return _userAgent;
         }
         
-        /* Define a custom user agent.
-           
-           For case where the user would want
-           to define its own application name and version.
-        */
+        /**
+         * @private
+         */
         public function set userAgent( custom:UserAgent ):void
         {
             _userAgent = custom;
         }
         
-        /**
-         * Indicates if the SWF is embeded in an HTML page.
-         * @return true if the SWF is embeded in an HTML page.
-         */
-        public function isInHTML():Boolean
-        {
-            return Capabilities.playerType == "PlugIn";
-        }
+
         
     }
 }
