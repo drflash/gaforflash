@@ -57,10 +57,9 @@ package com.google.analytics
         public function GATracker( display:DisplayObject )
         {
             _display   = display;
-            _localInfo = new LocalInfo();
-            _buffer    = new Buffer();
-            
             _layout    = new Layout( _display );
+            _localInfo = new LocalInfo( "", null, _layout );
+            _buffer    = new Buffer();
             
             if( config.debug && _layout )
             {
