@@ -15,10 +15,15 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.ui
 {
+	
+    /**
+     * The Margin class specifies the thickness, in pixels, of the four edge regions around a visual pbject (display, component, etc.).
+     */
     public class Margin
     {
         public var top:int;
@@ -26,6 +31,13 @@ package com.google.ui
         public var left:int;
         public var right:int;
         
+        /**
+         * Creates a new EdgeMetrics instance.
+         * @param top The height, in pixels, of the top edge region.
+         * @param bottom The height, in pixels, of the bottom edge region.
+         * @param left The width, in pixels, of the left edge region.
+         * @param right The width, in pixels, of the right edge region.
+         */        
         public function Margin( top:int = 0, bottom:int = 0, left:int = 0, right:int = 0 )
         {
             this.top    = top;

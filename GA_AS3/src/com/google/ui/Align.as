@@ -20,9 +20,21 @@
 
 package com.google.ui
 {
+	
+	/**
+	 * The enumeration of all Align values.
+	 */
     public class Align
     {
+    	
+    	/**
+    	 * @private
+    	 */
         private var _value:int;
+        
+        /**
+         * @private
+         */
         private var _name:String;
         
         /**
@@ -55,52 +67,52 @@ package com.google.ui
         }        
         
         /**
-         * Defines the "none" value (0x000).
+         * Defines the "none" value (<code class="prettyprint">0x000</code>).
          */
-        public static const none:Align        = new Align( 0x000, "none" );
+        public static const none:Align = new Align( 0x000, "none" );
 
         /**
-         * Defines the "top" value (0x001).
+         * Defines the "top" value (<code class="prettyprint">0x001</code>).
          */
-        public static const top:Align         = new Align( 0x001, "top" );
+        public static const top:Align = new Align( 0x001, "top" );
 
         /**
-         * Defines the "bottom" value (0x002).
+         * Defines the "bottom" value (<code class="prettyprint">0x002</code>).
          */
-        public static const bottom:Align      = new Align( 0x002, "bottom" );
+        public static const bottom:Align = new Align( 0x002, "bottom" );
 
         /**
-         * Defines the "right" value (0x010).
+         * Defines the "right" value (<code class="prettyprint">0x010</code>).
          */ 
-        public static const right:Align       = new Align( 0x010, "right" );
+        public static const right:Align = new Align( 0x010, "right" );
         
         /**
-         * Defines the "left" value (0x020).
+         * Defines the "left" value (<code class="prettyprint">0x020</code>).
          */
-        public static const left:Align        = new Align( 0x020, "left" );
+        public static const left:Align = new Align( 0x020, "left" );
         
         /**
-         * Defines the "center" value (0x100).
+         * Defines the "center" value (<code class="prettyprint">0x100</code>).
          */
-        public static const center:Align      = new Align( 0x100, "center" );
+        public static const center:Align = new Align( 0x100, "center" );
         
         /**
-         * Defines the "topLeft" value (0x021).
+         * Defines the "topLeft" value (<code class="prettyprint">0x021</code>).
          */        
-        public static const topLeft:Align     = new Align( 0x021, "topLeft" );
+        public static const topLeft:Align = new Align( 0x021, "topLeft" );
         
         /**
-         * Defines the "topRight" value (0x011).
+         * Defines the "topRight" value (<code class="prettyprint">0x011</code>).
          */        
-        public static const topRight:Align    = new Align( 0x011, "topRight" );
+        public static const topRight:Align = new Align( 0x011, "topRight" );
         
         /**
-         * Defines the "bottomLeft" value (0x022).
+         * Defines the "bottomLeft" value (<code class="prettyprint">0x022</code>).
          */        
-        public static const bottomLeft:Align  = new Align( 0x022, "bottomLeft" );
+        public static const bottomLeft:Align = new Align( 0x022, "bottomLeft" );
 
         /**
-         * Defines the "bottomRight" value (0x012).
+         * Defines the "bottomRight" value (<code class="prettyprint">0x012</code>).
          */
         public static const bottomRight:Align = new Align( 0x012, "bottomRight" );
         
