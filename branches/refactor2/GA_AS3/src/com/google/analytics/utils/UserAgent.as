@@ -30,7 +30,7 @@ package com.google.analytics.utils
      * <li>http://www.mozilla.org/build/revised-user-agent-strings.html</li>
      * <li>RFC 1945 - http://www.ietf.org/rfc/rfc1945.txt</li>
      * <li>RFC 2068 - http://www.ietf.org/rfc/rfc2068.txt</li>
-     * <pre>
+     * <pre class="prettyprint">
      * User-Agent        = "User-Agent" ":" 1*( product | comment )
      * product           = token ["/" product-version ]
      * product-version   = token

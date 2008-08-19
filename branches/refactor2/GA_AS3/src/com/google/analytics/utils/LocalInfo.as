@@ -189,7 +189,7 @@ package com.google.analytics.utils
          * Returns the flash version object representation of the application. 
          * <p>This object contains the attributes major, minor, build and revision :</p>
          * <p><b>Example :</b></b>
-         * <pre>
+         * <pre class="prettyprint">
          * import com.google.analytics.utils.LocalInfo ;
          * 
          * var info:LocalInfo = new LocalInfo( "http://www.domain.com" ) ;
