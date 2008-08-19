@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,24 +19,22 @@
  
 package
 {
-    import com.google.analytics.GATracker;
-    import com.google.analytics.core.as3_api;
-    import com.google.analytics.utils.LocalInfo;
-    import com.google.analytics.utils.UserAgent;
-    import com.google.analytics.v4.GoogleAnalyticsAPI;
-    
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
     import flash.events.Event;
     
-    
+    import com.google.analytics.GATracker;
+    import com.google.analytics.core.as3_api;
+    import com.google.analytics.v4.GoogleAnalyticsAPI;    
+
     /* note:
        for testing code we use GATracker
        but ultimately users will use a component (SWC)
        as the main entry point to configure GA for AS3
     */
     [SWF(width="800", height="600", backgroundColor='0xffffff', frameRate='24', pageTitle='test', scriptRecursionLimit='1000', scriptTimeLimit='60')]
+    [ExcludeClass]  
     public class GA_AS3_refactor2 extends Sprite
     {
         private var _gat:GATracker;
