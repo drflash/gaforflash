@@ -84,7 +84,7 @@ package com.google.analytics.core
          * and you want to track visitor behavior across all hosts.
          * <p>For example, if you have two hosts : <code>server1.example.com</code> and <code>server2.example.com</code>,
          * you would set the domain name as follows : 
-         * <pre>
+         * <pre class="prettyprint">
          * pageTracker.setDomainName( new Domain( DomainName.custom, ".example.com" ) ) ;
          * </pre>
          */
