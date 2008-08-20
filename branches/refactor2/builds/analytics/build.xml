@@ -5,49 +5,29 @@
     <!-- includes properties -->
     	
 	<property file="./build.properties"/>
-
+    
+    <!-- main -->
+	
 	<target 
 		
 		name        = "main" 
-		description = "Creates the new version of the documentation."
-		depends     = "doc,copy"
+		description = "Build the Google Analytics core library."
+		depends     = "documentation"  
 		
 	/>
-	    
-	<!-- main -->
+	 
+	<!-- Documentation -->
 	
-	<target name="clean" description="Cleans all ASDocs">
-		
-		<delete dir="${output}" />
-		<mkdir  dir="${output}" />
-	
-	</target>
-
 	<target 
-	   
-	   name        = "doc" 
-	   depends     = "clean" 
-	   description = "Run the ASDoc process"
+		name        = "documentation" 
+		description = "Run the ASDoc process"
     >
 		
-		<exec executable="${asdoc}" failonerror="true" >
-			<arg line='-doc-sources ${sources}'     />
-			<arg line='-main-title ${main.title}'   />
-			<arg line='-window-title ${win.title}'  />
-			<arg line='-output ${output}'           />
-			<arg line='-templates-path ${template}' />
+		<exec executable="${asdoc.application}" failonerror="true" >
+			<arg line='${asdoc.params}' />
 		</exec>
 			
 	</target>
-
-    <target name="copy" description="Copy the new documentation in the final directory" >
-	    
-	    <copy todir="${docs}" >
-	    	<fileset dir="${output}" />
-	    </copy>
-    	
-        <delete dir="${output}" />
-          
-	</target>
 	
+
 </project>

@@ -31,9 +31,25 @@ package com.google.analytics.v4
      */
     public class Tracker implements GoogleAnalyticsAPI
     {
+    	
+    	/**
+    	 * @private
+    	 */
         private var _account:String;
+        
+        /**
+         * @private
+         */
         private var _info:LocalInfo;
+        
+        /**
+         * @private
+         */
         private var _buffer:Buffer;
+        
+        /**
+         * @private
+         */
         private var _layout:Layout;
         
         /** 
@@ -51,23 +67,9 @@ package com.google.analytics.v4
             _initData();
         }
         
-        private function _showInfo( message:String ):void
-        {
-            if( config.showInfos && _layout )
-            {
-                _layout.createInfo( message );
-            }
-        }
-        
-        private function _showWarning( message:String ):void
-        {
-            if( config.showWarnings && _layout )
-            {
-                _layout.createWarning( message );
-            }
-        }
-        
-        
+        /**
+         * @private
+         */        
         private function _initData():void
         {
             _updateDomainName();
@@ -79,10 +81,33 @@ package com.google.analytics.v4
                 data += "\nlanguage: " + _info.language;
             _showInfo( data );
             
+        }        
+        
+        /**
+         * @private
+         */        
+        private function _showInfo( message:String ):void
+        {
+            if( config.showInfos && _layout )
+            {
+                _layout.createInfo( message );
+            }
+        }
+        
+        /**
+         * @private
+         */        
+        private function _showWarning( message:String ):void
+        {
+            if( config.showWarnings && _layout )
+            {
+                _layout.createWarning( message );
+            }
         }
         
         /**
          * Resolves domain name from document object if domain name is set to "auto".
+         * @private
          */
         private function _updateDomainName():void
         {
