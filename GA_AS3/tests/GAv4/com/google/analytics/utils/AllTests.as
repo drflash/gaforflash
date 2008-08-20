@@ -1,4 +1,5 @@
-﻿/*
+﻿
+/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,24 +21,21 @@
 package com.google.analytics.utils
 {
     import buRRRn.ASTUce.framework.*;
-    
+
     public class AllTests
-        {
-        
+    {
+
         public function AllTests()
-            {
-            
-            }
-        
-        static public function suite():ITest
-            {
+        {
+        }
+
+        public static function suite():ITest
+        {
             var suite:TestSuite = new TestSuite( "Google Analytics utils tests" );
             
             suite.addTestSuite( LocalInfoTest );
             
             return suite;
-            }
-        
         }
-    
     }
+}

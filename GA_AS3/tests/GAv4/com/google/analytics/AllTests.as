@@ -33,7 +33,7 @@ package com.google.analytics
             
             }
         
-        static public function suite():ITest
+        public static function suite():ITest
             {
             var suite:TestSuite = new TestSuite( "Google Analytics tests" );
             
@@ -41,6 +41,7 @@ package com.google.analytics
             suite.addTestSuite( ConfigurationTest );
             
             /* packages */
+            
             suite.addTest( com.google.analytics.core.AllTests.suite() );
             suite.addTest( com.google.analytics.data.AllTests.suite() );
             suite.addTest( com.google.analytics.utils.AllTests.suite() );

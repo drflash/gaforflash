@@ -29,7 +29,7 @@ package com.google.analytics.data
             
         }
         
-        static public function suite():ITest
+        public static function suite():ITest
         {
             var suite:TestSuite = new TestSuite( "Google Analytics data tests" );
             
