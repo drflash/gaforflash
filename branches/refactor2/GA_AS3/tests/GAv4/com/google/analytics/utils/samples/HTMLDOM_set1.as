@@ -1,4 +1,4 @@
-
+﻿
 package com.google.analytics.utils.samples
 {
     import com.google.analytics.external.HTMLDOM;
