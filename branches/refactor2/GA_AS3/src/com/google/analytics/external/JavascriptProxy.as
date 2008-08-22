@@ -20,8 +20,8 @@
 
 package com.google.analytics.external
 {
-    import flash.external.ExternalInterface;    
-
+    import flash.external.ExternalInterface;
+    
     /**
      * Javascript proxy access class.
      */
