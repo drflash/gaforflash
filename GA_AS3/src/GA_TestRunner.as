@@ -20,27 +20,74 @@
 package
 {
     import flash.display.Sprite;
+    import flash.display.StageAlign;
+    import flash.display.StageScaleMode;
+    import flash.events.Event;
+    import flash.text.TextField;
+    import flash.text.TextFormat;
     
     import com.google.analytics.AllTests;
+    import com.google.diagnostics.TextFieldConsole;
     
     import buRRRn.ASTUce.Runner;
     import buRRRn.ASTUce.config;
     
-    import system.config;	
-    
+    import system.config;
+    import system.console;    
+
     [ExcludeClass]	
 	public class GA_TestRunner extends Sprite
         {
         
+        /**
+         * Creates a new GA_TestRunner instance. 
+         */
         public function GA_TestRunner()
             {
-            system.config.serializer.prettyPrinting = true;
-            buRRRn.ASTUce.config.showConstructorList = false;
             
-            //testing everything
+            // init
+            
+            stage.align     = StageAlign.TOP_LEFT;
+            stage.scaleMode = StageScaleMode.NO_SCALE;
+            
+            textfield                   = new TextField() ;
+            textfield.defaultTextFormat = new TextFormat( "Courier New" , 14 , 0xFFFFFF ) ; 
+            textfield.multiline         = true ;
+            textfield.selectable        = true ;
+            textfield.wordWrap          = true ;
+                
+            addChild( textfield ) ;
+                
+            stage.addEventListener( Event.RESIZE , resize ) ;
+            resize() ;
+            
+            console = new TextFieldConsole( textfield ) ;
+
+            system.config.serializer.prettyPrinting  = true  ;
+            
+            buRRRn.ASTUce.config.showConstructorList = false ;
+            
+            // testing
+            
             Runner.main( com.google.analytics.AllTests.suite() );
+
             
             }
+            
+        /**
+         * The debug textfield of this application.
+         */
+        public var textfield:TextField ;
+        
+        /**
+         * Invoked to resize the application content.
+         */
+        public function resize( e:Event = null ):void
+            {
+            textfield.width  = stage.stageWidth ;
+            textfield.height = stage.stageHeight ;
+            }               
+            
         }
     }
 
