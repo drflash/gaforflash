@@ -34,9 +34,10 @@ package
     
     import system.config;
     import system.console;    
-
-    [ExcludeClass]	
-	public class GA_TestRunner extends Sprite
+    
+    [SWF(width="800", height="600", backgroundColor='0x333333', frameRate='24', pageTitle='GA unit tests', scriptRecursionLimit='1000', scriptTimeLimit='60')]
+    [ExcludeClass]
+    public class GA_TestRunner extends Sprite
         {
         
         /**
@@ -62,7 +63,7 @@ package
             resize() ;
             
             console = new TextFieldConsole( textfield ) ;
-
+            
             system.config.serializer.prettyPrinting  = true  ;
             
             buRRRn.ASTUce.config.showConstructorList = false ;
@@ -70,7 +71,7 @@ package
             // testing
             
             Runner.main( com.google.analytics.AllTests.suite() );
-
+            
             
             }
             
@@ -86,7 +87,7 @@ package
             {
             textfield.width  = stage.stageWidth ;
             textfield.height = stage.stageHeight ;
-            }               
+            }
             
         }
     }
