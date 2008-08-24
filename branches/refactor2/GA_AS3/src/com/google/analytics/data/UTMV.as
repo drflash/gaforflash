@@ -41,12 +41,23 @@ package com.google.analytics.data
          */
         public static const VALUE:int      = 1;
         
+        public var domainHash:Number;
+        
+        public var value:String;
+        
         /**
          * Creates a new UTMV instance.
          */
-        public function UTMV()
+        public function UTMV( domainHash:Number = 0, value:String = "" )
         {
+            this.domainHash = domainHash;
+            this.value      = value;
         }
-
+        
+        public function toURLString():String
+        {
+            return _inURL + "=" + domainHash + "." + encodeURIComponent(value);
+        }
+        
     }
 }

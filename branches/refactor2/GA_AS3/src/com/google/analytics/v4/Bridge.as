@@ -106,7 +106,7 @@ package com.google.analytics.v4
          * 
          * @param newTimeout New session timeout to set in seconds.
          */        
-        public function setSessionTimeout(newTimeout:int=1800):void
+        public function setSessionTimeout(newTimeout:int):void
         {
         }
         
@@ -134,7 +134,7 @@ package com.google.analytics.v4
          * 
          * @param pageURL Optional parameter to indicate what page URL to track metrics under. When using this option, use a beginning slash (/) to indicate the page URL.
          */          
-        public function trackPageview(pageURL:String=""):void
+        public function trackPageview(pageURL:String):void
         {
         }
         
@@ -153,7 +153,7 @@ package com.google.analytics.v4
         * 
         * @param enable If this parameter is set to true, then campaign will use anchors. Else, campaign will use search strings.
         */           
-        public function setAllowAnchor(enable:Boolean=false):void
+        public function setAllowAnchor(enable:Boolean):void
         {
         }
         
@@ -239,7 +239,7 @@ package com.google.analytics.v4
          * 
          * @param enable True by default, which enables campaign tracking. If set to false, campaign tracking is disabled.
          */           
-        public function setCampaignTrack(enable:Boolean=true):void
+        public function setCampaignTrack(enable:Boolean):void
         {
         }
         
@@ -253,7 +253,7 @@ package com.google.analytics.v4
          * 
          * @param newDefaultTimeout New default cookie expiration time to set.
          */         
-        public function setCookieTimeout(newDefaultTimeout:int=15768000):void
+        public function setCookieTimeout(newDefaultTimeout:int):void
         {
         }
         
@@ -317,7 +317,7 @@ package com.google.analytics.v4
          * 
          * @param enable If this parameter is set to true, then domain hashing is enabled. Else, domain hashing is disabled. True by default.
          */        
-        public function setAllowHash(enable:Boolean=true):void
+        public function setAllowHash(enable:Boolean):void
         {
         }
         
@@ -328,7 +328,7 @@ package com.google.analytics.v4
          * 
          * @param enable If this parameter is set to true, then linker is enabled. Else, linker is disabled.
          */        
-        public function setAllowLinker(enable:Boolean=false):void
+        public function setAllowLinker(enable:Boolean):void
         {
         }
         
@@ -346,7 +346,7 @@ package com.google.analytics.v4
          * 
          * @param newCookiePath New cookie path to set.
          */        
-        public function setCookiePath(newCookiePath:String="/"):void
+        public function setCookiePath(newCookiePath:String):void
         {
         }
         
@@ -358,7 +358,7 @@ package com.google.analytics.v4
          * 
          * @param newDomainName New default domain name to set.
          */         
-        public function setDomainName(newDomainName:String="auto"):void
+        public function setDomainName(newDomainName:String):void
         {
         }
         
@@ -555,7 +555,7 @@ package com.google.analytics.v4
          * 
          * @param enable Defaults to true, and browser tracking is enabled. If set to false, browser tracking is disabled.
          */           
-        public function setClientInfo(enable:Boolean=true):void
+        public function setClientInfo(enable:Boolean):void
         {
         }
         
@@ -569,7 +569,7 @@ package com.google.analytics.v4
          * 
          * @param enable Default is true and Flash detection is enabled. False disables Flash detection.
          */        
-        public function setDetectFlash(enable:Boolean=true):void
+        public function setDetectFlash(enable:Boolean):void
         {
         }
         
@@ -587,7 +587,7 @@ package com.google.analytics.v4
          * 
          * @param enable Defaults to true, and title detection is enabled. If set to false, title detection is disabled.
          */         
-        public function setDetectTitle(enable:Boolean=true):void
+        public function setDetectTitle(enable:Boolean):void
         {
         }
         

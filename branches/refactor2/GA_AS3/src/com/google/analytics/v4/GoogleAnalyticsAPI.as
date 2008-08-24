@@ -85,7 +85,7 @@ package com.google.analytics.v4
          * 
          * @param newTimeout New session timeout to set in seconds.
          */
-        function setSessionTimeout(newTimeout:int = 1800):void;
+        function setSessionTimeout(newTimeout:int):void;
         
         /**
          * Sets a user-defined value.
@@ -109,7 +109,7 @@ package com.google.analytics.v4
          * 
          * @param pageURL Optional parameter to indicate what page URL to track metrics under. When using this option, use a beginning slash (/) to indicate the page URL.
          */
-        function trackPageview(pageURL:String = ""):void
+        function trackPageview(pageURL:String):void
         
         
         // ----------------------------------------
@@ -127,7 +127,7 @@ package com.google.analytics.v4
          * 
          * @param enable If this parameter is set to true, then campaign will use anchors. Else, campaign will use search strings.
          */
-        function setAllowAnchor(enable:Boolean = false):void;
+        function setAllowAnchor(enable:Boolean):void;
         
         /**
          * Sets the campaign ad content key.
@@ -199,7 +199,7 @@ package com.google.analytics.v4
          * 
          * @param enable True by default, which enables campaign tracking. If set to false, campaign tracking is disabled.
          */
-        function setCampaignTrack(enable:Boolean = true):void;
+        function setCampaignTrack(enable:Boolean):void;
         
         /**
          * Sets the campaign tracking cookie expiration time in seconds.
@@ -211,7 +211,7 @@ package com.google.analytics.v4
          * 
          * @param newDefaultTimeout New default cookie expiration time to set.
          */
-        function setCookieTimeout(newDefaultTimeout:int = 15768000):void;
+        function setCookieTimeout(newDefaultTimeout:int):void;
         
         
         // ----------------------------------------
@@ -272,7 +272,7 @@ package com.google.analytics.v4
          * 
          * @param enable If this parameter is set to true, then domain hashing is enabled. Else, domain hashing is disabled. True by default.
          */
-        function setAllowHash(enable:Boolean = true):void;
+        function setAllowHash(enable:Boolean):void;
         
         /**
          * Sets the campaign tracking flag.
@@ -291,7 +291,7 @@ package com.google.analytics.v4
          * 
          * @param enable If this parameter is set to true, then linker is enabled. Else, linker is disabled.
          */
-        function setAllowLinker(enable:Boolean = false):void;
+        function setAllowLinker(enable:Boolean):void;
         
         /**
          * Sets the new cookie path for your site.
@@ -307,7 +307,7 @@ package com.google.analytics.v4
          * 
          * @param newCookiePath New cookie path to set.
          */
-        function setCookiePath(newCookiePath:String = "/"):void;
+        function setCookiePath(newCookiePath:String):void;
         
         /**
          * Sets the domain name for cookies.
@@ -320,7 +320,7 @@ package com.google.analytics.v4
         /* TODO:
            use an Enum that resolve to "none", "auto", or a domain ?
          */
-        function setDomainName(newDomainName:String = "auto"):void;
+        function setDomainName(newDomainName:String):void;
         
         
         // ----------------------------------------
@@ -520,7 +520,7 @@ package com.google.analytics.v4
          * 
          * @param enable Defaults to true, and browser tracking is enabled. If set to false, browser tracking is disabled.
          */
-        function setClientInfo(enable:Boolean = true):void;
+        function setClientInfo(enable:Boolean):void;
         
         /**
          * Sets the Flash detection flag.
@@ -532,7 +532,7 @@ package com.google.analytics.v4
          * 
          * @param enable Default is true and Flash detection is enabled. False disables Flash detection.
          */
-        function setDetectFlash(enable:Boolean = true):void;
+        function setDetectFlash(enable:Boolean):void;
         
         /**
          * Sets the title detection flag.
@@ -548,7 +548,7 @@ package com.google.analytics.v4
          * 
          * @param enable Defaults to true, and title detection is enabled. If set to false, title detection is disabled.
          */
-        function setDetectTitle(enable:Boolean = true):void;
+        function setDetectTitle(enable:Boolean):void;
         
         
         // ----------------------------------------

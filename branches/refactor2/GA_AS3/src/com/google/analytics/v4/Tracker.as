@@ -24,6 +24,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.DomainNameMode;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.utils.LocalInfo;
+    import com.google.analytics.utils.generateHash;
     import com.google.ui.Layout;
     
     /**
@@ -79,9 +80,10 @@ package com.google.analytics.v4
                 data += "\nprotocol: " + _info.protocol;
                 data += "\ndefault domain name (auto): \"" + _info.domainName +"\"";
                 data += "\nlanguage: " + _info.language;
+                data += "\ndomain hash: " + _getDomainHash();
             _showInfo( data );
             
-        }        
+        }
         
         /**
          * @private
@@ -126,6 +128,27 @@ package com.google.analytics.v4
             config.domainName = config.domain.name.toLowerCase();
             //_showInfo( "config.domain.name: " + config.domain.name );
             //_showInfo( "domain name: " + config.domainName );
+        }
+        
+        private function _getDomainHash():int
+        {
+            if( !config.domainName || (config.domainName == "") ||
+                config.domain.mode == DomainNameMode.none )
+            {
+                config.domainName = "";
+                return 1;
+            }
+            
+            //_updateDomainName();
+            
+            if( config.allowDomainHash )
+            {
+                return generateHash( config.domainName );
+            }
+            else
+            {
+                return 1;
+            }
         }
         
         
@@ -200,9 +223,9 @@ package com.google.analytics.v4
          * 
          * @param newTimeout New session timeout to set in seconds.
          */        
-        public function setSessionTimeout(newTimeout:int=1800):void
+        public function setSessionTimeout(newTimeout:int):void
         {
-        	//
+            config.sessionTimeout = newTimeout;
         }
         
         /**
@@ -215,10 +238,13 @@ package com.google.analytics.v4
          * This variable is then updated in the cookie for that visitor.
          * 
          * @param newVal New user defined value to set.
-         */        
+         */
         public function setVar(newVal:String):void
         {
-            //
+            _buffer.utmv.domainHash = _getDomainHash();
+            _buffer.utmv.value      = newVal;
+            
+            _showInfo( "UTMV : " + _buffer.utmv.toURLString() );
         }
         
         /**
@@ -230,7 +256,7 @@ package com.google.analytics.v4
          * 
          * @param pageURL Optional parameter to indicate what page URL to track metrics under. When using this option, use a beginning slash (/) to indicate the page URL.
          */        
-        public function trackPageview(pageURL:String=""):void
+        public function trackPageview(pageURL:String):void
         {
             //
         }
@@ -250,9 +276,9 @@ package com.google.analytics.v4
         * 
         * @param enable If this parameter is set to true, then campaign will use anchors. Else, campaign will use search strings.
         */        
-        public function setAllowAnchor(enable:Boolean=false):void
+        public function setAllowAnchor(enable:Boolean):void
         {
-            //
+            config.allowAnchor = enable;
         }
         
         /**
@@ -343,7 +369,7 @@ package com.google.analytics.v4
          * 
          * @param enable True by default, which enables campaign tracking. If set to false, campaign tracking is disabled.
          */        
-        public function setCampaignTrack(enable:Boolean=true):void
+        public function setCampaignTrack(enable:Boolean):void
         {
             //
         }
@@ -358,9 +384,9 @@ package com.google.analytics.v4
          * 
          * @param newDefaultTimeout New default cookie expiration time to set.
          */        
-        public function setCookieTimeout(newDefaultTimeout:int=15768000):void
+        public function setCookieTimeout(newDefaultTimeout:int):void
         {
-            //
+            config.conversionTimeout = newDefaultTimeout;
         }
         
         // ----------------------------------------
@@ -379,7 +405,7 @@ package com.google.analytics.v4
          */        
         public function cookiePathCopy(newPath:String):void
         {
-        	//
+            //
         }
         
         /**
@@ -426,7 +452,7 @@ package com.google.analytics.v4
          * 
          * @param enable If this parameter is set to true, then domain hashing is enabled. Else, domain hashing is disabled. True by default.
          */        
-        public function setAllowHash(enable:Boolean=true):void
+        public function setAllowHash(enable:Boolean):void
         {
             config.allowDomainHash = enable;
         }
@@ -438,9 +464,9 @@ package com.google.analytics.v4
          * 
          * @param enable If this parameter is set to true, then linker is enabled. Else, linker is disabled.
          */        
-        public function setAllowLinker(enable:Boolean=false):void
+        public function setAllowLinker(enable:Boolean):void
         {
-        	//
+            config.allowLinker = enable;
         }
         
         /**
@@ -457,9 +483,9 @@ package com.google.analytics.v4
          * 
          * @param newCookiePath New cookie path to set.
          */        
-        public function setCookiePath(newCookiePath:String="/"):void
+        public function setCookiePath(newCookiePath:String):void
         {
-        	//
+            config.cookiePath = newCookiePath;
         }
         
         /**
@@ -470,7 +496,7 @@ package com.google.analytics.v4
          * 
          * @param newDomainName New default domain name to set.
          */        
-        public function setDomainName(newDomainName:String="auto"):void
+        public function setDomainName(newDomainName:String):void
         {
             if( newDomainName == "auto" )
             {
@@ -513,7 +539,7 @@ package com.google.analytics.v4
          */        
         public function addItem(item:String, sku:String, name:String, category:String, price:Number, quantity:int):void
         {
-        	//
+            //
         }
         
         /**
@@ -545,7 +571,7 @@ package com.google.analytics.v4
          */        
         public function trackTrans():void
         {
-        	//
+            //
         }
         
         /**
@@ -691,7 +717,7 @@ package com.google.analytics.v4
          * 
          * @param enable Defaults to true, and browser tracking is enabled. If set to false, browser tracking is disabled.
          */        
-        public function setClientInfo(enable:Boolean=true):void
+        public function setClientInfo(enable:Boolean):void
         {
             config.detectClientInfo = enable;
         }
@@ -706,7 +732,7 @@ package com.google.analytics.v4
          * 
          * @param enable Default is true and Flash detection is enabled. False disables Flash detection.
          */        
-        public function setDetectFlash(enable:Boolean=true):void
+        public function setDetectFlash(enable:Boolean):void
         {
             config.detectFlash = enable;
         }
@@ -725,7 +751,7 @@ package com.google.analytics.v4
          * 
          * @param enable Defaults to true, and title detection is enabled. If set to false, title detection is disabled.
          */        
-        public function setDetectTitle(enable:Boolean=true):void
+        public function setDetectTitle(enable:Boolean):void
         {
             config.detectTitle = enable;
         }
