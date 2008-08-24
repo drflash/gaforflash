@@ -31,22 +31,32 @@ package com.google.analytics.data
     	 */
         private var _inURL:String = "__utmv";
         
+//        /**
+//         * Field index for domain hash in user defined cookie (__utmv) value.
+//         */
+//        public static const DOMAINHASH:int = 0;
+        
+//        /**
+//         * Field index for user defined fields in user defined cookie (__utmv) value.
+//         */
+//        public static const VALUE:int      = 1;
+       
         /**
-         * Field index for domain hash in user defined cookie (__utmv) value.
+         * The domain hash in user defined cookie (__utmv) value.
+         * <p><b>Note :</b> First element in the toURLString representation) (0).</p>
          */
-        public static const DOMAINHASH:int = 0;
+        public var domainHash:Number ;
         
         /**
-         * Field index for user defined fields in user defined cookie (__utmv) value.
-         */
-        public static const VALUE:int      = 1;
-        
-        public var domainHash:Number;
-        
+         * The user defined fields in user defined cookie (__utmv) value.
+         * <p><b>Note :</b> Second element in the toURLString representation) (1).</p>
+         */    
         public var value:String;
         
         /**
          * Creates a new UTMV instance.
+         * @param domainHash The field index for domain hash in user defined cookie (__utmv) value.
+         * @param value
          */
         public function UTMV( domainHash:Number = 0, value:String = "" )
         {
@@ -54,9 +64,13 @@ package com.google.analytics.data
             this.value      = value;
         }
         
+        /**
+         * Returns the URL String representation of the object.
+         * @return the URL String representation of the object.
+         */
         public function toURLString():String
         {
-            return _inURL + "=" + domainHash + "." + encodeURIComponent(value);
+            return _inURL + "=" + domainHash + "." + encodeURIComponent(value) ;
         }
         
     }
