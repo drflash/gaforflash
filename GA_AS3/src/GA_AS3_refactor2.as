@@ -56,6 +56,7 @@ package
             pageTracker.setSampleRate( -0.5 );
             //pageTracker.addOrganic("google","q");
             pageTracker.setDomainName( ".zwetan.com" );
+            pageTracker.setVar( "hello world" );
             
         }
         
