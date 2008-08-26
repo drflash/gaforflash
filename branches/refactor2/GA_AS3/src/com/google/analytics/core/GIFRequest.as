@@ -20,6 +20,8 @@
 
 package com.google.analytics.core
 {
+    import com.google.analytics.core.Buffer;
+    
     /**
      * Google Analytics Tracker Code (GATC)'s GIF request module.
      * This file encapsulates all the necessary components that are required to
@@ -27,13 +29,15 @@ package com.google.analytics.core
      */
     public class GIFRequest
     {
-    	
-    	/**
-    	 * Creates a new GIFRequest instance.
-    	 */
-        public function GIFRequest()
+        private var _buffer:Buffer;
+        
+        /**
+         * Creates a new GIFRequest instance.
+         */
+        public function GIFRequest( buffer:Buffer )
         {
+            _buffer = buffer;
         }
-
+        
     }
 }

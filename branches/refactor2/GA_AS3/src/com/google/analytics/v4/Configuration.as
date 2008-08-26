@@ -239,6 +239,16 @@ package com.google.analytics.v4
          */
         public var debug:Boolean = true;
         
+        //to trace infos and warnign to the output
+        public var debugTrace:Boolean = true;
+        
+        //to show more debug used internally
+        public var debugVerbose:Boolean = true;
+        
+        //to show extended info and warning messages
+        //from the GA docs
+        public var verbose:Boolean = false;
+        
         /**
          * Indicates if show infos in the debug mode.
          */        
@@ -248,6 +258,9 @@ package com.google.analytics.v4
          * Indicates if show warnings in the debug mode.
          */                
         public var showWarnings:Boolean = true;
+        
+        //to be able to track in local mode (when protocol is file://)
+        public var allowLocalTracking:Boolean = true;
         
         /**
          * Creates a new Configuration instance.

@@ -110,7 +110,7 @@ package com.google.analytics.utils
             
             if( value.indexOf( separator ) > -1 )
                 {
-                var values:Array = value.split( "." );
+                var values:Array = value.split( separator );
                 v.major    = parseInt( values[0] );
                 v.minor    = parseInt( values[1] );
                 v.build    = parseInt( values[2] );

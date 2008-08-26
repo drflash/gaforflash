@@ -88,7 +88,8 @@ package com.google.analytics.core
          */
         public function Buffer()
         {
-            this.utmv = new UTMV();
+            utma = new UTMA();
+            utmv = new UTMV();
         }
 
     }

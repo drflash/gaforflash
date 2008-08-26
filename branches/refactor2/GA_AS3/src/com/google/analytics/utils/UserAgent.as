@@ -51,36 +51,29 @@ package com.google.analytics.utils
         /**
          * @private
          */
-        private var _applicationVersion:String;
+        private var _localInfo:LocalInfo;
         
         /**
          * @private
          */
-        private var _localInfo:LocalInfo;
+        private var _version:Version;
         
         /**
          * For privacy concern.
          */
-        public static var minimal:Boolean ;
+        public static var minimal:Boolean = false;
         
         /**
          * Creates a new UserAgent instance.
          * @param product The product String representation.
          * @param version The version String representation.
          */
-        public function UserAgent( localInfo:LocalInfo, product:String = "Flash", version:String = "" )
+        public function UserAgent( localInfo:LocalInfo, product:String = "", version:String = "" )
         {
             _localInfo = localInfo;
             applicationProduct = product;
             
-            if( (product == "Flash") && (version == "") )
-            {
-                applicationVersion = _localInfo.flashVersion.toString(2);
-            }
-            else
-            {
-                applicationVersion = version;
-            }
+            _version = Version.fromString(version);
         }
         
         /**
@@ -91,10 +84,10 @@ package com.google.analytics.utils
             var comment:Array = [];
                 comment.push( _localInfo.platform );
                 comment.push( _localInfo.playerType );
-                comment.push( _localInfo.operatingSystem );
                 
                 if( !UserAgent.minimal )
                 {
+                    comment.push( _localInfo.operatingSystem );
                     comment.push( _localInfo.language );
                 }
                 
@@ -151,7 +144,7 @@ package com.google.analytics.utils
          */
         public function get applicationVersion():String
         {
-            return _applicationVersion;
+            return _version.toString(2);
         }
         
         /**
@@ -159,7 +152,7 @@ package com.google.analytics.utils
          */        
         public function set applicationVersion( value:String ):void
         {
-            _applicationVersion = value;
+            _version = Version.fromString( value );
         }
         
         /**
@@ -190,14 +183,17 @@ package com.google.analytics.utils
         {
             var vp:String = "";
             
-            /* TODO:
-               check for AIR, if found
-               return AIR/1.0, AIR/1.1, etc.
-            */
-            
+            if( _localInfo.isAIR() )
+            {
+                vp += "AIR";
+            }
+            else
+            {
                 vp += "FlashPlayer";
+            }
+                
                 vp += "/";
-                vp += _localInfo.flashVersion.toString(3);
+                vp += _version.toString(3);
             
             return vp;
         }

@@ -20,8 +20,11 @@
 
 package com.google.ui
 {
+    import com.google.analytics.config;
+    
     import flash.display.DisplayObject;
     import flash.events.Event;
+    import flash.utils.getTimer;
     
     /**
      * The Layout class is a helper who manages all information's displays in the application.
@@ -54,6 +57,8 @@ package com.google.ui
          */
         private var _warningQueue:Array;
         
+        private var _maxCharPerLine:int = 85;
+        
         /**
          * @private
          */
@@ -76,6 +81,26 @@ package com.google.ui
             _hasDebug   = false;
             _warningQueue = [];
             _infoQueue    = [];
+        }
+        
+        private function _filterMaxChars( message:String ):String
+        {
+            var CRLF:String = "\n";
+            var output:Array = [];
+            var lines:Array = message.split(CRLF);
+            var line:String;
+            for( var i:int = 0; i<lines.length; i++ )
+            {
+                line = lines[i];
+                while( line.length > _maxCharPerLine )
+                {
+                    output.push( line.substr(0,_maxCharPerLine) );
+                    line = line.substring(_maxCharPerLine);
+                }
+                output.push( line );
+            }
+            
+            return output.join(CRLF);
         }
         
         /**
@@ -104,6 +129,43 @@ package com.google.ui
                 createInfo( _infoQueue.shift() );
             }
             
+        }
+        
+        protected function trace( message:String ):void
+        {
+            var messages:Array = [];
+            var pre0:String = getTimer() + " - ";
+            var pre1:String = new Array(pre0.length).join(" ") + " ";
+            
+            if( message.indexOf("\n") > -1 )
+            {
+                var msgs:Array = message.split("\n");
+                for( var j:int = 0; j<msgs.length; j++ )
+                {
+                    if( msgs[j] == "" )
+                    {
+                        continue;
+                    }
+                    
+                    if( j == 0 )
+                    {
+                        messages.push( pre0 + msgs[j] );
+                    }
+                    else
+                    {
+                        messages.push( pre1 + msgs[j] );
+                    }
+                }
+            }
+            else
+            {
+                messages.push( pre0 + message );
+            }
+            
+            for( var i:int = 0; i<messages.length; i++ )
+            {
+                public::trace( messages[i] );
+            }
         }
         
         /**
@@ -148,6 +210,7 @@ package com.google.ui
                 return;
             }
             
+            message = _filterMaxChars( message );
             _hasInfo = true;
             var i:Info = new Info( message );
             addToStage( i );
@@ -157,6 +220,11 @@ package com.google.ui
             if( _hasDebug )
             {
                 debug.write( message );
+            }
+            
+            if( config.debugTrace )
+            {
+                trace( message );
             }
         }
         
@@ -180,6 +248,11 @@ package com.google.ui
             if( _hasDebug )
             {
                 debug.write( "<b>"+message+"</b>" );
+            }
+            
+            if( config.debugTrace )
+            {
+                trace( "## " + message + " ##" );
             }
         }
         

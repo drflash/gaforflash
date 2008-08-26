@@ -19,9 +19,10 @@
 
 package com.google.analytics
 {
+    
     import com.google.analytics.core.Buffer;
-    import com.google.analytics.core.ga_internal;
     import com.google.analytics.core.as3_api;
+    import com.google.analytics.core.ga_internal;
     import com.google.analytics.core.js_bridge;
     import com.google.analytics.events.MessageEvent;
     import com.google.analytics.utils.LocalInfo;
@@ -39,7 +40,6 @@ package com.google.analytics
     
     public class GATracker
     {
-        
         private var _display:DisplayObject;
         private var _localInfo:LocalInfo;
         private var _buffer:Buffer;
@@ -58,7 +58,15 @@ package com.google.analytics
         {
             _display   = display;
             _layout    = new Layout( _display );
-            _localInfo = new LocalInfo( "", null, _layout );
+            
+            /* note:
+               for unit testing and to avoid 2 different branches AIR/Flash
+               here we will detect if we are in the Flash Player or AIR
+               and pass the infos to the LocalInfo
+               
+               By default we will define "Flash" for our local tests
+            */
+            _localInfo = new LocalInfo( "", "", "", null, _layout );
             _buffer    = new Buffer();
             
             if( config.debug && _layout )
