@@ -70,7 +70,11 @@ package com.google.analytics.data
          */
         public function toURLString():String
         {
-            return _inURL + "=" + domainHash + "." + encodeURIComponent(value) ;
+            var data:Array = [];
+                data.push( domainHash ); //0
+                data.push( encodeURIComponent(value) ); //1
+            
+            return _inURL + "=" + data.join( "." ) ;
         }
         
     }

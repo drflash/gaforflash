@@ -19,11 +19,16 @@
 
 package com.google.analytics.v4
 {
+    
     import com.google.analytics.config;
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.DomainNameMode;
+    import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.ServerOperationMode;
+    import com.google.analytics.data.X10;
     import com.google.analytics.utils.LocalInfo;
+    import com.google.analytics.utils.Protocols;
+    import com.google.analytics.utils.generate32bitRandom;
     import com.google.analytics.utils.generateHash;
     import com.google.ui.Layout;
     
@@ -32,10 +37,9 @@ package com.google.analytics.v4
      */
     public class Tracker implements GoogleAnalyticsAPI
     {
-    	
-    	/**
-    	 * @private
-    	 */
+        /**
+         * @private
+         */
         private var _account:String;
         
         /**
@@ -48,10 +52,19 @@ package com.google.analytics.v4
          */
         private var _buffer:Buffer;
         
+        private var _gifRequest:GIFRequest;
+        
         /**
          * @private
          */
         private var _layout:Layout;
+        
+        
+        private var _hasInitData:Boolean = false;
+        private var _domainHash:Number;
+        private var _timeStamp:Number;
+        private var _x10Module:X10;
+        private var _eventTracker:X10;
         
         /** 
          * Creates a new Tracker instance.
@@ -60,29 +73,13 @@ package com.google.analytics.v4
         public function Tracker( account:String, info:LocalInfo, buffer:Buffer,
                                  layout:Layout = null )
         {
-            _account   = account;
-            _info      = info;
-            _buffer    = buffer;
-            _layout    = layout;
+            _account    = account;
+            _info       = info;
+            _buffer     = buffer;
+            
+            _layout    = layout; //optional
             
             _initData();
-        }
-        
-        /**
-         * @private
-         */        
-        private function _initData():void
-        {
-            _updateDomainName();
-            
-            var data:String = "";
-                data += "_initData";
-                data += "\nprotocol: " + _info.protocol;
-                data += "\ndefault domain name (auto): \"" + _info.domainName +"\"";
-                data += "\nlanguage: " + _info.language;
-                data += "\ndomain hash: " + _getDomainHash();
-            _showInfo( data );
-            
         }
         
         /**
@@ -108,6 +105,161 @@ package com.google.analytics.v4
         }
         
         /**
+         * @private
+         */        
+        private function _initData():void
+        {
+            // initialize initial data
+            if( !_hasInitData )
+            {
+                //find domain name
+                _updateDomainName();
+                
+                // get domain hash
+                _domainHash = _getDomainHash();
+                
+                //define the timestamp for start of the session
+                _timeStamp  = Math.round((new Date()).getTime() / 1000);
+                
+                // create new gif request object
+                _gifRequest = new GIFRequest( _buffer );
+                
+                if( config.debug && config.debugVerbose )
+                {
+                    var data0:String = "";
+                        data0 += "_initData 0";
+                        data0 += "\ndomain name: " + config.domainName;
+                        data0 += "\ndomain hash: " + _domainHash;
+                        data0 += "\ntimestamp:   " + _timeStamp + " ("+new Date(_timeStamp*1000)+")";
+                    _showInfo( data0 );
+                }
+            }
+            
+            if( _doTracking() )
+            {
+                // initializes cookies each time for page tracking, event tracking, X10,
+                // transactions, custom variables
+                _handleCookie();
+            }
+            
+            //initialize tracking campaign information. handleCookie_() needs have been
+            //called before campaign information can be parsed.
+            if( !_hasInitData )
+            {
+                // no need if page is a google property
+                if( _doTracking() )
+                {
+                    // format referrer
+                    
+                    // caching browser info
+                    // note: done in ctor
+                    
+                    // cache campaign info
+                    if( config.campaignTracking )
+                    {
+                        
+                    }
+                }
+                
+                // Initialize X10 module.
+                _x10Module = new X10();
+                
+                // Initialize event tracker module
+                _eventTracker = new X10();
+                
+                _hasInitData = true;
+            }
+            
+            // Initialize site overlay
+            if( config.hasSiteOverlay )
+            {
+                //init GASO
+            }
+            
+            if( config.debug && config.debugVerbose )
+            {
+                var data:String = "";
+                    data += "_initData (misc)";
+                    data += "\nflash version: " + _info.flashVersion.toString(4);
+                    data += "\nprotocol: " + _info.protocol;
+                    data += "\ndefault domain name (auto): \"" + _info.domainName +"\"";
+                    data += "\nlanguage: " + _info.language;
+                    data += "\ndomain hash: " + _getDomainHash();
+                    data += "\nuser-agent: " + _info.userAgent;
+                _showInfo( data );
+            }
+        }
+        
+  /**
+   * Handles / formats GATC cookie values.  If linker functionalities are
+   * enabled, then GATC cookies parsed from linker request takes precedences
+   * over stored cookies.  Also updates the __utma, __utmb, and __utmc values
+   * appropriately.
+   *
+   * @private
+   */
+        private function _handleCookie():void
+        {
+            
+        }
+        
+  /**
+   * Return true if and only if the cookie domain is NOT a google search page.
+   *
+   * @return {Boolean} Return true if and only if the cookie domain is not a
+   *     google search page.
+   */
+        private function _isNotGoogleSearch():Boolean
+        {
+            var domainName:String = config.domainName;
+            
+            var g0:Boolean = domainName.indexOf( "www.google." ) < 0;
+            var g1:Boolean = domainName.indexOf( ".google."    ) < 0;
+            var g2:Boolean = domainName.indexOf( "google."     ) < 0;
+            
+            /* note:
+               google.org is not a google search page.
+            */
+            var g4:Boolean = domainName.indexOf( "google.org"  ) > -1;
+            
+            return (g0 || g1 || g2) || (config.cookiePath != "/") || g4;
+        }
+        
+  /**
+   * Returns predicate indicating whether we should track this page.  Only track
+   * page if it's not residing on local machine (file protocol), and the page is
+   * not sitting on the google domain.
+   *
+   * @return {Boolean} True if and only if the page is not sitting no local
+   *     machine, and it's not sitting on a google domain.
+   */
+        private function _doTracking():Boolean
+        {
+            if( (_info.protocol != Protocols.file) &&
+                (_info.protocol != Protocols.none) &&
+                _isNotGoogleSearch() )
+                {
+                    return true;
+                }
+            
+            /* note:
+               to be able to test localy
+               for now we also need to have the debug flag on
+            */
+            if( config.debug && config.allowLocalTracking )
+            {
+                return true;
+            }
+            
+            /* TODO:
+               add logic for AIR and other running local exe
+               by default a SWF running ina projector or in AIR
+               will have a file:// protocol
+            */
+            return false;
+        }
+        
+        /**
          * Resolves domain name from document object if domain name is set to "auto".
          * @private
          */
@@ -130,7 +282,58 @@ package com.google.analytics.v4
             //_showInfo( "domain name: " + config.domainName );
         }
         
-        private function _getDomainHash():int
+  /**
+   * This method generates a hashed value from the user-specific navigator,
+   * window and document properties.
+   *
+   * @private
+   * @return {Number} hash value of the user-specific properties.
+   */
+        private function _generateUserDataHash():Number
+        {
+            var hash:String = "";
+                hash       += _info.appName;
+                hash       += _info.appVersion;
+                hash       += _info.language;
+                hash       += _info.platform;
+                hash       += _info.userAgent.toString();
+              //hash       += _info.screenWidth+"x"+_info.screenHeight+_info.colorDepth;
+              //hash       += _info.cookies;
+              //hash       += _info.referrer;
+                
+            return generateHash(hash);
+        }
+        
+  /**
+   * Generates the unique session id from the current user specific properties
+   * and a random number.
+   *
+   * @private
+   * @return {Number} a 32 bit unique number.
+   */
+        private function _getUniqueSessionId():Number
+        {
+            var sessionID:Number = (generate32bitRandom() ^ _generateUserDataHash()) * 0x7fffffff;
+            _showInfo( "Session ID: " + sessionID );
+            return sessionID;
+        }
+        
+  /**
+   * If the domain name is initialized to "auto", then automatically trying to
+   * resolve cookie domain name from document object.  The resolved domain name
+   * will be stored in the domain name instance variable, which could be
+   * accessed by the set/getDomainName methods.  If domain hashing is turn on,
+   * then the hash of the domain name is also returned.  Else, hash value is
+   * always 1.
+   *
+   * @private
+   * @return {Number} If the domain name is empty (undefined, empty string, or
+   *     "none"), then return 1 as the hash of domain name.  If hashing is
+   *     turned off , then return 1 as the hash value as well.  If there is a
+   *     domain name, and domain hashing is turned on, then return the hash of
+   *     the domain name.
+   */
+        private function _getDomainHash():Number
         {
             if( !config.domainName || (config.domainName == "") ||
                 config.domain.mode == DomainNameMode.none )
@@ -139,7 +342,7 @@ package com.google.analytics.v4
                 return 1;
             }
             
-            //_updateDomainName();
+            _updateDomainName();
             
             if( config.allowDomainHash )
             {
@@ -149,6 +352,33 @@ package com.google.analytics.v4
             {
                 return 1;
             }
+        }
+        
+        private function _visitCode():Number
+        {
+            return 1;
+        }
+        
+        /**
+         * This method returns true to indicate GATC will take this sample.  Or false
+         * to indicate GATC will skip this sample.  Sampling decision is a function of
+         * sample rate (a percentage) and the session ID.
+         *
+         * @param {String} sessionId Used to decide whether we should sample this
+         *     session.
+         *
+         * @private
+         * @return {Boolean} True to indicate we should record this hit.  False to
+         *     indicate we should skip this hit.
+         */
+        private function _takeSample():Boolean
+        {
+            /* note:
+               be carefull here
+               GA.js sampleRate returns 0 to 100
+               our config.sampleRate returns 0 to 1
+            */
+            return (_visitCode() % 10000) < (config.sampleRate * 100);
         }
         
         
@@ -201,9 +431,12 @@ package com.google.analytics.v4
         {
             if( newRate < 0 )
             {
-                _showWarning( "sample rate can not be negative, using default value." );
+                _showWarning( "sample rate can not be negative, ignoring value." );
             }
-            config.sampleRate = newRate;
+            else
+            {
+                config.sampleRate = newRate;
+            }
             _showInfo( "sample rate = " + config.sampleRate );
         }
         
@@ -241,10 +474,26 @@ package com.google.analytics.v4
          */
         public function setVar(newVal:String):void
         {
-            _buffer.utmv.domainHash = _getDomainHash();
-            _buffer.utmv.value      = newVal;
-            
-            _showInfo( "UTMV : " + _buffer.utmv.toURLString() );
+            if( (newVal != "") && _isNotGoogleSearch() )
+            {
+                _buffer.utmv.domainHash = _domainHash;
+                _buffer.utmv.value      = newVal;
+                
+                if( config.debug && config.debugVerbose )
+                {
+                    _showInfo( "UTMV : " + _buffer.utmv.toURLString() );
+                }
+                _showInfo( "setVar = " + newVal );
+                if( _takeSample() )
+                {
+                    //_gifRequest.send( ... );
+                }
+                
+            }
+            else
+            {
+                _showWarning( "setVar \"" + newVal + "\" is ignored" );
+            }
         }
         
         /**
@@ -387,6 +636,7 @@ package com.google.analytics.v4
         public function setCookieTimeout(newDefaultTimeout:int):void
         {
             config.conversionTimeout = newDefaultTimeout;
+            _showInfo( "setCookieTimeout = " + config.conversionTimeout );
         }
         
         // ----------------------------------------
@@ -455,6 +705,7 @@ package com.google.analytics.v4
         public function setAllowHash(enable:Boolean):void
         {
             config.allowDomainHash = enable;
+            _showInfo( "setAllowHash = " + config.allowDomainHash );
         }
         
         /**
@@ -467,6 +718,7 @@ package com.google.analytics.v4
         public function setAllowLinker(enable:Boolean):void
         {
             config.allowLinker = enable;
+            _showInfo( "setAllowLinker = " + config.allowLinker );
         }
         
         /**
@@ -486,6 +738,7 @@ package com.google.analytics.v4
         public function setCookiePath(newCookiePath:String):void
         {
             config.cookiePath = newCookiePath;
+            _showInfo( "setCookiePath = " + config.cookiePath );
         }
         
         /**
@@ -513,7 +766,7 @@ package com.google.analytics.v4
             }
             
             _updateDomainName();
-            _showInfo( "setDomainName: " + config.domainName );
+            _showInfo( "setDomainName = " + config.domainName );
         }
         
         // ----------------------------------------
@@ -720,6 +973,7 @@ package com.google.analytics.v4
         public function setClientInfo(enable:Boolean):void
         {
             config.detectClientInfo = enable;
+            _showInfo( "setClientInfo = " + config.detectClientInfo );
         }
         
         /**
@@ -735,6 +989,7 @@ package com.google.analytics.v4
         public function setDetectFlash(enable:Boolean):void
         {
             config.detectFlash = enable;
+            _showInfo( "setDetectFlash = " + config.detectFlash );
         }
         
         /**
@@ -754,6 +1009,7 @@ package com.google.analytics.v4
         public function setDetectTitle(enable:Boolean):void
         {
             config.detectTitle = enable;
+            _showInfo( "setDetectTitle = " + config.detectTitle );
         }
         
         // ----------------------------------------
@@ -795,6 +1051,7 @@ package com.google.analytics.v4
         public function setLocalGifPath(newLocalGifPath:String):void
         {
             config.localGIFpath = newLocalGifPath;
+            _showInfo( "setLocalGifPath = " + config.localGIFpath );
         }
         
         /**
@@ -807,6 +1064,7 @@ package com.google.analytics.v4
         public function setLocalRemoteServerMode():void
         {
             config.serverMode = ServerOperationMode.both;
+            _showInfo( "setLocalRemoteServerMode = ServerOperationMode." + config.serverMode.toString() );
         }
         
         /**
@@ -818,6 +1076,7 @@ package com.google.analytics.v4
         public function setLocalServerMode():void
         {
             config.serverMode = ServerOperationMode.local;
+            _showInfo( "setLocalServerMode = ServerOperationMode." + config.serverMode.toString() );
         }
         
         /**
@@ -828,6 +1087,7 @@ package com.google.analytics.v4
         public function setRemoteServerMode():void
         {
             config.serverMode = ServerOperationMode.remote;
+            _showInfo( "setRemoteServerMode = ServerOperationMode." + config.serverMode.toString() );
         }
         
     }

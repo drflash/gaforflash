@@ -20,18 +20,21 @@
 
 package com.google.analytics.utils
 {
-    import flash.system.Capabilities;
     
+    import com.google.analytics.config;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.external.HTMLDOM;
-    import com.google.ui.Layout;    
-
+    import com.google.ui.Layout;
+    
+    import flash.system.Capabilities;
+    import flash.system.Security;
+    
+    
     /**
      * Local Informations provide informations for the local environment.
      */
     public class LocalInfo
     {
-    	
         /**
          * @private
          */        
@@ -47,6 +50,10 @@ package com.google.analytics.utils
          */        
         private var _protocol:Protocols;
         
+        private var _appName:String;
+        
+        private var _appVersion:Version;
+        
         /**
          * @private
          */        
@@ -59,21 +66,52 @@ package com.google.analytics.utils
         
         /**
          * Creates a new LocalInfo instance.
-         * @param stage The Stage reference of the application.
+         * @param url The URL of the SWF.
+         * @param app The application name
+         * @param version The application version
+         * @param dom the HTMLDOM
+         * @param layout a Layout reference
          */
-        public function LocalInfo( url:String = "", dom:HTMLDOM = null, layout:Layout = null )
+        public function LocalInfo( url:String = "", app:String = "", version:String = "", dom:HTMLDOM = null,
+                                   layout:Layout = null )
         {
+            var v:Version;
+            
+            if( app == "" )
+            {
+                if( isAIR() )
+                {
+                    app = "AIR";
+                }
+                else
+                {
+                    app = "Flash";
+                }
+            }
+            
+            if( version == "" )
+            {
+                v = flashVersion;
+            }
+            else
+            {
+                v = Version.fromString( version );
+            }
+            
             if( dom == null )
             {
                 dom = new HTMLDOM();
             }
             
-            _url = url;
-            _dom = dom;
+            _url        = url;
+            _appName    = app;
+            _appVersion = v;
+            _dom        = dom;
             
             _layout = layout; //optional
             
-            if( _layout )
+            //DEBUG
+            if( _layout && config.debug && config.debugVerbose )
             {
                 var data:String = "";
                     data       += "dom.language: " + _dom.language + "\n" ;
@@ -84,14 +122,6 @@ package com.google.analytics.utils
                 _layout.createInfo( data );
             }
             
-        }
-        
-        /**
-         * Sets the stage reference value of the application.
-         */
-        ga_internal function set url( value:String ):void
-        {
-            _url = value;
         }
         
         /**
@@ -154,7 +184,38 @@ package com.google.analytics.utils
             
             _protocol = p;
         }
-                
+        
+        public function get appName():String
+        {
+            return _appName;
+        }
+        
+        public function set appName( value:String ):void
+        {
+            _appName = value;
+            userAgent.applicationProduct = value;
+        }
+        
+        public function get appVersion():Version
+        {
+            return _appVersion;
+        }
+        
+        public function set appVersion( value:Version ):void
+        {
+            trace( "appVersion: " + value.toString(4) );
+            _appVersion = value;
+            userAgent.applicationVersion = value.toString(4);
+        }
+        
+        /**
+         * Sets the stage reference value of the application.
+         */
+        ga_internal function set url( value:String ):void
+        {
+            _url = value;
+        }
+        
         /**
          * Indicates the local domain name value.
          */
@@ -204,18 +265,9 @@ package com.google.analytics.utils
          */
         public function get flashVersion():Version
         {
-        	var v:Version = Version.fromString( Capabilities.version.split( " " )[1], "," ) ;
+            var v:Version = Version.fromString( Capabilities.version.split( " " )[1], "," ) ;
             return v ;
         }
-        
-        /**
-         * Indicates if the SWF is embeded in an HTML page.
-         * @return true if the SWF is embeded in an HTML page.
-         */
-        public function isInHTML():Boolean
-        {
-            return Capabilities.playerType == "PlugIn" ;
-        }        
         
         /**
          * Returns the language string as a lowercase two-letter language code from ISO 639-1.
@@ -301,14 +353,27 @@ package com.google.analytics.utils
             return _protocol;
         }        
         
+        public function get screenResolution():String
+        {
+            return Capabilities.screenResolutionX + "x" + Capabilities.screenResolutionY;
+        }
+        
         /**
-         * Defines a custom user agent. For case where the user would want to define its own application name and version.
+         * Defines a custom user agent.
+         * For case where the user would want to define its own application name and version
+         * it is possible to change appName and appVersion which are in sync with
+         * applicationProduct and applicationVersion properties
          */
         public function get userAgent():UserAgent
         {
+            /* note:
+               if we change appName then we update applicationProduct
+               if we change appVersion then we update applicationVersion
+               but the inverse is not true.
+            */
             if( !_userAgent )
             {
-                 _userAgent = new UserAgent(this);
+                 _userAgent = new UserAgent(this, appName, appVersion.toString(4));
             }
             
             return _userAgent;
@@ -322,7 +387,20 @@ package com.google.analytics.utils
             _userAgent = custom;
         }
         
-
+        /**
+         * Indicates if the SWF is embeded in an HTML page.
+         * @return true if the SWF is embeded in an HTML page.
+         */
+        public function isInHTML():Boolean
+        {
+            return Capabilities.playerType == "PlugIn" ;
+        }
+        
+        //are we running in AIR ?
+        public function isAIR():Boolean
+        {
+            return (playerType == "Desktop") && (Security.sandboxType.toString() == "application");
+        }
         
     }
 }

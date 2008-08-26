@@ -60,43 +60,64 @@ package com.google.analytics.data
          */
         public static const SESSIONCOUNT:int = 5;
         
-        /**
-         * The current time value.
-         */
-        public var currentTime:uint;        
         
         /**
          * The domain hash value.
          */
-        public var domainHash:uint;
-
-        /**
-         * The first time value.
-         */
-        public var firstTime:uint;
-
-        /**
-         * The last time value.
-         */
-        public var lastTime:uint;
-
-        /**
-         * The session count value.
-         */
-        public var sessionCount:uint;
+        public var domainHash:Number;
         
         /**
          * The session id value.
          */
-        public var sessionId:uint;
+        public var sessionId:Number;
+        
+        /**
+         * The first time value.
+         */
+        public var firstTime:Number;
+        
+        /**
+         * The last time value.
+         */
+        public var lastTime:Number;
+        
+        /**
+         * The current time value.
+         */
+        public var currentTime:Number;
+        
+        /**
+         * The session count value.
+         */
+        public var sessionCount:Number;
+        
+        
         
         /**
          * Creates a new UTMA instance.
          */
-        public function UTMA()
+        public function UTMA( domainHash:Number = NaN, sessionId:Number = NaN, firstTime:Number = NaN,
+                              lastTime:Number = NaN, currentTime:Number = NaN, sessionCount:Number = NaN )
         {
+            this.domainHash   = domainHash;
+            this.sessionId    = sessionId;
+            this.firstTime    = firstTime;
+            this.lastTime     = lastTime;
+            this.currentTime  = currentTime;
+            this.sessionCount = sessionCount;
         }
         
+        public function toURLString():String
+        {
+            var data:Array = [];
+                data.push( domainHash );   //0
+                data.push( sessionId );    //1
+                data.push( firstTime );    //2
+                data.push( lastTime );     //3
+                data.push( currentTime );  //4
+                data.push( sessionCount ); //5
+            return _inURL + "=" + data.join( "." );
+        }
         
     }
 }

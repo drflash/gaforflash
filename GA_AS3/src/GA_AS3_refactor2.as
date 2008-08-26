@@ -19,6 +19,7 @@
  
 package
 {
+    
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
@@ -26,8 +27,8 @@ package
     
     import com.google.analytics.GATracker;
     import com.google.analytics.core.as3_api;
-    import com.google.analytics.v4.GoogleAnalyticsAPI;    
-
+    import com.google.analytics.v4.GoogleAnalyticsAPI;
+    
     /* note:
        for testing code we use GATracker
        but ultimately users will use a component (SWC)
@@ -53,11 +54,13 @@ package
             use namespace as3_api;
             _gat = new GATracker( this );
             pageTracker = _gat.getTracker( "UA-1234-5" );
-            pageTracker.setSampleRate( -0.5 );
+            //pageTracker.setSampleRate( -0.5 );
             //pageTracker.addOrganic("google","q");
-            pageTracker.setDomainName( ".zwetan.com" );
+            //pageTracker.setDomainName( ".zwetan.com" );
             pageTracker.setVar( "hello world" );
-            
+            //pageTracker.setLocalRemoteServerMode();
+            //pageTracker.setLocalServerMode();
+            //pageTracker.setRemoteServerMode();
         }
         
     }

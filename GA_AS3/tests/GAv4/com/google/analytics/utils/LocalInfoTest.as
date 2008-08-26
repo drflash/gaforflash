@@ -74,8 +74,8 @@ package com.google.analytics.utils
             var set1:HTMLDOM = new HTMLDOM_set1(); //downcast trick
             var set2:HTMLDOM = new HTMLDOM_set2(); //downcast trick
             
-            var li1:LocalInfo = new LocalInfo( "" , set1 ); //en-GB
-            var li2:LocalInfo = new LocalInfo( "" , set2 ); //fr-FR
+            var li1:LocalInfo = new LocalInfo( "" , "", "", set1 ); //en-GB
+            var li2:LocalInfo = new LocalInfo( "" , "", "", set2 ); //fr-FR
             
             //assertEquals( "en-GB" , li1.language , "The LocalInfo language attribute failed" ) ; //match, upgrade
             //assertEquals( "fr-FR" , li2.language , "The LocalInfo language attribute failed" ) ; //no match, no upgrade
