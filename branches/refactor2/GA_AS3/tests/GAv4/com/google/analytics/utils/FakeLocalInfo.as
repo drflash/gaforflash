@@ -1,4 +1,4 @@
-
+﻿
 package com.google.analytics.utils
 {
     
@@ -76,7 +76,7 @@ package com.google.analytics.utils
         
         public override function get appVersion():Version
         {
-            return _appVersion
+            return _appVersion;
         }
         
         public override function set appVersion( value:Version ):void
@@ -96,7 +96,7 @@ package com.google.analytics.utils
         
         public override function get referrer():String
         {
-            return _referrer
+            return _referrer;
         }
         
         public override function get documentTitle():String

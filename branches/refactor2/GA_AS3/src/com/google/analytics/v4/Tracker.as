@@ -44,34 +44,100 @@ package com.google.analytics.v4
      */
     public class Tracker implements GoogleAnalyticsAPI
     {
-        private var _account:String;
         
-        private var _info:LocalInfo;
-        
-        private var _buffer:Buffer;
-        
-        private var _gifRequest:GIFRequest;
-        
+        /**
+         * @private
+         */
         private var _adSense:AdSenseGlobals;
         
+        /**
+         * @private
+         */
+        private var _account:String;
+        
+        /**
+         * @private
+         */
+        private var _browserInfo:BrowserInfo;
+        
+        /**
+         * @private
+         */
+        private var _buffer:Buffer;
+        
+        /**
+         * @private
+         */
+        private var _campaign:CampaignManager;
+        
+        /**
+         * @private
+         */
+        private var _campaignInfo:String = "";
+        
+        /**
+         * @private
+         */
+        private var _domainHash:Number;
+        
+        /**
+         * @private
+         */
+        private var _eventTracker:X10;
+        
+        /**
+         * @private
+         */
+        private var _formatedReferrer:String;
+        
+        /**
+         * @private
+         */
+        private var _gifRequest:GIFRequest;
+        
+        /**
+         * @private
+         */
+        private var _hasInitData:Boolean          = false;
+        
+        /**
+         * @private
+         */
+        private var _info:LocalInfo;
+        
+        /**
+         * @private
+         */
+        private var _isNewVisitor:Boolean         = false;
+        
+        /**
+         * @private
+         */
         private var _layout:Layout;
         
-        private var _hasInitData:Boolean          = false;
-        private var _isNewVisitor:Boolean         = false;
+        /**
+         * @private
+         */
         private var _noSessionInformation:Boolean = false;
         
-        private var _domainHash:Number;
+        /**
+         * @private
+         */
         private var _timeStamp:Number;
-        private var _formatedReferrer:String;
-        private var _browserInfo:BrowserInfo;
-        private var _campaignInfo:String = "";
-        private var _campaign:CampaignManager;
+        
+        /**
+         * @private
+         */
         private var _x10Module:X10;
-        private var _eventTracker:X10;
         
         /** 
          * Creates a new Tracker instance.
          * @param account Urchin Account to record metrics in.
+         * @param info The LocalInfo reference of this tracker.
+         * @param buffer The Buffer reference of this tracker.
+         * @param gifRequest The GifRequest of this tracker.
+         * @param adSense The optional adsense global object.
+         * @param layout The optional Layout object.
          */
         public function Tracker( account:String, info:LocalInfo, buffer:Buffer, gifRequest:GIFRequest,
                                  adSense:AdSenseGlobals = null , layout:Layout = null )
@@ -399,12 +465,11 @@ package com.google.analytics.v4
             
         }
         
-  /**
-   * Return true if and only if the cookie domain is NOT a google search page.
-   *
-   * @return {Boolean} Return true if and only if the cookie domain is not a
-   *     google search page.
-   */
+        /**
+         * Returns true if and only if the cookie domain is NOT a google search page.
+         * @return {Boolean} Return true if and only if the cookie domain is not a google search page.
+         * @private
+         */
         private function _isNotGoogleSearch():Boolean
         {
             var domainName:String = config.domainName;
@@ -606,8 +671,7 @@ package com.google.analytics.v4
          *     session.
          *
          * @private
-         * @return {Boolean} True to indicate we should record this hit.  False to
-         *     indicate we should skip this hit.
+         * @return <code class="prettyprint">true</code> to indicate we should record this hit. <code class="prettyprint">false</code> to indicate we should skip this hit.
          */
         private function _takeSample():Boolean
         {
@@ -633,7 +697,7 @@ package com.google.analytics.v4
                to all the users that visit the web site, it's not the sampleRate
                of data taken from only 1 user.
             */
-            trace( "takeSample: (" +(_visitCode() % 10000)+ ") < (" +(config.sampleRate * 10000)+ ")" )
+            trace( "takeSample: (" +(_visitCode() % 10000)+ ") < (" +(config.sampleRate * 10000)+ ")" );
             return (_visitCode() % 10000) < (config.sampleRate * 10000);
         }
         
@@ -673,14 +737,12 @@ package com.google.analytics.v4
         }
         
         /**
-         * Sets the new sample rate.
-         * If your website is particularly large and subject to heavy traffic spikes,
-         * then setting the sample rate ensures un-interrupted report tracking.
-         * 
-         * Sampling in Google Analytics occurs consistently across unique visitors,
+         * Sets the new sample rate. 
+         * <p>If your website is particularly large and subject to heavy traffic spikes,
+         * then setting the sample rate ensures un-interrupted report tracking.</p>
+         * <p>Sampling in Google Analytics occurs consistently across unique visitors,
          * so there is integrity in trending and reporting even when sampling is enabled,
-         * because unique visitors remain included or excluded from the sample,
-         * as set from the initiation of sampling.
+         * because unique visitors remain included or excluded from the sample, as set from the initiation of sampling.</p>
          * @param newRate New sample rate to set. Provide a numeric as a whole percentage, 0.1 being 10%, 1 being 100%.
          */        
         public function setSampleRate(newRate:Number):void
@@ -777,18 +839,14 @@ package com.google.analytics.v4
             }
         }
         
-  /**
-   * This method will gather metric data needed and construct it into a search
-   * string to be sent via a GIF request.  It is used by any tracking methods
-   * that needs browser, campaign, and document information to be sent.
-   *
-   * @private
-   *
-   * @param opt_pageURL Optional parameter.  This is the virtual page URL for 
-   *     the page view.
-   *
-   * @return {String} The rendered search string with various information included.
-   */
+        /**
+         * This method will gather metric data needed and construct it into a search 
+         * string to be sent via a GIF request.  It is used by any tracking methods 
+         * that needs browser, campaign, and document information to be sent.
+         * @param pageURL This is the virtual page URL for the page view (optional).
+         * @return The rendered search string with various information included.
+         * @private
+         */
         private function _renderMetricsSearchVariables( pageURL:String = "" ):URLVariables
         {
             var docInfo:DocumentInfo = new DocumentInfo( _info, _formatedReferrer, pageURL );
@@ -806,14 +864,11 @@ package com.google.analytics.v4
             return variables;
         }
         
-  /**
-   * This method will gather all the data needed, and sent these data to GABE
-   * (Google Analytics Back-end) via GIF requests.
-   *
-   * @private
-   * @param {String} opt_pageURL (Optional) Page URL to assign metrics to at the
-   *     back-end.
-   */
+        /**
+         * This method will gather all the data needed, and sent these data to GABE (Google Analytics Back-end) via GIF requests.
+         * @param pageURL Page URL to assign metrics to at the back-end (optional).
+         * @private
+         */
         private function _trackMetrics( pageURL:String = "" ):void
         {
             if( _takeSample() )

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,12 +22,30 @@ package com.google.ui
 {
     public class AlertAction
     {
-        public var name:String;
-        public var activator:String;
-        public var container:Alert;
         
+        /**
+         * @private
+         */
         private var _callback:*;
         
+        /**
+         * The activator value.
+         */
+        public var activator:String;
+        
+        /**
+         * The container value.
+         */
+        public var container:Alert;
+        
+        /**
+         * The name value.
+         */
+        public var name:String;
+        
+        /**
+         * Creates a new AlertAction instance.
+         */
         public function AlertAction( name:String, activator:String, callback:* )
         {
             this.name      = name;
@@ -36,13 +54,16 @@ package com.google.ui
             _callback = callback;
         }
         
+        /**
+         * Run the command.
+         */
         public function execute():void
         {
             if( _callback )
             {
                 if( _callback is Function )
                 {
-                    _callback();
+                    (_callback as Function)();
                 }
                 else if( _callback is String )
                 {

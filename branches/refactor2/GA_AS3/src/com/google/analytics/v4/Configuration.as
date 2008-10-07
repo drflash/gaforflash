@@ -56,12 +56,24 @@ package com.google.analytics.v4
          */
         private var _sampleRate:Number       = 1; //100%
         
+        /**
+         * @private
+         */        
         private var _trackingLimitPerSession:int = 500;
         
+        /**
+         * @private
+         */         
         private var _domain:Domain = new Domain( DomainNameMode.auto );
         
+        /**
+         * @private
+         */         
         private var _organicCache:Object  = {};
         
+        /**
+         * @private
+         */         
         private var _organicSources:Array = [];
         
         /**
@@ -81,7 +93,6 @@ package com.google.analytics.v4
          * @private
          */
         private var _ignoredOutboundHosts:Array = [];
-        
         
         /**
          * This is the cse path that needs to be ignored for Google.
@@ -103,11 +114,9 @@ package com.google.analytics.v4
         private var _google:String = "google";
         
         /**
-        * name used by the SharedObject (read-only)
-        */
+         * Name used by the SharedObject (read-only)
+         */
         private var _cookieName:String = "analytics";
-        
-        
         
         /**
          * Unique domain hash for cookies.

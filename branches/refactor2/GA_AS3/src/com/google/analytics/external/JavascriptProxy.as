@@ -45,8 +45,9 @@ package com.google.analytics.external
                         prop  = path;
                     }
                     
-                    var target = window;
-                    for( var i=0; i<paths.length; i++ )
+                    var target = window ;
+                    var len    = paths.length ;
+                    for( var i = 0; i<len ; i++ )
                     {
                         target = target[ paths[i] ];
                     }

@@ -57,34 +57,46 @@ package com.google.ui
         /**
          * @private
          */
-        private var _warningQueue:Array;
+        private var _infoQueue:Array;        
         
-        private var _maxCharPerLine:int = 85;
+        /**
+         * @private
+         */        
+        private var _maxCharPerLine:int = 85;        
         
         /**
          * @private
          */
-        private var _infoQueue:Array;
+        private var _warningQueue:Array;
         
         /**
-         * The Debug reference of this Layout.
+         * @private
          */
-        public var debug:Debug;
-        
-        /**
-         * Creates a new Layout instance.
-         */
-        public function Layout( display:DisplayObject )
+        private function _clearInfo( event:Event ):void
         {
-            super();
-            _display   = display;
-            _hasWarning = false;
-            _hasInfo    = false;
-            _hasDebug   = false;
-            _warningQueue = [];
-            _infoQueue    = [];
-        }
+            _hasInfo = false;
+            
+            if( _infoQueue.length > 0 )
+            {
+                createInfo( _infoQueue.shift() );
+            }
+        }        
         
+        /**
+         * @private
+         */
+        private function _clearWarning( event:Event ):void
+        {
+            _hasWarning = false;
+            if( _warningQueue.length > 0 )
+            {
+                createWarning( _warningQueue.shift() );
+            }
+        }        
+        
+        /**
+         * @private
+         */
         private function _filterMaxChars( message:String, maxCharPerLine:int = 0 ):String
         {
             var CRLF:String = "\n";
@@ -107,38 +119,12 @@ package com.google.ui
                 }
                 output.push( line );
             }
-            
             return output.join(CRLF);
         }
         
         /**
-         * @private
-         */
-        private function _clearWarning( event:Event ):void
-        {
-            _hasWarning = false;
-            
-            if( _warningQueue.length > 0 )
-            {
-                createWarning( _warningQueue.shift() );
-            }
-            
-        }
-
-        /**
-         * @private
-         */
-        private function _clearInfo( event:Event ):void
-        {
-            _hasInfo = false;
-            
-            if( _infoQueue.length > 0 )
-            {
-                createInfo( _infoQueue.shift() );
-            }
-            
-        }
-        
+         * The protected custom trace method.
+         */        
         protected function trace( message:String ):void
         {
             var messages:Array = [];
@@ -170,12 +156,32 @@ package com.google.ui
                 messages.push( pre0 + message );
             }
             
-            for( var i:int = 0; i<messages.length; i++ )
+            var len:int = messages.length ;
+            for( var i:int = 0; i<len ; i++ )
             {
                 public::trace( messages[i] );
             }
-        }
+        }        
         
+        /**
+         * The Debug reference of this Layout.
+         */
+        public var debug:Debug;
+        
+        /**
+         * Creates a new Layout instance.
+         */
+        public function Layout( display:DisplayObject )
+        {
+            super();
+            _display   = display;
+            _hasWarning = false;
+            _hasInfo    = false;
+            _hasDebug   = false;
+            _warningQueue = [];
+            _infoQueue    = [];
+        }
+                
         /**
          * Adds to stage the specified visual display.
          */
@@ -193,6 +199,25 @@ package com.google.ui
         }
         
         /**
+         * Creates an alert message in the debug display.
+         */        
+        public function createAlert( message:String ):void
+        {
+            message = _filterMaxChars( message );
+            var a:Alert = new Alert( message, [ new AlertAction("Close","close","close") ] );
+            addToStage( a );
+            bringToFront( a );
+            if( _hasDebug )
+            {
+                debug.write( "<b>"+message+"</b>" );
+            }
+            if( config.debugTrace )
+            {
+                trace( "##" + message + " ##" );
+            }
+        }        
+        
+        /**
          * Creates a debug message in the debug display.
          */        
         public function createDebug():void
@@ -206,6 +231,64 @@ package com.google.ui
                 _hasDebug = true;
             }
         }
+        
+        /**
+         * Creates a failure alert message in the debug display.
+         */            
+        public function createFailureAlert( message:String ):void
+        {
+            if( config.debugVerbose )
+            {
+                message = _filterMaxChars( message );
+            }
+            var fa:Alert = new FailureAlert( message, [ new AlertAction("Close","close","close") ] );
+            addToStage( fa );
+            bringToFront( fa );
+            
+            if( _hasDebug )
+            {
+                if( config.debugVerbose )
+                {
+                    message = message.split("\n").join("");
+                    message = _filterMaxChars( message, 66 );
+                }
+                debug.write( "<b>"+message+"</b>" );
+            }
+            
+            if( config.debugTrace )
+            {
+                trace( "## " + message + " ##" );
+            }
+        }        
+        
+        /**
+         * Creates a GIFRequest alert message in the debug display.
+         */
+        public function createGIFRequestAlert( message:String, request:URLRequest, ref:GIFRequest ):void
+        {
+            
+            var f:Function = function():void
+            {
+                ref.sendRequest( request );
+            };
+            
+            message = _filterMaxChars( message );
+            var gra:GIFRequestAlert = new GIFRequestAlert( message, [ new AlertAction("OK","ok",f),
+                                                                      new AlertAction("Cancel","cancel","close") ] );
+            addToStage( gra );
+            bringToFront( gra );
+            
+            if( _hasDebug )
+            {
+                //debug.write( "<b>"+message+"</b>" );
+                debug.write( message );
+            }
+            
+            if( config.debugTrace )
+            {
+                trace( "##" + message + " ##" );
+            }
+        }        
         
         /**
          * Creates an info message in the debug display.
@@ -246,68 +329,24 @@ package com.google.ui
                 _warningQueue.push( message );
                 return;
             }
-            
             _hasWarning = true;
             var w:Warning = new Warning( message );
             addToStage( w );
             bringToFront( w );
             w.addEventListener( Event.REMOVED_FROM_STAGE, _clearWarning );
-            
             if( _hasDebug )
             {
                 debug.write( "<b>"+message+"</b>" );
             }
-            
             if( config.debugTrace )
             {
                 trace( "## " + message + " ##" );
             }
         }
         
-        public function createAlert( message:String ):void
-        {
-            message = _filterMaxChars( message );
-            var a:Alert = new Alert( message, [ new AlertAction("Close","close","close") ] );
-            addToStage( a );
-            bringToFront( a );
-            
-            if( _hasDebug )
-            {
-                debug.write( "<b>"+message+"</b>" );
-            }
-            
-            if( config.debugTrace )
-            {
-                trace( "##" + message + " ##" );
-            }
-        }
-        
-        public function createFailureAlert( message:String ):void
-        {
-            if( config.debugVerbose )
-            {
-                message = _filterMaxChars( message );
-            }
-            var fa:Alert = new FailureAlert( message, [ new AlertAction("Close","close","close") ] );
-            addToStage( fa );
-            bringToFront( fa );
-            
-            if( _hasDebug )
-            {
-                if( config.debugVerbose )
-                {
-                    message = message.split("\n").join("");
-                    message = _filterMaxChars( message, 66 );
-                }
-                debug.write( "<b>"+message+"</b>" );
-            }
-            
-            if( config.debugTrace )
-            {
-                trace( "## " + message + " ##" );
-            }
-        }
-        
+        /**
+         * Creates a success alert message in the debug display.
+         */
         public function createSuccessAlert( message:String ):void
         {
             if( config.debugVerbose )
@@ -334,30 +373,6 @@ package com.google.ui
             }
         }
         
-        public function createGIFRequestAlert( message:String, request:URLRequest, ref:GIFRequest ):void
-        {
-            var f:Function = function():void
-            {
-                ref.sendRequest( request );
-            }
-            
-            message = _filterMaxChars( message );
-            var gra:GIFRequestAlert = new GIFRequestAlert( message, [ new AlertAction("OK","ok",f),
-                                                                      new AlertAction("Cancel","cancel","close") ] );
-            addToStage( gra );
-            bringToFront( gra );
-            
-            if( _hasDebug )
-            {
-                //debug.write( "<b>"+message+"</b>" );
-                debug.write( message );
-            }
-            
-            if( config.debugTrace )
-            {
-                trace( "##" + message + " ##" );
-            }
-        }
         
     }
 }
