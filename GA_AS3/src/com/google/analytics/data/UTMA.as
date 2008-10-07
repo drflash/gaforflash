@@ -21,77 +21,31 @@
 package com.google.analytics.data
 {
     /**
-     * Visitor / session tracking : always persists for 2 years.
+     * Urchin Tracking Module Cookie A.
+     * The visitor tracking cookie.
+     * 
+     * This cookie is typically written to the browser upon the first visit to your site from that web browser.
+     * If the cookie has been deleted by the browser operator, and the browser subsequently visits your site,
+     * a new __utma cookie is written with a different unique ID.
+     * 
+     * This cookie is used to determine unique visitors to your site and it is updated with each page view.
+     * Additionally, this cookie is provided with a unique ID that Google Analytics uses to ensure both the
+     * validity and accessibility of the cookie as an extra security measure.
+     * 
+     * expiration:
+     * 2 years from set/update.
+     * 
+     * format:
+     * __utma=<domainHash>.<sessionId>.<firstTime>.<lastTime>.<currentTime>.<sessionCount>
      */
-    public class UTMA
+    public class UTMA  extends UTMCookie
     {
-    	/**
-    	 * @private
-    	 */
-        private var _inURL:String = "__utma";
-        
-        /**
-         * Field index for domain hash in visitor tracking cookie (__utma) value.
-         */
-        public static const DOMAINHASH:int   = 0;
-        
-        /**
-         * Field index for session id in visitor tracking cookie (__utma) value.
-         */
-        public static const SESSIONID:int    = 1;
-        
-        /**
-         * Field index for first visit timestamp in vistior tracking cookie (__utma) value.
-         */
-        public static const FIRSTTIME:int    = 2;
-        
-        /**
-         * Field index for last visit timestamp in vistior tracking cookie (__utma) value.
-         */
-        public static const LASTTIME:int     = 3;
-        
-        /**
-         * Field index for current visit timestamp in vistior tracking cookie (__utma) value.
-         */
-        public static const CURTIME:int      = 4;
-        
-        /**
-         * Field index for session count in vistior tracking cookie (__utma) value.
-         */
-        public static const SESSIONCOUNT:int = 5;
-        
-        
-        /**
-         * The domain hash value.
-         */
-        public var domainHash:Number;
-        
-        /**
-         * The session id value.
-         */
-        public var sessionId:Number;
-        
-        /**
-         * The first time value.
-         */
-        public var firstTime:Number;
-        
-        /**
-         * The last time value.
-         */
-        public var lastTime:Number;
-        
-        /**
-         * The current time value.
-         */
-        public var currentTime:Number;
-        
-        /**
-         * The session count value.
-         */
-        public var sessionCount:Number;
-        
-        
+        private var _domainHash:Number;   //0
+        private var _sessionId:Number;    //1
+        private var _firstTime:Number;    //2
+        private var _lastTime:Number;     //3
+        private var _currentTime:Number;  //4
+        private var _sessionCount:Number; //5
         
         /**
          * Creates a new UTMA instance.
@@ -99,6 +53,8 @@ package com.google.analytics.data
         public function UTMA( domainHash:Number = NaN, sessionId:Number = NaN, firstTime:Number = NaN,
                               lastTime:Number = NaN, currentTime:Number = NaN, sessionCount:Number = NaN )
         {
+            super( "utma", "__utma", ["domainHash","sessionId","firstTime","lastTime","currentTime","sessionCount"] );
+            
             this.domainHash   = domainHash;
             this.sessionId    = sessionId;
             this.firstTime    = firstTime;
@@ -107,16 +63,106 @@ package com.google.analytics.data
             this.sessionCount = sessionCount;
         }
         
-        public function toURLString():String
+        /**
+         * The domain hash value.
+         */
+        public function get domainHash():Number
         {
-            var data:Array = [];
-                data.push( domainHash );   //0
-                data.push( sessionId );    //1
-                data.push( firstTime );    //2
-                data.push( lastTime );     //3
-                data.push( currentTime );  //4
-                data.push( sessionCount ); //5
-            return _inURL + "=" + data.join( "." );
+            return _domainHash;
+        }
+        
+        /**
+        * @private
+        */
+        public function set domainHash( value:Number ):void
+        {
+            _domainHash = value;
+            update();
+        }
+        
+        /**
+         * The session id value.
+         */
+        public function get sessionId():Number
+        {
+            return _sessionId;
+        }
+        
+        /**
+        * @private
+        */
+        public function set sessionId( value:Number ):void
+        {
+            _sessionId = value;
+            update();
+        }
+        
+        /**
+         * The first visit timestamp.
+         */
+        public function get firstTime():Number
+        {
+            return _firstTime;
+        }
+        
+        /**
+        * @private
+        */
+        public function set firstTime( value:Number ):void
+        {
+            _firstTime = value;
+            update();
+        }
+        
+        /**
+         * The last visit timestamp.
+         */
+        public function get lastTime():Number
+        {
+            return _lastTime;
+        }
+        
+        /**
+        * @private
+        */
+        public function set lastTime( value:Number ):void
+        {
+            _lastTime = value;
+            update();
+        }
+        
+        /**
+         * The current visit timestamp.
+         */
+        public function get currentTime():Number
+        {
+            return _currentTime;
+        }
+        
+        /**
+        * @private
+        */
+        public function set currentTime( value:Number ):void
+        {
+            _currentTime = value;
+            update();
+        }
+        
+        /**
+         * The session count value.
+         */
+        public function get sessionCount():Number
+        {
+            return _sessionCount;
+        }
+        
+        /**
+        * @private
+        */
+        public function set sessionCount( value:Number ):void
+        {
+            _sessionCount = value;
+            update();
         }
         
     }

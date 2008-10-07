@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,26 +15,20 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.analytics.core
+package com.google.ui
 {
-    import buRRRn.ASTUce.framework.*;
-    
-    public class AllTests
+    import flash.events.TextEvent;
+    import flash.net.URLRequest;
+
+    public class GIFRequestAlert extends Alert
     {
-        
-        public function AllTests()
+        public function GIFRequestAlert( text:String, actions:Array )
         {
+            super( text, actions );
         }
         
-        public static function suite():ITest
-        {
-            var suite:TestSuite = new TestSuite( "Google Analytics core tests" );
-            
-            suite.addTestSuite( DocumentInfoTest );
-            suite.addTestSuite( BrowserInfoTest );
-            return suite;
-        }
     }
 }

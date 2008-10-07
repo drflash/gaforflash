@@ -67,6 +67,37 @@ package com.google.analytics.external
             return lang;
         }
         
+        public function get characterSet():String
+        {
+            if( !isAvailable() )
+            {
+                return null;
+            }
+            
+            var cs:String = getProperty( "document.characterSet" );
+            
+            if( cs == null )
+            {
+                cs = getProperty( "document.charset" );
+            }
+            
+            return cs;
+            
+        }
+        
+        public function get colorDepth():String
+        {
+            if( !isAvailable() )
+            {
+                return null;
+            }
+            
+            var cd:String = getProperty( "window.screen.colorDepth" );
+            
+            return cd;
+        }
+        
+        
         /**
          * Determinates the 'location' String value from the HTML DOM.
          */     
@@ -77,6 +108,15 @@ package com.google.analytics.external
                 return null;
             }
             return getPropertyString( "document.location" );
+        }
+        
+        public function get pathname():String
+        {
+            if( !isAvailable() )
+            {
+                return null;
+            }
+            return getProperty( "document.location.pathname" );
         }
         
         /**
@@ -101,6 +141,24 @@ package com.google.analytics.external
                 return null;
             }
             return getProperty( "document.location.search" );
+        }
+        
+        public function get referrer():String
+        {
+            if( !isAvailable() )
+            {
+                return null;
+            }
+            return getProperty( "document.referrer" );
+        }
+        
+        public function get title():String
+        {
+            if( !isAvailable() )
+            {
+                return null;
+            }
+            return getProperty( "document.title" );
         }
         
     }

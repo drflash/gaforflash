@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,24 +17,23 @@
  *   Zwetan Kjukov <zwetan@gmail.com>.
  */
 
-package com.google.analytics.core
+package com.google.analytics.data
 {
-    import buRRRn.ASTUce.framework.*;
-    
-    public class AllTests
+    public interface Cookie
     {
+        /**
+        * Format data to render in the URL.
+        */
+        function toURLString():String;
         
-        public function AllTests()
-        {
-        }
+        /**
+        * Deserialize data from a simple object.
+        */
+        function fromSharedObject( data:Object ):void;
         
-        public static function suite():ITest
-        {
-            var suite:TestSuite = new TestSuite( "Google Analytics core tests" );
-            
-            suite.addTestSuite( DocumentInfoTest );
-            suite.addTestSuite( BrowserInfoTest );
-            return suite;
-        }
+        /**
+        * Serialize data to a simple object.
+        */
+        function toSharedObject():Object;
     }
 }

@@ -33,7 +33,7 @@ package
     import buRRRn.ASTUce.config;
     
     import system.config;
-    import system.console;    
+    import system.console;
     
     [SWF(width="800", height="600", backgroundColor='0x333333', frameRate='24', pageTitle='GA unit tests', scriptRecursionLimit='1000', scriptTimeLimit='60')]
     [ExcludeClass]
@@ -51,22 +51,22 @@ package
             stage.align     = StageAlign.TOP_LEFT;
             stage.scaleMode = StageScaleMode.NO_SCALE;
             
-            textfield                   = new TextField() ;
-            textfield.defaultTextFormat = new TextFormat( "Courier New" , 14 , 0xFFFFFF ) ; 
-            textfield.multiline         = true ;
-            textfield.selectable        = true ;
-            textfield.wordWrap          = true ;
+            textfield                   = new TextField();
+            textfield.defaultTextFormat = new TextFormat( "Courier New" , 14 , 0xFFFFFF );
+            textfield.multiline         = true;
+            textfield.selectable        = true;
+            textfield.wordWrap          = true;
                 
             addChild( textfield ) ;
                 
-            stage.addEventListener( Event.RESIZE , resize ) ;
-            resize() ;
+            stage.addEventListener( Event.RESIZE , resize );
+            resize();
             
-            console = new TextFieldConsole( textfield ) ;
+            console = new TextFieldConsole( textfield );
             
-            system.config.serializer.prettyPrinting  = true  ;
+            system.config.serializer.prettyPrinting  = true;
             
-            buRRRn.ASTUce.config.showConstructorList = false ;
+            buRRRn.ASTUce.config.showConstructorList = false;
             
             // testing
             

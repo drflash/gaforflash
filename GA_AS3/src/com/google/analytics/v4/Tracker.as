@@ -20,49 +20,52 @@
 package com.google.analytics.v4
 {
     
+    import com.google.analytics.campaign.CampaignManager;
     import com.google.analytics.config;
+    import com.google.analytics.core.BrowserInfo;
     import com.google.analytics.core.Buffer;
+    import com.google.analytics.core.DocumentInfo;
     import com.google.analytics.core.DomainNameMode;
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.data.X10;
+    import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.utils.LocalInfo;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.generate32bitRandom;
     import com.google.analytics.utils.generateHash;
+    import com.google.analytics.utils.joinVariables;
     import com.google.ui.Layout;
+    
+    import flash.net.URLVariables;
     
     /**
      * The Tracker class.
      */
     public class Tracker implements GoogleAnalyticsAPI
     {
-        /**
-         * @private
-         */
         private var _account:String;
         
-        /**
-         * @private
-         */
         private var _info:LocalInfo;
         
-        /**
-         * @private
-         */
         private var _buffer:Buffer;
         
         private var _gifRequest:GIFRequest;
         
-        /**
-         * @private
-         */
+        private var _adSense:AdSenseGlobals;
+        
         private var _layout:Layout;
         
+        private var _hasInitData:Boolean          = false;
+        private var _isNewVisitor:Boolean         = false;
+        private var _noSessionInformation:Boolean = false;
         
-        private var _hasInitData:Boolean = false;
         private var _domainHash:Number;
         private var _timeStamp:Number;
+        private var _formatedReferrer:String;
+        private var _browserInfo:BrowserInfo;
+        private var _campaignInfo:String = "";
+        private var _campaign:CampaignManager;
         private var _x10Module:X10;
         private var _eventTracker:X10;
         
@@ -70,13 +73,20 @@ package com.google.analytics.v4
          * Creates a new Tracker instance.
          * @param account Urchin Account to record metrics in.
          */
-        public function Tracker( account:String, info:LocalInfo, buffer:Buffer,
-                                 layout:Layout = null )
+        public function Tracker( account:String, info:LocalInfo, buffer:Buffer, gifRequest:GIFRequest,
+                                 adSense:AdSenseGlobals = null , layout:Layout = null )
         {
             _account    = account;
             _info       = info;
             _buffer     = buffer;
+            _gifRequest = gifRequest;
             
+            if( !adSense )
+            {
+                adSense = new AdSenseGlobals();
+            }
+            
+            _adSense   = adSense;
             _layout    = layout; //optional
             
             _initData();
@@ -106,7 +116,7 @@ package com.google.analytics.v4
         
         /**
          * @private
-         */        
+         */
         private function _initData():void
         {
             // initialize initial data
@@ -120,9 +130,6 @@ package com.google.analytics.v4
                 
                 //define the timestamp for start of the session
                 _timeStamp  = Math.round((new Date()).getTime() / 1000);
-                
-                // create new gif request object
-                _gifRequest = new GIFRequest( _buffer );
                 
                 if( config.debug && config.debugVerbose )
                 {
@@ -150,14 +157,16 @@ package com.google.analytics.v4
                 if( _doTracking() )
                 {
                     // format referrer
+                    _formatedReferrer = _formatReferrer();
                     
-                    // caching browser info
-                    // note: done in ctor
+                    // cache browser info
+                    _browserInfo = new BrowserInfo( _info );
+                    trace( "_browserInfo: " + _browserInfo.toURLString() );
                     
                     // cache campaign info
                     if( config.campaignTracking )
                     {
-                        
+                        _campaign = new CampaignManager( _buffer, _domainHash, _timeStamp );
                     }
                 }
                 
@@ -174,6 +183,7 @@ package com.google.analytics.v4
             if( config.hasSiteOverlay )
             {
                 //init GASO
+                _showWarning( "Site Overlay is not supported" );
             }
             
             if( config.debug && config.debugVerbose )
@@ -190,16 +200,202 @@ package com.google.analytics.v4
             }
         }
         
-  /**
-   * Handles / formats GATC cookie values.  If linker functionalities are
-   * enabled, then GATC cookies parsed from linker request takes precedences
-   * over stored cookies.  Also updates the __utma, __utmb, and __utmc values
-   * appropriately.
-   *
-   * @private
-   */
+        /**
+         * Handles / formats GATC cookie values.  If linker functionalities are
+         * enabled, then GATC cookies parsed from linker request takes precedences
+         * over stored cookies.  Also updates the __utma, __utmb, and __utmc values
+         * appropriately.
+         *
+         * @private
+         */
         private function _handleCookie():void
         {
+            trace( "_handleCookie()" );
+            //Linker functionalities are enabled.
+            if( config.allowLinker )
+            {
+                //not supported for now
+                /* TODO:
+                   use JavascriptProxy to grab the query string when the application start
+                   and then parse the QS here if utma/utmb/etc. found
+                */
+            }
+            
+            
+//            //Has linked cookie value.
+//            if( _buffer.hasUTMA() && !_buffer.utma.isEmpty() )
+//            {
+//                //Linked value only have __utma.  Either __utmb, or __utmc is missing.
+//                if( _buffer.utmb.isEmpty() || _buffer.utmc.isEmpty() )
+//                {
+//                    //We take passed in __utma value, and we update it.
+//                    _buffer.updateUTMA( _timeStamp );
+//                    
+//                    // Indicate that there is no session information.
+//                    _noSessionInformation = true;
+//                }
+//                /* There is session information.  We are going to extract the domainHash,
+//                  just in case it doesn't agree, and we override the passed in domainHash.
+//                */
+//                else
+//                {
+//                    _domainHash = _buffer.utmb.domainHash;
+//                }
+//                
+//                if( config.debug && config.debugVerbose )
+//                {
+//                    _showInfo( "linked " + _buffer.utma.toString() );
+//                }
+//            }
+//            //Does not have linked cookie value.
+//            else
+//            {
+                //We already have __utma value stored in document cookie.
+                if( _buffer.hasUTMA() && !_buffer.utma.isEmpty() )
+                {
+                    /* Either __utmb, __utmc, or both are missing from document cookie.  We
+                       take the existing __utma value, and update with new session
+                       information.  And then we indicate that there is no session information
+                       available.
+                    */
+                    if( !_buffer.hasUTMB() || !_buffer.hasUTMC() )
+                    {
+                        _buffer.updateUTMA( _timeStamp );
+                        _noSessionInformation = true;
+                    }
+                    
+                    if( config.debug && config.debugVerbose )
+                    {
+                        _showInfo( "from cookie " + _buffer.utma.toString() );
+                    }
+                    
+                }
+                /* We don't have __utma value already stored in document cookie.  We are not
+                   going to construct a new __utma value.  Also indicate that there is no
+                   session information stored in cookie.
+                */
+                else
+                {
+                    _buffer.utma.domainHash   = _domainHash;
+                    _buffer.utma.sessionId    = _getUniqueSessionId();
+                    _buffer.utma.firstTime    = _timeStamp;
+                    _buffer.utma.lastTime     = _timeStamp;
+                    _buffer.utma.currentTime  = _timeStamp;
+                    _buffer.utma.sessionCount = 1;
+                    
+                    if( config.debug && config.debugVerbose )
+                    {
+                        _showInfo( _buffer.utma.toString() );
+                    }
+                    
+                    _noSessionInformation = true;
+                    _isNewVisitor         = true;
+                }
+//            }
+            
+            /* Respect the AdSense DOM globals, but only if they match the
+               current domainHash.
+               There are 2 scenarios when we have AS globals:
+                - AS globals + new visitor:
+                    Copy all info (vid, sid) from globals.
+                - AS globals + returning visitor:
+                    Copy only sid from globals.
+            */
+            if( (_adSense.gaGlobal) && (_adSense.dh == String(_domainHash)) )
+            {
+                /* Over-write current session time with sid from AdSense globals.
+                   We always copy this to ensure that the timestamp is consistent
+                   between GA and AS.
+                */
+                if( _adSense.sid )
+                {
+                    _buffer.utma.currentTime = Number( _adSense.sid );
+                    
+                    if( config.debug && config.debugVerbose )
+                        {
+                            var data0:String = "";
+                                data0 += "AdSense sid found\n";
+                                data0 += "Override currentTime("+_buffer.utma.currentTime+") from AdSense sid("+Number(_adSense.sid)+")";
+                            
+                            _showInfo( data0 );
+                        }
+                }
+                
+                //For new visitors, copy over all the info from the AdSense globals.
+                if( _isNewVisitor )
+                {
+                    /* Over-write the last session timestamp with the current session
+                       timestamp if this is a new visitor.
+                    */
+                    if( _adSense.sid )
+                    {
+                        _buffer.utma.lastTime = Number( _adSense.sid );
+                        
+                        if( config.debug && config.debugVerbose )
+                        {
+                            var data1:String = "";
+                                data1 += "AdSense sid found (new visitor)\n";
+                                data1 += "Override lastTime("+_buffer.utma.lastTime+") from AdSense sid("+Number(_adSense.sid)+")";
+                            
+                            _showInfo( data1 );
+                        }
+                    }
+                    
+                    /* Over-write visitor id, and first session timestamp with visitor id
+                       from DOM.
+                    */
+                    if( _adSense.vid )
+                    {
+                        var vid:Array = _adSense.vid.split( "." );
+                        _buffer.utma.sessionId = Number( vid[0] );
+                        _buffer.utma.firstTime = Number( vid[1] );
+                        
+                        if( config.debug && config.debugVerbose )
+                        {
+                            var data2:String = "";
+                                data2 += "AdSense vid found (new visitor)\n";
+                                data2 += "Override sessionId("+_buffer.utma.sessionId+") from AdSense vid("+Number( vid[0] )+")\n";
+                                data2 += "Override firstTime("+_buffer.utma.firstTime+") from AdSense vid("+Number( vid[1] )+")";
+                            
+                            _showInfo( data2 );
+                        }
+                    }
+                    
+                    if( config.debug && config.debugVerbose )
+                    {
+                        _showInfo( "AdSense modified : " + _buffer.utma.toString() );
+                    }
+                }
+                
+            }
+                
+            /* Sets the common __utmb, __utmc values.
+               note: we are resetting the count for every new session.
+            */
+            _buffer.utmb.domainHash = _domainHash;
+            
+            if( isNaN( _buffer.utmb.trackCount ) )
+            {
+                _buffer.utmb.trackCount = 0;
+            }
+            
+            if( isNaN( _buffer.utmb.token ) )
+            {
+                _buffer.utmb.token = config.tokenCliff;
+            }
+            
+            if( isNaN( _buffer.utmb.lastTime ) )
+            {
+                _buffer.utmb.lastTime = _buffer.utma.currentTime;
+            }
+            
+            _buffer.utmc.domainHash = _domainHash;
+            
+            if( config.debug && config.debugVerbose )
+            {
+                _showInfo( _buffer.utmb.toString() );
+                _showInfo( _buffer.utmc.toString() );
+            }
             
         }
         
@@ -282,13 +478,51 @@ package com.google.analytics.v4
             //_showInfo( "domain name: " + config.domainName );
         }
         
-  /**
-   * This method generates a hashed value from the user-specific navigator,
-   * window and document properties.
-   *
-   * @private
-   * @return {Number} hash value of the user-specific properties.
-   */
+        /**
+        * Formats document referrer.
+        */
+        private function _formatReferrer():String
+        {
+            var referrer:String = _info.referrer;
+            
+            //if there is no referrer
+            if( referrer == "" )
+            {
+                referrer = "-";
+            }
+            //if there is a referrer
+            else
+            {
+                var domainName:String = _info.domainName;
+                
+                /* If referrer is in the sub-domain of document,
+                   then formatted referrer is set to "0".
+                */
+                var pos:int = domainName.indexOf( referrer );
+                
+                //no self-referral
+                if( (pos >= 0) && (pos <= 8) )
+                {
+                    referrer = "0";
+                }
+                
+                //no referrer if referrer is enclosed in square-brackets
+                if( (referrer.charAt(0) == "[") && (referrer.charAt(referrer.length-1)) )
+                {
+                    referrer = "-";
+                }
+            }
+            
+            return referrer;
+        }
+        
+        /**
+         * This method generates a hashed value from the user-specific navigator,
+         * window and document properties.
+         *
+         * @private
+         * @return {Number} hash value of the user-specific properties.
+         */
         private function _generateUserDataHash():Number
         {
             var hash:String = "";
@@ -297,42 +531,42 @@ package com.google.analytics.v4
                 hash       += _info.language;
                 hash       += _info.platform;
                 hash       += _info.userAgent.toString();
-              //hash       += _info.screenWidth+"x"+_info.screenHeight+_info.colorDepth;
-              //hash       += _info.cookies;
-              //hash       += _info.referrer;
+                hash       += _info.screenWidth+"x"+_info.screenHeight+_info.screenColorDepth;
+                hash       += _info.referrer;
                 
             return generateHash(hash);
         }
         
-  /**
-   * Generates the unique session id from the current user specific properties
-   * and a random number.
-   *
-   * @private
-   * @return {Number} a 32 bit unique number.
-   */
+        /**
+         * Generates the unique session id from the current user specific properties
+         * and a random number.
+         *
+         * @private
+         * @return {Number} a 32 bit unique number.
+         */
         private function _getUniqueSessionId():Number
         {
             var sessionID:Number = (generate32bitRandom() ^ _generateUserDataHash()) * 0x7fffffff;
             _showInfo( "Session ID: " + sessionID );
+            trace( "Session ID: " + sessionID );
             return sessionID;
         }
         
-  /**
-   * If the domain name is initialized to "auto", then automatically trying to
-   * resolve cookie domain name from document object.  The resolved domain name
-   * will be stored in the domain name instance variable, which could be
-   * accessed by the set/getDomainName methods.  If domain hashing is turn on,
-   * then the hash of the domain name is also returned.  Else, hash value is
-   * always 1.
-   *
-   * @private
-   * @return {Number} If the domain name is empty (undefined, empty string, or
-   *     "none"), then return 1 as the hash of domain name.  If hashing is
-   *     turned off , then return 1 as the hash value as well.  If there is a
-   *     domain name, and domain hashing is turned on, then return the hash of
-   *     the domain name.
-   */
+        /**
+         * If the domain name is initialized to "auto", then automatically trying to
+         * resolve cookie domain name from document object.  The resolved domain name
+         * will be stored in the domain name instance variable, which could be
+         * accessed by the set/getDomainName methods.  If domain hashing is turn on,
+         * then the hash of the domain name is also returned.  Else, hash value is
+         * always 1.
+         *
+         * @private
+         * @return {Number} If the domain name is empty (undefined, empty string, or
+         *     "none"), then return 1 as the hash of domain name.  If hashing is
+         *     turned off , then return 1 as the hash value as well.  If there is a
+         *     domain name, and domain hashing is turned on, then return the hash of
+         *     the domain name.
+         */
         private function _getDomainHash():Number
         {
             if( !config.domainName || (config.domainName == "") ||
@@ -354,9 +588,13 @@ package com.google.analytics.v4
             }
         }
         
+        /**
+        * Returns the session ID from __utma.
+        */
         private function _visitCode():Number
         {
-            return 1;
+            trace( "visitCode: " + _buffer.utma.sessionId );
+            return _buffer.utma.sessionId;
         }
         
         /**
@@ -376,9 +614,27 @@ package com.google.analytics.v4
             /* note:
                be carefull here
                GA.js sampleRate returns 0 to 100
-               our config.sampleRate returns 0 to 1
+               with
+               (selfRef._visitCode() % 10000) < (config.sampleRate_ * 100);
+               
+               our config.sampleRate returns 0 to 1 (0.1=10%, etc.)
+               so we use
+               (_visitCode() % 10000) < (config.sampleRate * 10000);
+               
+               some explanations:
+               visitCode() returns the utma sessionID which will always be a unique 32bit number
+               a 32-bit number will always distribute in the same range when %(modulo) 10000
+               (from ~1000 to ~6000)
+               
+               so as each user get a unique 32-bit number per session
+               the sampleRate allow to take a percentage of those unique users
+               
+               so here, the thing to understand is that the sampleRate apply
+               to all the users that visit the web site, it's not the sampleRate
+               of data taken from only 1 user.
             */
-            return (_visitCode() % 10000) < (config.sampleRate * 100);
+            trace( "takeSample: (" +(_visitCode() % 10000)+ ") < (" +(config.sampleRate * 10000)+ ")" )
+            return (_visitCode() % 10000) < (config.sampleRate * 10000);
         }
         
         
@@ -481,12 +737,12 @@ package com.google.analytics.v4
                 
                 if( config.debug && config.debugVerbose )
                 {
-                    _showInfo( "UTMV : " + _buffer.utmv.toURLString() );
+                    _showInfo( _buffer.utmv.toString() );
                 }
                 _showInfo( "setVar = " + newVal );
                 if( _takeSample() )
                 {
-                    //_gifRequest.send( ... );
+                    _gifRequest.send( _account );
                 }
                 
             }
@@ -507,7 +763,77 @@ package com.google.analytics.v4
          */        
         public function trackPageview(pageURL:String):void
         {
-            //
+            //Do nothing if we decided to not track this page.
+            if( _doTracking() )
+            {
+                //_initData();
+                
+                //ignoredOutboundHosts_ ?
+                
+                //track metrics (sent data to GABE)
+                _trackMetrics( pageURL );
+                
+                _noSessionInformation = false;
+            }
+        }
+        
+  /**
+   * This method will gather metric data needed and construct it into a search
+   * string to be sent via a GIF request.  It is used by any tracking methods
+   * that needs browser, campaign, and document information to be sent.
+   *
+   * @private
+   *
+   * @param opt_pageURL Optional parameter.  This is the virtual page URL for 
+   *     the page view.
+   *
+   * @return {String} The rendered search string with various information included.
+   */
+        private function _renderMetricsSearchVariables( pageURL:String = "" ):URLVariables
+        {
+            var docInfo:DocumentInfo = new DocumentInfo( _info, _formatedReferrer, pageURL );
+            
+            var campvars:URLVariables;
+            
+            if( config.campaignTracking && (_campaignInfo != "") )
+            {
+                campvars = new URLVariables( _campaignInfo );
+            }
+            
+            var variables:URLVariables = joinVariables( docInfo.toURLVariables(),
+                                                        _browserInfo.toURLVariables(),
+                                                        campvars );
+            return variables;
+        }
+        
+  /**
+   * This method will gather all the data needed, and sent these data to GABE
+   * (Google Analytics Back-end) via GIF requests.
+   *
+   * @private
+   * @param {String} opt_pageURL (Optional) Page URL to assign metrics to at the
+   *     back-end.
+   */
+        private function _trackMetrics( pageURL:String = "" ):void
+        {
+            if( _takeSample() )
+            {
+                var x10vars:URLVariables = new URLVariables();
+                
+                //X10
+                if( _x10Module && _x10Module.hasData() )
+                {
+                    x10vars.utme = _x10Module.renderUrlString();
+                }
+                
+                //Browser, campaign, and document information.
+                var generalvars:URLVariables = _renderMetricsSearchVariables( pageURL );
+                
+                //gif request parameters
+                var searchVariables:URLVariables = joinVariables( x10vars, generalvars );
+                
+                _gifRequest.send( _account, searchVariables );
+            }
         }
         
         // ----------------------------------------
@@ -835,7 +1161,7 @@ package com.google.analytics.v4
          * 
          * @param objName The name of the tracked object.
          * @return A new event tracker instance.
-         */        
+         */
         public function createEventTracker(objName:String):Object
         {
             return null;

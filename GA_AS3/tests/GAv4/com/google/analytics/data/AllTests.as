@@ -34,6 +34,7 @@ package com.google.analytics.data
             var suite:TestSuite = new TestSuite( "Google Analytics data tests" );
             
             suite.addTestSuite( X10Test );
+            suite.addTestSuite( UTMATest );
             
             return suite;
         }

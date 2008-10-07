@@ -19,14 +19,11 @@
 
 package com.google.analytics.utils
 {
-    import com.google.analytics.external.HTMLDOM;
-    import com.google.analytics.utils.samples.HTMLDOM_set1;
-    import com.google.analytics.utils.samples.HTMLDOM_set2;
-    
     import buRRRn.ASTUce.framework.TestCase;
     
-    import system.console;    
-
+    import com.google.analytics.external.FakeHTMLDOM;
+    import com.google.analytics.external.HTMLDOM;
+    
     public class LocalInfoTest extends TestCase
     {
         
@@ -71,8 +68,8 @@ package com.google.analytics.utils
         {
             // THIS TEST WILL NOT WORK ON A NON-UK MACHINE
             
-            var set1:HTMLDOM = new HTMLDOM_set1(); //downcast trick
-            var set2:HTMLDOM = new HTMLDOM_set2(); //downcast trick
+            var set1:HTMLDOM = new FakeHTMLDOM("","en-GB"); //downcast trick
+            var set2:HTMLDOM = new FakeHTMLDOM("","fr-FR"); //downcast trick
             
             var li1:LocalInfo = new LocalInfo( "" , "", "", set1 ); //en-GB
             var li2:LocalInfo = new LocalInfo( "" , "", "", set2 ); //fr-FR

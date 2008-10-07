@@ -21,6 +21,7 @@ package com.google.analytics
 {
     
     import com.google.analytics.core.Buffer;
+    import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.as3_api;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.core.js_bridge;
@@ -43,7 +44,7 @@ package com.google.analytics
         private var _display:DisplayObject;
         private var _localInfo:LocalInfo;
         private var _buffer:Buffer;
-        
+        private var _gifRequest:GIFRequest;
         private var _layout:Layout;
         
         /**
@@ -66,8 +67,9 @@ package com.google.analytics
                
                By default we will define "Flash" for our local tests
             */
-            _localInfo = new LocalInfo( "", "", "", null, _layout );
-            _buffer    = new Buffer();
+            _localInfo  = new LocalInfo( "", "", "", null, _layout );
+            _buffer     = new Buffer( false );
+            _gifRequest = new GIFRequest( _buffer, _localInfo, _layout );
             
             if( config.debug && _layout )
             {
@@ -82,7 +84,7 @@ package com.google.analytics
         * note:
         * each components will have also their own version
         */
-        public static var version:String = "0.2.0." + "$Rev$ ".split( " " )[1];
+        public static var version:String = "0.5.0." + "$Rev$ ".split( " " )[1];
         
         private function _onInfo( event:MessageEvent ):void
         {
@@ -135,7 +137,7 @@ package com.google.analytics
             */
             use namespace ga_internal;
             _localInfo.url = _display.stage.loaderInfo.url;
-            return new Tracker( account, _localInfo, _buffer, _layout );
+            return new Tracker( account, _localInfo, _buffer, _gifRequest, null, _layout );
         }
         
         /**

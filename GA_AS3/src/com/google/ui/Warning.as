@@ -22,7 +22,7 @@ package com.google.ui
 {
     import flash.events.TextEvent;
     import flash.events.TimerEvent;
-    import flash.utils.Timer;    
+    import flash.utils.Timer;
 
     /**
      * The Warning class.
@@ -82,6 +82,6 @@ package com.google.ui
         {
             close();
         }
-                
+        
     }
 }

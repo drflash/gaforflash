@@ -149,5 +149,23 @@ package com.google.ui
             resize();
         }
         
+        public function appendText( value:String, newtag:String = "" ):void
+        {
+            if( value == "" )
+            {
+                return;
+            }
+            
+            if( newtag == "" )
+            {
+                newtag = tag;
+            }
+            
+            _textField.htmlText += "<span class=\""+newtag+"\">"+value+"</span>";
+            _text += value;
+            _draw();
+            resize();
+        }
+        
     }
 }
