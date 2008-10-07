@@ -102,6 +102,8 @@ package com.google.analytics.data
          */        
         private var _minimum:int;
         
+        private var _hasData:int;
+        
         /**
          * Creates a new X10 instance.
          */
@@ -139,6 +141,7 @@ package com.google.analytics.data
             }
             
             _projectData[projectId][type][num] = value;
+            _hasData += 1;
         }
         
         /**
@@ -196,6 +199,7 @@ package com.google.analytics.data
                 if( isEmpty )
                 {
                     _projectData[projectId] = undefined;
+                    _hasData -= 1;
                 }
             }
         }
@@ -324,6 +328,16 @@ package com.google.analytics.data
         public function hasProject( projectId:Number ):Boolean
         {
             return _projectData[projectId];
+        }
+        
+        public function hasData():Boolean
+        {
+            if( _hasData > 0 )
+            {
+                return true;
+            }
+            
+            return false;
         }
         
         /**

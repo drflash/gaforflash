@@ -21,61 +21,69 @@
 package com.google.analytics.data
 {
     /**
-     * User defined value : always persists for 2 years.
+     * Urchin Tracking Module Cookie V.
+     * The user defined cookie.
+     * 
+     * This cookie is not normally present in a default configuration of the tracking code.
+     * The __utmv cookie passes the information provided via the setVar() method,
+     * which you use to create a custom user segment.
+     * 
+     * This string is then passed to the Analytics servers in the GIF request URL via the utmcc parameter.
+     * This cookie is only written if you have added the setVar() method for the tracking code on your website page.
+     * 
+     * expiration:
+     * 2 years from set/update.
+     * 
+     * format:
+     * __utmv=<domainHash>.<value>
      */
-    public class UTMV
+    public class UTMV extends UTMCookie
     {
-    	
-    	/**
-    	 * @private
-    	 */
-        private var _inURL:String = "__utmv";
-        
-//        /**
-//         * Field index for domain hash in user defined cookie (__utmv) value.
-//         */
-//        public static const DOMAINHASH:int = 0;
-        
-//        /**
-//         * Field index for user defined fields in user defined cookie (__utmv) value.
-//         */
-//        public static const VALUE:int      = 1;
-       
-        /**
-         * The domain hash in user defined cookie (__utmv) value.
-         * <p><b>Note :</b> First element in the toURLString representation) (0).</p>
-         */
-        public var domainHash:Number ;
-        
-        /**
-         * The user defined fields in user defined cookie (__utmv) value.
-         * <p><b>Note :</b> Second element in the toURLString representation) (1).</p>
-         */    
-        public var value:String;
+        private var _domainHash:Number; //0
+        private var _value:String;      //1
         
         /**
          * Creates a new UTMV instance.
-         * @param domainHash The field index for domain hash in user defined cookie (__utmv) value.
-         * @param value
          */
-        public function UTMV( domainHash:Number = 0, value:String = "" )
+        public function UTMV( domainHash:Number = NaN, value:String = "" )
         {
+            super( "utmv", "__utmv", ["domainHash","value"] );
             this.domainHash = domainHash;
             this.value      = value;
         }
         
         /**
-         * Returns the URL String representation of the object.
-         * @return the URL String representation of the object.
+         * The domain hash value.
          */
-        public function toURLString():String
+        public function get domainHash():Number
         {
-            var data:Array = [];
-                data.push( domainHash ); //0
-                data.push( encodeURIComponent(value) ); //1
-            
-            return _inURL + "=" + data.join( "." ) ;
+            return _domainHash;
         }
         
+        /**
+        * @private
+        */
+        public function set domainHash( value:Number ):void
+        {
+            _domainHash = value;
+            update();
+        }
+        
+        /**
+         * The user defined value.
+         */
+        public function get value():String
+        {
+            return _value;
+        }
+        
+        /**
+        * @private
+        */
+        public function set value( value:String ):void
+        {
+            _value = value;
+            update();
+        }
     }
 }

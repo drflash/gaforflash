@@ -20,7 +20,6 @@
 
 package com.google.analytics.utils
 {
-    
     import com.google.analytics.config;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.external.HTMLDOM;
@@ -28,6 +27,7 @@ package com.google.analytics.utils
     
     import flash.system.Capabilities;
     import flash.system.Security;
+    import flash.system.System;
     
     
     /**
@@ -114,11 +114,11 @@ package com.google.analytics.utils
             if( _layout && config.debug && config.debugVerbose )
             {
                 var data:String = "";
-                    data       += "dom.language: " + _dom.language + "\n" ;
-                    data       += "dom.location: " + _dom.location + "\n" ;
-                    data       += "dom.protocol: " + _dom.protocol + "\n" ;
-                    data       += "dom.host:     " + _dom.host     + "\n" ;
-                    data       += "dom.search:   " + _dom.search   + "\n" ;
+                    data       += "dom.language: " + _dom.language + "\n";
+                    data       += "dom.location: " + _dom.location + "\n";
+                    data       += "dom.protocol: " + _dom.protocol + "\n";
+                    data       += "dom.host:     " + _dom.host     + "\n";
+                    data       += "dom.search:   " + _dom.search   + "\n";
                 _layout.createInfo( data );
             }
             
@@ -216,6 +216,35 @@ package com.google.analytics.utils
             _url = value;
         }
         
+        public function get locationSWFPath():String
+        {
+            return _url;
+        }
+        
+        public function get referrer():String
+        {
+            var _referrer:String = _dom.referrer;
+            
+            if( _referrer )
+            {
+                return _referrer;
+            }
+            
+            return "";
+        }
+        
+        public function get documentTitle():String
+        {
+            var _title:String = _dom.title;
+            
+            if( _title )
+            {
+                return _title;
+            }
+            
+            return "";
+        }
+        
         /**
          * Indicates the local domain name value.
          */
@@ -238,11 +267,39 @@ package com.google.analytics.utils
                 }
                 
                 end = str.indexOf( "/" );
-                str = str.substring(0,end);
+                
+                if( end > -1 )
+                {
+                    str = str.substring(0,end);
+                }
                 
                 return str;
             }
         
+            return "";
+        }
+        
+        public function get locationPath():String
+        {
+            var _pathname:String = _dom.pathname;
+            
+            if( _pathname )
+            {
+                return _pathname;
+            }
+            
+            return "";
+        }
+        
+        public function get locationSearch():String
+        {
+            var _search:String = _dom.search;
+            
+            if( _search )
+            {
+                return _search;
+            }
+            
             return "";
         }
         
@@ -296,7 +353,36 @@ package com.google.analytics.utils
             
             return lang;
         }
+        
+        /**
+        * Return the internal character set used by the flash player
+        * 
+        * logic:
+        * by default flash player use unicode internally
+        * so we return UTF-8
+        * 
+        * if the player use the system code page
+        * then we try to return the char set of the browser
+        * 
+        */
+        public function get languageEncoding():String
+        {
+            if( System.useCodePage )
+            {
+                var _charset:String = _dom.characterSet;
                 
+                if( _charset )
+                {
+                    return _charset;
+                }
+                
+                return "-"; //not found
+            }
+            
+            //default
+            return "UTF-8";
+        }
+        
         /**
          * Returns the operating system string.
          * <p><b>Note:</b> The flash documentation indicate those strings</p>
@@ -353,9 +439,62 @@ package com.google.analytics.utils
             return _protocol;
         }        
         
-        public function get screenResolution():String
+        public function get screenWidth():Number
         {
-            return Capabilities.screenResolutionX + "x" + Capabilities.screenResolutionY;
+            return Capabilities.screenResolutionX;
+        }
+        
+        public function get screenHeight():Number
+        {
+            return Capabilities.screenResolutionY;
+        }
+        
+        /* note:
+           in AIR we can use flash.display.Screen
+           to directly get the colorDepth property
+           
+           in flash player we can only access
+           screenColor in flash.system.Capabilities
+           
+           some ref: http://en.wikipedia.org/wiki/Color_depth
+           
+           "color" -> 16-bit or 24-bit or 32-bit
+           "gray"  -> 2-bit
+           "bw"    -> 1-bit
+           
+        */
+        public function get screenColorDepth():String
+        {
+            var color:String;
+            
+            switch( Capabilities.screenColor )
+            {
+                case "bw":
+                color = "1";
+                break;
+                
+                case "gray":
+                color = "2";
+                break;
+                
+                /* note:
+                   as we have no way to know if
+                   we are in 16-bit, 24-bit or 32-bit
+                   we gives 24-bit by default
+                */
+                case "color":
+                default:
+                color = "24";
+            }
+            
+            var _colorDepth:String = _dom.colorDepth;
+            
+            if( _colorDepth )
+            {
+                color = _colorDepth;
+            }
+            
+            return color;
         }
         
         /**

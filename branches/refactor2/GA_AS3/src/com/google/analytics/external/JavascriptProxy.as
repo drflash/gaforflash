@@ -27,12 +27,46 @@ package com.google.analytics.external
      */
     public class JavascriptProxy
     {
-    	
-    	/**
-    	 * Creates a new JavascriptProxy instance.
-    	 */
+        public static var setProperty_js:XML = 
+            <script>
+                <![CDATA[
+                function(path,value)
+                {
+                    var paths;
+                    var prop;
+                    if( path.indexOf(".") > 0 )
+                    {
+                        paths = path.split(".");
+                        prop  = paths.pop();
+                    }
+                    else
+                    {
+                        paths = [];
+                        prop  = path;
+                    }
+                    
+                    var target = window;
+                    for( var i=0; i<paths.length; i++ )
+                    {
+                        target = target[ paths[i] ];
+                    }
+                    
+                    target[ prop ] = value;
+                }
+                ]]>
+            </script>
+        
+        
+        /**
+         * Creates a new JavascriptProxy instance.
+         */
         public function JavascriptProxy()
         {
+        }
+        
+        protected function executeBlock( data:XML ):void
+        {
+            ExternalInterface.call( data );
         }
         
         /**
@@ -49,6 +83,11 @@ package com.google.analytics.external
                and yes it will work only with primitives
             */
             return ExternalInterface.call( name + ".valueOf" );
+        }
+        
+        protected function setProperty( path:String, value:* ):void
+        {
+            ExternalInterface.call( setProperty_js, path, value );
         }
         
         /**

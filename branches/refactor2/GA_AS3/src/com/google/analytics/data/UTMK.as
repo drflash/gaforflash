@@ -21,16 +21,36 @@
 package com.google.analytics.data
 {
     /**
-     * Hash.
+     * Urchin Tracking Module Cookie K.
+     * The Hash cookie.
+     * 
+     * Contains a hash (digest) of all the __utm* values
+     * 
+     * format:
+     * __utmk=<hash>
      */
-    public class UTMK
+    public class UTMK extends UTMCookie
     {
-    	/**
-    	 * Creates the new UTMK instance.
-    	 */
-        public function UTMK()
+        private var _hash:Number; //0
+        
+        /**
+         * Creates the new UTMK instance.
+         */
+        public function UTMK( hash:Number = NaN )
         {
+            super( "utmk", "__utmk", ["hash"] );
+            this.hash = hash;
         }
-
+        
+        public function get hash():Number
+        {
+            return _hash;
+        }
+        
+        public function set hash( value:Number ):void
+        {
+            _hash = value;
+            update();
+        }
     }
 }

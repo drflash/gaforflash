@@ -48,9 +48,6 @@ package com.google.analytics.v4
     public class Configuration extends EventDispatcher
     {
         
-        /**
-         * @private
-         */
         private var _version:String          = "4.3as";
         
         /**
@@ -58,20 +55,13 @@ package com.google.analytics.v4
          * @private
          */
         private var _sampleRate:Number       = 1; //100%
-
-        /**
-         * @private
-         */
+        
+        private var _trackingLimitPerSession:int = 500;
+        
         private var _domain:Domain = new Domain( DomainNameMode.auto );
         
-        /**
-         * @private
-         */
         private var _organicCache:Object  = {};
-
-        /**
-         * @private
-         */
+        
         private var _organicSources:Array = [];
         
         /**
@@ -111,6 +101,12 @@ package com.google.analytics.v4
          * @private
          */
         private var _google:String = "google";
+        
+        /**
+        * name used by the SharedObject (read-only)
+        */
+        private var _cookieName:String = "analytics";
+        
         
         
         /**
@@ -161,7 +157,7 @@ package com.google.analytics.v4
         /**
          * The number of tokens available at the start of the session.
          */
-        public var tokenCliff:Number = 10;
+        public var tokenCliff:int = 10;
         
         /**
          * Capacity of the token bucket.
@@ -245,9 +241,30 @@ package com.google.analytics.v4
         //to show more debug used internally
         public var debugVerbose:Boolean = true;
         
+        /* send a Gir Request with validation or not
+           
+           without validation (use sendToURL())
+           it's fire and forget
+           ok: send the request but does not returns any success or failure
+           cancel: does not send the request
+           
+           with validation (use URLLoader.load())
+           ok: returns success when received by the the server
+               returns failure if not received by the server, or gif not found, or error etc.
+           cancel: does not send the request
+        */
+        public var validateGIFRequest:Boolean = true;
+        
+        /* allow to debug the GIF Request
+           if true, will show a debug panel
+           and a confirmation message to send or not
+           the request.
+        */
+        public var debugGIFRequest:Boolean = true;
+        
         //to show extended info and warning messages
         //from the GA docs
-        public var verbose:Boolean = false;
+        public var verbose:Boolean = true;
         
         /**
          * Indicates if show infos in the debug mode.
@@ -327,6 +344,11 @@ package com.google.analytics.v4
             return _version;
         }
         
+        public function get cookieName():String
+        {
+            return _cookieName;
+        }
+        
         /**
         * Domain name for cookies.
         * (auto | none | domain)
@@ -375,7 +397,16 @@ package com.google.analytics.v4
             value = Number( value.toFixed( 2 ) );
             
             _sampleRate = value;
-        }        
+        }
+        
+        /**
+        * This is the max number of tracking requests to the backend
+        * allowed per session.
+        */
+        public function get trackingLimitPerSession():int
+        {
+            return _trackingLimitPerSession;
+        }
         
         
         public function get organicSources():Array

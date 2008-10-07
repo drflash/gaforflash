@@ -57,7 +57,8 @@ package
             //pageTracker.setSampleRate( -0.5 );
             //pageTracker.addOrganic("google","q");
             //pageTracker.setDomainName( ".zwetan.com" );
-            pageTracker.setVar( "hello world" );
+            pageTracker.setVar( "bonjour le monde" );
+            pageTracker.trackPageview( "/test/hello/world" );
             //pageTracker.setLocalRemoteServerMode();
             //pageTracker.setLocalServerMode();
             //pageTracker.setRemoteServerMode();

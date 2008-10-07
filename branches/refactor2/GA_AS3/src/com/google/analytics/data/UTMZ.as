@@ -21,46 +21,127 @@
 package com.google.analytics.data
 {
     /**
-     * Campaign tracking :persists for 6 months.
+     * Urchin Tracking Module Cookie Z.
+     * The campaign tracking cookie.
+     * 
+     * This cookie stores the type of referral used by the visitor to reach your site,
+     * whether via a direct method, a referring link, a website search, or a campaign such as an ad or an email link.
+     * 
+     * It is used to calculate search engine traffic, ad campaigns and page navigation within your own site.
+     * The cookie is updated with each page view to your site.
+     * 
+     * expiration:
+     * 6 months from set/update.
+     * 
+     * format:
+     * __utmz=<domainHash>.<campaignCreation>.<campaignSessions>.<responseCount>.<campaignTracking>
      */
-    public class UTMZ
+    public class UTMZ extends UTMCookie
     {
-    	/**
-    	 * @private
-    	 */
-        private var _inURL:String = "__utmz";
-        
-        /**
-         * Field index for domain hash in campaign tracking cookie (__utmz) value.
-         */
-        public static const DOMAINHASH:int       = 0;
-        
-        /**
-         * Field index for campaign creation timestamp in campaign tracking cookie (__utmz) value.
-         */
-        public static const CAMPAIGNCREATION:int = 1;
-        
-        /**
-         * Field index for campaign session count in campaign tracking cookie (__utmz) value.
-         */
-        public static const CAMPAIGNSESSIONS:int = 2;
-        
-        /**
-         * Field index for response count in campaign tracking cookie (__utmz) value.
-         */
-        public static const RESPONSECOUNT:int    = 3;
-        
-        /**
-         * Field index for campaign tracker in campaign tracking cookie (__utmz) value.
-         */
-        public static const CAMPAIGNTRACKING:int = 4;
+        private var _domainHash:Number;          //0
+        private var _campaignCreation:Number;    //1
+        private var _campaignSessions:Number;    //2
+        private var _responseCount:Number;       //3
+        private var _campaignTracking:String;    //4
         
         /**
          * Creates a new UTMZ instance.
          */
-        public function UTMZ()
+        public function UTMZ( domainHash:Number = NaN, campaignCreation:Number = NaN, campaignSessions:Number = NaN,
+                              responseCount:Number = NaN, campaignTracking:String = "" )
         {
+            super( "utmz", "__utmz", ["domainHash","campaignCreation","campaignSessions","responseCount","campaignTracking"] );
+            
+            this.domainHash       = domainHash;
+            this.campaignCreation = campaignCreation;
+            this.campaignSessions = campaignSessions;
+            this.responseCount    = responseCount;
+            this.campaignTracking = campaignTracking;
         }
-
+        
+        /**
+         * The domain hash value.
+         */
+        public function get domainHash():Number
+        {
+            return _domainHash;
+        }
+        
+        /**
+        * @private
+        */
+        public function set domainHash( value:Number ):void
+        {
+            _domainHash = value;
+            update();
+        }
+        
+        /**
+        * The campaign creation timestamp.
+        */
+        public function get campaignCreation():Number
+        {
+            return _campaignCreation;
+        }
+        
+        /**
+        * @private
+        */
+        public function set campaignCreation( value:Number ):void
+        {
+            _campaignCreation = value;
+            update();
+        }
+        
+        /**
+        * The campaign session count.
+        */
+        public function get campaignSessions():Number
+        {
+            return _campaignSessions;
+        }
+        
+        /**
+        * @private
+        */
+        public function set campaignSessions( value:Number ):void
+        {
+            _campaignSessions = value;
+            update();
+        }
+        
+        /**
+        * The response count.
+        */
+        public function get responseCount():Number
+        {
+            return _responseCount;
+        }
+        
+        /**
+        * @private
+        */
+        public function set responseCount( value:Number ):void
+        {
+            _responseCount = value;
+            update();
+        }
+        
+        /**
+        * The campaign tracker value
+        */
+        public function get campaignTracking():String
+        {
+            return _campaignTracking;
+        }
+        
+        /**
+        * @private
+        */
+        public function set campaignTracking( value:String ):void
+        {
+            _campaignTracking = value;
+            update();
+        }
     }
 }

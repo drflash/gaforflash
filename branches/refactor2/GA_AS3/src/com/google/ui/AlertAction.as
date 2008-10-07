@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,34 +18,37 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.analytics.data
+package com.google.ui
 {
-    /**
-     * Urchin Tracking Module Cookie X.
-     * The Website Optimizer cookie.
-     * 
-     * This cookie is used by Website Optimizer and only set when
-     * the Website Optimizer tracking code is installed and correctly configured for your pages.
-     * See the Google Website Optimizer Help Center for details.
-     * 
-     * expiration:
-     * 2 years from set/update.
-     * 
-     * note:
-     * - ALPO value
-     * - document.location.search
-     */
-    public class UTMX extends UTMCookie
+    public class AlertAction
     {
-        //_udn
-        //_uhash
-        //_utimeout
-        //_utcp
+        public var name:String;
+        public var activator:String;
+        public var container:Alert;
         
-        public function UTMX()
+        private var _callback:*;
+        
+        public function AlertAction( name:String, activator:String, callback:* )
         {
-            //not implemented yet
-            super( "utmx", "__utmx", ["dn","hash","timeout","tcp"] );
+            this.name      = name;
+            this.activator = activator;
+            
+            _callback = callback;
+        }
+        
+        public function execute():void
+        {
+            if( _callback )
+            {
+                if( _callback is Function )
+                {
+                    _callback();
+                }
+                else if( _callback is String )
+                {
+                    container[_callback]();
+                }
+            }
         }
         
     }

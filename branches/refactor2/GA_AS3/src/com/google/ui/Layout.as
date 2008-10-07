@@ -21,9 +21,11 @@
 package com.google.ui
 {
     import com.google.analytics.config;
+    import com.google.analytics.core.GIFRequest;
     
     import flash.display.DisplayObject;
     import flash.events.Event;
+    import flash.net.URLRequest;
     import flash.utils.getTimer;
     
     /**
@@ -83,19 +85,25 @@ package com.google.ui
             _infoQueue    = [];
         }
         
-        private function _filterMaxChars( message:String ):String
+        private function _filterMaxChars( message:String, maxCharPerLine:int = 0 ):String
         {
             var CRLF:String = "\n";
             var output:Array = [];
             var lines:Array = message.split(CRLF);
             var line:String;
+            
+            if( maxCharPerLine == 0 )
+            {
+                maxCharPerLine = _maxCharPerLine;
+            }
+            
             for( var i:int = 0; i<lines.length; i++ )
             {
                 line = lines[i];
-                while( line.length > _maxCharPerLine )
+                while( line.length > maxCharPerLine )
                 {
-                    output.push( line.substr(0,_maxCharPerLine) );
-                    line = line.substring(_maxCharPerLine);
+                    output.push( line.substr(0,maxCharPerLine) );
+                    line = line.substring(maxCharPerLine);
                 }
                 output.push( line );
             }
@@ -256,7 +264,100 @@ package com.google.ui
             }
         }
         
-
+        public function createAlert( message:String ):void
+        {
+            message = _filterMaxChars( message );
+            var a:Alert = new Alert( message, [ new AlertAction("Close","close","close") ] );
+            addToStage( a );
+            bringToFront( a );
+            
+            if( _hasDebug )
+            {
+                debug.write( "<b>"+message+"</b>" );
+            }
+            
+            if( config.debugTrace )
+            {
+                trace( "##" + message + " ##" );
+            }
+        }
+        
+        public function createFailureAlert( message:String ):void
+        {
+            if( config.debugVerbose )
+            {
+                message = _filterMaxChars( message );
+            }
+            var fa:Alert = new FailureAlert( message, [ new AlertAction("Close","close","close") ] );
+            addToStage( fa );
+            bringToFront( fa );
+            
+            if( _hasDebug )
+            {
+                if( config.debugVerbose )
+                {
+                    message = message.split("\n").join("");
+                    message = _filterMaxChars( message, 66 );
+                }
+                debug.write( "<b>"+message+"</b>" );
+            }
+            
+            if( config.debugTrace )
+            {
+                trace( "## " + message + " ##" );
+            }
+        }
+        
+        public function createSuccessAlert( message:String ):void
+        {
+            if( config.debugVerbose )
+            {
+                message = _filterMaxChars( message );
+            }
+            var sa:Alert = new SuccessAlert( message, [ new AlertAction("Close","close","close") ] );
+            addToStage( sa );
+            bringToFront( sa );
+            
+            if( _hasDebug )
+            {
+                if( config.debugVerbose )
+                {
+                    message = message.split("\n").join("");
+                    message = _filterMaxChars( message, 66 );
+                }
+                debug.write( "<b>"+message+"</b>" );
+            }
+            
+            if( config.debugTrace )
+            {
+                trace( "## " + message + " ##" );
+            }
+        }
+        
+        public function createGIFRequestAlert( message:String, request:URLRequest, ref:GIFRequest ):void
+        {
+            var f:Function = function():void
+            {
+                ref.sendRequest( request );
+            }
+            
+            message = _filterMaxChars( message );
+            var gra:GIFRequestAlert = new GIFRequestAlert( message, [ new AlertAction("OK","ok",f),
+                                                                      new AlertAction("Cancel","cancel","close") ] );
+            addToStage( gra );
+            bringToFront( gra );
+            
+            if( _hasDebug )
+            {
+                //debug.write( "<b>"+message+"</b>" );
+                debug.write( message );
+            }
+            
+            if( config.debugTrace )
+            {
+                trace( "##" + message + " ##" );
+            }
+        }
         
     }
 }

@@ -21,28 +21,53 @@
 package com.google.analytics.data
 {
     /**
-     * Session tracking
-     * <p><b>note:</b> Expires when the browser exists.</p>
+     * Urchin Tracking Module Cookie C.
+     * The session tracking cookie.
+     * 
+     * This cookie operates in conjunction with the __utmb cookie to determine whether or not
+     * to establish a new session for the user.
+     * In particular, this cookie is not provided with an expiration date,
+     * so it expires when the user exits the browser.
+     * 
+     * Should a user visit your site, exit the browser and then return to your website within 30 minutes,
+     * the absence of the __utmc cookie indicates that a new session needs to be established,
+     * despite the fact that the __utmb cookie has not yet expired.
+     * 
+     * expiration:
+     * Not set.
+     * 
+     * format:
+     * __utmc=<domainHash>
      */
-    public class UTMC
+    public class UTMC extends UTMCookie
     {
-    	
-    	/**
-    	 * @private
-    	 */
-        private var _inURL:String = "__utmc";
-        
-        /**
-         * Field index for domain hash in session cookie (__utmc) value.
-         */
-        public static const DOMAINHASH:int = 0;
+        private var _domainHash:Number; //0
         
         /**
          * Creates a new UTMC instance.
          */
-        public function UTMC()
+        public function UTMC( domainHash:Number = NaN )
         {
+            super( "utmc", "__utmc", ["domainHash"] );
+            this.domainHash = domainHash;
         }
-
+        
+        /**
+         * The domain hash value.
+         */
+        public function get domainHash():Number
+        {
+            return _domainHash;
+        }
+        
+        /**
+        * @private
+        */
+        public function set domainHash( value:Number ):void
+        {
+            _domainHash = value;
+            update();
+        }
+        
     }
 }
