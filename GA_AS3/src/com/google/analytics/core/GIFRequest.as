@@ -248,7 +248,7 @@ package com.google.analytics.core
             if( _layout && config.debugGIFRequest )
             {
                 //_layout.createFailureAlert( event.text );
-                var url:String = _lastRequest.url
+                var url:String = _lastRequest.url;
                 
                 if( config.debugVerbose )
                 {
@@ -267,7 +267,7 @@ package com.google.analytics.core
         {
             if( _layout && config.debugGIFRequest )
             {
-                var url:String = _lastRequest.url
+                var url:String = _lastRequest.url;
                 
                 if( config.debugVerbose )
                 {
@@ -399,12 +399,12 @@ package com.google.analytics.core
                              }
                              
                              var localImage:URLRequest = new URLRequest();
-                                 localImage.url  = localPath + config.localGIFpath
+                                 localImage.url  = localPath + config.localGIFpath;
                                  localImage.data = variables;
                              
                              if( config.debugGIFRequest )
                              {
-                                 _debugSend( localImage )
+                                 _debugSend( localImage );
                              }
                              else
                              {

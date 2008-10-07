@@ -24,7 +24,6 @@ package com.google.analytics.events
 
     /**
      * The event invoked in a warning or info message is dispatched in the GA tracker.
-     * @author eKameleon
      */
     public class MessageEvent extends Event
     {

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,7 +62,7 @@ package com.google.ui
         
         private function _defineActions():void
         {
-            var str:String = ""
+            var str:String = "";
                 if( actionOnNextLine )
                 {
                     str += "\n";
@@ -78,7 +78,7 @@ package com.google.ui
             for( var i:int = 0; i<_actions.length; i++ )
             {
                 action = _actions[i];
-                actions.push( "<a href=\"event:"+action.activator+"\">"+action.name+"</a>" )
+                actions.push( "<a href=\"event:"+action.activator+"\">"+action.name+"</a>" );
             }
             
             str += actions.join( " | " );

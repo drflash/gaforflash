@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,6 @@
 
 package com.google.ui
 {
-    import flash.events.TextEvent;
-    import flash.net.URLRequest;
 
     public class GIFRequestAlert extends Alert
     {
