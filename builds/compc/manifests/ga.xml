@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<componentPackage>
+        
+    <!-- com.google.analytics -->
+
+    <component id="com.google.analytics:config"    class="com.google.analytics.config"    />
+    <component id="com.google.analytics:GATracker" class="com.google.analytics.GATracker" />
+
+    <!-- com.google.analytics.campaign -->
+    
+    <!-- com.google.analytics.core -->
+
+    <!-- com.google.analytics.ecommerce -->
+
+    <!-- com.google.analytics.events -->
+    
+    <!-- com.google.analytics.events -->
+    
+    <!-- com.google.analytics.external -->
+   
+    <!-- com.google.analytics.utils -->
+    
+    <!-- com.google.analytics.v4 -->
+   
+    <!-- com.google.ui -->
+    
+    <component id="com.google.ui:_Style"     class="com.google.ui._Style" />
+    <component id="com.google.ui:Align"      class="com.google.ui.Align"  />
+    <component id="com.google.ui:Background" class="com.google.ui._Style" />
+    <component id="com.google.ui:Debug"      class="com.google.ui._Style" />
+    <component id="com.google.ui:Info"       class="com.google.ui._Style" />
+    <component id="com.google.ui:Label"      class="com.google.ui._Style" />
+    <component id="com.google.ui:Layout"     class="com.google.ui._Style" />
+    <component id="com.google.ui:Margin"     class="com.google.ui._Style" />
+    <component id="com.google.ui:Style"      class="com.google.ui._Style" />
+    <component id="com.google.ui:UISprite"   class="com.google.ui._Style" />
+    <component id="com.google.ui:Warning"    class="com.google.ui._Style" />
+    
+</componentPackage>
