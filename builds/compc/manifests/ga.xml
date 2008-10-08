@@ -9,19 +9,67 @@
 
     <!-- com.google.analytics.campaign -->
     
+    <component id="com.google.analytics.campaign:CampaignInfo"    class="com.google.analytics.campaign.CampaignInfo"    />    
+    <component id="com.google.analytics.campaign:CampaignManager" class="com.google.analytics.campaign.CampaignManager" />
+    <component id="com.google.analytics.campaign:CampaignTracker" class="com.google.analytics.campaign.CampaignTracker" />
+    
     <!-- com.google.analytics.core -->
+
+    <component id="com.google.analytics.core:as3_api"             class="com.google.analytics.core.as3_api"             />    
+    <component id="com.google.analytics.core:BrowserInfo"         class="com.google.analytics.core.BrowserInfo"         />
+    <component id="com.google.analytics.core:Buffer"              class="com.google.analytics.core.Buffer"              />
+    <component id="com.google.analytics.core:DocumentInfo"        class="com.google.analytics.core.DocumentInfo"        />
+    <component id="com.google.analytics.core:Domain"              class="com.google.analytics.core.Domain"              />
+    <component id="com.google.analytics.core:DomainNameMode"      class="com.google.analytics.core.BrowserInfo"         />
+    <component id="com.google.analytics.core:ga_internal"         class="com.google.analytics.core.ga_internal"         />
+    <component id="com.google.analytics.core:GIFRequest"          class="com.google.analytics.core.GIFRequest"          />
+    <component id="com.google.analytics.core:js_bridge"           class="com.google.analytics.core.js_bridge"           />
+    <component id="com.google.analytics.core:OrganicReferrer"     class="com.google.analytics.core.OrganicReferrer"     />
+    <component id="com.google.analytics.core:ServerOperationMode" class="com.google.analytics.core.ServerOperationMode" />
+
+    <!-- com.google.analytics.data -->
+
+    <component id="com.google.analytics.data:Cookie"     class="com.google.analytics.data.Cookie"    />  
+    <component id="com.google.analytics.data:GASO"       class="com.google.analytics.data.GASO"      />
+    <component id="com.google.analytics.data:UTMA"       class="com.google.analytics.data.UTMA"      />
+    <component id="com.google.analytics.data:UTMB"       class="com.google.analytics.data.UTMB"      />
+    <component id="com.google.analytics.data:UTMC"       class="com.google.analytics.data.UTMC"      />
+    <component id="com.google.analytics.data:UTMCookie"  class="com.google.analytics.data.UTMCookie" />
+    <component id="com.google.analytics.data:UTMK"       class="com.google.analytics.data.UTMK"      />
+    <component id="com.google.analytics.data:UTMV"       class="com.google.analytics.data.UTMV"      />
+    <component id="com.google.analytics.data:UTMX"       class="com.google.analytics.data.UTMX"      />
+    <component id="com.google.analytics.data:UTMZ"       class="com.google.analytics.data.UTMZ"      />
+    <component id="com.google.analytics.data:X10"        class="com.google.analytics.data.X10"       />
 
     <!-- com.google.analytics.ecommerce -->
 
     <!-- com.google.analytics.events -->
     
-    <!-- com.google.analytics.events -->
+    <component id="com.google.analytics.events:MessageEvent" class="com.google.analytics.events.MessageEvent" />    
     
     <!-- com.google.analytics.external -->
+
+    <component id="com.google.analytics.external:AdSenseGlobals"   class="com.google.analytics.external.AdSenseGlobals"   />     
+    <component id="com.google.analytics.external:HTMLDOM"          class="com.google.analytics.external.HTMLDOM"          />
+    <component id="com.google.analytics.external:JavascriptProxy"  class="com.google.analytics.external.JavascriptProxy"  />
    
     <!-- com.google.analytics.utils -->
     
+    <component id="com.google.analytics.utils:generate32bitRandom" class="com.google.analytics.utils.generate32bitRandom" />
+    <component id="com.google.analytics.utils:generateHash"        class="com.google.analytics.utils.generateHash"        />
+    <component id="com.google.analytics.utils:joinVariables"       class="com.google.analytics.utils.joinVariables"       />
+    <component id="com.google.analytics.utils:LocalInfo"           class="com.google.analytics.utils.LocalInfo"           />
+    <component id="com.google.analytics.utils:Protocols"           class="com.google.analytics.utils.Protocols"           />
+    <component id="com.google.analytics.utils:trim"                class="com.google.analytics.utils.trim"                />
+    <component id="com.google.analytics.utils:UserAgent"           class="com.google.analytics.utils.UserAgent"           />
+    <component id="com.google.analytics.utils:Version"             class="com.google.analytics.utils.Version"             />
+    
     <!-- com.google.analytics.v4 -->
+   
+    <component id="com.google.analytics.v4:Bridge"             class="com.google.analytics.v4.Bridge"             />   
+    <component id="com.google.analytics.v4:Configuration"      class="com.google.analytics.v4.Configuration"      />
+    <component id="com.google.analytics.v4:GoogleAnalyticsAPI" class="com.google.analytics.v4.GoogleAnalyticsAPI" />
+    <component id="com.google.analytics.v4:Tracker"            class="com.google.analytics.v4.Tracker"            />
    
     <!-- com.google.ui -->
     
