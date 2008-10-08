@@ -47,7 +47,7 @@ package com.google.analytics.external
                     
                     var target = window ;
                     var len    = paths.length ;
-                    for( var i = 0; i<len ; i++ )
+                    for( var i = 0 ; i < len ; i++ )
                     {
                         target = target[ paths[i] ];
                     }
