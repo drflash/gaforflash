@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Google Analytics" default="main" >
+    
+    <!-- includes properties -->
+    	
+	<property file="./build.properties"/>
+    
+	<!-- conditions -->
+
+
+   <condition property="useTest" >
+        <istrue value="${task.tests}"/> 
+   </condition>
+
+    <condition property="useDocumentation" >
+        <istrue value="${task.documentation}"/> 
+    </condition>
+    	
+	<!-- main -->
+	
+	<target 
+		
+		name        = "main" 
+		description = "Build the Google Analytics core library."
+		depends     = "documentation,tests"  
+		
+	/>
+	 
+	<!-- Documentation -->
+		
+	<target 
+		name        = "documentation" 
+		description = "Run the ASDoc process"
+        if          = "useDocumentation"		
+    >
+
+		<exec executable="${asdoc.application}" failonerror="true" >
+			<arg line='${asdoc.params}' />
+		</exec>
+		
+	</target>
+	
+    <!-- Unit Tests with ASTUce -->	
+
+    <target 
+        
+        name        = "tests" 
+        description = "Launch the Unit Tests of the library"
+        if          = "useTest"
+    >
+        
+    	<exec executable="${flex.application}" failonerror="true" >
+            <arg line='${tests.params}' />
+    		<arg line='${tests.classpath}' />
+            <arg line='${tests.output}' />    		
+        </exec>
+    	
+    </target>   	
+	
+</project>

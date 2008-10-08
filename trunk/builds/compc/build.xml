@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="GA library AS3" default="main">
+
+	<property file="./build.properties"/>
+	
+	<target name="main">
+		
+		<exec executable="${compc}" >
+			
+			<arg line="-load-config+=${config}" />
+		
+		</exec>
+			
+	</target>
+
+</project>
