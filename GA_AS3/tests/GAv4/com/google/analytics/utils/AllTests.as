@@ -33,7 +33,7 @@ package com.google.analytics.utils
         {
             var suite:TestSuite = new TestSuite( "Google Analytics utils tests" );
             
-            suite.addTestSuite( LocalInfoTest );
+            suite.addTestSuite( EnvironmentTest );
             
             return suite;
         }

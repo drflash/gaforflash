@@ -30,7 +30,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.data.X10;
     import com.google.analytics.external.AdSenseGlobals;
-    import com.google.analytics.utils.LocalInfo;
+    import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.generate32bitRandom;
     import com.google.analytics.utils.generateHash;
@@ -103,7 +103,7 @@ package com.google.analytics.v4
         /**
          * @private
          */
-        private var _info:LocalInfo;
+        private var _info:Environment;
         
         /**
          * @private
@@ -139,7 +139,7 @@ package com.google.analytics.v4
          * @param adSense The optional adsense global object.
          * @param layout The optional Layout object.
          */
-        public function Tracker( account:String, info:LocalInfo, buffer:Buffer, gifRequest:GIFRequest,
+        public function Tracker( account:String, info:Environment, buffer:Buffer, gifRequest:GIFRequest,
                                  adSense:AdSenseGlobals = null , layout:Layout = null )
         {
             _account    = account;

@@ -21,19 +21,19 @@ package com.google.analytics.core
 {
     import com.google.analytics.config;
     import com.google.analytics.external.AdSenseGlobals;
-    import com.google.analytics.utils.LocalInfo;
+    import com.google.analytics.utils.Environment;
     
     import flash.net.URLVariables;
     
     public class DocumentInfo
     {
-        private var _info:LocalInfo;
+        private var _info:Environment;
         private var _adSense:AdSenseGlobals;
         
         private var _pageURL:String;
         private var _utmr:String;
         
-        public function DocumentInfo( info:LocalInfo, formatedReferrer:String,
+        public function DocumentInfo( info:Environment, formatedReferrer:String,
                                       pageURL:String = null, adSense:AdSenseGlobals = null )
         {
             _info = info;

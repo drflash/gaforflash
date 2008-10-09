@@ -33,7 +33,7 @@ package com.google.analytics.utils
     /**
      * Local Informations provide informations for the local environment.
      */
-    public class LocalInfo
+    public class Environment
     {
         /**
          * @private
@@ -72,7 +72,7 @@ package com.google.analytics.utils
          * @param dom the HTMLDOM
          * @param layout a Layout reference
          */
-        public function LocalInfo( url:String = "", app:String = "", version:String = "", dom:HTMLDOM = null,
+        public function Environment( url:String = "", app:String = "", version:String = "", dom:HTMLDOM = null,
                                    layout:Layout = null )
         {
             var v:Version;
