@@ -51,7 +51,7 @@ package com.google.analytics.utils
         /**
          * @private
          */
-        private var _localInfo:LocalInfo;
+        private var _localInfo:Environment;
         
         /**
          * @private
@@ -68,7 +68,7 @@ package com.google.analytics.utils
          * @param product The product String representation.
          * @param version The version String representation.
          */
-        public function UserAgent( localInfo:LocalInfo, product:String = "", version:String = "" )
+        public function UserAgent( localInfo:Environment, product:String = "", version:String = "" )
         {
             _localInfo = localInfo;
             applicationProduct = product;

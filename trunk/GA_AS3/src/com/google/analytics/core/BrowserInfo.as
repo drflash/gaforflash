@@ -20,16 +20,16 @@
 package com.google.analytics.core
 {
     import com.google.analytics.config;
-    import com.google.analytics.utils.LocalInfo;
+    import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Version;
     
     import flash.net.URLVariables;
     
     public class BrowserInfo
     {
-        private var _info:LocalInfo;
+        private var _info:Environment;
         
-        public function BrowserInfo( info:LocalInfo )
+        public function BrowserInfo( info:Environment )
         {
             _info = info;
         }

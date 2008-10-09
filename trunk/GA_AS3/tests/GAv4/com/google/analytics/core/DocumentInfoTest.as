@@ -24,8 +24,8 @@ package com.google.analytics.core
     import com.google.analytics.config;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.external.FakeAdSenseGlobals;
-    import com.google.analytics.utils.FakeLocalInfo;
-    import com.google.analytics.utils.LocalInfo;
+    import com.google.analytics.utils.FakeEnvironment;
+    import com.google.analytics.utils.Environment;
     
     import flash.net.URLVariables;
     
@@ -33,8 +33,8 @@ package com.google.analytics.core
     {
         private var _emptyDocInfo0:DocumentInfo;
         private var _emptyDocInfo1:DocumentInfo;
-        private var _info0:LocalInfo;
-        private var _info1:LocalInfo;
+        private var _env0:Environment;
+        private var _env1:Environment;
         private var _adSense0:AdSenseGlobals;
         private var _adSense1:AdSenseGlobals;
         
@@ -45,12 +45,12 @@ package com.google.analytics.core
         
         public function setUp():void
         {
-            _info0 = new LocalInfo( "http://www.domain.com" );
-            _info1 = new FakeLocalInfo("",null,"","","a simple title","","/some/path/page.html","?a=1&b=2");
+            _env0 = new Environment( "http://www.domain.com" );
+            _env1 = new FakeEnvironment("",null,"","","a simple title","","/some/path/page.html","?a=1&b=2");
             _adSense0 = new FakeAdSenseGlobals();
             _adSense1 = new FakeAdSenseGlobals( null, "", "12345" );
-            _emptyDocInfo0 = new DocumentInfo( _info0, "", null, _adSense0 );
-            _emptyDocInfo1 = new DocumentInfo( _info0, "", null, _adSense1 );
+            _emptyDocInfo0 = new DocumentInfo( _env0, "", null, _adSense0 );
+            _emptyDocInfo1 = new DocumentInfo( _env0, "", null, _adSense1 );
             
         }
         
@@ -68,7 +68,7 @@ package com.google.analytics.core
         
         public function testPageTitle():void
         {
-            var docInfo:DocumentInfo = new DocumentInfo( _info1, "", null, _adSense0 );
+            var docInfo:DocumentInfo = new DocumentInfo( _env1, "", null, _adSense0 );
             
             assertEquals( "a simple title", docInfo.utmdt );
             
@@ -86,8 +86,8 @@ package com.google.analytics.core
         
         public function testPageURL():void
         {
-            var docInfo0:DocumentInfo = new DocumentInfo( _info1, "", null, _adSense0 );
-            var docInfo1:DocumentInfo = new DocumentInfo( _info1, "", "/some/other/path/index.html", _adSense0 );
+            var docInfo0:DocumentInfo = new DocumentInfo( _env1, "", null, _adSense0 );
+            var docInfo1:DocumentInfo = new DocumentInfo( _env1, "", "/some/other/path/index.html", _adSense0 );
             
             assertEquals( "/some/path/page.html?a=1&b=2", docInfo0.utmp );
             assertEquals( "/some/other/path/index.html", docInfo1.utmp );

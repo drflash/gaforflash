@@ -21,7 +21,7 @@
 package com.google.analytics.core
 {
     import com.google.analytics.config;
-    import com.google.analytics.utils.LocalInfo;
+    import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.generate32bitRandom;
     import com.google.ui.Layout;
@@ -42,7 +42,7 @@ package com.google.analytics.core
     public class GIFRequest
     {
         private var _buffer:Buffer;
-        private var _info:LocalInfo;
+        private var _info:Environment;
         private var _layout:Layout;
         
         private var _utmac:String;
@@ -51,7 +51,7 @@ package com.google.analytics.core
         /**
          * Creates a new GIFRequest instance.
          */
-        public function GIFRequest( buffer:Buffer, info:LocalInfo,
+        public function GIFRequest( buffer:Buffer, info:Environment,
                                     layout:Layout = null )
         {
             _buffer = buffer;

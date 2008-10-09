@@ -24,44 +24,44 @@ package com.google.analytics.utils
     import com.google.analytics.external.FakeHTMLDOM;
     import com.google.analytics.external.HTMLDOM;
     
-    public class LocalInfoTest extends TestCase
+    public class EnvironmentTest extends TestCase
     {
         
-        public function LocalInfoTest( name:String="" )
+        public function EnvironmentTest( name:String="" )
         {
             super(name);
         }
 
         public function testBasicEmpty():void
         {
-            var li_empty:LocalInfo = new LocalInfo();
+            var env_empty:Environment = new Environment();
             
-            assertEquals( Protocols.none, li_empty.protocol );
-            assertEquals( "", li_empty.domainName );
+            assertEquals( Protocols.none, env_empty.protocol );
+            assertEquals( "", env_empty.domainName );
         }
         
         public function testBasicLocal():void
         {
-            var li_local:LocalInfo = new LocalInfo( "file://someFolder/someFile.swf" );
+            var env_local:Environment = new Environment( "file://someFolder/someFile.swf" );
             
-            assertEquals( Protocols.file, li_local.protocol );
-            assertEquals( "", li_local.domainName );
+            assertEquals( Protocols.file, env_local.protocol );
+            assertEquals( "", env_local.domainName );
         }
         
         public function testBasicHTTP():void
         {
-            var li_http:LocalInfo = new LocalInfo( "http://www.domain.com/file.swf" );
+            var env_http:Environment = new Environment( "http://www.domain.com/file.swf" );
             
-            assertEquals( Protocols.HTTP, li_http.protocol );
-            assertEquals( "www.domain.com", li_http.domainName );
+            assertEquals( Protocols.HTTP, env_http.protocol );
+            assertEquals( "www.domain.com", env_http.domainName );
         }
         
         public function testBasicHTTPS():void
         {
-            var li_https:LocalInfo = new LocalInfo( "https://www.domain.com/secure/file.swf" );
+            var env_https:Environment = new Environment( "https://www.domain.com/secure/file.swf" );
             
-            assertEquals( Protocols.HTTPS, li_https.protocol );
-            assertEquals( "www.domain.com", li_https.domainName );
+            assertEquals( Protocols.HTTPS, env_https.protocol );
+            assertEquals( "www.domain.com", env_https.domainName );
         }
         
         public function testLanguageUpgrade():void
@@ -71,8 +71,8 @@ package com.google.analytics.utils
             var set1:HTMLDOM = new FakeHTMLDOM("","en-GB"); //downcast trick
             var set2:HTMLDOM = new FakeHTMLDOM("","fr-FR"); //downcast trick
             
-            var li1:LocalInfo = new LocalInfo( "" , "", "", set1 ); //en-GB
-            var li2:LocalInfo = new LocalInfo( "" , "", "", set2 ); //fr-FR
+            var env1:Environment = new Environment( "" , "", "", set1 ); //en-GB
+            var env2:Environment = new Environment( "" , "", "", set2 ); //fr-FR
             
             //assertEquals( "en-GB" , li1.language , "The LocalInfo language attribute failed" ) ; //match, upgrade
             //assertEquals( "fr-FR" , li2.language , "The LocalInfo language attribute failed" ) ; //no match, no upgrade

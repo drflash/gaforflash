@@ -2,7 +2,7 @@
 package com.google.analytics.utils
 {
     
-    public class FakeLocalInfo extends LocalInfo
+    public class FakeEnvironment extends Environment
     {
         private var _appName:String;
         private var _appVersion:Version;
@@ -26,7 +26,7 @@ package com.google.analytics.utils
         private var _isInHTML:Boolean;
         private var _isAIR:Boolean;
         
-        public function FakeLocalInfo( appName:String = "", appVersion:Version = null,
+        public function FakeEnvironment( appName:String = "", appVersion:Version = null,
                                        url:String = "", referrer:String = "",
                                        documentTitle:String = "", domainName:String = "",
                                        locationPath:String = "", locationSearch:String = "",

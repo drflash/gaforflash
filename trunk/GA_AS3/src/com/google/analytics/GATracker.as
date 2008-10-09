@@ -26,7 +26,7 @@ package com.google.analytics
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.core.js_bridge;
     import com.google.analytics.events.MessageEvent;
-    import com.google.analytics.utils.LocalInfo;
+    import com.google.analytics.utils.Environment;
     import com.google.analytics.v4.Bridge;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
@@ -42,7 +42,7 @@ package com.google.analytics
     public class GATracker
     {
         private var _display:DisplayObject;
-        private var _localInfo:LocalInfo;
+        private var _localInfo:Environment;
         private var _buffer:Buffer;
         private var _gifRequest:GIFRequest;
         private var _layout:Layout;
@@ -67,7 +67,7 @@ package com.google.analytics
                
                By default we will define "Flash" for our local tests
             */
-            _localInfo  = new LocalInfo( "", "", "", null, _layout );
+            _localInfo  = new Environment( "", "", "", null, _layout );
             _buffer     = new Buffer( false );
             _gifRequest = new GIFRequest( _buffer, _localInfo, _layout );
             
