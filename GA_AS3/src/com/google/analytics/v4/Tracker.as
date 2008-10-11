@@ -232,7 +232,7 @@ package com.google.analytics.v4
                     // cache campaign info
                     if( config.campaignTracking )
                     {
-                        _campaign = new CampaignManager( _buffer, _domainHash, _timeStamp );
+                        _campaign = new CampaignManager( _buffer, _domainHash, _formatedReferrer, _timeStamp );
                     }
                 }
                 
