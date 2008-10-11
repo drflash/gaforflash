@@ -19,8 +19,11 @@
 
 package com.google.analytics.campaign
 {
+    import com.google.analytics.config;
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.OrganicReferrer;
+    import com.google.analytics.utils.Protocols;
+    import com.google.analytics.utils.URL;
     
     /**
     * 
@@ -30,17 +33,78 @@ package com.google.analytics.campaign
         private var _buffer:Buffer;
         
         private var _domainHash:Number;
+        private var _referrer:String;
         private var _timeStamp:Number;
         
         //Delimiter for campaign tracker.
         public static const trackingDelimiter:String = "|";
         
-        public function CampaignManager( buffer:Buffer, domainHash:Number, timeStamp:Number )
+        public function CampaignManager( buffer:Buffer, domainHash:Number, referrer:String, timeStamp:Number )
         {
             _buffer     = buffer;
             
             _domainHash = domainHash;
+            _referrer   = referrer;
             _timeStamp  = timeStamp;
+        }
+        
+  /**
+   * This method will return true if and only document referrer is invalid.
+   * Document referrer is considered to be invalid when it's empty (undefined,
+   * empty string, "-", or "0"), or it's not a valid URL (doesn't have protocol)
+   *
+   * @private
+   * @param {String} docRef Document referrer to be evaluated for validity.
+   *
+   * @return {Boolean} True if and only if document referrer is invalid.
+   */
+        public static function isInvalidReferrer( referrer:String ):Boolean
+        {
+            if( (referrer == "") ||
+                (referrer == "-") ||
+                (referrer == "0") )
+            {
+                return true;
+            }
+            
+            if( referrer.indexOf("://") > -1 )
+            {
+                var url:URL = new URL( referrer );
+                
+                if( (url.protocol == Protocols.file) ||
+                    (url.protocol == Protocols.none) )
+                    {
+                    return true;
+                    }
+            }
+            
+            return false;
+        }
+        
+  /**
+   * Checks if the document referrer is from the google custom search engine.
+   *
+   * @private
+   * @return {Boolean} true if the referrer is from google custom search engine.
+   */
+        public static function isFromGoogleCSE( referrer:String ):Boolean
+        {
+            var url:URL = new URL( referrer );
+            
+            // verify that the referrer is google cse search query.
+            if( url.hostName.indexOf( config.google ) > -1 )
+            {
+                if( url.search.indexOf( config.googleSearchParam+"=" ) > -1 )
+                {
+                    // check if this is google custom search engine.
+                    if( url.path == config.googleCsePath )
+                    {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
         }
         
   /**
@@ -87,16 +151,54 @@ package com.google.analytics.campaign
    */
         public function getOrganicCampaign():CampaignTracker
         {
-            var camp:CampaignTracker = new CampaignTracker();
+            var camp:CampaignTracker;
             
-            var currentOrganicSource:OrganicReferrer;
-            //config.organicSources
-            var keyword:String;
+            // if there is no referrer, or referrer is not a valid URL, or the referrer
+            // is google custom search engine, return an empty tracker
+            if( isInvalidReferrer( _referrer ) && isFromGoogleCSE( _referrer ) )
+            {
+                return camp;
+            }
             
-            camp.source = currentOrganicSource.engine;
-            camp.name   = "(organic)";
-            camp.medium = "organic";
-            camp.term   = keyword;
+            var ref:URL = new URL( _referrer );
+            
+            var name:String = "";
+            
+            if( ref.hostName != "" )
+            {
+                if( ref.hostName.indexOf( "." ) > -1 )
+                {
+                    var tmp:Array = ref.hostName.split( "." );
+                    
+                    switch( tmp.length)
+                    {
+                        case 2:
+                        // case: http://domain.com
+                        name = tmp[0];
+                        break;
+                        
+                        case 3:
+                        //case: http://www.domain.com
+                        name = tmp[1];
+                        break;
+                    }
+                }
+            }
+            
+            // organic source match
+            if( config.organic.match( name ) )
+            {
+                var currentOrganicSource:OrganicReferrer = config.organic.getReferrerByName( name );
+                
+                // extract keyword value from query string
+                var keyword:String = config.organic.getKeywordValue( currentOrganicSource, _referrer );
+                
+                camp = new CampaignTracker();
+                camp.source = currentOrganicSource.engine;
+                camp.name   = "(organic)";
+                camp.medium = "organic";
+                camp.term   = keyword;
+            }
             
             return camp;
         }

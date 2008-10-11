@@ -35,7 +35,7 @@ package
        as the main entry point to configure GA for AS3
     */
     [SWF(width="800", height="600", backgroundColor='0xffffff', frameRate='24', pageTitle='test', scriptRecursionLimit='1000', scriptTimeLimit='60')]
-    [ExcludeClass]  
+    [ExcludeClass]
     public class GA_AS3_trunk extends Sprite
     {
         private var _gat:GATracker;

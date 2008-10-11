@@ -32,6 +32,7 @@ package com.google.analytics.core
         {
             var suite:TestSuite = new TestSuite( "Google Analytics core tests" );
             
+            suite.addTestSuite( OrganicTest );
             suite.addTestSuite( DocumentInfoTest );
             suite.addTestSuite( BrowserInfoTest );
             return suite;

@@ -20,32 +20,52 @@
 
 package com.google.analytics.core
 {
-	/**
-	 * The OrganicReferrer class.
-	 */
-	public class OrganicReferrer
-	{
-		
-		/**
-		 * Indicates the organic source engine value.
-		 */
-		public var engine:String;
-		
-		/**
-		 * Indicates the organic keyword value.
-		 */
-		public var keyword:String;
-		
-		/**
-		 * Creates a new OrganicReferrer instance.
-		 * @param engine The the organic source engine value.
-		 * @param keyword The the organic keyword value.
-		 */
-		public function OrganicReferrer( engine:String , keyword:String )
-		{
-		    this.engine  = engine  ;  
-		   	this.keyword = keyword ; 
-		}
+    /**
+     * The OrganicReferrer class.
+     */
+    public class OrganicReferrer
+    {
+        
+        private var _engine:String;
+        
+        private var _keyword:String;
+        
+        /**
+         * Creates a new OrganicReferrer instance.
+         * @param engine The the organic source engine value.
+         * @param keyword The the organic keyword value.
+         */
+        public function OrganicReferrer( engine:String , keyword:String )
+        {
+            this.engine  = engine;
+           	this.keyword = keyword;
+        }
+        
+        /**
+        * The search engine name.
+        */
+        public function get engine():String
+        {
+            return _engine;
+        }
+        
+        public function set engine( value:String ):void
+        {
+            _engine = value.toLowerCase();
+        }
+        
+        /**
+        * The keyword value.
+        */
+        public function get keyword():String
+        {
+            return _keyword;
+        }
+        
+        public function set keyword( value:String ):void
+        {
+            _keyword = value.toLowerCase();
+        }
         
         /**
          * Returns the String representation of the object.
@@ -53,7 +73,7 @@ package com.google.analytics.core
          */
         public function toString():String
         {
-            return engine + "?" + keyword ;
+            return engine + "?" + keyword;
         }
         
 	}

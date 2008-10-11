@@ -22,7 +22,7 @@ package com.google.analytics.v4
 {
     import com.google.analytics.core.Domain;
     import com.google.analytics.core.DomainNameMode;
-    import com.google.analytics.core.OrganicReferrer;
+    import com.google.analytics.core.Organic;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.events.MessageEvent;
     
@@ -66,6 +66,8 @@ package com.google.analytics.v4
          */         
         private var _domain:Domain = new Domain( DomainNameMode.auto );
         
+        private var _organic:Organic = new Organic();
+        
         /**
          * @private
          */         
@@ -99,19 +101,19 @@ package com.google.analytics.v4
          * All referers with path cse from google donmains will be ignored from organic and referrer campaigns.
          * @private
          */
-        private var _googleCsePath:String = "cse";
+        public  var googleCsePath:String = "cse";
         
         /**
          * The parameter used by google for the search keyword.
          * @private
          */
-        private var _googleSearchParam:String = "q";
+        public var googleSearchParam:String = "q";
         
         /**
          * Google string value.
          * @private
          */
-        private var _google:String = "google";
+        public var google:String = "google";
         
         /**
          * Name used by the SharedObject (read-only)
@@ -301,7 +303,7 @@ package com.google.analytics.v4
          */
         private function _initOrganicSources():void
         {
-            addOrganicSource( _google,          _googleSearchParam );
+            addOrganicSource( google,            googleSearchParam );
             addOrganicSource( "yahoo",          "p"                );
             addOrganicSource( "msn",            "q"                );
             addOrganicSource( "aol",            "query"            );
@@ -418,6 +420,11 @@ package com.google.analytics.v4
         }
         
         
+        public function get organic():Organic
+        {
+            return _organic;
+        }
+        
         public function get organicSources():Array
         {
             return _organicSources;
@@ -436,27 +443,40 @@ package com.google.analytics.v4
          */
         public function addOrganicSource(engine:String, keyword:String):void
         {
-            var orgref:OrganicReferrer = new OrganicReferrer(engine, keyword);
-            if( !_organicCache[orgref.toString()] )
+//            var orgref:OrganicReferrer = new OrganicReferrer(engine, keyword);
+//            if( !_organicCache[orgref.toString()] )
+//            {
+//                _organicSources.push(orgref);
+//                _organicCache[orgref.toString()] = true ;
+//            }
+//            else if( debug )
+//            {
+//                var message:String = orgref.toString()+" already exists, we don't add it";
+//                trace( "## WARNING: "+message+" ##" );
+//                dispatchEvent( new MessageEvent(MessageEvent.WARNING,false,true, message ) );
+//            }
+            
+            try
             {
-                _organicSources.push(orgref);
-                _organicCache[orgref.toString()] = true ;
+                _organic.addSource( engine, keyword );
             }
-            else if( debug )
+            catch( e:Error )
             {
-                var message:String = orgref.toString()+" already exists, we don't add it";
-                trace( "## WARNING: "+message+" ##" );
-                dispatchEvent( new MessageEvent(MessageEvent.WARNING,false,true, message ) );
+                if( debug )
+                {
+                    trace( "## WARNING: "+e.message+" ##" );
+                    dispatchEvent( new MessageEvent(MessageEvent.WARNING,false,true, e.message ) );
+                }
             }
+            
         }
         
         /**
          * Removes all organic sources.
-         */        
+         */
         public function clearOrganicSources():void
         {
-            _organicCache   = {};
-            _organicSources = [];
+            _organic.clear();
         }
         
         
