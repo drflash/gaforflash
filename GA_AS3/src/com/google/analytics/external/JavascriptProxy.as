@@ -27,35 +27,38 @@ package com.google.analytics.external
      */
     public class JavascriptProxy
     {
+
+    	/**
+    	 * The setProperty Javascript injection.
+    	 */
         public static var setProperty_js:XML = 
             <script>
                 <![CDATA[
-                function(path,value)
+                function( path , value )
                 {
                     var paths;
                     var prop;
                     if( path.indexOf(".") > 0 )
                     {
                         paths = path.split(".");
-                        prop  = paths.pop();
+                        prop  = paths.pop() ;
                     }
                     else
                     {
                         paths = [];
                         prop  = path;
                     }
-                    
                     var target = window ;
                     var len    = paths.length ;
                     for( var i = 0 ; i < len ; i++ )
                     {
-                        target = target[ paths[i] ];
+                        target = target[ paths[i] ] ;
                     }
                     
-                    target[ prop ] = value;
+                    target[ prop ] = value ;
                 }
                 ]]>
-            </script>
+            </script>;
         
         
         /**

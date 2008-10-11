@@ -26,8 +26,8 @@ package com.google.analytics.v4
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.events.MessageEvent;
     
-    import flash.events.EventDispatcher;
-    
+    import flash.events.EventDispatcher;    
+
     /**
      * Dispatched when the configuration notify an info.
      * @eventType com.google.analytics.events.MessageEvent.INFO
@@ -66,6 +66,9 @@ package com.google.analytics.v4
          */         
         private var _domain:Domain = new Domain( DomainNameMode.auto );
         
+        /**
+         * @private
+         */         
         private var _organic:Organic = new Organic();
         
         /**
@@ -195,7 +198,6 @@ package com.google.analytics.v4
          */
         public var campaignTracking:Boolean = true;
         
-        
         /**
          * Boolean flag to indicate if outbound links for subdomains of the current domain 
          * needs to be considered as outbound links. Default value is false.
@@ -238,7 +240,6 @@ package com.google.analytics.v4
          */
         public var domainName:String = "";
         
-        
         //---- Not part of GA API ----
         
         /**
@@ -246,35 +247,34 @@ package com.google.analytics.v4
          */
         public var debug:Boolean = true;
         
-        //to trace infos and warnign to the output
+        /**
+         * To trace infos and warnign to the output.
+         */
         public var debugTrace:Boolean = true;
         
-        //to show more debug used internally
+        /**
+         * To show more debug used internally.
+         */
         public var debugVerbose:Boolean = true;
         
-        /* send a Gir Request with validation or not
-           
-           without validation (use sendToURL())
-           it's fire and forget
-           ok: send the request but does not returns any success or failure
-           cancel: does not send the request
-           
-           with validation (use URLLoader.load())
-           ok: returns success when received by the the server
-               returns failure if not received by the server, or gif not found, or error etc.
-           cancel: does not send the request
-        */
+        /**
+         * Send a Gir Request with validation or not without validation (use sendToURL()) it's fire and forget
+         * ok: send the request but does not returns any success or failure 
+         * cancel: does not send the request with validation (use URLLoader.load())
+         * ok: returns success when received by the the server
+         * returns failure if not received by the server, or gif not found, or error etc.
+         * cancel: does not send the request
+         */
         public var validateGIFRequest:Boolean = true;
         
-        /* allow to debug the GIF Request
-           if true, will show a debug panel
-           and a confirmation message to send or not
-           the request.
-        */
+        /**
+         * Allow to debug the GIF Request if true, will show a debug panel and a confirmation message to send or not the request.
+         */
         public var debugGIFRequest:Boolean = true;
         
-        //to show extended info and warning messages
-        //from the GA docs
+        /**
+         * To show extended info and warning messages from the GA docs.
+         */
         public var verbose:Boolean = true;
         
         /**
@@ -287,7 +287,9 @@ package com.google.analytics.v4
          */                
         public var showWarnings:Boolean = true;
         
-        //to be able to track in local mode (when protocol is file://)
+        /**
+         * To be able to track in local mode (when protocol is file://)
+         */
         public var allowLocalTracking:Boolean = true;
         
         /**
@@ -346,18 +348,21 @@ package com.google.analytics.v4
             addOrganicSource( "ekolay",         "q"                );
             addOrganicSource( "search.ilse",    "search_for"       );
         }
-        
+
+        /**
+         * Indicates the name of the cookie.
+         */
+        public function get cookieName():String
+        {
+            return _cookieName;
+        }
+                
         /**
          * Indicates the version String representation of the application.
          */
         public function get version():String
         {
             return _version;
-        }
-        
-        public function get cookieName():String
-        {
-            return _cookieName;
         }
         
         /**
@@ -379,7 +384,30 @@ package com.google.analytics.v4
         {
             return _domain;
         }
+                        
+        /**
+         * Indicates the Organic reference.
+         */
+        public function get organic():Organic
+        {
+            return _organic;
+        }
         
+        /**
+         * Indicates the collection (Array) of all organic sources.
+         */
+        public function get organicSources():Array
+        {
+            return _organicSources;
+        }
+        
+        /**
+         * @private
+         */
+        public function set organicSources(sources:Array):void
+        {
+            _organicSources = sources;
+        }
         
         /**
          * Indicates the sample rate value of the application.
@@ -390,9 +418,8 @@ package com.google.analytics.v4
         }
         
         /**
-        * Sampling percentage of visitors to track.
-        *
-        */
+         * Sampling percentage of visitors to track.
+         */
         public function set sampleRate( value:Number ):void
         {
             if( value <= 0 )
@@ -408,33 +435,16 @@ package com.google.analytics.v4
             value = Number( value.toFixed( 2 ) );
             
             _sampleRate = value;
-        }
+        }        
         
         /**
-        * This is the max number of tracking requests to the backend
-        * allowed per session.
-        */
+         * This is the max number of tracking requests to the backend
+         * allowed per session.
+         */
         public function get trackingLimitPerSession():int
         {
             return _trackingLimitPerSession;
-        }
-        
-        
-        public function get organic():Organic
-        {
-            return _organic;
-        }
-        
-        public function get organicSources():Array
-        {
-            return _organicSources;
-        }
-        
-        public function set organicSources(sources:Array):void
-        {
-            _organicSources = sources;
-        }
-        
+        }        
         
         /**
          * Adds a new organic source.
@@ -464,7 +474,7 @@ package com.google.analytics.v4
             {
                 if( debug )
                 {
-                    trace( "## WARNING: "+e.message+" ##" );
+                    trace( "## WARNING: " + e.message + " ##" ) ;
                     dispatchEvent( new MessageEvent(MessageEvent.WARNING,false,true, e.message ) );
                 }
             }

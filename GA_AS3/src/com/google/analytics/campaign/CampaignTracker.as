@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,60 +15,73 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.campaign
 {
     /**
-    * Campaign tracker object.
-    * Contains all the data associated with a campaign.
-    * 
-    * AdWords:
-    * The following variables
-    * name, source, medium, term, content
-    * are automatically generated for AdWords hits when autotagging
-    * is turned on through the AdWords interface.
-    * 
-    * 
-    * note:
-    * we can not use a CampaignInfo because here the serialization
-    * to URL have to be injected into __utmz and is then a special case.
-    * 
-    * links:
-    * 
-    * Understanding campaign variables: The five dimensions of campaign tracking
-    * http://www.google.com/support/googleanalytics/bin/answer.py?answer=55579&hl=en
-    * 
-    * How does campaign tracking work? 
-    * http://www.google.com/support/googleanalytics/bin/answer.py?hl=en&answer=55540
-    * 
-    * What is A/B Testing and how can it help me?
-    * http://www.google.com/support/googleanalytics/bin/answer.py?answer=55589
-    * 
-    * What information do the filter fields represent?
-    * http://www.google.com/support/googleanalytics/bin/answer.py?hl=en&answer=55588
-    */
+     * Campaign tracker object.
+     * Contains all the data associated with a campaign.
+     * 
+     * AdWords:
+     * The following variables
+     * name, source, medium, term, content
+     * are automatically generated for AdWords hits when autotagging
+     * is turned on through the AdWords interface.
+     * 
+     * 
+     * note:
+     * we can not use a CampaignInfo because here the serialization
+     * to URL have to be injected into __utmz and is then a special case.
+     * 
+     * links:
+     * 
+     * Understanding campaign variables: The five dimensions of campaign tracking
+     * http://www.google.com/support/googleanalytics/bin/answer.py?answer=55579&hl=en
+     * 
+     * How does campaign tracking work? 
+     * http://www.google.com/support/googleanalytics/bin/answer.py?hl=en&answer=55540
+     * 
+     * What is A/B Testing and how can it help me?
+     * http://www.google.com/support/googleanalytics/bin/answer.py?answer=55589
+     * 
+     * What information do the filter fields represent?
+     * http://www.google.com/support/googleanalytics/bin/answer.py?hl=en&answer=55588
+     */
     public class CampaignTracker
     {
         
         /**
-        * The campaign code or id can be used to refer to a campaign lookup table,
-        * or chart of referring codes used to define variables in place of multiple request query tags.
-        * 
-        * variable: utmcid
-        */
+         * @private
+         */ 
+        private function _addIfNotEmpty( arr:Array, field:String, value:String ):void
+        {
+            if( value != "" )
+            {
+                value = value.split( "+" ).join( "%20" );
+                value = value.split( " " ).join( "%20" );
+                arr.push( field, value );
+            }
+        }
+        
+        /**
+         * The campaign code or id can be used to refer to a campaign lookup table,
+         * or chart of referring codes used to define variables in place of multiple request query tags.
+         * variable: utmcid
+         */
         public var id:String;
         
         /**
-        * The resource that provided the click.
-        * Every referral to a web site has an origin, or source.
-        * Examples of sources are the Google search engine,
-        * the AOL search engine, the name of a newsletter,
-        * or the name of a referring web site.
-        * Other example: "AdWords".
-        * 
-        * variable: utmcsr
-        */
+         * The resource that provided the click.
+         * Every referral to a web site has an origin, or source.
+         * Examples of sources are the Google search engine,
+         * the AOL search engine, the name of a newsletter,
+         * or the name of a referring web site.
+         * Other example: "AdWords".
+         * 
+         * variable: utmcsr
+         */
         public var source:String; //required
         
         /**
@@ -106,26 +119,28 @@ package com.google.analytics.campaign
         public var medium:String; //required
         
         /**
-        * The term or keyword is the word or phrase that a user types into a search engine.
-        * Used for paid search.
-        * 
-        * variable: utmctr
-        */
+         * The term or keyword is the word or phrase that a user types into a search engine.
+         * Used for paid search.
+         * variable: utmctr
+         */
         public var term:String;
         
         /**
-        * The content dimension describes the version of an advertisement
-        * on which a visitor clicked.
-        * It is used in content-targeted advertising and Content (A/B) Testing
-        * to determine which version of an advertisement is most effective at attracting profitable leads.
-        * 
-        * alternative:
-        * Used for A/B testing and content-targeted ads to differentiate ads or links that point to the same URL.
-        * 
-        * variable: utmcct
-        */
+         * The content dimension describes the version of an advertisement
+         * on which a visitor clicked.
+         * It is used in content-targeted advertising and Content (A/B) Testing
+         * to determine which version of an advertisement is most effective at attracting profitable leads.
+         * 
+         * alternative:
+         * Used for A/B testing and content-targeted ads to differentiate ads or links that point to the same URL.
+         * 
+         * variable: utmcct
+         */
         public var content:String;
         
+        /**
+         * Creates a new CampaingTracker instance.
+         */
         public function CampaignTracker( id:String = "", source:String = "", clickId:String = "",
                                          name:String = "", medium:String = "", term:String = "", content:String = "" )
         {
@@ -139,10 +154,9 @@ package com.google.analytics.campaign
         }
         
         /**
-        * Returns a flag indicating whether this tracker object is valid.
-        * A tracker object is considered to be valid if and only if one of
-        * id, source or clickId is present.
-        */
+         * Returns a flag indicating whether this tracker object is valid.
+         * A tracker object is considered to be valid if and only if one of id, source or clickId is present.
+         */
         public function isValid():Boolean
         {
             if( (id != "") ||
@@ -154,30 +168,20 @@ package com.google.analytics.campaign
             
             return false;
         }
-        
-        private function _addIfNotEmpty( arr:Array, field:String, value:String ):void
-        {
-            if( value != "" )
-            {
-                value = value.split( "+" ).join( "%20" );
-                value = value.split( " " ).join( "%20" );
-                arr.push( field, value );
-            }
-        }
-        
+                
         /**
-        * 
-        *     format for tracker have the following fields (seperated by "|"):
-        *         <table>
-        *           <tr><td>utmcsr - campaign source</td></tr>
-        *           <tr><td>utmccn - campaign name</td></tr>
-        *           <tr><td>utmcmd - campaign medium</td></tr>
-        *           <tr><td>utmctr - keywords</td></tr>
-        *           <tr><td>utmcct - ad content description</td></tr>
-        *           <tr><td>utmcid - lookup table id</td></tr>
-        *           <tr><td>utmgclid - google ad click id</td></tr>
-        *         </table>
-        */
+         * 
+         *     format for tracker have the following fields (seperated by "|"):
+         *         <table>
+         *           <tr><td>utmcsr - campaign source</td></tr>
+         *           <tr><td>utmccn - campaign name</td></tr>
+         *           <tr><td>utmcmd - campaign medium</td></tr>
+         *           <tr><td>utmctr - keywords</td></tr>
+         *           <tr><td>utmcct - ad content description</td></tr>
+         *           <tr><td>utmcid - lookup table id</td></tr>
+         *           <tr><td>utmgclid - google ad click id</td></tr>
+         *         </table>
+         */
         public function toTrackerString():String
         {
             var data:Array = [];
