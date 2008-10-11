@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +15,25 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.core
 {
-    import flash.net.URLVariables;
-    
+    import flash.net.URLVariables;                
+
+    /**
+     * The Organic class.
+     */
     public class Organic
     {
         private var _sources:Array;
         private var _sourcesCache:Array;
         private var _sourcesEngine:Array;
         
+        /**
+         * Creates a new Organic instance.
+         */
         public function Organic()
         {
             _sources       = [];
@@ -62,6 +69,9 @@ package com.google.analytics.core
             return _sources;
         }
         
+        /**
+         * Adds a source in the organic.
+         */
         public function addSource( engine:String, keyword:String ):void
         {
             var orgref:OrganicReferrer = new OrganicReferrer(engine, keyword);
@@ -81,16 +91,22 @@ package com.google.analytics.core
             }
             else
             {
-                throw new Error( orgref.toString()+" already exists, we don't add it." )
+                throw new Error( orgref.toString()+" already exists, we don't add it." );
             }
         }
         
+        /**
+         * Clear the organic object.
+         */
         public function clear():void
         {
             _sources      = [];
             _sourcesCache = [];
         }
         
+        /**
+         * Match the specified value.
+         */
         public function match( name:String ):Boolean
         {
             if( name == "" )
@@ -108,6 +124,10 @@ package com.google.analytics.core
             return false;
         }
         
+        /**
+         * Returns the OrganicReferrer by name.
+         * @return the OrganicReferrer by name.
+         */
         public function getReferrerByName( name:String ):OrganicReferrer
         {
             if( match( name ) )
@@ -120,6 +140,10 @@ package com.google.analytics.core
             return null;
         }
         
+        /**
+         * Returns the keyword value of the organic referrer.
+         * @return the keyword value of the organic referrer.
+         */
         public function getKeywordValue( or:OrganicReferrer, path:String ):String
         {
             var keyword:String = or.keyword;
