@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,17 +15,34 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.campaign
 {
     import flash.net.URLVariables;
     
+    /**
+     * The CampaingInfo class.
+     */
     public class CampaignInfo
     {
+        
+        /**
+         * @private
+         */
         private var _empty:Boolean;
+        
+        /**
+         * @private
+         */
         private var _new:Boolean;
         
+        /**
+         * Creates a new CampaignInfo instance
+         * @param empty Indicates there is no value in the gif request.
+         * @param newCampaign Indicates if the campaign is a new campaign.
+         */
         public function CampaignInfo( empty:Boolean = true, newCampaign:Boolean = false )
         {
             _empty = empty;
@@ -33,31 +50,41 @@ package com.google.analytics.campaign
         }
         
         /**
-        * Indicates a new campaign.
-        */
+         * Indicates a new campaign.
+         */
         public function get utmcn():String
         {
             return "1";
         }
         
         /**
-        * Indicates a repeated campaign.
-        */
+         * Indicates a repeated campaign.
+         */
         public function get utmcr():String
         {
             return "1";
         }
         
+        /**
+         * Indicates if the campaing is empty.
+         */
         public function isEmpty():Boolean
         {
             return _empty;
         }
         
+        /**
+         * Indicates if the campaign is a new campaign.
+         */
         public function isNew():Boolean
         {
             return _new;
         }
         
+        /**
+         * Returns the URLVariables representation of the campaign.
+         * @retunr the URLVariables representation of the campaign.
+         */
         public function toURLVariables():URLVariables
         {
             var variables:URLVariables = new URLVariables();
@@ -75,6 +102,10 @@ package com.google.analytics.campaign
             return variables;
         }
         
+        /**
+         * Returns the url string of the campaign.
+         * @return the url string of the campaign.
+         */
         public function toURLString():String
         {
             var v:URLVariables = toURLVariables();
