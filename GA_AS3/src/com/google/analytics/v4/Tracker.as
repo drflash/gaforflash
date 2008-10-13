@@ -20,6 +20,7 @@
 package com.google.analytics.v4
 {
     
+    import com.google.analytics.campaign.CampaignInfo;
     import com.google.analytics.campaign.CampaignManager;
     import com.google.analytics.config;
     import com.google.analytics.core.BrowserInfo;
@@ -44,90 +45,31 @@ package com.google.analytics.v4
      */
     public class Tracker implements GoogleAnalyticsAPI
     {
+        /* DON'T CHANGE THE ORDER OF THE VARS */
         
-        /**
-         * @private
-         */
-        private var _adSense:AdSenseGlobals;
-        
-        /**
-         * @private
-         */
+        //params
         private var _account:String;
-        
-        /**
-         * @private
-         */
-        private var _browserInfo:BrowserInfo;
-        
-        /**
-         * @private
-         */
-        private var _buffer:Buffer;
-        
-        /**
-         * @private
-         */
-        private var _campaign:CampaignManager;
-        
-        /**
-         * @private
-         */
-        private var _campaignInfo:String = "";
-        
-        /**
-         * @private
-         */
         private var _domainHash:Number;
-        
-        /**
-         * @private
-         */
-        private var _eventTracker:X10;
-        
-        /**
-         * @private
-         */
         private var _formatedReferrer:String;
-        
-        /**
-         * @private
-         */
-        private var _gifRequest:GIFRequest;
-        
-        /**
-         * @private
-         */
+        private var _timeStamp:Number;
         private var _hasInitData:Boolean          = false;
-        
-        /**
-         * @private
-         */
-        private var _info:Environment;
-        
-        /**
-         * @private
-         */
         private var _isNewVisitor:Boolean         = false;
-        
-        /**
-         * @private
-         */
-        private var _layout:Layout;
-        
-        /**
-         * @private
-         */
         private var _noSessionInformation:Boolean = false;
         
-        /**
-         * @private
-         */
-        private var _timeStamp:Number;
+        //factory
+        private var _info:Environment;
+        private var _buffer:Buffer;
+        private var _gifRequest:GIFRequest;
+        private var _adSense:AdSenseGlobals;
+        private var _layout:Layout;
         
-        /**
-         * @private
-         */
+        //gif requests
+        private var _browserInfo:BrowserInfo;
+        private var _campaignInfo:CampaignInfo;
+        
+        //other
+        private var _campaign:CampaignManager;
+        private var _eventTracker:X10;
         private var _x10Module:X10;
         
         /** 
@@ -158,9 +100,6 @@ package com.google.analytics.v4
             _initData();
         }
         
-        /**
-         * @private
-         */        
         private function _showInfo( message:String ):void
         {
             if( config.showInfos && _layout )
@@ -169,9 +108,6 @@ package com.google.analytics.v4
             }
         }
         
-        /**
-         * @private
-         */        
         private function _showWarning( message:String ):void
         {
             if( config.showWarnings && _layout )
@@ -180,9 +116,6 @@ package com.google.analytics.v4
             }
         }
         
-        /**
-         * @private
-         */
         private function _initData():void
         {
             // initialize initial data
@@ -233,6 +166,8 @@ package com.google.analytics.v4
                     if( config.campaignTracking )
                     {
                         _campaign = new CampaignManager( _buffer, _domainHash, _formatedReferrer, _timeStamp );
+                        
+                        _campaignInfo = _campaign.getCampaignInformation( _noSessionInformation );
                     }
                 }
                 
@@ -853,9 +788,9 @@ package com.google.analytics.v4
             
             var campvars:URLVariables;
             
-            if( config.campaignTracking && (_campaignInfo != "") )
+            if( config.campaignTracking )
             {
-                campvars = new URLVariables( _campaignInfo );
+                campvars = _campaignInfo.toURLVariables()
             }
             
             var variables:URLVariables = joinVariables( docInfo.toURLVariables(),
@@ -921,9 +856,9 @@ package com.google.analytics.v4
          */        
         public function setCampContentKey(newCampContentKey:String):void
         {
-            //
+            config.campaignKey.UCCT = newCampContentKey;
         }
-
+        
         /**
          * Sets the campaign medium key,
          * which is used to retrieve the medium from your campaign URLs.
@@ -933,7 +868,7 @@ package com.google.analytics.v4
          */
         public function setCampMediumKey(newCampMedKey:String):void
         {
-            //
+            config.campaignKey.UCMD = newCampMedKey;
         }
         
         /**
@@ -942,10 +877,10 @@ package com.google.analytics.v4
          * You would use this function on any page that you want to track click-campaigns on.
          * 
          * @param newCampNameKey Campaign name key.
-         */        
+         */
         public function setCampNameKey(newCampNameKey:String):void
         {
-            //
+            config.campaignKey.UCCN = newCampNameKey;
         }
         
         /**
@@ -962,10 +897,10 @@ package com.google.analytics.v4
          * by similarly-defined campaign URLs that the visitor might also click on.
          * 
          * @param newCampNOKey Campaign no-override key to set.
-         */        
+         */
         public function setCampNOKey(newCampNOKey:String):void
         {
-            //
+            config.campaignKey.UCNO = newCampNOKey;
         }
         
         /**
@@ -974,21 +909,21 @@ package com.google.analytics.v4
          * "Source" appears as a segment option in the Campaigns report.
          * 
          * @param newCampSrcKey Campaign source key to set.
-         */        
+         */
         public function setCampSourceKey(newCampSrcKey:String):void
         {
-            //
+            config.campaignKey.UCSR = newCampSrcKey;
         }
-
+        
         /**
          * Sets the campaign term key,
          * which is used to retrieve the campaign keywords from the URL.
          * 
          * @param newCampTermKey Term key to set.
-         */        
+         */
         public function setCampTermKey(newCampTermKey:String):void
         {
-            //
+            config.campaignKey.UCTR = newCampTermKey;
         }
         
         /**
@@ -999,9 +934,10 @@ package com.google.analytics.v4
          * 
          * @param enable True by default, which enables campaign tracking. If set to false, campaign tracking is disabled.
          */        
-        public function setCampaignTrack(enable:Boolean):void
+        public function setCampaignTrack( enable:Boolean ):void
         {
-            //
+            config.campaignTracking = enable;
+            _showInfo( "setCampaignTrack = " + config.campaignTracking );
         }
         
         /**
