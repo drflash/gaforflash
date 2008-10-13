@@ -136,7 +136,7 @@ package com.google.analytics.campaign
          * @return {String} Gif hit key-value pair indicating wether this is a repeated
          *     click, or a brand new campaign for the visitor.
          */
-        public function getCampaignInformation():CampaignInfo
+        public function getCampaignInformation( noSessionInformation:Boolean ):CampaignInfo
         {
             var campInfo:CampaignInfo;
             

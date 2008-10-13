@@ -20,13 +20,14 @@
 
 package com.google.analytics.v4
 {
+    import com.google.analytics.campaign.CampaignKey;
     import com.google.analytics.core.Domain;
     import com.google.analytics.core.DomainNameMode;
     import com.google.analytics.core.Organic;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.events.MessageEvent;
     
-    import flash.events.EventDispatcher;    
+    import flash.events.EventDispatcher;
 
     /**
      * Dispatched when the configuration notify an info.
@@ -56,29 +57,14 @@ package com.google.analytics.v4
          */
         private var _sampleRate:Number       = 1; //100%
         
-        /**
-         * @private
-         */        
         private var _trackingLimitPerSession:int = 500;
         
-        /**
-         * @private
-         */         
         private var _domain:Domain = new Domain( DomainNameMode.auto );
         
-        /**
-         * @private
-         */         
         private var _organic:Organic = new Organic();
         
-        /**
-         * @private
-         */         
         private var _organicCache:Object  = {};
         
-        /**
-         * @private
-         */         
         private var _organicSources:Array = [];
         
         /**
@@ -229,6 +215,8 @@ package com.google.analytics.v4
          * Default cookie path to set in document header.
          */
         public var cookiePath:String = "/" ; //SharedObjectPath
+        
+        public var campaignKey:CampaignKey = new CampaignKey();
         
         /**
          * Delimiter for e-commerce transaction fields.
