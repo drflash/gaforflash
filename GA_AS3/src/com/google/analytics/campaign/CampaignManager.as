@@ -138,7 +138,7 @@ package com.google.analytics.campaign
          */
         public function getCampaignInformation( noSessionInformation:Boolean ):CampaignInfo
         {
-            var campInfo:CampaignInfo;
+            var campInfo:CampaignInfo = new CampaignInfo();
             
             //TODO
             

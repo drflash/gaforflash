@@ -18,21 +18,17 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
     import flash.events.TextEvent;
     import flash.events.TimerEvent;
     import flash.utils.Timer;
-
+    
     /**
      * The Warning class.
      */
     public class Warning extends Label
     {
-    	
-    	/**
-    	 * @private
-    	 */
         private var _timer:Timer;
         
         /**
@@ -60,7 +56,7 @@ package com.google.ui
         	{
                 parent.removeChild( this );
         	}
-        }        
+        }
         
         /**
          * Invoked when a link is selected in the text.

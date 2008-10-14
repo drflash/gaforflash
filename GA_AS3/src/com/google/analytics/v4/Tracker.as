@@ -36,7 +36,7 @@ package com.google.analytics.v4
     import com.google.analytics.utils.generate32bitRandom;
     import com.google.analytics.utils.generateHash;
     import com.google.analytics.utils.joinVariables;
-    import com.google.ui.Layout;
+    import com.google.analytics.debug.Layout;
     
     import flash.net.URLVariables;
     
