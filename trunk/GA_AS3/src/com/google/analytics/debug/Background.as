@@ -18,16 +18,16 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
-    import flash.display.Graphics;    
-
+    import flash.display.Graphics;
+    
     /**
      * The background class.
      */
     public class Background
     {
-    	
+        
         /**
          * Draw the rounded background in the specified target.
          */

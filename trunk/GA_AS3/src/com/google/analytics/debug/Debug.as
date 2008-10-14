@@ -18,17 +18,13 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
 	/**
 	 * The Debug label class.
 	 */
     public class Debug extends Label
     {
-    	
-    	/**
-    	 * @private
-    	 */
         private var _lines:Array;
         
         /**

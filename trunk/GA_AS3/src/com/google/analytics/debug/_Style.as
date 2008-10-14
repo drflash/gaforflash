@@ -18,37 +18,25 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
     import flash.net.URLLoader;
-    import flash.text.StyleSheet;    
+    import flash.text.StyleSheet;
     
     /**
-     * The _Style class.
+     * The _Style internal class.
      */
     public class _Style
     {
-    	
-    	/**
-    	 * @private
-    	 */
         private var _defaultSheet:String;
-
-        /**
-         * @private
-         */
         private var _sheet:StyleSheet;
-
-        /**
-         * @private
-         */
         private var _loader:URLLoader;
         
         /**
          * The background color.
          */
         public var backgroundColor:uint;
-
+        
         /**
          * The info color value.
          */
@@ -69,7 +57,14 @@ package com.google.ui
          */
         public var alertColor:uint;
         
+        /**
+        * The success color value.
+        */
         public var successColor:uint;
+        
+        /**
+        * The failue color value.
+        */
         public var failureColor:uint;
         
         
@@ -84,11 +79,13 @@ package com.google.ui
             _init();
         }
         
-        /**
-         * @private
-         */
         private function _init():void
         {
+            /* note:
+               to avoid an external loading of a .css that could
+               delay the UI initialization we pack directly the CSS
+               into the code.
+            */
             _defaultSheet  = "";
             _defaultSheet += "a{text-decoration: underline;}\n";
             _defaultSheet += ".uiLabel{color: #000000;font-family: Arial;font-size: 12;margin-left: 2;margin-right: 2;}\n";
@@ -113,16 +110,13 @@ package com.google.ui
             _parseSheet( _defaultSheet );
         }
         
-        /**
-         * @private
-         */
         private function _parseSheet( data:String ):void
         {
             _sheet.parseCSS( data );
         }
         
         /**
-         * @private
+         * Returns the current style sheet.
          */
         public function get sheet():StyleSheet
         {

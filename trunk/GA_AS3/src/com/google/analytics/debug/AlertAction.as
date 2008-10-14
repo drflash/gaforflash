@@ -18,14 +18,14 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
+    /**
+    * The AlertAction allow to define the different action
+    * for a button contained in an Alert window.
+    */
     public class AlertAction
     {
-        
-        /**
-         * @private
-         */
         private var _callback:*;
         
         /**

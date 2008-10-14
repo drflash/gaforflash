@@ -18,7 +18,7 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
     import flash.events.TextEvent;
     
@@ -110,6 +110,18 @@ package com.google.ui
             }
             
             return null;
+        }
+        
+        protected function spaces( num:int ):String
+        {
+            var str:String = "";
+            var spc:String = "          ";
+            for( var i:int = 0; i<num+1; i++ )
+            {
+                str += spc;
+            }
+            
+            return str;
         }
         
         protected override function layout():void
