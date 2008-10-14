@@ -18,23 +18,15 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
-	
-	/**
-	 * The enumeration of all Align values.
-	 */
+    
+    /**
+     * The enumeration of all Align values.
+     */
     public class Align
     {
-    	
-    	/**
-    	 * @private
-    	 */
         private var _value:int;
-        
-        /**
-         * @private
-         */
         private var _name:String;
         
         /**
@@ -47,7 +39,7 @@ package com.google.ui
             _value = value;
             _name  = name;
         }
-                
+         
         /**
          * Returns the String representation of the object.
          * @return the String representation of the object.
@@ -64,23 +56,23 @@ package com.google.ui
         public function valueOf():int
         {
             return _value;
-        }        
+        }
         
         /**
          * Defines the "none" value (<code class="prettyprint">0x000</code>).
          */
         public static const none:Align = new Align( 0x000, "none" );
-
+        
         /**
          * Defines the "top" value (<code class="prettyprint">0x001</code>).
          */
         public static const top:Align = new Align( 0x001, "top" );
-
+        
         /**
          * Defines the "bottom" value (<code class="prettyprint">0x002</code>).
          */
         public static const bottom:Align = new Align( 0x002, "bottom" );
-
+        
         /**
          * Defines the "right" value (<code class="prettyprint">0x010</code>).
          */ 
@@ -110,7 +102,7 @@ package com.google.ui
          * Defines the "bottomLeft" value (<code class="prettyprint">0x022</code>).
          */        
         public static const bottomLeft:Align = new Align( 0x022, "bottomLeft" );
-
+        
         /**
          * Defines the "bottomRight" value (<code class="prettyprint">0x012</code>).
          */

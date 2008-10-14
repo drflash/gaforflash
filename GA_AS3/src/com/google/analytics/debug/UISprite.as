@@ -23,21 +23,21 @@ package com.google.ui
     import flash.display.DisplayObject;
     import flash.display.Sprite;
     import flash.events.Event;    
-
+    
     /**
      * The core UISprite class.
      */
     public class UISprite extends Sprite
     {
-    	
-    	/**
-    	 * Indicates the display object align target.
-    	 */
-    	protected var alignTarget:DisplayObject;
-    	
-    	/**
-    	 * Indicates if the resize process is listening. 
-    	 */
+        
+        /**
+         * Indicates the display object align target.
+         */
+        protected var alignTarget:DisplayObject;
+        
+        /**
+         * Indicates if the resize process is listening. 
+         */
         protected var listenResize:Boolean;
         
         /**
@@ -66,9 +66,6 @@ package com.google.ui
             
         }
         
-        /**
-         * @private
-         */
         private function _onAddedToStage( event:Event ):void
         {
             layout();
@@ -80,15 +77,14 @@ package com.google.ui
          */
         protected function layout():void
         {
-            //trace( "UISprite.layout" );
-        }        
+            //to override
+        }
         
         /**
          * Invoked when the stage is resized.
          */
         protected function onResize( event:Event ):void
         {
-            //trace( "UISprite.onResize" );
             resize();
         }
         
@@ -110,7 +106,6 @@ package com.google.ui
             {
                 if( this.stage == null )
                 {
-                    trace( "stage is null" );
                     return;
                 }
                 
@@ -190,7 +185,7 @@ package com.google.ui
             {
                 alignTo( alignement, alignTarget );
             }
-        }        
+        }
         
     }
 }

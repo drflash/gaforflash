@@ -18,11 +18,18 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
-	/**
-	 * The Style singleton of the ui debug labels.
-	 */
-    public const Style:_Style = new _Style();
+    
+    /**
+    * An Alert dedicated to the Gif Request.
+    */
+    public class GIFRequestAlert extends Alert
+    {
+        public function GIFRequestAlert( text:String, actions:Array )
+        {
+            super( text, actions );
+        }
+        
+    }
 }
-

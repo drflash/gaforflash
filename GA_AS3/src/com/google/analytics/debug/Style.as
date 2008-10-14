@@ -20,13 +20,9 @@
 
 package com.google.ui
 {
-
-    public class GIFRequestAlert extends Alert
-    {
-        public function GIFRequestAlert( text:String, actions:Array )
-        {
-            super( text, actions );
-        }
-        
-    }
+    /**
+     * The Style singleton.
+     */
+    public const Style:_Style = new _Style();
 }
+

@@ -18,7 +18,7 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
     import com.google.analytics.config;
     import com.google.analytics.core.GIFRequest;
@@ -29,49 +29,38 @@ package com.google.ui
     import flash.utils.getTimer;
     
     /**
-     * The Layout class is a helper who manages all information's displays in the application.
+     * The Layout class is a helper who manages
+     * as a factory all visual display in the application.
      */
     public class Layout
     {
-    	
-    	/**
-    	 * @private
-    	 */
         private var _display:DisplayObject;
-
-        /**
-         * @private
-         */        
         private var _hasWarning:Boolean;
-        
-        /**
-         * @private
-         */
         private var _hasInfo:Boolean;
-        
-        /**
-         * @private
-         */
         private var _hasDebug:Boolean;
-        
-        /**
-         * @private
-         */
-        private var _infoQueue:Array;        
-        
-        /**
-         * @private
-         */        
-        private var _maxCharPerLine:int = 85;        
-        
-        /**
-         * @private
-         */
+        private var _infoQueue:Array;
+        private var _maxCharPerLine:int = 85;
         private var _warningQueue:Array;
         
         /**
-         * @private
+         * The Debug reference of this Layout.
          */
+        public var debug:Debug;
+        
+        /**
+         * Creates a new Layout instance.
+         */
+        public function Layout( display:DisplayObject )
+        {
+            super();
+            _display   = display;
+            _hasWarning = false;
+            _hasInfo    = false;
+            _hasDebug   = false;
+            _warningQueue = [];
+            _infoQueue    = [];
+        }
+        
         private function _clearInfo( event:Event ):void
         {
             _hasInfo = false;
@@ -80,11 +69,8 @@ package com.google.ui
             {
                 createInfo( _infoQueue.shift() );
             }
-        }        
+        }
         
-        /**
-         * @private
-         */
         private function _clearWarning( event:Event ):void
         {
             _hasWarning = false;
@@ -94,9 +80,6 @@ package com.google.ui
             }
         }        
         
-        /**
-         * @private
-         */
         private function _filterMaxChars( message:String, maxCharPerLine:int = 0 ):String
         {
             var CRLF:String = "\n";
@@ -124,7 +107,7 @@ package com.google.ui
         
         /**
          * The protected custom trace method.
-         */        
+         */
         protected function trace( message:String ):void
         {
             var messages:Array = [];
@@ -161,27 +144,8 @@ package com.google.ui
             {
                 public::trace( messages[i] );
             }
-        }        
-        
-        /**
-         * The Debug reference of this Layout.
-         */
-        public var debug:Debug;
-        
-        /**
-         * Creates a new Layout instance.
-         */
-        public function Layout( display:DisplayObject )
-        {
-            super();
-            _display   = display;
-            _hasWarning = false;
-            _hasInfo    = false;
-            _hasDebug   = false;
-            _warningQueue = [];
-            _infoQueue    = [];
         }
-                
+        
         /**
          * Adds to stage the specified visual display.
          */
@@ -189,7 +153,7 @@ package com.google.ui
         {
             _display.stage.addChild( visual );
         }
-
+        
         /**
          * Brings to front the specified visual display.
          */
@@ -200,7 +164,7 @@ package com.google.ui
         
         /**
          * Creates an alert message in the debug display.
-         */        
+         */
         public function createAlert( message:String ):void
         {
             message = _filterMaxChars( message );
@@ -215,11 +179,11 @@ package com.google.ui
             {
                 trace( "##" + message + " ##" );
             }
-        }        
+        }
         
         /**
          * Creates a debug message in the debug display.
-         */        
+         */
         public function createDebug():void
         {
             if( !debug )
@@ -234,7 +198,7 @@ package com.google.ui
         
         /**
          * Creates a failure alert message in the debug display.
-         */            
+         */
         public function createFailureAlert( message:String ):void
         {
             if( config.debugVerbose )
@@ -259,7 +223,7 @@ package com.google.ui
             {
                 trace( "## " + message + " ##" );
             }
-        }        
+        }
         
         /**
          * Creates a GIFRequest alert message in the debug display.
@@ -288,7 +252,7 @@ package com.google.ui
             {
                 trace( "##" + message + " ##" );
             }
-        }        
+        }
         
         /**
          * Creates an info message in the debug display.
@@ -372,7 +336,6 @@ package com.google.ui
                 trace( "## " + message + " ##" );
             }
         }
-        
         
     }
 }

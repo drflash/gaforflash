@@ -18,13 +18,23 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
     import com.google.analytics.config;
     
-    public class SuccessAlert extends Alert
+    /**
+    * The FailureAlert allow to indicates visualy a failure.
+    * 
+    * note:
+    * depending on the configuration the alert
+    * will display 1 line aligned on the bottom-left
+    * or
+    * will display aligned in the center with a title 
+    * and the full failure information.
+    */
+    public class FailureAlert extends Alert
     {
-        public function SuccessAlert( text:String, actions:Array )
+        public function FailureAlert( text:String, actions:Array )
         {
             var alignement:Align = Align.bottomLeft;
             var stickToEdge:Boolean = true;
@@ -32,25 +42,14 @@ package com.google.ui
             
             if( config.debugVerbose )
             {
-                text = "<u><span class=\"uiAlertTitle\">Success</span>"+_spc(18)+"</u>\n\n"+text;
+                text = "<u><span class=\"uiAlertTitle\">Failure</span>"+spaces(18)+"</u>\n\n"+text;
                 alignement = Align.center;
                 stickToEdge = false;
                 actionOnNextLine = true;
             }
             
-            super( text, actions, "uiSuccess", Style.successColor, alignement, stickToEdge, actionOnNextLine );
+            super( text, actions, "uiFailure", Style.failureColor, alignement, stickToEdge, actionOnNextLine );
         }
         
-        private function _spc( num:int ):String
-        {
-            var str:String = "";
-            var spc:String = "          ";
-            for( var i:int = 0; i<num+1; i++ )
-            {
-                str += spc;
-            }
-            
-            return str;
-        }
     }
 }

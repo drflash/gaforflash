@@ -18,15 +18,15 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
     import flash.display.Graphics;
     import flash.display.Shape;
     import flash.events.TextEvent;
     import flash.text.TextField;
     import flash.text.TextFieldAutoSize;
-    import flash.text.TextFieldType;    
-
+    import flash.text.TextFieldType;
+    
     /**
      * The label sprite.
      */
@@ -42,6 +42,14 @@ package com.google.ui
         protected var forcedWidth:uint;
         protected var selectable:Boolean;
         
+        /**
+        * Indicates if the border of the label
+        * stick to the edge.
+        * 
+        * note:
+        * in case of rounded corner, the corner(s)
+        * sticked to an edge would not be rounded
+        */
         public var stickToEdge:Boolean;
         
         /**
@@ -83,7 +91,6 @@ package com.google.ui
         
         protected override function layout():void
         {
-            //trace( "Label.layout" );
             _textField.type       = TextFieldType.DYNAMIC;
             _textField.autoSize   = TextFieldAutoSize.LEFT;
             _textField.background = false;
@@ -120,22 +127,34 @@ package com.google.ui
             //trace( "onLink()" );
         }
         
+        /**
+        * the CSS tag used for the label.
+        */
         public function get tag():String
         {
             return _tag;
         }
         
+        /**
+        * @private
+        */
         public function set tag( value:String ):void
         {
             _tag = value;
             text = "";
         }
         
+        /**
+        * The text of the label.
+        */
         public function get text():String
         {
             return _textField.text;
         }
         
+        /**
+        * @private
+        */
         public function set text( value:String ):void
         {
             if( value == "" )
@@ -149,6 +168,10 @@ package com.google.ui
             resize();
         }
         
+        /**
+        * Appends more text to the label,
+        * with the option to change the CSS tag.
+        */
         public function appendText( value:String, newtag:String = "" ):void
         {
             if( value == "" )

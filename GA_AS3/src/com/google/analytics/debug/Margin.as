@@ -18,11 +18,12 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
-	
+    
     /**
-     * The Margin class specifies the thickness, in pixels, of the four edge regions around a visual pbject (display, component, etc.).
+     * The Margin class specifies the thickness, in pixels,
+     * of the four edge regions around a visual object.
      */
     public class Margin
     {
