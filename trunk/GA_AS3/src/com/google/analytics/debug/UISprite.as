@@ -18,11 +18,11 @@
  *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
-package com.google.ui
+package com.google.analytics.debug
 {
     import flash.display.DisplayObject;
     import flash.display.Sprite;
-    import flash.events.Event;    
+    import flash.events.Event;
     
     /**
      * The core UISprite class.

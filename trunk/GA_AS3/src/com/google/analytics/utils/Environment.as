@@ -23,7 +23,7 @@ package com.google.analytics.utils
     import com.google.analytics.config;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.external.HTMLDOM;
-    import com.google.ui.Layout;
+    import com.google.analytics.debug.Layout;
     
     import flash.system.Capabilities;
     import flash.system.Security;

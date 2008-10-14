@@ -30,7 +30,7 @@ package com.google.analytics
     import com.google.analytics.v4.Bridge;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
-    import com.google.ui.Layout;
+    import com.google.analytics.debug.Layout;
     
     import flash.display.DisplayObject;
     
