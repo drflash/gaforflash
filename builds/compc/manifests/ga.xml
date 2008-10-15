@@ -5,11 +5,13 @@
     <!-- com.google.analytics -->
 
     <component id="com.google.analytics:config"    class="com.google.analytics.config"    />
+    <component id="com.google.analytics:config"    class="com.google.analytics.debug"     />
     <component id="com.google.analytics:GATracker" class="com.google.analytics.GATracker" />
 
     <!-- com.google.analytics.campaign -->
     
     <component id="com.google.analytics.campaign:CampaignInfo"    class="com.google.analytics.campaign.CampaignInfo"    />    
+    <component id="com.google.analytics.campaign:CampaignKey"     class="com.google.analytics.campaign.CampaignKey"     />
     <component id="com.google.analytics.campaign:CampaignManager" class="com.google.analytics.campaign.CampaignManager" />
     <component id="com.google.analytics.campaign:CampaignTracker" class="com.google.analytics.campaign.CampaignTracker" />
     
@@ -21,9 +23,11 @@
     <component id="com.google.analytics.core:DocumentInfo"        class="com.google.analytics.core.DocumentInfo"        />
     <component id="com.google.analytics.core:Domain"              class="com.google.analytics.core.Domain"              />
     <component id="com.google.analytics.core:DomainNameMode"      class="com.google.analytics.core.BrowserInfo"         />
+    <component id="com.google.analytics.core:EventTracker"        class="com.google.analytics.core.EventTracker"        />
     <component id="com.google.analytics.core:ga_internal"         class="com.google.analytics.core.ga_internal"         />
     <component id="com.google.analytics.core:GIFRequest"          class="com.google.analytics.core.GIFRequest"          />
     <component id="com.google.analytics.core:js_bridge"           class="com.google.analytics.core.js_bridge"           />
+    <component id="com.google.analytics.core:Organic"             class="com.google.analytics.core.Organic"             />
     <component id="com.google.analytics.core:OrganicReferrer"     class="com.google.analytics.core.OrganicReferrer"     />
     <component id="com.google.analytics.core:ServerOperationMode" class="com.google.analytics.core.ServerOperationMode" />
 
@@ -41,6 +45,26 @@
     <component id="com.google.analytics.data:UTMZ"       class="com.google.analytics.data.UTMZ"      />
     <component id="com.google.analytics.data:X10"        class="com.google.analytics.data.X10"       />
 
+    <!-- com.google.analytics.debug -->
+    
+    <component id="com.google.analytics.debug:_Style"          class="com.google.analytics.debug._Style"          />
+    <component id="com.google.analytics.debug:Alert"           class="com.google.analytics.debug.Alert"           />
+    <component id="com.google.analytics.debug:AlertAction"     class="com.google.analytics.debug.AlertAction"     />
+    <component id="com.google.analytics.debug:Align"           class="com.google.analytics.debug.Align"           />
+    <component id="com.google.analytics.debug:Background"      class="com.google.analytics.debug.Background"      />
+    <component id="com.google.analytics.debug:Configuration"   class="com.google.analytics.debug.Configuration"   />
+    <component id="com.google.analytics.debug:Debug"           class="com.google.analytics.debug.Debug"           />
+    <component id="com.google.analytics.debug:FailureAlert"    class="com.google.analytics.debug.FailureAlert"    />
+    <component id="com.google.analytics.debug:GIFRequestAlert" class="com.google.analytics.debug.GIFRequestAlert" />
+    <component id="com.google.analytics.debug:Info"            class="com.google.analytics.debug.Info"            />
+    <component id="com.google.analytics.debug:Label"           class="com.google.analytics.debug.Label"           />
+    <component id="com.google.analytics.debug:Layout"          class="com.google.analytics.debug.Layout"          />
+    <component id="com.google.analytics.debug:Margin"          class="com.google.analytics.debug.Margin"          />
+    <component id="com.google.analytics.debug:Style"           class="com.google.analytics.debug.Style"           />
+    <component id="com.google.analytics.debug:SuccessAlert"    class="com.google.analytics.debug.SuccessAlert"    />
+    <component id="com.google.analytics.debug:UISprite"        class="com.google.analytics.debug.UISprite"        />
+    <component id="com.google.analytics.debug:Warning"         class="com.google.analytics.debug.Warning"         />
+
     <!-- com.google.analytics.ecommerce -->
 
     <!-- com.google.analytics.events -->
@@ -55,12 +79,13 @@
    
     <!-- com.google.analytics.utils -->
     
+    <component id="com.google.analytics.utils:Environment"         class="com.google.analytics.utils.Environment"         />
     <component id="com.google.analytics.utils:generate32bitRandom" class="com.google.analytics.utils.generate32bitRandom" />
     <component id="com.google.analytics.utils:generateHash"        class="com.google.analytics.utils.generateHash"        />
     <component id="com.google.analytics.utils:joinVariables"       class="com.google.analytics.utils.joinVariables"       />
-    <component id="com.google.analytics.utils:LocalInfo"           class="com.google.analytics.utils.LocalInfo"           />
     <component id="com.google.analytics.utils:Protocols"           class="com.google.analytics.utils.Protocols"           />
     <component id="com.google.analytics.utils:trim"                class="com.google.analytics.utils.trim"                />
+    <component id="com.google.analytics.utils:URL"                 class="com.google.analytics.utils.URL"                 />
     <component id="com.google.analytics.utils:UserAgent"           class="com.google.analytics.utils.UserAgent"           />
     <component id="com.google.analytics.utils:Version"             class="com.google.analytics.utils.Version"             />
     
@@ -71,18 +96,6 @@
     <component id="com.google.analytics.v4:GoogleAnalyticsAPI" class="com.google.analytics.v4.GoogleAnalyticsAPI" />
     <component id="com.google.analytics.v4:Tracker"            class="com.google.analytics.v4.Tracker"            />
    
-    <!-- com.google.ui -->
-    
-    <component id="com.google.ui:_Style"     class="com.google.ui._Style"     />
-    <component id="com.google.ui:Align"      class="com.google.ui.Align"      />
-    <component id="com.google.ui:Background" class="com.google.ui.Background" />
-    <component id="com.google.ui:Debug"      class="com.google.ui.Debug"      />
-    <component id="com.google.ui:Info"       class="com.google.ui.Info"       />
-    <component id="com.google.ui:Label"      class="com.google.ui.Label"      />
-    <component id="com.google.ui:Layout"     class="com.google.ui.Layout"     />
-    <component id="com.google.ui:Margin"     class="com.google.ui.Margin"     />
-    <component id="com.google.ui:Style"      class="com.google.ui.Style"      />
-    <component id="com.google.ui:UISprite"   class="com.google.ui.UISprite"   />
-    <component id="com.google.ui:Warning"    class="com.google.ui.Warning"    />
+
     
 </componentPackage>
