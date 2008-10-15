@@ -43,7 +43,7 @@ package com.google.analytics.debug
             {
                 _timer = new Timer( timeout, 1 );
                 _timer.start();
-                _timer.addEventListener( TimerEvent.TIMER_COMPLETE, onComplete );
+                _timer.addEventListener( TimerEvent.TIMER_COMPLETE, onComplete, false, 0, true );
             }
         }
         
@@ -52,10 +52,10 @@ package com.google.analytics.debug
          */
         public function close():void
         {
-        	if ( parent != null )
-        	{
+            if ( parent != null )
+            {
                 parent.removeChild( this );
-        	}
+            }
         }
         
         /**

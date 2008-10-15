@@ -38,6 +38,11 @@ package com.google.analytics.debug
         public var backgroundColor:uint;
         
         /**
+         * The border color.
+         */
+        public var borderColor:uint;
+        
+        /**
          * The info color value.
          */
         public var infoColor:uint;
@@ -100,6 +105,7 @@ package com.google.analytics.debug
             
             roundedCorner   = 6;
             backgroundColor = 0xcccccc;
+            borderColor     = 0x555555;
             
             infoColor       = 0xffff99;
             alertColor      = 0xffcc00;

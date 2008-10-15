@@ -20,7 +20,7 @@
 
 package com.google.analytics.debug
 {
-    import com.google.analytics.config;
+    import com.google.analytics.debug;
     
     /**
     * The SuccessAlert allow to indicates visualy a success.
@@ -40,7 +40,7 @@ package com.google.analytics.debug
             var stickToEdge:Boolean = true;
             var actionOnNextLine:Boolean = false;
             
-            if( config.debugVerbose )
+            if( debug.verbose )
             {
                 text = "<u><span class=\"uiAlertTitle\">Success</span>"+spaces(18)+"</u>\n\n"+text;
                 alignement = Align.center;

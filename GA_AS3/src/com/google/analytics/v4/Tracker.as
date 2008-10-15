@@ -37,6 +37,7 @@ package com.google.analytics.v4
     import com.google.analytics.utils.generateHash;
     import com.google.analytics.utils.joinVariables;
     import com.google.analytics.debug.Layout;
+    import com.google.analytics.debug;
     
     import flash.net.URLVariables;
     
@@ -102,7 +103,7 @@ package com.google.analytics.v4
         
         private function _showInfo( message:String ):void
         {
-            if( config.showInfos && _layout )
+            if( debug.showInfos && _layout )
             {
                 _layout.createInfo( message );
             }
@@ -110,7 +111,7 @@ package com.google.analytics.v4
         
         private function _showWarning( message:String ):void
         {
-            if( config.showWarnings && _layout )
+            if( debug.showWarnings && _layout )
             {
                 _layout.createWarning( message );
             }
@@ -130,7 +131,7 @@ package com.google.analytics.v4
                 //define the timestamp for start of the session
                 _timeStamp  = Math.round((new Date()).getTime() / 1000);
                 
-                if( config.debug && config.debugVerbose )
+                if( debug.verbose )
                 {
                     var data0:String = "";
                         data0 += "_initData 0";
@@ -187,7 +188,7 @@ package com.google.analytics.v4
                 _showWarning( "Site Overlay is not supported" );
             }
             
-            if( config.debug && config.debugVerbose )
+            if( debug.verbose )
             {
                 var data:String = "";
                     data += "_initData (misc)";
@@ -265,7 +266,7 @@ package com.google.analytics.v4
                         _noSessionInformation = true;
                     }
                     
-                    if( config.debug && config.debugVerbose )
+                    if( debug.verbose )
                     {
                         _showInfo( "from cookie " + _buffer.utma.toString() );
                     }
@@ -284,7 +285,7 @@ package com.google.analytics.v4
                     _buffer.utma.currentTime  = _timeStamp;
                     _buffer.utma.sessionCount = 1;
                     
-                    if( config.debug && config.debugVerbose )
+                    if( debug.verbose )
                     {
                         _showInfo( _buffer.utma.toString() );
                     }
@@ -312,7 +313,7 @@ package com.google.analytics.v4
                 {
                     _buffer.utma.currentTime = Number( _adSense.sid );
                     
-                    if( config.debug && config.debugVerbose )
+                    if( debug.verbose )
                         {
                             var data0:String = "";
                                 data0 += "AdSense sid found\n";
@@ -332,7 +333,7 @@ package com.google.analytics.v4
                     {
                         _buffer.utma.lastTime = Number( _adSense.sid );
                         
-                        if( config.debug && config.debugVerbose )
+                        if( debug.verbose )
                         {
                             var data1:String = "";
                                 data1 += "AdSense sid found (new visitor)\n";
@@ -351,7 +352,7 @@ package com.google.analytics.v4
                         _buffer.utma.sessionId = Number( vid[0] );
                         _buffer.utma.firstTime = Number( vid[1] );
                         
-                        if( config.debug && config.debugVerbose )
+                        if( debug.verbose )
                         {
                             var data2:String = "";
                                 data2 += "AdSense vid found (new visitor)\n";
@@ -362,7 +363,7 @@ package com.google.analytics.v4
                         }
                     }
                     
-                    if( config.debug && config.debugVerbose )
+                    if( debug.verbose )
                     {
                         _showInfo( "AdSense modified : " + _buffer.utma.toString() );
                     }
@@ -392,7 +393,7 @@ package com.google.analytics.v4
             
             _buffer.utmc.domainHash = _domainHash;
             
-            if( config.debug && config.debugVerbose )
+            if( debug.verbose )
             {
                 _showInfo( _buffer.utmb.toString() );
                 _showInfo( _buffer.utmc.toString() );
@@ -442,7 +443,7 @@ package com.google.analytics.v4
                to be able to test localy
                for now we also need to have the debug flag on
             */
-            if( config.debug && config.allowLocalTracking )
+            if( debug.active && config.allowLocalTracking )
             {
                 return true;
             }
@@ -732,7 +733,7 @@ package com.google.analytics.v4
                 _buffer.utmv.domainHash = _domainHash;
                 _buffer.utmv.value      = newVal;
                 
-                if( config.debug && config.debugVerbose )
+                if( debug.verbose )
                 {
                     _showInfo( _buffer.utmv.toString() );
                 }

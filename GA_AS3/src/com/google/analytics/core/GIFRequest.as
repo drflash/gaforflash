@@ -21,10 +21,11 @@
 package com.google.analytics.core
 {
     import com.google.analytics.config;
+    import com.google.analytics.debug;
+    import com.google.analytics.debug.Layout;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.generate32bitRandom;
-    import com.google.analytics.debug.Layout;
     
     import flash.events.Event;
     import flash.events.IOErrorEvent;
@@ -173,7 +174,11 @@ package com.google.analytics.core
             
             // calculate the token count increase since last update
             tokenDelta = (timestamp - _buffer.utmb.lastTime) * (config.tokenRate / 1000);
-            trace( "tokenDelta: " + tokenDelta );
+            
+            if( _layout && debug.verbose )
+            {
+                _layout.createInfo( "tokenDelta: " + tokenDelta );
+            }
             
             // only update token when there is a change
             if( tokenDelta >= 1 )
@@ -181,7 +186,12 @@ package com.google.analytics.core
                 //Only fill bucket to capacity
                 _buffer.utmb.token    = Math.min( Math.floor( _buffer.utmb.token + tokenDelta ) , config.bucketCapacity );
                 _buffer.utmb.lastTime = timestamp;
-                trace( _buffer.utmb.toString() );
+                
+                if( _layout )
+                {
+                    _layout.createInfo( _buffer.utmb.toString() );
+                }
+                
             }
         }
         
@@ -237,7 +247,7 @@ package com.google.analytics.core
         
         public function onSecurityError( event:SecurityErrorEvent ):void
         {
-            if( _layout && config.debugGIFRequest )
+            if( _layout && debug.GIFRequest )
             {
                 _layout.createFailureAlert( event.text );
             }
@@ -245,12 +255,12 @@ package com.google.analytics.core
         
         public function onIOError( event:IOErrorEvent ):void
         {
-            if( _layout && config.debugGIFRequest )
+            if( _layout && debug.GIFRequest )
             {
                 //_layout.createFailureAlert( event.text );
                 var url:String = _lastRequest.url;
                 
-                if( config.debugVerbose )
+                if( debug.verbose )
                 {
                     url += "?"+_lastRequest.data.toString();
                 }
@@ -265,11 +275,11 @@ package com.google.analytics.core
         
         public function onComplete( event:Event ):void
         {
-            if( _layout && config.debugGIFRequest )
+            if( _layout && debug.GIFRequest )
             {
                 var url:String = _lastRequest.url;
                 
-                if( config.debugVerbose )
+                if( debug.verbose )
                 {
                     url += "?"+_lastRequest.data.toString();
                 }
@@ -322,7 +332,7 @@ package com.google.analytics.core
         
         public function sendRequest( request:URLRequest ):void
         {
-            if( config.validateGIFRequest )
+            if( debug.validateGIFRequest )
             {
                 sendWithValidation( request );
             }
@@ -346,7 +356,11 @@ package com.google.analytics.core
                  variables = new URLVariables();
              }
              
-             trace( _buffer.utmb.trackCount +" < "+ config.trackingLimitPerSession );
+             if( _layout && debug.verbose )
+             {
+                 _layout.createInfo( "tracking: " + _buffer.utmb.trackCount+"/"+config.trackingLimitPerSession );
+             }
+             
              /* Only send request if
                 1. We havn't reached the limit yet.
                 2. User forced gif hit
@@ -370,6 +384,11 @@ package com.google.analytics.core
                     
                     //increment request count
                     _buffer.utmb.trackCount += 1;
+                    
+                    if( _layout && debug.verbose )
+                    {
+                        _layout.createInfo( _buffer.utmb.toString() );
+                    }
                     
                     
                     variables.utmwv = utmwv;
@@ -402,7 +421,7 @@ package com.google.analytics.core
                                  localImage.url  = localPath + config.localGIFpath;
                                  localImage.data = variables;
                              
-                             if( config.debugGIFRequest )
+                             if( debug.GIFRequest )
                              {
                                  _debugSend( localImage );
                              }
@@ -442,7 +461,7 @@ package com.google.analytics.core
                              
                              remoteImage.data = variables;
                              
-                             if( config.debugGIFRequest )
+                             if( debug.GIFRequest )
                              {
                                  _debugSend( remoteImage );
                              }

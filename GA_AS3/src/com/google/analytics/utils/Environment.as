@@ -111,16 +111,16 @@ package com.google.analytics.utils
             _layout = layout; //optional
             
             //DEBUG
-            if( _layout && config.debug && config.debugVerbose )
-            {
-                var data:String = "";
-                    data       += "dom.language: " + _dom.language + "\n";
-                    data       += "dom.location: " + _dom.location + "\n";
-                    data       += "dom.protocol: " + _dom.protocol + "\n";
-                    data       += "dom.host:     " + _dom.host     + "\n";
-                    data       += "dom.search:   " + _dom.search   + "\n";
-                _layout.createInfo( data );
-            }
+//            if( _layout && config.debug && config.debugVerbose )
+//            {
+//                var data:String = "";
+//                    data       += "dom.language: " + _dom.language + "\n";
+//                    data       += "dom.location: " + _dom.location + "\n";
+//                    data       += "dom.protocol: " + _dom.protocol + "\n";
+//                    data       += "dom.host:     " + _dom.host     + "\n";
+//                    data       += "dom.search:   " + _dom.search   + "\n";
+//                _layout.createInfo( data );
+//            }
             
         }
         
