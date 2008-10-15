@@ -25,12 +25,12 @@ package com.google.analytics
     import com.google.analytics.core.as3_api;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.core.js_bridge;
+    import com.google.analytics.debug.Layout;
     import com.google.analytics.events.MessageEvent;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.v4.Bridge;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
-    import com.google.analytics.debug.Layout;
     
     import flash.display.DisplayObject;
     
@@ -59,6 +59,12 @@ package com.google.analytics
         {
             _display   = display;
             _layout    = new Layout( _display );
+            debug.layout = _layout;
+            
+            if( debug.active && _layout )
+            {
+                _layout.init();
+            }
             
             /* note:
                for unit testing and to avoid 2 different branches AIR/Flash
@@ -70,12 +76,6 @@ package com.google.analytics
             _localInfo  = new Environment( "", "", "", null, _layout );
             _buffer     = new Buffer( false );
             _gifRequest = new GIFRequest( _buffer, _localInfo, _layout );
-            
-            if( config.debug && _layout )
-            {
-                _layout.createDebug();
-            }
-            
         }
         
         /**
@@ -88,7 +88,7 @@ package com.google.analytics
         
         private function _onInfo( event:MessageEvent ):void
         {
-            if( config.showInfos && _layout )
+            if( debug.showInfos && _layout )
             {
                 _layout.createInfo( event.message );
             }
@@ -96,7 +96,7 @@ package com.google.analytics
         
         private function _onWarning( event:MessageEvent ):void
         {
-            if( config.showWarnings && _layout )
+            if( debug.showWarnings && _layout )
             {
                 _layout.createWarning( event.message );
             }
@@ -110,7 +110,7 @@ package com.google.analytics
         */
         as3_api function getTracker( account:String ):GoogleAnalyticsAPI
         {
-            if( config.showInfos && _layout )
+            if( debug.showInfos && _layout )
             {
                 _layout.createInfo( "GATracker v" + version +"\naccount: " + account );
             }

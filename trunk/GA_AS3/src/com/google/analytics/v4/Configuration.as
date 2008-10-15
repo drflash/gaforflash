@@ -26,6 +26,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.Organic;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.events.MessageEvent;
+    import com.google.analytics.debug;
     
     import flash.events.EventDispatcher;
 
@@ -33,14 +34,14 @@ package com.google.analytics.v4
      * Dispatched when the configuration notify an info.
      * @eventType com.google.analytics.events.MessageEvent.INFO
      */
-    [Event(name="info", type="com.google.analytics.events.MessageEvent")]       
+    [Event(name="info", type="com.google.analytics.events.MessageEvent")]
     
     /**
      * Dispatched when the configuration notify a warning.
      * @eventType com.google.analytics.events.MessageEvent.WARNING
      * @see #addOrganicSource
      */
-    [Event(name="warning", type="com.google.analytics.events.MessageEvent")]    
+    [Event(name="warning", type="com.google.analytics.events.MessageEvent")]
     
     /**
      * Google Analytic Tracker Code (GATC)'s configuration / state component.
@@ -233,17 +234,17 @@ package com.google.analytics.v4
         /**
          * Indicates the debug mode activity.
          */
-        public var debug:Boolean = true;
+        //public var debug:Boolean = true;
         
         /**
          * To trace infos and warnign to the output.
          */
-        public var debugTrace:Boolean = true;
+        //public var debugTrace:Boolean = true;
         
         /**
          * To show more debug used internally.
          */
-        public var debugVerbose:Boolean = true;
+        //public var debugVerbose:Boolean = true;
         
         /**
          * Send a Gir Request with validation or not without validation (use sendToURL()) it's fire and forget
@@ -253,27 +254,27 @@ package com.google.analytics.v4
          * returns failure if not received by the server, or gif not found, or error etc.
          * cancel: does not send the request
          */
-        public var validateGIFRequest:Boolean = true;
+        //public var validateGIFRequest:Boolean = true;
         
         /**
          * Allow to debug the GIF Request if true, will show a debug panel and a confirmation message to send or not the request.
          */
-        public var debugGIFRequest:Boolean = true;
+        //public var debugGIFRequest:Boolean = true;
         
         /**
          * To show extended info and warning messages from the GA docs.
          */
-        public var verbose:Boolean = true;
+        //public var verbose:Boolean = true;
         
         /**
          * Indicates if show infos in the debug mode.
          */        
-        public var showInfos:Boolean = true;
+        //public var showInfos:Boolean = true;
         
         /**
          * Indicates if show warnings in the debug mode.
          */                
-        public var showWarnings:Boolean = true;
+        //public var showWarnings:Boolean = true;
         
         /**
          * To be able to track in local mode (when protocol is file://)
@@ -460,7 +461,7 @@ package com.google.analytics.v4
             }
             catch( e:Error )
             {
-                if( debug )
+                if( debug.active )
                 {
                     trace( "## WARNING: " + e.message + " ##" ) ;
                     dispatchEvent( new MessageEvent(MessageEvent.WARNING,false,true, e.message ) );

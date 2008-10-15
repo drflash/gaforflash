@@ -23,24 +23,22 @@ package com.google.analytics.debug
     
     public class Configuration
     {
+        private var _verbose:Boolean = false;
         
-        private var _showLayout:Boolean = false;
+        public var layout:Layout;
+        
+        public var active:Boolean = true;
         
         /**
          * To trace infos and warning to the output.
          */
-        public var trace:Boolean   = false;
-        
-        /**
-         * To show more debug used internally.
-         */
-        public var verbose:Boolean = false;
+        public var trace:Boolean   = true;
         
         /**
          * Allow to debug the GIF Request if true, will show a debug panel
          * and a confirmation message to send or not the request.
          */
-        public var GIFRequest:Boolean = false;
+        public var GIFRequest:Boolean = true;
         
         /**
          * Send a Gif Request with validation or not without validation (use sendToURL()) it's fire and forget
@@ -50,36 +48,46 @@ package com.google.analytics.debug
          * returns failure if not received by the server, or gif not found, or error etc.
          * cancel: does not send the request
          */
-        public var validateGIFRequest:Boolean = false;
+        public var validateGIFRequest:Boolean = true;
         
         /**
          * Indicates if show infos in the debug mode.
-         */        
-        public var showInfos:Boolean = false;
+         */
+        public var showInfos:Boolean = true;
         
         /**
          * Indicates if show warnings in the debug mode.
-         */                
-        public var showWarnings:Boolean = false;
+         */
+        public var showWarnings:Boolean = true;
         
         /**
          * Indicates if show alerts in the debug mode.
-         */                
-        public var showAlerts:Boolean = false;
+         */
+        //public var showAlerts:Boolean = true;
         
         public function Configuration(  )
         {
         }
         
-        public function get showLayout():Boolean
+        /**
+         * To show more debug (used internally).
+         */
+        public function get verbose():Boolean
         {
-            return _showLayout;
+            if( active )
+            {
+                return _verbose;
+            }
+            
+            return false;
         }
         
-        public function set showLayout( value:Boolean ):void
+        /**
+        * @private
+        */
+        public function set verbose( value:Boolean ):void
         {
-            _showLayout = value;
-            //
+            _verbose = value;
         }
         
     }

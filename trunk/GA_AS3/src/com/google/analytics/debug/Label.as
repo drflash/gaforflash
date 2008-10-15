@@ -39,7 +39,6 @@ package com.google.analytics.debug
         private var _tag:String;
         private var _color:uint;
         
-        protected var forcedWidth:uint;
         protected var selectable:Boolean;
         
         /**
@@ -52,6 +51,8 @@ package com.google.analytics.debug
         */
         public var stickToEdge:Boolean;
         
+        public static var count:uint = 0;
+        
         /**
          * Creates a new Label instance.
          * @param text The text of the label.
@@ -63,6 +64,8 @@ package com.google.analytics.debug
                                color:uint = 0, alignement:Align = null, stickToEdge:Boolean = false )
         {
             super();
+            
+            this.name = "Label"+ count++;
             
             selectable = false;
             
@@ -101,6 +104,12 @@ package com.google.analytics.debug
             
             addChild( _background );
             addChild( _textField );
+        }
+        
+        protected override function dispose():void
+        {
+            _textField.removeEventListener( TextEvent.LINK, onLink );
+            super.dispose();
         }
         
         private function _draw():void
