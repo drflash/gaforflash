@@ -29,9 +29,6 @@ package com.google.analytics.debug
     import flash.events.KeyboardEvent;
     import flash.net.URLRequest;
     import flash.ui.Keyboard;
-    import flash.utils.getTimer;
-    
-    import system.diagnostics.VirtualMachine;
     
     /**
      * The Layout class is a helper who manages
@@ -83,7 +80,12 @@ package com.google.analytics.debug
             _mainPanel = mp;
             addToStage( mp );
             bringToFront( mp );
-            //_mainPanel.onToggle(); //toggle on start
+            
+            if( debug.minimizedOnStart )
+            {
+                _mainPanel.onToggle();
+            }
+            
             createVisualDebug();
             
             _display.stage.addEventListener( KeyboardEvent.KEY_DOWN, onKey, false, 0, true );
@@ -93,7 +95,6 @@ package com.google.analytics.debug
         {
             debug.layout = null;
             _mainPanel.close();
-            VirtualMachine.garbageCollection();
         }
         
         private function onKey( event:KeyboardEvent = null ):void
@@ -152,48 +153,8 @@ package com.google.analytics.debug
                 }
                 output.push( line );
             }
+            
             return output.join(CRLF);
-        }
-        
-        /**
-         * The protected custom trace method.
-         */
-        protected function trace( message:String ):void
-        {
-            var messages:Array = [];
-            var pre0:String = getTimer() + " - ";
-            var pre1:String = new Array(pre0.length).join(" ") + " ";
-            
-            if( message.indexOf("\n") > -1 )
-            {
-                var msgs:Array = message.split("\n");
-                for( var j:int = 0; j<msgs.length; j++ )
-                {
-                    if( msgs[j] == "" )
-                    {
-                        continue;
-                    }
-                    
-                    if( j == 0 )
-                    {
-                        messages.push( pre0 + msgs[j] );
-                    }
-                    else
-                    {
-                        messages.push( pre1 + msgs[j] );
-                    }
-                }
-            }
-            else
-            {
-                messages.push( pre0 + message );
-            }
-            
-            var len:int = messages.length ;
-            for( var i:int = 0; i<len ; i++ )
-            {
-                public::trace( messages[i] );
-            }
         }
         
         /**
@@ -272,17 +233,11 @@ package com.google.analytics.debug
             _hasInfo = true;
             var i:Info = new Info( message );
             addToPanel( "analytics", i );
-            
-            i.addEventListener( Event.REMOVED_FROM_STAGE, _clearInfo );
+            i.addEventListener( Event.REMOVED_FROM_STAGE, _clearInfo, false, 0, true );
             
             if( _hasDebug )
             {
                 visualDebug.write( message );
-            }
-            
-            if( debug.trace )
-            {
-                trace( message );
             }
         }
         
@@ -296,18 +251,16 @@ package com.google.analytics.debug
                 _warningQueue.push( message );
                 return;
             }
+            
+            message = _filterMaxChars( message );
             _hasWarning = true;
             var w:Warning = new Warning( message );
             addToPanel( "analytics", w );
+            w.addEventListener( Event.REMOVED_FROM_STAGE, _clearWarning, false, 0, true );
             
-            w.addEventListener( Event.REMOVED_FROM_STAGE, _clearWarning );
             if( _hasDebug )
             {
                 visualDebug.writeBold( message );
-            }
-            if( debug.trace )
-            {
-                trace( "## " + message + " ##" );
             }
         }
         
@@ -323,10 +276,6 @@ package com.google.analytics.debug
             if( _hasDebug )
             {
                 visualDebug.writeBold( message );
-            }
-            if( debug.trace )
-            {
-                trace( "##" + message + " ##" );
             }
         }
         
@@ -359,11 +308,6 @@ package com.google.analytics.debug
                 }
                 visualDebug.writeBold( message );
             }
-            
-            if( debug.trace )
-            {
-                trace( "## " + message + " ##" );
-            }
         }
         
         /**
@@ -394,11 +338,6 @@ package com.google.analytics.debug
                 }
                 visualDebug.writeBold( message );
             }
-            
-            if( debug.trace )
-            {
-                trace( "## " + message + " ##" );
-            }
         }
         
         /**
@@ -415,16 +354,11 @@ package com.google.analytics.debug
             message = _filterMaxChars( message );
             var gra:GIFRequestAlert = new GIFRequestAlert( message, [ new AlertAction("OK","ok",f),
                                                                       new AlertAction("Cancel","cancel","close") ] );
-            
             addToPanel( "analytics", gra );
+            
             if( _hasDebug )
             {
                 visualDebug.write( message );
-            }
-            
-            if( debug.trace )
-            {
-                trace( "##" + message + " ##" );
             }
         }
         

@@ -39,7 +39,7 @@ package com.google.analytics.utils
                                        isInHTML:Boolean = false,
                                        isAIR:Boolean = false )
         {
-            super("", "", "", null, null);
+            super("", "", "", null);
             
             _appName = appName;
             _appVersion = appVersion;

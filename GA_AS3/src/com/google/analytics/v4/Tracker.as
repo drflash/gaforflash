@@ -30,14 +30,14 @@ package com.google.analytics.v4
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.data.X10;
+    import com.google.analytics.debug;
+    import com.google.analytics.debug.Layout;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.generate32bitRandom;
     import com.google.analytics.utils.generateHash;
     import com.google.analytics.utils.joinVariables;
-    import com.google.analytics.debug.Layout;
-    import com.google.analytics.debug;
     
     import flash.net.URLVariables;
     
@@ -83,7 +83,7 @@ package com.google.analytics.v4
          * @param layout The optional Layout object.
          */
         public function Tracker( account:String, info:Environment, buffer:Buffer, gifRequest:GIFRequest,
-                                 adSense:AdSenseGlobals = null , layout:Layout = null )
+                                 adSense:AdSenseGlobals = null )
         {
             _account    = account;
             _info       = info;
@@ -96,25 +96,8 @@ package com.google.analytics.v4
             }
             
             _adSense   = adSense;
-            _layout    = layout; //optional
             
             _initData();
-        }
-        
-        private function _showInfo( message:String ):void
-        {
-            if( debug.showInfos && _layout )
-            {
-                _layout.createInfo( message );
-            }
-        }
-        
-        private function _showWarning( message:String ):void
-        {
-            if( debug.showWarnings && _layout )
-            {
-                _layout.createWarning( message );
-            }
         }
         
         private function _initData():void
@@ -138,7 +121,7 @@ package com.google.analytics.v4
                         data0 += "\ndomain name: " + config.domainName;
                         data0 += "\ndomain hash: " + _domainHash;
                         data0 += "\ntimestamp:   " + _timeStamp + " ("+new Date(_timeStamp*1000)+")";
-                    _showInfo( data0 );
+                    debug.info( data0 );
                 }
             }
             
@@ -161,7 +144,7 @@ package com.google.analytics.v4
                     
                     // cache browser info
                     _browserInfo = new BrowserInfo( _info );
-                    trace( "_browserInfo: " + _browserInfo.toURLString() );
+                    debug.info( "browserInfo: " + _browserInfo.toURLString() );
                     
                     // cache campaign info
                     if( config.campaignTracking )
@@ -169,6 +152,7 @@ package com.google.analytics.v4
                         _campaign = new CampaignManager( _buffer, _domainHash, _formatedReferrer, _timeStamp );
                         
                         _campaignInfo = _campaign.getCampaignInformation( _noSessionInformation );
+                        debug.info( "campaignInfo: " + _campaignInfo.toURLString() );
                     }
                 }
                 
@@ -185,7 +169,7 @@ package com.google.analytics.v4
             if( config.hasSiteOverlay )
             {
                 //init GASO
-                _showWarning( "Site Overlay is not supported" );
+                debug.warning( "Site Overlay is not supported" );
             }
             
             if( debug.verbose )
@@ -198,7 +182,7 @@ package com.google.analytics.v4
                     data += "\nlanguage: " + _info.language;
                     data += "\ndomain hash: " + _getDomainHash();
                     data += "\nuser-agent: " + _info.userAgent;
-                _showInfo( data );
+                debug.info( data );
             }
         }
         
@@ -212,7 +196,6 @@ package com.google.analytics.v4
          */
         private function _handleCookie():void
         {
-            trace( "_handleCookie()" );
             //Linker functionalities are enabled.
             if( config.allowLinker )
             {
@@ -268,7 +251,7 @@ package com.google.analytics.v4
                     
                     if( debug.verbose )
                     {
-                        _showInfo( "from cookie " + _buffer.utma.toString() );
+                        debug.info( "from cookie " + _buffer.utma.toString() );
                     }
                     
                 }
@@ -287,7 +270,7 @@ package com.google.analytics.v4
                     
                     if( debug.verbose )
                     {
-                        _showInfo( _buffer.utma.toString() );
+                        debug.info( _buffer.utma.toString() );
                     }
                     
                     _noSessionInformation = true;
@@ -319,7 +302,7 @@ package com.google.analytics.v4
                                 data0 += "AdSense sid found\n";
                                 data0 += "Override currentTime("+_buffer.utma.currentTime+") from AdSense sid("+Number(_adSense.sid)+")";
                             
-                            _showInfo( data0 );
+                            debug.info( data0 );
                         }
                 }
                 
@@ -339,7 +322,7 @@ package com.google.analytics.v4
                                 data1 += "AdSense sid found (new visitor)\n";
                                 data1 += "Override lastTime("+_buffer.utma.lastTime+") from AdSense sid("+Number(_adSense.sid)+")";
                             
-                            _showInfo( data1 );
+                            debug.info( data1 );
                         }
                     }
                     
@@ -359,13 +342,13 @@ package com.google.analytics.v4
                                 data2 += "Override sessionId("+_buffer.utma.sessionId+") from AdSense vid("+Number( vid[0] )+")\n";
                                 data2 += "Override firstTime("+_buffer.utma.firstTime+") from AdSense vid("+Number( vid[1] )+")";
                             
-                            _showInfo( data2 );
+                            debug.info( data2 );
                         }
                     }
                     
                     if( debug.verbose )
                     {
-                        _showInfo( "AdSense modified : " + _buffer.utma.toString() );
+                        debug.info( "AdSense modified : " + _buffer.utma.toString() );
                     }
                 }
                 
@@ -395,8 +378,8 @@ package com.google.analytics.v4
             
             if( debug.verbose )
             {
-                _showInfo( _buffer.utmb.toString() );
-                _showInfo( _buffer.utmc.toString() );
+                debug.info( _buffer.utmb.toString() );
+                debug.info( _buffer.utmc.toString() );
             }
             
         }
@@ -475,8 +458,7 @@ package com.google.analytics.v4
             }
             
             config.domainName = config.domain.name.toLowerCase();
-            //_showInfo( "config.domain.name: " + config.domain.name );
-            //_showInfo( "domain name: " + config.domainName );
+            debug.info( "domain name: " + config.domainName );
         }
         
         /**
@@ -514,6 +496,7 @@ package com.google.analytics.v4
                 }
             }
             
+            debug.info( "formated referrer: " + referrer );
             return referrer;
         }
         
@@ -548,8 +531,7 @@ package com.google.analytics.v4
         private function _getUniqueSessionId():Number
         {
             var sessionID:Number = (generate32bitRandom() ^ _generateUserDataHash()) * 0x7fffffff;
-            _showInfo( "Session ID: " + sessionID );
-            trace( "Session ID: " + sessionID );
+            debug.info( "Session ID: " + sessionID );
             return sessionID;
         }
         
@@ -594,7 +576,10 @@ package com.google.analytics.v4
         */
         private function _visitCode():Number
         {
-            trace( "visitCode: " + _buffer.utma.sessionId );
+            if( debug.verbose )
+            {
+                debug.write( "visitCode: " + _buffer.utma.sessionId );
+            }
             return _buffer.utma.sessionId;
         }
         
@@ -633,7 +618,10 @@ package com.google.analytics.v4
                to all the users that visit the web site, it's not the sampleRate
                of data taken from only 1 user.
             */
-            trace( "takeSample: (" +(_visitCode() % 10000)+ ") < (" +(config.sampleRate * 10000)+ ")" );
+            if( debug.verbose )
+            {
+                debug.write( "takeSample: (" +(_visitCode() % 10000)+ ") < (" +(config.sampleRate * 10000)+ ")" );
+            }
             return (_visitCode() % 10000) < (config.sampleRate * 10000);
         }
         
@@ -685,13 +673,14 @@ package com.google.analytics.v4
         {
             if( newRate < 0 )
             {
-                _showWarning( "sample rate can not be negative, ignoring value." );
+                debug.warning( "sample rate can not be negative, ignoring value." );
             }
             else
             {
                 config.sampleRate = newRate;
             }
-            _showInfo( "sample rate = " + config.sampleRate );
+            
+            debug.info( "sample rate = " + config.sampleRate );
         }
         
         /**
@@ -713,6 +702,7 @@ package com.google.analytics.v4
         public function setSessionTimeout(newTimeout:int):void
         {
             config.sessionTimeout = newTimeout;
+            debug.info( "session timeout = " + config.sessionTimeout );
         }
         
         /**
@@ -735,9 +725,11 @@ package com.google.analytics.v4
                 
                 if( debug.verbose )
                 {
-                    _showInfo( _buffer.utmv.toString() );
+                    debug.info( _buffer.utmv.toString() );
                 }
-                _showInfo( "setVar = " + newVal );
+                
+                debug.info( "setVar = " + newVal );
+                
                 if( _takeSample() )
                 {
                     _gifRequest.send( _account );
@@ -746,7 +738,7 @@ package com.google.analytics.v4
             }
             else
             {
-                _showWarning( "setVar \"" + newVal + "\" is ignored" );
+                debug.warning( "setVar \"" + newVal + "\" is ignored" );
             }
         }
         
@@ -786,6 +778,7 @@ package com.google.analytics.v4
         private function _renderMetricsSearchVariables( pageURL:String = "" ):URLVariables
         {
             var docInfo:DocumentInfo = new DocumentInfo( _info, _formatedReferrer, pageURL );
+            debug.info( "docInfo: " + docInfo.toURLString() );
             
             var campvars:URLVariables;
             
@@ -845,6 +838,7 @@ package com.google.analytics.v4
         public function setAllowAnchor(enable:Boolean):void
         {
             config.allowAnchor = enable;
+            debug.info( "allow anchor = " + config.allowAnchor );
         }
         
         /**
@@ -858,6 +852,7 @@ package com.google.analytics.v4
         public function setCampContentKey(newCampContentKey:String):void
         {
             config.campaignKey.UCCT = newCampContentKey;
+            debug.info( "campaign content key (UCCT) = " + config.campaignKey.UCCT );
         }
         
         /**
@@ -870,6 +865,7 @@ package com.google.analytics.v4
         public function setCampMediumKey(newCampMedKey:String):void
         {
             config.campaignKey.UCMD = newCampMedKey;
+            debug.info( "campaign medium key (UCMD) = " + config.campaignKey.UCMD );
         }
         
         /**
@@ -882,6 +878,7 @@ package com.google.analytics.v4
         public function setCampNameKey(newCampNameKey:String):void
         {
             config.campaignKey.UCCN = newCampNameKey;
+            debug.info( "campaign name key (UCCN) = " + config.campaignKey.UCCN );
         }
         
         /**
@@ -902,6 +899,7 @@ package com.google.analytics.v4
         public function setCampNOKey(newCampNOKey:String):void
         {
             config.campaignKey.UCNO = newCampNOKey;
+            debug.info( "campaign no-override key (UCNO) = " + config.campaignKey.UCNO );
         }
         
         /**
@@ -914,6 +912,7 @@ package com.google.analytics.v4
         public function setCampSourceKey(newCampSrcKey:String):void
         {
             config.campaignKey.UCSR = newCampSrcKey;
+            debug.info( "campaign source key (UCSR) = " + config.campaignKey.UCSR );
         }
         
         /**
@@ -925,6 +924,7 @@ package com.google.analytics.v4
         public function setCampTermKey(newCampTermKey:String):void
         {
             config.campaignKey.UCTR = newCampTermKey;
+            debug.info( "campaign term key (UCTR) = " + config.campaignKey.UCTR );
         }
         
         /**
@@ -938,7 +938,7 @@ package com.google.analytics.v4
         public function setCampaignTrack( enable:Boolean ):void
         {
             config.campaignTracking = enable;
-            _showInfo( "setCampaignTrack = " + config.campaignTracking );
+            debug.info( "campaign tracking = " + config.campaignTracking );
         }
         
         /**
@@ -954,7 +954,7 @@ package com.google.analytics.v4
         public function setCookieTimeout(newDefaultTimeout:int):void
         {
             config.conversionTimeout = newDefaultTimeout;
-            _showInfo( "setCookieTimeout = " + config.conversionTimeout );
+            debug.info( "cookie timeout = " + config.conversionTimeout );
         }
         
         // ----------------------------------------
@@ -973,7 +973,7 @@ package com.google.analytics.v4
          */        
         public function cookiePathCopy(newPath:String):void
         {
-            //
+            debug.warning( "cookiePathCopy() not implemented" );
         }
         
         /**
@@ -987,7 +987,7 @@ package com.google.analytics.v4
          */        
         public function link(targetUrl:String, useHash:Boolean=false):void
         {
-            //
+            debug.warning( "link() not implemented" );
         }
         
         /**
@@ -1004,7 +1004,7 @@ package com.google.analytics.v4
          */        
         public function linkByPost(formObject:Object, useHash:Boolean=false):void
         {
-            //
+            debug.warning( "linkByPost() not implemented" );
         }
         
         /**
@@ -1023,7 +1023,7 @@ package com.google.analytics.v4
         public function setAllowHash(enable:Boolean):void
         {
             config.allowDomainHash = enable;
-            _showInfo( "setAllowHash = " + config.allowDomainHash );
+            debug.info( "allow domain hash = " + config.allowDomainHash );
         }
         
         /**
@@ -1036,7 +1036,7 @@ package com.google.analytics.v4
         public function setAllowLinker(enable:Boolean):void
         {
             config.allowLinker = enable;
-            _showInfo( "setAllowLinker = " + config.allowLinker );
+            debug.info( "allow linker = " + config.allowLinker );
         }
         
         /**
@@ -1056,7 +1056,7 @@ package com.google.analytics.v4
         public function setCookiePath(newCookiePath:String):void
         {
             config.cookiePath = newCookiePath;
-            _showInfo( "setCookiePath = " + config.cookiePath );
+            debug.info( "cookie path = " + config.cookiePath );
         }
         
         /**
@@ -1084,7 +1084,7 @@ package com.google.analytics.v4
             }
             
             _updateDomainName();
-            _showInfo( "setDomainName = " + config.domainName );
+            debug.info( "set domain name = " + config.domainName );
         }
         
         // ----------------------------------------
@@ -1110,7 +1110,7 @@ package com.google.analytics.v4
          */        
         public function addItem(item:String, sku:String, name:String, category:String, price:Number, quantity:int):void
         {
-            //
+            debug.warning( "addItem() not implemented" );
         }
         
         /**
@@ -1131,6 +1131,7 @@ package com.google.analytics.v4
          */        
         public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):Object
         {
+            debug.warning( "addTrans() not implemented" );
             return null;
         }
         
@@ -1142,7 +1143,7 @@ package com.google.analytics.v4
          */        
         public function trackTrans():void
         {
-            //
+            debug.warning( "trackTrans() not implemented" );
         }
         
         /**
@@ -1156,6 +1157,7 @@ package com.google.analytics.v4
          */
         public function createEventTracker(objName:String):Object
         {
+            debug.warning( "createEventTracker() not implemented" );
             return null;
         }
         
@@ -1170,6 +1172,7 @@ package com.google.analytics.v4
          */        
         public function trackEvent(eventType:String, label:String="", value:int=0):Boolean
         {
+            debug.warning( "trackEvent() not implemented" );
             return false;
         }
         
@@ -1291,7 +1294,7 @@ package com.google.analytics.v4
         public function setClientInfo(enable:Boolean):void
         {
             config.detectClientInfo = enable;
-            _showInfo( "setClientInfo = " + config.detectClientInfo );
+            debug.info( "set client info = " + config.detectClientInfo );
         }
         
         /**
@@ -1307,7 +1310,7 @@ package com.google.analytics.v4
         public function setDetectFlash(enable:Boolean):void
         {
             config.detectFlash = enable;
-            _showInfo( "setDetectFlash = " + config.detectFlash );
+            debug.info( "set detect flash = " + config.detectFlash );
         }
         
         /**
@@ -1327,7 +1330,7 @@ package com.google.analytics.v4
         public function setDetectTitle(enable:Boolean):void
         {
             config.detectTitle = enable;
-            _showInfo( "setDetectTitle = " + config.detectTitle );
+            debug.info( "set detect title = " + config.detectTitle );
         }
         
         // ----------------------------------------
@@ -1369,7 +1372,7 @@ package com.google.analytics.v4
         public function setLocalGifPath(newLocalGifPath:String):void
         {
             config.localGIFpath = newLocalGifPath;
-            _showInfo( "setLocalGifPath = " + config.localGIFpath );
+            debug.info( "set local Gif path = " + config.localGIFpath );
         }
         
         /**
@@ -1382,7 +1385,7 @@ package com.google.analytics.v4
         public function setLocalRemoteServerMode():void
         {
             config.serverMode = ServerOperationMode.both;
-            _showInfo( "setLocalRemoteServerMode = ServerOperationMode." + config.serverMode.toString() );
+            debug.info( "setLocalRemoteServerMode = ServerOperationMode." + config.serverMode.toString() );
         }
         
         /**
@@ -1394,7 +1397,7 @@ package com.google.analytics.v4
         public function setLocalServerMode():void
         {
             config.serverMode = ServerOperationMode.local;
-            _showInfo( "setLocalServerMode = ServerOperationMode." + config.serverMode.toString() );
+            debug.info( "setLocalServerMode = ServerOperationMode." + config.serverMode.toString() );
         }
         
         /**
@@ -1405,7 +1408,7 @@ package com.google.analytics.v4
         public function setRemoteServerMode():void
         {
             config.serverMode = ServerOperationMode.remote;
-            _showInfo( "setRemoteServerMode = ServerOperationMode." + config.serverMode.toString() );
+            debug.info( "setRemoteServerMode = ServerOperationMode." + config.serverMode.toString() );
         }
         
     }
