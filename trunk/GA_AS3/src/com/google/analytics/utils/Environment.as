@@ -21,9 +21,9 @@
 package com.google.analytics.utils
 {
     import com.google.analytics.config;
+    import com.google.analytics.debug;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.external.HTMLDOM;
-    import com.google.analytics.debug.Layout;
     
     import flash.system.Capabilities;
     import flash.system.Security;
@@ -35,33 +35,11 @@ package com.google.analytics.utils
      */
     public class Environment
     {
-        /**
-         * @private
-         */        
         private var _dom:HTMLDOM;
-        
-        /**
-         * @private
-         */        
-        private var _layout:Layout;    	
-    	
-        /**
-         * @private
-         */        
         private var _protocol:Protocols;
-        
         private var _appName:String;
-        
         private var _appVersion:Version;
-        
-        /**
-         * @private
-         */        
         private var _userAgent:UserAgent;
-
-        /**
-         * @private
-         */
         private var _url:String;
         
         /**
@@ -72,8 +50,7 @@ package com.google.analytics.utils
          * @param dom the HTMLDOM
          * @param layout a Layout reference
          */
-        public function Environment( url:String = "", app:String = "", version:String = "", dom:HTMLDOM = null,
-                                   layout:Layout = null )
+        public function Environment( url:String = "", app:String = "", version:String = "", dom:HTMLDOM = null )
         {
             var v:Version;
             
@@ -107,21 +84,6 @@ package com.google.analytics.utils
             _appName    = app;
             _appVersion = v;
             _dom        = dom;
-            
-            _layout = layout; //optional
-            
-            //DEBUG
-//            if( _layout && config.debug && config.debugVerbose )
-//            {
-//                var data:String = "";
-//                    data       += "dom.language: " + _dom.language + "\n";
-//                    data       += "dom.location: " + _dom.location + "\n";
-//                    data       += "dom.protocol: " + _dom.protocol + "\n";
-//                    data       += "dom.host:     " + _dom.host     + "\n";
-//                    data       += "dom.search:   " + _dom.search   + "\n";
-//                _layout.createInfo( data );
-//            }
-            
         }
         
         /**
@@ -170,16 +132,11 @@ package com.google.analytics.utils
             
             var _proto:String = _dom.protocol;
             
-            //debug
-            if( _layout )
+            var proto:String = (p.toString()+":").toLowerCase();
+            
+            if( _proto && _proto != proto )
             {
-                var proto:String = (p.toString()+":").toLowerCase();
-                
-                if( _proto && _proto != proto )
-                {
-                    _layout.createWarning( "Protocol mismatch: SWF="+proto+", DOM="+_proto );
-                }
-                
+                debug.warning( "Protocol mismatch: SWF="+proto+", DOM="+_proto );
             }
             
             _protocol = p;
@@ -203,7 +160,6 @@ package com.google.analytics.utils
         
         public function set appVersion( value:Version ):void
         {
-            trace( "appVersion: " + value.toString(4) );
             _appVersion = value;
             userAgent.applicationVersion = value.toString(4);
         }
@@ -332,13 +288,6 @@ package com.google.analytics.utils
          */
         public function get language():String
         {
-
-            /* 
-                TODO:
-                if we can bridge to JS we can return a more precise string
-                from the browser as "en-GB" instead of "en".
-            */
-
             var _lang:String = _dom.language;
             var lang:String  = Capabilities.language;
             

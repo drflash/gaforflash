@@ -20,25 +20,29 @@
 
 package com.google.analytics.debug
 {
+    import com.google.analytics.core.GIFRequest;
+    
+    import flash.net.URLRequest;
+    import flash.utils.getTimer;
     
     public class Configuration
     {
-        private var _verbose:Boolean = false;
+        private var _active:Boolean = false;
+        private var _verbose:Boolean = true;
+        private var _visualInitialized:Boolean = false;
         
         public var layout:Layout;
-        
-        public var active:Boolean = true;
         
         /**
          * To trace infos and warning to the output.
          */
-        public var trace:Boolean   = true;
+        public var traceOutput:Boolean = true;
         
         /**
          * Allow to debug the GIF Request if true, will show a debug panel
          * and a confirmation message to send or not the request.
          */
-        public var GIFRequest:Boolean = true;
+        public var GIFRequests:Boolean = true;
         
         /**
          * Send a Gif Request with validation or not without validation (use sendToURL()) it's fire and forget
@@ -61,12 +65,94 @@ package com.google.analytics.debug
         public var showWarnings:Boolean = true;
         
         /**
-         * Indicates if show alerts in the debug mode.
-         */
-        //public var showAlerts:Boolean = true;
+        * Show the visuals minimized on start.
+        */
+        public var minimizedOnStart:Boolean = false;
         
         public function Configuration(  )
         {
+        }
+        
+        private function _initializeVisual():void
+        {
+            if( layout )
+            {
+                layout.init();
+                _visualInitialized = true;
+            }
+        }
+        
+        private function _destroyVisual():void
+        {
+            if( layout && _visualInitialized )
+            {
+                layout.destroy();
+            }
+        }
+        
+        /**
+         * The protected custom trace method.
+         */
+        protected function trace( message:String ):void
+        {
+            var messages:Array = [];
+            var pre0:String = getTimer() + " - ";
+            var pre1:String = new Array(pre0.length).join(" ") + " ";
+            
+            if( message.indexOf("\n") > -1 )
+            {
+                var msgs:Array = message.split("\n");
+                for( var j:int = 0; j<msgs.length; j++ )
+                {
+                    if( msgs[j] == "" )
+                    {
+                        continue;
+                    }
+                    
+                    if( j == 0 )
+                    {
+                        messages.push( pre0 + msgs[j] );
+                    }
+                    else
+                    {
+                        messages.push( pre1 + msgs[j] );
+                    }
+                }
+            }
+            else
+            {
+                messages.push( pre0 + message );
+            }
+            
+            var len:int = messages.length ;
+            for( var i:int = 0; i<len ; i++ )
+            {
+                public::trace( messages[i] );
+            }
+        }
+        
+        /**
+        * set or unset the activation of the debug session,
+        * and if the layout is present, the initialization
+        * and destruction of the visual displays.
+        */
+        public function get active():Boolean
+        {
+            return _active;
+        }
+        
+        public function set active( value:Boolean ):void
+        {
+            _active = value;
+            
+            if( _active )
+            {
+                _initializeVisual();
+            }
+            else
+            {
+                _destroyVisual();
+            }
         }
         
         /**
@@ -90,5 +176,95 @@ package com.google.analytics.debug
             _verbose = value;
         }
         
+        public function write( message:String ):void
+        {
+            if( layout )
+            {
+                layout.visualDebug.write( message );
+            }
+            
+            if( traceOutput )
+            {
+                trace( message );
+            }
+        }
+        
+        public function info( message:String ):void
+        {
+            if( layout && showInfos )
+            {
+                layout.createInfo( message );
+            }
+            
+            if( traceOutput )
+            {
+                trace( message );
+            }
+        }
+        
+        public function warning( message:String ):void
+        {
+            if( layout && showWarnings )
+            {
+                layout.createWarning( message );
+            }
+            
+            if( traceOutput )
+            {
+                trace( "## " + message + " ##" );
+            }
+        }
+        
+        public function alert( message:String ):void
+        {
+            if( layout )
+            {
+                layout.createAlert( message );
+            }
+            
+            if( traceOutput )
+            {
+                trace( "!! " + message + " !!" );
+            }
+        }
+        
+        public function failure( message:String ):void
+        {
+            if( layout )
+            {
+                layout.createFailureAlert( message );
+            }
+            
+            if( traceOutput )
+            {
+                trace( "[-] " + message + " !!" );
+            }
+        }
+        
+        public function success( message:String ):void
+        {
+            if( layout )
+            {
+                layout.createSuccessAlert( message );
+            }
+            
+            if( traceOutput )
+            {
+                trace( "[+] " + message + " !!" );
+            }
+        }
+        
+        public function alertGifRequest( message:String, request:URLRequest, ref:GIFRequest ):void
+        {
+            if( layout )
+            {
+                layout.createGIFRequestAlert( message, request, ref );
+            }
+            
+            if( traceOutput )
+            {
+                trace( ">> " + message + " <<" );
+            }
+        }
     }
 }

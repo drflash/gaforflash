@@ -20,6 +20,7 @@
 package com.google.analytics
 {
     
+    
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.as3_api;
@@ -45,7 +46,6 @@ package com.google.analytics
         private var _localInfo:Environment;
         private var _buffer:Buffer;
         private var _gifRequest:GIFRequest;
-        private var _layout:Layout;
         
         /**
         * note:
@@ -58,13 +58,8 @@ package com.google.analytics
         public function GATracker( display:DisplayObject )
         {
             _display   = display;
-            _layout    = new Layout( _display );
-            debug.layout = _layout;
-            
-            if( debug.active && _layout )
-            {
-                _layout.init();
-            }
+            debug.layout = new Layout( _display );
+            debug.active = true;
             
             /* note:
                for unit testing and to avoid 2 different branches AIR/Flash
@@ -73,9 +68,9 @@ package com.google.analytics
                
                By default we will define "Flash" for our local tests
             */
-            _localInfo  = new Environment( "", "", "", null, _layout );
+            _localInfo  = new Environment( "", "", "", null );
             _buffer     = new Buffer( false );
-            _gifRequest = new GIFRequest( _buffer, _localInfo, _layout );
+            _gifRequest = new GIFRequest( _buffer, _localInfo );
         }
         
         /**
@@ -88,18 +83,12 @@ package com.google.analytics
         
         private function _onInfo( event:MessageEvent ):void
         {
-            if( debug.showInfos && _layout )
-            {
-                _layout.createInfo( event.message );
-            }
+            debug.info( event.message );
         }
         
         private function _onWarning( event:MessageEvent ):void
         {
-            if( debug.showWarnings && _layout )
-            {
-                _layout.createWarning( event.message );
-            }
+            debug.warning( event.message );
         }
         
         /**
@@ -110,23 +99,11 @@ package com.google.analytics
         */
         as3_api function getTracker( account:String ):GoogleAnalyticsAPI
         {
-            if( debug.showInfos && _layout )
-            {
-                _layout.createInfo( "GATracker v" + version +"\naccount: " + account );
-            }
+            debug.info( "GATracker v" + version +"\naccount: " + account );
             
-            config.addEventListener(MessageEvent.INFO, _onInfo );
-            config.addEventListener(MessageEvent.WARNING, _onWarning );
-            /*
-            _layout.debug.write( "A" );
-            _layout.debug.write( "B" );
-            _layout.debug.write( "C" );
-            _layout.debug.write( "D" );
-            _layout.debug.write( "E" );
-            _layout.debug.write( "F" );
-            _layout.debug.write( "G" );
-            _layout.debug.write( "H" );
-            */
+            config.addEventListener( MessageEvent.INFO, _onInfo );
+            config.addEventListener( MessageEvent.WARNING, _onWarning );
+            
             /* note:
                To be able to obtain the URL of the main SWF containing the GA API
                we need to be able to access the stage property of a DisplayObject,
@@ -137,7 +114,7 @@ package com.google.analytics
             */
             use namespace ga_internal;
             _localInfo.url = _display.stage.loaderInfo.url;
-            return new Tracker( account, _localInfo, _buffer, _gifRequest, null, _layout );
+            return new Tracker( account, _localInfo, _buffer, _gifRequest, null );
         }
         
         /**
