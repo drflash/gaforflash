@@ -109,7 +109,7 @@ package com.google.analytics.v4
          * 
          * @param pageURL Optional parameter to indicate what page URL to track metrics under. When using this option, use a beginning slash (/) to indicate the page URL.
          */
-        function trackPageview(pageURL:String):void
+        function trackPageview(pageURL:String=""):void
         
         
         // ----------------------------------------
@@ -391,10 +391,7 @@ package com.google.analytics.v4
          * @param objName The name of the tracked object.
          * @return A new event tracker instance.
          */
-        /* TODO:
-           replace the return Object by a GATracker object (_gat.GA_EventTracker_).
-         */
-        function createEventTracker(objName:String):Object;
+ //       function createEventTracker(objName:String):Object;
         
         /**
          * Constructs and sends the event tracking call to GATC.
@@ -405,7 +402,22 @@ package com.google.analytics.v4
          * 
          * @return whether the event was successfully sent.
          */
-        function trackEvent(eventType:String, label:String = "", value:int = 0):Boolean;
+ //       function trackEvent(eventType:String, label:String = "", value:int = 0):Boolean;
+        
+        /**
+        * Constructs and sends the event tracking call to the Google Analytics Tracking Code. 
+        * Use this to track visitor behavior on your website that is not related to a web page visit, 
+        * such as interaction with a Flash video movie control or any user event that does not
+        * trigger a page request. 
+        * 
+        * @param category The general event category (e.g. "Videos"). 
+        * @param action The action for the event (e.g. "Play"). 
+        * @param opt_label An optional descriptor for the event. 
+        * @param opt_value An optional value to be aggregated with the event.
+        * 
+        * @return whether the event was sucessfully sent
+        */
+        function trackEvent(category:String, action:String, opt_label:String = "", opt_value:int = 0):Boolean;
         
         
         // ----------------------------------------
