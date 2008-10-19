@@ -21,10 +21,11 @@ package com.google.analytics
 {
     import buRRRn.ASTUce.framework.*;
     
+    import com.google.analytics.campaign.AllTests;
     import com.google.analytics.core.AllTests;
     import com.google.analytics.data.AllTests;
     import com.google.analytics.utils.AllTests;
-    import com.google.analytics.campaign.AllTests;
+    import com.google.analytics.external.AllTests;
     
     public class AllTests
         {
@@ -40,6 +41,7 @@ package com.google.analytics
             
             suite.addTestSuite( UtilitiesTest );
             suite.addTestSuite( ConfigurationTest );
+            suite.addTestSuite( BridgeTest );
             
             /* packages */
             
@@ -47,6 +49,7 @@ package com.google.analytics
             suite.addTest( com.google.analytics.data.AllTests.suite() );
             suite.addTest( com.google.analytics.utils.AllTests.suite() );
             suite.addTest( com.google.analytics.campaign.AllTests.suite() );
+            suite.addTest( com.google.analytics.external.AllTests.suite() );
             
             return suite;
             }

@@ -21,6 +21,8 @@
 package com.google.analytics.external
 {
     import flash.external.ExternalInterface;
+    import com.google.analytics.debug;
+    import com.google.analytics.debug.Layout;
     
     /**
      * Javascript proxy access class.
@@ -110,5 +112,44 @@ package com.google.analytics.external
         {
             return ExternalInterface.available;
         }
+        
+        /**
+         * This function communicates between Flash and the JS browser DOM. It can except either a string or  
+		 * XML for JS injection. 
+         * 
+         */        
+        public function jsExternal(jsMethodName:String, ... args):*
+		{	
+			var jsResult:*;
+			if(ExternalInterface.available == true)
+			{
+				try
+				{
+
+					if (debug.verbose) {
+						debug.info("Flash calling JS function: "+ jsMethodName +"\nParams: "+ args.join(","));
+					}
+
+					args.unshift(jsMethodName);
+					jsResult = ExternalInterface.call.apply(ExternalInterface, args);
+					return jsResult;
+				}
+				catch(err:SecurityError)
+				{
+					debug.warning("ExternalInterface is not available.  Ensure that allowScriptAccess is set to 'always' in the Flash embed HTML.");
+				}
+				catch(err:Error)
+				{
+					debug.warning("ExternalInterface failed to make the call, reason: " + err.message);
+				}
+			}
+			else
+			{
+				debug.warning("ExternalInterface is not available.");
+			}
+		}
+        
+        
+        
     }
 }

@@ -20,32 +20,119 @@
 
 package com.google.analytics.v4
 {
-    import com.google.analytics.core.ServerOperationMode;
+	import com.google.analytics.core.ServerOperationMode;
+	import com.google.analytics.external.JavascriptProxy;
+	import com.google.analytics.debug;
+    import com.google.analytics.debug.Layout;
     
     /**
      * This apo use a Javascript bridge to fill the GATracker properties.
      */
     public class Bridge implements GoogleAnalyticsAPI
     {
-
-        /* TODO:
-           re-implement actionscript3-event-tracking
-           but join/optimize ExternalInterface calls
-        */    	
     	
         /**
          * @private
          */	
         private var _account:String;
+        private var _jsObjName:String;
+        private var _jsProxy:JavascriptProxy;
         
         /**
          * Creates a new Bridge instance.
+         * If the parameter is a correct account id we assume user wants to create a new JS tracking object
+         * Otherwise we assume the value is the parameter of an existing JS object the users wants to track against
+         * We then to check if that object actually exists in DOM and is a GA tracking object. If object doesn't exits
+         * an Error is thrown
+         * 
          * @param account Urchin Account to record metrics in.
          */
         public function Bridge(account:String)
         {
             _account = account;
+        	_jsProxy = new JavascriptProxy();
+
+        	if (isAccountId(account))
+        	{
+        		_jsObjName = createJSTrackingObject(account);;
+        	}
+        	else
+        	{
+        		if(jsTrackingObjExisits(account))
+        		{
+        			_jsObjName = account;
+        		}
+        		else
+        		{
+        			var msg:String = "Warning: JS object "+ account +" doesn't exist in DOM. Bridge Obj not created.";
+        			debug.warning(msg);
+        			throw new Error(msg);
+        		}
+        		
+        	}
         }
+        /**
+        * This function creates a JS tracking object in the DOM. The main use case is if you want to 
+        * add ga.js tracking to the site and don't even want to touch JS/HTML
+        * This function will load ga.js if it doesn't exist. It also create a glocal variable to hold 
+        * any new tracking objects in this variable: window._GAtrack[id] : 
+        * Finally it create a new JS GA tracking object with the id supplied 
+        * note creating a 2nd object with the same ID will override the first
+        * 
+        * @return name of created JS object as a String
+        */
+        public function createJSTrackingObject( account:String ):String
+        {
+        	var XMLDom:XML =
+        	    <script>
+        			<![CDATA[
+        				function(acct)
+        				{
+        					try 
+        					{
+	        					if(_GATracker);						
+        					}
+        					catch(e) 
+        					{
+        					    _GATracker = {}; 	
+        					}
+        					if(_gat._getTracker) 
+        					{
+	        					_GATracker[acct] = _gat._getTracker(acct);
+	        					return true;
+	        				}
+	        				return false;
+        				}
+        			]]>
+        		</script>;        				
+ 
+         	if (!_jsProxy.jsExternal(XMLDom, account)) 
+         	{
+         		var msg:String = "The Google Analytcs tracking code was not found on the container page"
+         		debug.warning(msg);
+         		throw new Error(msg);
+         	}       	
+         	
+         	
+         	return "_GATracker['"+account+"']";
+        }
+        
+        /**
+        * Checks to ses if the tracking object Name passed into the functions exists in the DOM
+        * and is a real Google Analytics tracking object
+        */
+        public function jsTrackingObjExisits(objName:String):Boolean
+        {
+        	var xmlStr:String = "function(objName) { try { "
+        				+"if("+objName +" && "+ objName +"._getAccount)"
+        					+"return true; return false;  } catch(e){} return false }";
+        	
+        	return _jsProxy.jsExternal(xmlStr, objName);
+        }        
+        
+		
+		// -----------------------------------------------------------------------------
+        // START CONFIGURATION
         
         /**
          * Returns the Google Analytics tracking ID for this tracker object.
@@ -56,8 +143,9 @@ package com.google.analytics.v4
          */        
         public function getAccount():String
         {
-            return null;
+            return _callJSObj("_getAccount");
         }
+        
         
         /**
          * Returns the GATC version number.
@@ -65,7 +153,7 @@ package com.google.analytics.v4
          */         
         public function getVersion():String
         {
-            return null;
+            return _callJSObj("_getVersion");
         }
         
         /**
@@ -73,6 +161,7 @@ package com.google.analytics.v4
          */        
         public function initData():void
         {
+        	_callJSObj("_initData");
         }
         
         /**
@@ -88,6 +177,7 @@ package com.google.analytics.v4
          */         
         public function setSampleRate(newRate:Number):void
         {
+        	_callJSObj("_setSampleRate", newRate);
         }
         
         /**
@@ -108,6 +198,7 @@ package com.google.analytics.v4
          */        
         public function setSessionTimeout(newTimeout:int):void
         {
+        	_callJSObj("_setSessionTimeout", newTimeout);
         }
         
         /**
@@ -123,6 +214,7 @@ package com.google.analytics.v4
          */         
         public function setVar(newVal:String):void
         {
+        	_callJSObj("_setVar", newVal);
         }
         
         /**
@@ -134,12 +226,21 @@ package com.google.analytics.v4
          * 
          * @param pageURL Optional parameter to indicate what page URL to track metrics under. When using this option, use a beginning slash (/) to indicate the page URL.
          */          
-        public function trackPageview(pageURL:String):void
+        public function trackPageview(pageURL:String=""):void
         {
+        	if (pageURL == "") 
+        	{
+        		_callJSObj("_trackPageview");
+        	} 
+        	else 
+        	{
+        		_callJSObj("_trackPageview", pageURL);	
+        	}
         }
         
-        // ----------------------------------------
-        // Campaign Tracking
+        // END CONFIGURATION
+		// -----------------------------------------------------------------------------
+        // START Campaign Tracking
         // Methods that you use for setting up and customizing campaign tracking in Google Analytics reporting.
         
         /**
@@ -155,6 +256,7 @@ package com.google.analytics.v4
         */           
         public function setAllowAnchor(enable:Boolean):void
         {
+        	_callJSObj("_setAllowAnchor", enable)
         }
         
         /**
@@ -167,6 +269,7 @@ package com.google.analytics.v4
          */         
         public function setCampContentKey(newCampContentKey:String):void
         {
+        	_callJSObj("_setCampContentKey", newCampContentKey);
         }
         
         /**
@@ -178,6 +281,7 @@ package com.google.analytics.v4
          */        
         public function setCampMediumKey(newCampMedKey:String):void
         {
+        	_callJSObj("_setCampMediumKey", newCampMedKey);
         }
         
         /**
@@ -189,6 +293,7 @@ package com.google.analytics.v4
          */        
         public function setCampNameKey(newCampNameKey:String):void
         {
+        	_callJSObj("_setCampNameKey", newCampNameKey);
         }
         
         /**
@@ -208,6 +313,7 @@ package com.google.analytics.v4
          */        
         public function setCampNOKey(newCampNOKey:String):void
         {
+        	_callJSObj("_setCampNOKey", newCampNOKey);
         }
         
         /**
@@ -219,6 +325,7 @@ package com.google.analytics.v4
          */          
         public function setCampSourceKey(newCampSrcKey:String):void
         {
+        	_callJSObj("_setCampSourceKey", newCampSrcKey);
         }
         
         /**
@@ -229,6 +336,7 @@ package com.google.analytics.v4
          */          
         public function setCampTermKey(newCampTermKey:String):void
         {
+        	_callJSObj("_setCampTermKey", newCampTermKey);
         }
         
         /**
@@ -241,6 +349,7 @@ package com.google.analytics.v4
          */           
         public function setCampaignTrack(enable:Boolean):void
         {
+        	_callJSObj("_setCampaignTrack", enable);
         }
         
         /**
@@ -255,10 +364,12 @@ package com.google.analytics.v4
          */         
         public function setCookieTimeout(newDefaultTimeout:int):void
         {
+        	_callJSObj("_setCookieTimeout", newDefaultTimeout);
         }
         
-        // ----------------------------------------
-        // Domains and Directories
+        // END CAMPAIGN TRACKING
+		// -----------------------------------------------------------------------------
+        // START DOMAINS AND DIRECTORIES
         // Methods that you use for customizing how Google Analytics reporting works across domains,
         // across different hosts, or within sub-directories of a website.
         
@@ -273,6 +384,7 @@ package com.google.analytics.v4
          */         
         public function cookiePathCopy(newPath:String):void
         {
+        	_callJSObj("_cookiePathCopy", newPath);
         }
         
         /**
@@ -286,6 +398,7 @@ package com.google.analytics.v4
          */          
         public function link(targetUrl:String, useHash:Boolean=false):void
         {
+        	_callJSObj("_link", targetUrl, useHash);
         }
         
         /**
@@ -297,11 +410,13 @@ package com.google.analytics.v4
          * a 3rd-party shopping cart site, but can also be used to send cookie data to
          * other domains in pop-ups or in iFrames.
          * 
-         * @param formObject Form object encapsulating the POST request.
+         * @param formObject Form object encapsulating the POST request.  
          * @param useHash Set to true for passing tracking code variables by using the # anchortag separator rather than the default ? query string separator.
          */         
         public function linkByPost(formObject:Object, useHash:Boolean=false):void
         {
+			//TODO: this might not make any sense to provide...ie what form object would we provide?
+        	_jsProxy.jsExternal("function() { "+_jsObjName.toString()+"._linkByPost("+formObject+","+useHash+"); }");
         }
         
         /**
@@ -319,6 +434,7 @@ package com.google.analytics.v4
          */        
         public function setAllowHash(enable:Boolean):void
         {
+        	_callJSObj("_setAllowHash", enable);
         }
         
         /**
@@ -330,6 +446,7 @@ package com.google.analytics.v4
          */        
         public function setAllowLinker(enable:Boolean):void
         {
+        	_callJSObj("_setAllowLinker", enable);
         }
         
         /**
@@ -348,6 +465,7 @@ package com.google.analytics.v4
          */        
         public function setCookiePath(newCookiePath:String):void
         {
+        	_callJSObj("_setCookiePath", newCookiePath);
         }
         
         /**
@@ -360,10 +478,12 @@ package com.google.analytics.v4
          */         
         public function setDomainName(newDomainName:String):void
         {
+        	_callJSObj("_setDomainName", newDomainName);
         }
         
-        // ----------------------------------------
-        // Ecommerce
+        // END DOMAIN AND DIRECTORIES
+		// -----------------------------------------------------------------------------
+        // START ECOMMERCE
         // Methods that you use for customizing ecommerce in Google Analytics reporting.
         
         /**
@@ -385,6 +505,7 @@ package com.google.analytics.v4
          */         
         public function addItem(item:String, sku:String, name:String, category:String, price:Number, quantity:int):void
         {
+        	_callJSObj("_addItem", item, sku, name, category, price, quantity);
         }
         
         /**
@@ -405,6 +526,10 @@ package com.google.analytics.v4
          */         
         public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):Object
         {
+        	//TODO: decide if we want to return an actual transaction object from this????
+        	
+        	_callJSObj("_addTrans", orderId, affiliation, total, tax, shipping, city, state, country);
+        	
             return null;
         }
         
@@ -416,38 +541,38 @@ package com.google.analytics.v4
          */        
         public function trackTrans():void
         {
+        	_callJSObj("_trackTrans");
         }
 
-        /**
-         * Creates an event tracking object with the specified name.
-         * Call this method when you want to create a new web page object
-         * to track in the Event Tracking section of the reporting.
-         * See the Event Tracking Guide for more information.
-         * 
-         * @param objName The name of the tracked object.
-         * @return A new event tracker instance.
-         */         
-        public function createEventTracker(objName:String):Object
-        {
-            return null;
-        }
-        
-        /**
-         * Constructs and sends the event tracking call to GATC.
-         * 
-         * @param eventType The type name for the event.
-         * @param label An optional descriptor for the event.
-         * @param value An optional value to be aggregated with the event.
-         * 
-         * @return whether the event was successfully sent.
-         */        
-        public function trackEvent(eventType:String, label:String="", value:int=0):Boolean
-        {
-            return false;
-        }
-        
-        // ----------------------------------------
-        // Search Engines and Referrers
+  
+     	// END ECOMMERCE TRACKING
+     	// -----------------------------------------------------------------------------
+     	// START EVENT TRACKING
+     
+     
+       /**
+        * Constructs and sends the event tracking call to the Google Analytics Tracking Code. 
+        * Use this to track visitor behavior on your website that is not related to a web page visit, 
+        * such as interaction with a Flash video movie control or any user event that does not
+        * trigger a page request. 
+        * 
+        * @param category The general event category (e.g. "Videos"). 
+        * @param action The action for the event (e.g. "Play"). 
+        * @param opt_label An optional descriptor for the event. 
+        * @param opt_value An optional value to be aggregated with the event.
+        * 
+        * @return whether the event was sucessfully sent
+        */
+     	public function trackEvent(category:String, action:String, opt_label:String="", opt_value:int=0):Boolean
+     	{
+     		
+     		opt_value = isNaN(opt_value) ? 0 : opt_value;
+			return _callJSObj("_trackEvent", category, action, opt_label, opt_value);	
+     	}
+     
+		// END EVENT TRACKING
+		// -----------------------------------------------------------------------------
+        // START SEARCH ENGINES AND REFERRERS 
         // Methods that you use for customizing search engines and referral traffic in Google Analytics reporting.
         
         /**
@@ -462,6 +587,7 @@ package com.google.analytics.v4
          */         
         public function addIgnoredOrganic(newIgnoredOrganicKeyword:String):void
         {
+        	_callJSObj("_addIgnoredOrganic", newIgnoredOrganicKeyword);
         }
         
         /**
@@ -477,6 +603,7 @@ package com.google.analytics.v4
          */        
         public function addIgnoredRef(newIgnoredReferrer:String):void
         {
+        	_callJSObj("_addIgnoredRef", newIgnoredReferrer);
         }
         
         /**
@@ -489,6 +616,7 @@ package com.google.analytics.v4
          */        
         public function addOrganic(newOrganicEngine:String, newOrganicKeyword:String):void
         {
+        	_callJSObj("_addOrganic", newOrganicEngine);
         }
         
         /**
@@ -496,6 +624,7 @@ package com.google.analytics.v4
          */         
         public function clearIgnoredOrganic():void
         {
+        	_callJSObj("_clearIgnoreOrganic");
         }
         
         /**
@@ -503,6 +632,7 @@ package com.google.analytics.v4
          */        
         public function clearIgnoredRef():void
         {
+        	_callJSObj("_clearIgnoreRef");
         }
         
         /**
@@ -511,6 +641,7 @@ package com.google.analytics.v4
          */         
         public function clearOrganic():void
         {
+        	_callJSObj("_clearOrganic");
         }
         
         /**
@@ -521,7 +652,7 @@ package com.google.analytics.v4
          */         
         public function getClientInfo():Boolean
         {
-            return false;
+            return _callJSObj("_getClientInfo");
         }
         
         /**
@@ -532,7 +663,7 @@ package com.google.analytics.v4
          */        
         public function getDetectFlash():Boolean
         {
-            return false;
+            return _callJSObj("_getDetectFlash");
         }
         
         /**
@@ -542,7 +673,7 @@ package com.google.analytics.v4
          */        
         public function getDetectTitle():Boolean
         {
-            return false;
+            return _callJSObj("_getDetectTitle");
         }
         
         /**
@@ -557,6 +688,7 @@ package com.google.analytics.v4
          */           
         public function setClientInfo(enable:Boolean):void
         {
+        	_callJSObj("_setClientInfo", enable);
         }
         
         /**
@@ -571,6 +703,7 @@ package com.google.analytics.v4
          */        
         public function setDetectFlash(enable:Boolean):void
         {
+        	_callJSObj("_setDetectFlash", enable);
         }
         
         /**
@@ -589,10 +722,12 @@ package com.google.analytics.v4
          */         
         public function setDetectTitle(enable:Boolean):void
         {
+        	_callJSObj("_setDetectTitle", enable);
         }
         
-        // ----------------------------------------
-        // Urchin Server
+		// END SEARCH ENGINES AND REFERRERS        
+		// -----------------------------------------------------------------------------
+        // START URCHIN SERVER
         // Methods that you use for configuring your server setup when you are using
         // both Google Analytics and the Urchin software to track your website.
         
@@ -604,7 +739,7 @@ package com.google.analytics.v4
          */         
         public function getLocalGifPath():String
         {
-            return null;
+            return _callJSObj("_getLocalGifPath");
         }
         
         /**
@@ -616,7 +751,7 @@ package com.google.analytics.v4
          */        
         public function getServiceMode():ServerOperationMode
         {
-            return null;
+            return _callJSObj("_getServiceMode");
         }
         
         /**
@@ -629,6 +764,7 @@ package com.google.analytics.v4
          */         
         public function setLocalGifPath(newLocalGifPath:String):void
         {
+        	_callJSObj("_setLocalGifPath", newLocalGifPath);
         }
         
         /**
@@ -640,6 +776,7 @@ package com.google.analytics.v4
          */        
         public function setLocalRemoteServerMode():void
         {
+        	_callJSObj("_setLocalRemoteServerMode");
         }
         
         
@@ -651,6 +788,7 @@ package com.google.analytics.v4
          */         
         public function setLocalServerMode():void
         {
+        	_callJSObj("_setLocalServerMode");
         }
         
         /**
@@ -660,6 +798,31 @@ package com.google.analytics.v4
          */        
         public function setRemoteServerMode():void
         {
+        	_callJSObj("_setRemoteServerMode");
+        }
+        
+        
+        // END URCHIN SERVER
+        // -----------------------------------------------------------------------------
+        // START UTILITY FUNCTIONS
+        
+        /**
+        * Wrapper to simplify readability of External JS object calls in methods above 
+        */
+        private function _callJSObj(jsMethodName:String, ...args):*
+		{
+			args.unshift(_jsObjName+"."+jsMethodName);
+			return _jsProxy.jsExternal.apply(_jsProxy.jsExternal, args);
+  		}
+        
+        /**
+        * Checks if the paramater is a GA account ID.
+        */
+        public function isAccountId(account:String):Boolean 
+        {
+        	var rel:RegExp = /^UA-[0-9]*-[0-9]*$/;
+        	
+        	return rel.test(account);
         }
         
     }
