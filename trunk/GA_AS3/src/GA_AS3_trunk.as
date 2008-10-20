@@ -53,12 +53,19 @@ package
         {
             use namespace as3_api;
             _gat = new GATracker( this );
-            pageTracker = _gat.getTracker( "UA-1234-5" );
-            pageTracker.setSampleRate( -0.5 );
+            //pageTracker = _gat.getTracker( "UA-1234-5" );
+            
+            //UA-4241494-2 for gaas3.zwetan.com
+            //please your own UA to test
+            pageTracker = _gat.getTracker( "UA-4241494-2" );
+            //pageTracker.setSampleRate( -0.5 );
             //pageTracker.addOrganic("google","q");
             //pageTracker.setDomainName( ".zwetan.com" );
-            pageTracker.setVar( "bonjour le monde" );
-            pageTracker.trackPageview( "/test/hello/world" );
+            
+            //ideally you would want to change the setVar for each different tests
+            pageTracker.setVar( "nihao shijie" );
+            pageTracker.trackPageview( "/test/hello/world/from/AS3/API" );
+            
             //pageTracker.setLocalRemoteServerMode();
             //pageTracker.setLocalServerMode();
             //pageTracker.setRemoteServerMode();

@@ -22,6 +22,7 @@ package com.google.analytics.core
     import com.google.analytics.config;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.utils.Environment;
+    import com.google.analytics.utils.Variables;
     
     import flash.net.URLVariables;
     
@@ -147,9 +148,10 @@ package com.google.analytics.core
             return _renderPageURL( _pageURL );
         }
         
-        public function toURLVariables():URLVariables
+        public function toVariables():Variables
         {
-            var variables:URLVariables = new URLVariables();
+            var variables:Variables = new Variables();
+                variables.URIencode = true;
                 
                 if( config.detectTitle && ( utmdt != "") )
                 {
@@ -165,7 +167,7 @@ package com.google.analytics.core
         
         public function toURLString():String
         {
-            var v:URLVariables = toURLVariables();
+            var v:Variables = toVariables();
             return v.toString();
         }
     }

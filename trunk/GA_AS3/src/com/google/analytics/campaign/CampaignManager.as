@@ -21,11 +21,12 @@
 package com.google.analytics.campaign
 {
     import com.google.analytics.config;
+    import com.google.analytics.debug;
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.OrganicReferrer;
     import com.google.analytics.utils.Protocols;
-    import com.google.analytics.utils.URL;    
-
+    import com.google.analytics.utils.URL;
+    
     /**
      * The CampaignManager class.
      */
@@ -139,8 +140,27 @@ package com.google.analytics.campaign
         public function getCampaignInformation( noSessionInformation:Boolean ):CampaignInfo
         {
             var campInfo:CampaignInfo = new CampaignInfo();
+            var campaignTracker:CampaignTracker;
             
             //TODO
+            /* note:
+               for now we use a default direct campaign
+            */
+            campaignTracker = getDirectCampaign();
+            debug.info( "campaign tracking: " + campaignTracker.toTrackerString() );
+            
+            _buffer.utmz.domainHash       = _domainHash;
+            _buffer.utmz.campaignCreation = _timeStamp;
+            _buffer.utmz.campaignSessions = 1;
+            _buffer.utmz.responseCount    = 1;
+            _buffer.utmz.campaignTracking = campaignTracker.toTrackerString();
+            
+            if( debug.verbose )
+            {
+                debug.info( _buffer.utmz.toString() );
+            }
+            
+            campInfo = new CampaignInfo( false, true );
             
             return campInfo;
         }

@@ -61,7 +61,7 @@ package com.google.analytics.campaign
             {
                 value = value.split( "+" ).join( "%20" );
                 value = value.split( " " ).join( "%20" );
-                arr.push( field, value );
+                arr.push( field + value );
             }
         }
         

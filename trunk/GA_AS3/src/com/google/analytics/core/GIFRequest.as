@@ -24,15 +24,16 @@ package com.google.analytics.core
     import com.google.analytics.debug;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
+    import com.google.analytics.utils.Variables;
     import com.google.analytics.utils.generate32bitRandom;
     
+    import flash.display.Loader;
     import flash.events.Event;
     import flash.events.IOErrorEvent;
     import flash.events.SecurityErrorEvent;
-    import flash.net.URLLoader;
     import flash.net.URLRequest;
-    import flash.net.URLVariables;
     import flash.net.sendToURL;
+    import flash.system.LoaderContext;
     
     /**
      * Google Analytics Tracker Code (GATC)'s GIF request module.
@@ -248,12 +249,12 @@ package com.google.analytics.core
             {
                 var url:String = _lastRequest.url;
                 
-                if( debug.verbose )
+                if( !debug.verbose )
                 {
-                    url += "?"+_lastRequest.data.toString();
-                }
-                else
-                {
+                    if( url.indexOf( "?" ) > -1 )
+                    {
+                        url = url.split( "?" )[0];
+                    }
                     url = _shortenURL( url );
                 }
                 
@@ -267,36 +268,53 @@ package com.google.analytics.core
             {
                 var url:String = _lastRequest.url;
                 
-                if( debug.verbose )
+                if( !debug.verbose )
                 {
-                    url += "?"+_lastRequest.data.toString();
-                }
-                else
-                {
+                    if( url.indexOf( "?" ) > -1 )
+                    {
+                        url = url.split( "?" )[0];
+                    }
                     url = _shortenURL( url );
                 }
                 
                 debug.success( "Gif Request sent to \"" + url + "\"" );
             }
+            
+            _removeListeners( event.target );
+        }
+        
+        private function _removeListeners( target:Object ):void
+        {
+            target.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
+            target.removeEventListener( Event.COMPLETE, onComplete );
         }
         
         public function sendWithValidation( request:URLRequest ):void
         {
-            var req:URLLoader = new URLLoader();
+            //var req:URLLoader = new URLLoader();
+            var loader:Loader = new Loader();
+            var context:LoaderContext = new LoaderContext( false );
             
-            req.addEventListener( IOErrorEvent.IO_ERROR, onIOError, false, 0, true );
-            req.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError, false, 0, true );
-            req.addEventListener( Event.COMPLETE, onComplete, false, 0, true );
+            
+            //req.addEventListener( IOErrorEvent.IO_ERROR, onIOError, false, 0, true );
+            loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
+            
+            //req.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError, false, 0, true );
+            
+            //req.addEventListener( Event.COMPLETE, onComplete, false, 0, true );
+            loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onComplete );
             
             _lastRequest = request;
             
             try
             {
-                req.load( request );
+                //req.load( request );
+                loader.load( request, context );
             }
             catch( e:Error )
             {
-                debug.failure( "\"URLLoader.load()\" could not instanciate Gif Request" );
+                //debug.failure( "\"URLLoader.load()\" could not instanciate Gif Request" );
+                debug.failure( "\"Loader.load()\" could not instanciate Gif Request" );
             }
         }
         
@@ -328,15 +346,17 @@ package com.google.analytics.core
         * 
         * 
         */
-        public function send( account:String, variables:URLVariables = null,
+        public function send( account:String, variables:Variables = null,
                               force:Boolean = false, rateLimit:Boolean = false ):void
         {
              _utmac = account;
              
              if( !variables )
              {
-                 variables = new URLVariables();
+                 variables = new Variables();
              }
+             
+             variables.URIencode = false;
              
              if( debug.verbose )
              {
@@ -401,7 +421,9 @@ package com.google.analytics.core
                              
                              var localImage:URLRequest = new URLRequest();
                                  localImage.url  = localPath + config.localGIFpath;
-                                 localImage.data = variables;
+                                 
+                                 //localImage.data = variables;
+                                 localImage.url +=  "?"+variables.toString();
                              
                              if( debug.GIFRequests )
                              {
@@ -439,9 +461,10 @@ package com.google.analytics.core
                              }
                              
                              variables.utmac = utmac;
-                             variables.utmcc = encodeURIComponent( utmcc );
+                             variables.utmcc = encodeURIComponent(utmcc);
                              
-                             remoteImage.data = variables;
+                             //remoteImage.data = variables;
+                             remoteImage.url +=  "?"+variables.toString();
                              
                              if( debug.GIFRequests )
                              {

@@ -20,6 +20,8 @@
 
 package com.google.analytics.campaign
 {
+    import com.google.analytics.utils.Variables;
+    
     import flash.net.URLVariables;
     
     /**
@@ -81,13 +83,10 @@ package com.google.analytics.campaign
             return _new;
         }
         
-        /**
-         * Returns the URLVariables representation of the campaign.
-         * @retunr the URLVariables representation of the campaign.
-         */
-        public function toURLVariables():URLVariables
+        public function toVariables():Variables
         {
-            var variables:URLVariables = new URLVariables();
+            var variables:Variables = new Variables();
+                variables.URIencode = true;
                 
                 if( !isEmpty() && isNew() )
                 {
@@ -108,7 +107,7 @@ package com.google.analytics.campaign
          */
         public function toURLString():String
         {
-            var v:URLVariables = toURLVariables();
+            var v:Variables = toVariables();
             return v.toString();
         }
         

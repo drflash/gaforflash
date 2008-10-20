@@ -24,8 +24,9 @@ package com.google.analytics.core
     import com.google.analytics.config;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.external.FakeAdSenseGlobals;
-    import com.google.analytics.utils.FakeEnvironment;
     import com.google.analytics.utils.Environment;
+    import com.google.analytics.utils.FakeEnvironment;
+    import com.google.analytics.utils.Variables;
     
     import flash.net.URLVariables;
     
@@ -74,8 +75,9 @@ package com.google.analytics.core
             
             if( config.detectTitle )
             {
-                var vars:URLVariables = docInfo.toURLVariables();
-                var vars2:URLVariables = new URLVariables();
+                var vars:Variables = docInfo.toVariables();
+                var vars2:Variables = new Variables();
+                    vars2.URIencode = true;
                     vars2.utmdt = vars.utmdt;
                     
                 assertEquals( "a simple title", vars.utmdt );
