@@ -21,6 +21,7 @@ package com.google.analytics.core
 {
     import com.google.analytics.config;
     import com.google.analytics.utils.Environment;
+    import com.google.analytics.utils.Variables;
     import com.google.analytics.utils.Version;
     
     import flash.net.URLVariables;
@@ -76,7 +77,7 @@ package com.google.analytics.core
         */
         public function get utmul():String
         {
-            return _info.language;
+            return _info.language.toLowerCase();
         }
         
         /**
@@ -107,9 +108,11 @@ package com.google.analytics.core
             return "-";
         }
         
-        public function toURLVariables():URLVariables
+        public function toVariables():Variables
         {
-            var variables:URLVariables = new URLVariables();
+            var variables:Variables = new Variables();
+                variables.URIencode = true;
+                
                 variables.utmcs = utmcs;
                 variables.utmsr = utmsr;
                 variables.utmsc = utmsc;
@@ -117,13 +120,12 @@ package com.google.analytics.core
                 variables.utmje = utmje;
                 variables.utmfl = utmfl;
                 
-            
             return variables;
         }
         
         public function toURLString():String
         {
-            var v:URLVariables = toURLVariables();
+            var v:Variables = toVariables();
             return v.toString();
         }
     }

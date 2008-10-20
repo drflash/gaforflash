@@ -52,6 +52,11 @@ package com.google.analytics.data
             this.value      = value;
         }
         
+        public override function toURLString():String
+        {
+            return inURL + "=" + encodeURI( valueOf() );
+        }
+        
         /**
          * The domain hash value.
          */

@@ -227,19 +227,35 @@ package com.google.analytics.data
                 field = fields[i];
                 value = this[ field ];
                 
-                if( value == 0 )
+                if( value is String )
                 {
-                    data.push( value );
+                    if( value == "" )
+                    {
+                        value = "-";
+                        data.push( value );
+                    }
+                    else
+                    {
+                        data.push( value );
+                    }
                 }
-                else if( isNaN( value ) || (value == "") )
+                else if( value is Number )
                 {
-                    value = "-";
-                    data.push( value );
+                    if( value == 0 )
+                    {
+                        data.push( value );
+                    }
+                    else if( isNaN( value ) )
+                    {
+                        value = "-";
+                        data.push( value );
+                    }
+                    else
+                    {
+                        data.push( value );
+                    }
                 }
-                else
-                {
-                    data.push( encodeURIComponent( value ) );
-                }
+                
             }
             
             return ""+data.join( "." );

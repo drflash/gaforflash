@@ -35,11 +35,9 @@ package com.google.analytics.v4
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
+    import com.google.analytics.utils.Variables;
     import com.google.analytics.utils.generate32bitRandom;
     import com.google.analytics.utils.generateHash;
-    import com.google.analytics.utils.joinVariables;
-    
-    import flash.net.URLVariables;
     
     /**
      * The Tracker class.
@@ -481,7 +479,7 @@ package com.google.analytics.v4
                 /* If referrer is in the sub-domain of document,
                    then formatted referrer is set to "0".
                 */
-                var pos:int = domainName.indexOf( referrer );
+                var pos:int = referrer.indexOf( domainName );
                 
                 //no self-referral
                 if( (pos >= 0) && (pos <= 8) )
@@ -720,6 +718,8 @@ package com.google.analytics.v4
         {
             if( (newVal != "") && _isNotGoogleSearch() )
             {
+                _initData();
+                
                 _buffer.utmv.domainHash = _domainHash;
                 _buffer.utmv.value      = newVal;
                 
@@ -732,7 +732,10 @@ package com.google.analytics.v4
                 
                 if( _takeSample() )
                 {
-                    _gifRequest.send( _account );
+                    var variables:Variables = new Variables();
+                        variables.utmt = "var";
+                        
+                    _gifRequest.send( _account, variables );
                 }
                 
             }
@@ -756,7 +759,7 @@ package com.google.analytics.v4
             //Do nothing if we decided to not track this page.
             if( _doTracking() )
             {
-                //_initData();
+                _initData();
                 
                 //ignoredOutboundHosts_ ?
                 
@@ -775,21 +778,25 @@ package com.google.analytics.v4
          * @return The rendered search string with various information included.
          * @private
          */
-        private function _renderMetricsSearchVariables( pageURL:String = "" ):URLVariables
+        private function _renderMetricsSearchVariables( pageURL:String = "" ):Variables
         {
+            var variables:Variables = new Variables();
+                variables.URIencode = true;
+                
             var docInfo:DocumentInfo = new DocumentInfo( _info, _formatedReferrer, pageURL );
             debug.info( "docInfo: " + docInfo.toURLString() );
             
-            var campvars:URLVariables;
+            var campvars:Variables;
             
             if( config.campaignTracking )
             {
-                campvars = _campaignInfo.toURLVariables()
+                campvars = _campaignInfo.toVariables();
             }
             
-            var variables:URLVariables = joinVariables( docInfo.toURLVariables(),
-                                                        _browserInfo.toURLVariables(),
-                                                        campvars );
+            variables.join( docInfo.toVariables(),
+                            _browserInfo.toVariables(),
+                            campvars );
+            
             return variables;
         }
         
@@ -802,7 +809,12 @@ package com.google.analytics.v4
         {
             if( _takeSample() )
             {
-                var x10vars:URLVariables = new URLVariables();
+                //gif request parameters
+                var searchVariables:Variables = new Variables();
+                    searchVariables.URIencode = true;
+                
+                var x10vars:Variables = new Variables();
+                    x10vars.URIencode = true;
                 
                 //X10
                 if( _x10Module && _x10Module.hasData() )
@@ -811,10 +823,9 @@ package com.google.analytics.v4
                 }
                 
                 //Browser, campaign, and document information.
-                var generalvars:URLVariables = _renderMetricsSearchVariables( pageURL );
+                var generalvars:Variables = _renderMetricsSearchVariables( pageURL );
                 
-                //gif request parameters
-                var searchVariables:URLVariables = joinVariables( x10vars, generalvars );
+                searchVariables.join( x10vars, generalvars );
                 
                 _gifRequest.send( _account, searchVariables );
             }

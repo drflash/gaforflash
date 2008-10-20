@@ -57,7 +57,7 @@ package com.google.analytics.debug
             
             _lines = [];
             
-            forcedWidth = 500;
+            forcedWidth = 540;
             selectable  = true;
             
             addEventListener( KeyboardEvent.KEY_DOWN, onKey );
