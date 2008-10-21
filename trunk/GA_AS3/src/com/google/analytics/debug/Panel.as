@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -135,7 +135,7 @@ package com.google.analytics.debug
         
         private function _draw():void
         {
-            var W:uint
+            var W:uint;
             var H:uint;
             
             if( _savedW && _savedH )

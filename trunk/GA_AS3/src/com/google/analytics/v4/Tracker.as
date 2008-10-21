@@ -60,8 +60,7 @@ package com.google.analytics.v4
         private var _buffer:Buffer;
         private var _gifRequest:GIFRequest;
         private var _adSense:AdSenseGlobals;
-        private var _layout:Layout;
-        
+    
         //gif requests
         private var _browserInfo:BrowserInfo;
         private var _campaignInfo:CampaignInfo;

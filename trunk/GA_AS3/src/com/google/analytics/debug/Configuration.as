@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,6 +31,26 @@ package com.google.analytics.debug
         private var _verbose:Boolean = true;
         private var _visualInitialized:Boolean = false;
         
+        private function _initializeVisual():void
+        {
+            if( layout )
+            {
+                layout.init();
+                _visualInitialized = true;
+            }
+        }
+        
+        private function _destroyVisual():void
+        {
+            if( layout && _visualInitialized )
+            {
+                layout.destroy();
+            }
+        }        
+        
+        /**
+         * Indicates the Layout reference.
+         */
         public var layout:Layout;
         
         /**
@@ -73,22 +93,7 @@ package com.google.analytics.debug
         {
         }
         
-        private function _initializeVisual():void
-        {
-            if( layout )
-            {
-                layout.init();
-                _visualInitialized = true;
-            }
-        }
-        
-        private function _destroyVisual():void
-        {
-            if( layout && _visualInitialized )
-            {
-                layout.destroy();
-            }
-        }
+
         
         /**
          * The protected custom trace method.
@@ -132,15 +137,18 @@ package com.google.analytics.debug
         }
         
         /**
-        * set or unset the activation of the debug session,
-        * and if the layout is present, the initialization
-        * and destruction of the visual displays.
-        */
+         * set or unset the activation of the debug session,
+         * and if the layout is present, the initialization
+         * and destruction of the visual displays.
+         */
         public function get active():Boolean
         {
             return _active;
         }
         
+        /**
+         * @private
+         */
         public function set active( value:Boolean ):void
         {
             _active = value;
@@ -176,6 +184,9 @@ package com.google.analytics.debug
             _verbose = value;
         }
         
+        /**
+         * Writes a message.
+         */
         public function write( message:String ):void
         {
             if( layout )
@@ -189,6 +200,9 @@ package com.google.analytics.debug
             }
         }
         
+        /**
+         * Notify an "info" message.
+         */
         public function info( message:String ):void
         {
             if( layout && showInfos )
@@ -202,6 +216,9 @@ package com.google.analytics.debug
             }
         }
         
+        /**
+         * Notify a "warning" message.
+         */
         public function warning( message:String ):void
         {
             if( layout && showWarnings )
@@ -215,6 +232,9 @@ package com.google.analytics.debug
             }
         }
         
+        /**
+         * Notify an "alert" message.
+         */        
         public function alert( message:String ):void
         {
             if( layout )
@@ -228,6 +248,9 @@ package com.google.analytics.debug
             }
         }
         
+        /**
+         * Notify an "failure" message.
+         */         
         public function failure( message:String ):void
         {
             if( layout )
@@ -241,6 +264,9 @@ package com.google.analytics.debug
             }
         }
         
+        /**
+         * Notify a "success" message.
+         */         
         public function success( message:String ):void
         {
             if( layout )
@@ -254,6 +280,9 @@ package com.google.analytics.debug
             }
         }
         
+        /**
+         * Notify an "alertGifRequest" message.
+         */        
         public function alertGifRequest( message:String, request:URLRequest, ref:GIFRequest ):void
         {
             if( layout )

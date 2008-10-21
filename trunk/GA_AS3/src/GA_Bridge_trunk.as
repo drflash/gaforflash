@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,16 +19,16 @@
  
 package
 {
+    import com.google.analytics.GATracker;
+    import com.google.analytics.core.as3_api;
+    import com.google.analytics.v4.GoogleAnalyticsAPI;
     
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
-    import flash.events.Event;
-    
-    import com.google.analytics.GATracker;
-    import com.google.analytics.core.as3_api;
-    import com.google.analytics.v4.GoogleAnalyticsAPI;
-    import com.google.analytics.core.js_bridge;
+    import flash.events.Event;    
+
+    // import com.google.analytics.core.js_bridge;
     
     /* note:
        for testing code we use GATracker
@@ -53,8 +53,8 @@ package
         
         public function onComplete( evt:Event ):void
         {
-            //use namespace as3_api;
-            use namespace js_bridge;
+            use namespace as3_api;
+            // use namespace js_bridge;
             
             _gat = new GATracker( this );
           	

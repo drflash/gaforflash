@@ -20,10 +20,8 @@
 
 package com.google.analytics.campaign
 {
-    import com.google.analytics.utils.Variables;
-    
-    import flash.net.URLVariables;
-    
+    import com.google.analytics.utils.Variables;    
+
     /**
      * The CampaingInfo class.
      */

@@ -20,16 +20,14 @@
 
 package com.google.analytics.utils
 {
-    import com.google.analytics.config;
-    import com.google.analytics.debug;
     import com.google.analytics.core.ga_internal;
+    import com.google.analytics.debug;
     import com.google.analytics.external.HTMLDOM;
     
     import flash.system.Capabilities;
     import flash.system.Security;
-    import flash.system.System;
-    
-    
+    import flash.system.System;    
+
     /**
      * Local Informations provide informations for the local environment.
      */

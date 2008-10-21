@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,10 +22,8 @@ package com.google.analytics.core
     import com.google.analytics.config;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Variables;
-    import com.google.analytics.utils.Version;
-    
-    import flash.net.URLVariables;
-    
+    import com.google.analytics.utils.Version;    
+
     public class BrowserInfo
     {
         private var _info:Environment;

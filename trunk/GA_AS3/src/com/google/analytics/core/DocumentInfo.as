@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,10 +22,11 @@ package com.google.analytics.core
     import com.google.analytics.config;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.utils.Environment;
-    import com.google.analytics.utils.Variables;
-    
-    import flash.net.URLVariables;
-    
+    import com.google.analytics.utils.Variables;    
+
+    /**
+     * The DocumentInfo class.
+     */
     public class DocumentInfo
     {
         private var _info:Environment;
@@ -34,6 +35,9 @@ package com.google.analytics.core
         private var _pageURL:String;
         private var _utmr:String;
         
+        /**
+         * Creates a new DocumentInfo instance.
+         */
         public function DocumentInfo( info:Environment, formatedReferrer:String,
                                       pageURL:String = null, adSense:AdSenseGlobals = null )
         {
@@ -50,17 +54,17 @@ package com.google.analytics.core
             _adSense = adSense;
         }
         
-  /**
-   * Generates hit id for revenue per page tracking for AdSense.  This method
-   * first examines the DOM for existing hid.  If there is already a hid in DOM,
-   * then this method will return the existing hid.  If there isn't any hid in
-   * DOM, then this method will generate a new hid, and both stores it in DOM, and
-   * returns it to the caller.
-   *
-   * @memberOf _gat
-   * @private
-   * @return {Number} hid used by AdSense for revenue per page tracking
-   */
+        /**
+         * Generates hit id for revenue per page tracking for AdSense.  This method
+         * first examines the DOM for existing hid.  If there is already a hid in DOM,
+         * then this method will return the existing hid.  If there isn't any hid in
+         * DOM, then this method will generate a new hid, and both stores it in DOM, and
+         * returns it to the caller.
+         *
+         * @memberOf _gat
+         * @private
+         * @return {Number} hid used by AdSense for revenue per page tracking
+         */
         private function _generateHitId():Number
         {
             var hid:Number;
@@ -80,17 +84,17 @@ package com.google.analytics.core
             return hid;
         }
         
-  /**
-   * This method will collect and return the page URL information based on
-   * the page URL specified by the user if present, and the document's
-   * actual path otherwise.
-   *
-   * @private
-   * @param {String} opt_pageURL (Optional) User-specified Page URL to assign
-   *     metrics to at the back-end.
-   *
-   * @return {String} Final page URL to assign metrics to at the back-end.
-   */
+        /**
+         * This method will collect and return the page URL information based on
+         * the page URL specified by the user if present, and the document's
+         * actual path otherwise.
+         *
+         * @private
+         * @param {String} opt_pageURL (Optional) User-specified Page URL to assign
+         *     metrics to at the back-end.
+         *
+         * @return {String} Final page URL to assign metrics to at the back-end.
+         */
         private function _renderPageURL( pageURL:String = "" ):String
         {
             var pathname:String = _info.locationPath;
@@ -105,11 +109,10 @@ package com.google.analytics.core
         }
         
         /**
-        * Page title, which is a URL-encoded string.
-        * 
-        * ex:
-        * utmdt=analytics%20page%20test
-        */
+         * Page title, which is a URL-encoded string.
+         * <p><b>Example :</b></p>
+         * <pre class="prettyprint">utmdt=analytics%20page%20test</pre>
+         */
         public function get utmdt():String
         {
             return _info.documentTitle;
@@ -165,6 +168,10 @@ package com.google.analytics.core
             return variables;
         }
         
+        /**
+         * Returns the url String representation of the object.
+         * @return the url String representation of the object.
+         */
         public function toURLString():String
         {
             var v:Variables = toVariables();
