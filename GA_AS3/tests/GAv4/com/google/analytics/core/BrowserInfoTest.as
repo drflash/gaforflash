@@ -25,6 +25,7 @@ package com.google.analytics.core
     import com.google.analytics.utils.FakeEnvironment;
     import com.google.analytics.utils.Variables;
     import com.google.analytics.utils.Version;
+    import com.google.analytics.core.BrowserInfo;
     
     import flash.net.URLVariables;
 
@@ -39,6 +40,12 @@ package com.google.analytics.core
             super(name);
         }
         
+        public function testHitId():void {
+        	assertEquals(1,1);
+        
+        }
+        
+         
         public function setUp():void
         {
             _env0 = new FakeEnvironment("",null,"","","","","","",new Version(9,0,115,0),"en-GB","UTF-8","","","",null,800,600,"24");
@@ -73,7 +80,7 @@ package com.google.analytics.core
             assertEquals( "0",        vars.utmje );
             assertEquals( "9.0 r115", vars.utmfl );
         }
-        
+      
         public function testToURLString():void
         {
             var vars:Variables = _browserInfo0.toVariables();

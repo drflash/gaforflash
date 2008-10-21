@@ -28,6 +28,7 @@ package com.google.analytics
     import com.google.analytics.core.js_bridge;
     import com.google.analytics.debug.Layout;
     import com.google.analytics.events.MessageEvent;
+    import com.google.analytics.external.HTMLDOM;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.v4.Bridge;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
@@ -46,6 +47,7 @@ package com.google.analytics
         private var _localInfo:Environment;
         private var _buffer:Buffer;
         private var _gifRequest:GIFRequest;
+        private var _dom:HTMLDOM;
         
         /**
         * note:
@@ -68,7 +70,8 @@ package com.google.analytics
                
                By default we will define "Flash" for our local tests
             */
-            _localInfo  = new Environment( "", "", "", null );
+            _dom		= new HTMLDOM();
+            _localInfo  = new Environment( "", "", "", _dom );
             _buffer     = new Buffer( false );
             _gifRequest = new GIFRequest( _buffer, _localInfo );
         }

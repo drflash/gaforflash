@@ -20,145 +20,183 @@
 
 package com.google.analytics.external
 {
-	
+	import com.google.analytics.debug;
 	
 	/**
-	 * Proxy access to HTML Document Object Model.
+	 * Object to contain HTML Document Object Model.
 	 */
     public class HTMLDOM extends JavascriptProxy
-    {
-        
-
+    {        
+	    private var _location:String = "";
+        private var _protocol:String = "";   
+        private var _host:String = "";
+        private var _pathname:String = "";
+        private var _search:String = "";
+        private var _referrer:String = "";
+        private var _title:String = "";
+        private var _language:String = "";
+        private var _characterSet:String = "";
+        private var _colorDepth:String = "";
+		
+		/**
+		 * Constructor for HTMLDOM
+		 */
         public function HTMLDOM()
         {
+        	getDomProperties();       	
         }
         
         /**
-         * Determinates the 'host' String value from the HTML DOM.
-         */
-        public function get host():String
-        {
-            if( !isAvailable() )
-            {
-                return null;
-            }
+        * Grabs all DOM properties and sets this objects values.
+        * Pulling document.location insures we also get port and hash values 
+        */
+        public function getDomProperties():void {
+        	
+        	var domString:String = "";
+        	var domValues:Array = new Array();
+        	
+        	var domXML:XML = 
+        		<script>
+        			 <![CDATA[
+                	function()
+                	{
+        				var dom = "";
+						var dlim = "$";
+        				
+        				dom += document.location +dlim; 
+        				dom += document.location.protocol +dlim;
+						dom += document.location.host +dlim;
+						dom += document.location.pathname +dlim;
+						dom += document.location.search +dlim;
+						dom += document.referrer +dlim;
+						dom += document.title +dlim;
+						dom += (navigator.language?navigator.language:navigator.browserLanguage) +dlim;
+						dom += (document.characterSet?document.characterSet:document.charset) +dlim;
+						dom += window.screen.colorDepth;
+        				
+        				return dom;
+					}	
+					]]>
+        		</script>;
+        	
+        	domString = jsExternal( domXML );
+        	domValues = domString.split('$');
+        	
+        	if(domValues.length < 10 && debug.verbose && isAvailable()) {
+        		debug.warning("Not all browser values have been returned from HTMLDOM")
+        	}
+        	
+        	_location 		= domValues[0];
+        	_protocol 		= domValues[1]; 
+        	_host 			= domValues[2];
+        	_pathname 		= domValues[3];
+        	_search 		= domValues[4];
+        	_referrer 		= domValues[5];
+            _title 			= domValues[6];        	
+            _language 		= domValues[7];
+            _characterSet 	= domValues[8];
+            _colorDepth 	= domValues[9];
             
-            return getProperty( "document.location.host" );
+            if (debug.verbose) {
+            	var msg:String ="";
+            	msg += "document.location = "				+_location;
+            	msg += "\ndocument.location.protocol = "	+ _protocol;
+            	msg += "\ndocument.location.host = "		+ _host;
+            	msg += "\ndocument.location.pathname = " 	+_pathname;
+            	msg += "\ndocument.location.search = " 		+_search;
+            	msg += "\ndocument.referrer = " 			+_referrer;
+            	msg += "\ndocument.title = " 				+_title;
+            	msg += "\nnavigator.language = " 			+_language;
+            	msg += "\ndocument.characterSet = " 		+_characterSet;
+            	msg += "\nwindow.screen.colorDepth = " 		+_colorDepth;
+            	debug.info(msg);
+            }
+     
         }
         
-        /**
-         * Determinates the 'langage' String value from the HTML DOM.
-         */
-        public function get language():String
-        {
-            if( !isAvailable() )
-            {
-                return null;
-            }
-            
-            var lang:String = getProperty( "navigator.language" );
-            
-            if( lang == null )
-            {
-                lang = getProperty( "navigator.browserLanguage" );
-            }
-            
-            return lang;
-        }
         
-        public function get characterSet():String
-        {
-            if( !isAvailable() )
-            {
-                return null;
-            }
-            
-            var cs:String = getProperty( "document.characterSet" );
-            
-            if( cs == null )
-            {
-                cs = getProperty( "document.charset" );
-            }
-            
-            return cs;
-            
-        }
-        
-        public function get colorDepth():String
-        {
-            if( !isAvailable() )
-            {
-                return null;
-            }
-            
-            var cd:String = getProperty( "window.screen.colorDepth" );
-            
-            return cd;
-        }
-        
-        
-        /**
-         * Determinates the 'location' String value from the HTML DOM.
-         */     
+       /**
+        * Returns the 'document.location' String value from the HTML DOM.
+        */     
         public function get location():String
         {
-            if( !isAvailable() )
-            {
-                return null;
-            }
-            return getProperty( "document.location" );
-        }
-        
-        public function get pathname():String
-        {
-            if( !isAvailable() )
-            {
-                return null;
-            }
-            return getProperty( "document.location.pathname" );
-        }
-        
+           return _location;
+        }   
+         
         /**
-         * Determinates the 'protocol' String value from the HTML DOM.
+         * Returns the 'document.location.protocol' String value from the HTML DOM.
          */       
         public function get protocol():String
         {
-            if( !isAvailable() )
-            {
-                return null;
-            }
-            return getProperty( "document.location.protocol" );
+        	return _protocol;
+        } 
+             
+       /**
+        * Returns the 'document.location.host' String value from the HTML DOM.
+        */
+        public function get host():String
+        {
+        	return _host;
+        }
+        
+       /**
+        * Returns the 'document.location.pathname' String value from the HTML DOM.
+        */                
+        public function get pathname():String
+        {
+        	return _pathname;
         }
         
         /**
-         * Determinates the 'search' String value from the HTML DOM.
-         */        
+        * Returns the 'document.location.search' String value from the HTML DOM.
+        */        
         public function get search():String
         {
-            if( !isAvailable() )
-            {
-                return null;
-            }
-            return getProperty( "document.location.search" );
+           return _search;
         }
         
+        /**
+        * Returns the 'document.referrer' String value from HTML DOM
+        */        
         public function get referrer():String
-        {
-            if( !isAvailable() )
-            {
-                return null;
-            }
-            return getProperty( "document.referrer" );
+        { 
+        	return _referrer;
         }
         
+       /**
+        * Returns the 'document.title' String value from HTML DOM
+        */ 
         public function get title():String
         {
-            if( !isAvailable() )
-            {
-                return null;
-            }
-            return getProperty( "document.title" );
+        	return _title; 
         }
+        
+          
+       /**
+        * Returns the 'nvigator.langage' or 'navigator.browserLanguage' String value from the HTML DOM.
+        */
+        public function get language():String
+        {
+           return _language;
+        }
+        
+                
+        /**
+        * Returns the 'document.characterSet' or 'document.charset' String value from the HTML DOM.
+        */ 
+        public function get characterSet():String
+        {
+        	return _characterSet;
+        }
+        
+        /**
+        * Returns the 'document.characterSet' or 'document.charset' String value from the HTML DOM.
+        */       
+        public function get colorDepth():String
+        {
+        	return _colorDepth;
+        }
+        
         
     }
 }
