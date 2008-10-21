@@ -19,7 +19,6 @@
 
 package com.google.analytics.v4
 {
-    
     import com.google.analytics.campaign.CampaignInfo;
     import com.google.analytics.campaign.CampaignManager;
     import com.google.analytics.config;
@@ -31,14 +30,13 @@ package com.google.analytics.v4
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.data.X10;
     import com.google.analytics.debug;
-    import com.google.analytics.debug.Layout;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.Variables;
     import com.google.analytics.utils.generate32bitRandom;
-    import com.google.analytics.utils.generateHash;
-    
+    import com.google.analytics.utils.generateHash;    
+
     /**
      * The Tracker class.
      */
