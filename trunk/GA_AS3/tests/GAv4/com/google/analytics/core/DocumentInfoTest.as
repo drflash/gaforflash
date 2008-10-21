@@ -21,14 +21,12 @@ package com.google.analytics.core
 {
     import buRRRn.ASTUce.framework.TestCase;
     
-    import com.google.analytics.config;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.external.FakeAdSenseGlobals;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.FakeEnvironment;
     import com.google.analytics.utils.Variables;
-    
-    import flash.net.URLVariables;
+    import com.google.analytics.config;
     
     public class DocumentInfoTest extends TestCase
     {
@@ -54,7 +52,7 @@ package com.google.analytics.core
             _emptyDocInfo1 = new DocumentInfo( _env0, "", null, _adSense1 );
             
         }
-        
+         
         public function testHitId():void
         {
             //hitId updated from docInfo
@@ -66,7 +64,7 @@ package com.google.analytics.core
             assertEquals( "12345", _adSense1.hid );
             assertEquals( _adSense1.hid, _emptyDocInfo1.utmhid );
         }
-        
+       
         public function testPageTitle():void
         {
             var docInfo:DocumentInfo = new DocumentInfo( _env1, "", null, _adSense0 );
@@ -82,7 +80,7 @@ package com.google.analytics.core
                     
                 assertEquals( "a simple title", vars.utmdt );
                 assertEquals( "utmdt=a%20simple%20title", vars2.toString() );
-            }
+          }
             
         }
         
