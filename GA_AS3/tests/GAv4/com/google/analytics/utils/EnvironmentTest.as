@@ -21,8 +21,8 @@ package com.google.analytics.utils
 {
     import buRRRn.ASTUce.framework.TestCase;
     
-    import com.google.analytics.external.FakeHTMLDOM;
-    import com.google.analytics.external.HTMLDOM;
+    //import com.google.analytics.external.FakeHTMLDOM;
+    //import com.google.analytics.external.HTMLDOM;
     
     public class EnvironmentTest extends TestCase
     {
@@ -68,12 +68,12 @@ package com.google.analytics.utils
         {
             // THIS TEST WILL NOT WORK ON A NON-UK MACHINE
             
-              var set1:HTMLDOM = new FakeHTMLDOM("","en-GB"); //downcast trick
-              var set2:HTMLDOM = new FakeHTMLDOM("","fr-FR"); //downcast trick
+              //var set1:HTMLDOM = new FakeHTMLDOM("","en-GB"); //downcast trick
+              //var set2:HTMLDOM = new FakeHTMLDOM("","fr-FR"); //downcast trick
             
             
-              var env1:Environment = new Environment( "" , "", "", set1 ); //en-GB
-              var env2:Environment = new Environment( "" , "", "", set2 ); //fr-FR
+              //var env1:Environment = new Environment( "" , "", "", set1 ); //en-GB
+              //var env2:Environment = new Environment( "" , "", "", set2 ); //fr-FR
             
             //assertEquals( "en-GB" , li1.language , "The LocalInfo language attribute failed" ) ; //match, upgrade
             //assertEquals( "fr-FR" , li2.language , "The LocalInfo language attribute failed" ) ; //no match, no upgrade

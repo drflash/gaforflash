@@ -21,7 +21,6 @@
 package com.google.analytics.external
 {
     import com.google.analytics.debug;
-    import com.google.analytics.debug.Layout;
     import flash.external.ExternalInterface;
     
     /**
@@ -124,13 +123,13 @@ package com.google.analytics.external
 					jsResult = ExternalInterface.call.apply(ExternalInterface, args);
 					return jsResult;
 				}
-				catch(err:SecurityError)
+				catch(er1:SecurityError)
 				{
 					debug.warning("ExternalInterface is not available.  Ensure that allowScriptAccess is set to 'always' in the Flash embed HTML.");
 				}
-				catch(err:Error)
+				catch(er2:Error)
 				{
-					debug.warning("ExternalInterface failed to make the call, reason: " + err.message);
+					debug.warning("ExternalInterface failed to make the call, reason: " + er2.message);
 				}
 			}
 			else
@@ -138,8 +137,6 @@ package com.google.analytics.external
 				debug.warning("ExternalInterface is not available.");
 			}
 		}
-        
-        
-        
+            
     }
 }
