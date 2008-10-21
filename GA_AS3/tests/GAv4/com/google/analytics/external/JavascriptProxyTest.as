@@ -19,52 +19,65 @@
 
 package com.google.analytics.external
 {
-    import buRRRn.ASTUce.framework.TestCase;
-    
-    public class JavascriptProxyTest extends TestCase
-    {
-        
-        private var _jsProxy:JavascriptProxy;
-        
-        public function JavascriptProxyTest(name:String="")
-        {
-        super( name );
-        }
-        
-        public function setUp():void
-        {
-            _jsProxy = new JavascriptProxy();
-        }
-        
-        //
-        //	note this requires flash param allowscriptaccess = always
-        //
-        public function testjsExternal():void
-        {
-            if( !_jsProxy.isAvailable() )
+	import buRRRn.ASTUce.framework.TestCase;
+	
+	public class JavascriptProxyTest extends TestCase
+	{
+		
+		private var _jsProxy:JavascriptProxy;
+		
+		public function JavascriptProxyTest(name:String="")
+		{
+			super( name );
+		}
+		
+		public function setUp():void
+		{
+			_jsProxy = new JavascriptProxy();			
+		}
+
+		
+		//
+		//	note this requires flash param allowscriptaccess = always
+		//
+		public function testJsExternal():void
+		{
+			if( !_jsProxy.isAvailable() )
+            {
+                return;
+            }
+                
+			var testXML2:XML =      
+        		<script>
+        			<![CDATA[
+        				function(a, b, c, d, e){ return a + b + c + d + e; }
+        			]]>
+        		</script>;
+        		
+			assertEquals(15, _jsProxy.jsExternal(testXML2, 1,2,3,4,5));			
+		
+		}
+		
+		public function testGetProperty():void
+		{
+			if( !_jsProxy.isAvailable() )
             {
                 return;
             }
             
-            var testXML:XML = 
-                <script>
-                    <![CDATA[
-                        function(a){ return a; }
-                    ]]>
-                </script>;
-                
-            var testXML2:XML =      
-                <script>
-                    <![CDATA[
-                        function(a, b, c, d, e){ return a + b + c + d + e; }
-                    ]]>
-                </script>;
-                
-            assertEquals(5, _jsProxy.jsExternal(testXML, 5));
-            assertEquals("correct", _jsProxy.jsExternal(testXML, "correct"));	
-            assertEquals(15, _jsProxy.jsExternal(testXML2, 1,2,3,4,5));
-            
-        }
-        
-    }
+			var testXML:XML = 
+			    <script>
+			        <![CDATA[
+			            function(a){ return a; }
+			        ]]>
+			    </script>;			
+			
+			assertEquals(5, _jsProxy.jsExternal(testXML, 5));
+        	assertEquals("correct", _jsProxy.jsExternal(testXML, "correct"));	
+			
+		}
+		
+
+	}
+
 }

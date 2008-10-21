@@ -20,9 +20,9 @@
 
 package com.google.analytics.external
 {
-    import flash.external.ExternalInterface;
     import com.google.analytics.debug;
     import com.google.analytics.debug.Layout;
+    import flash.external.ExternalInterface;
     
     /**
      * Javascript proxy access class.
@@ -69,41 +69,25 @@ package com.google.analytics.external
         public function JavascriptProxy()
         {
         }
-        
-        protected function executeBlock( data:XML ):void
-        {
-            ExternalInterface.call( data );
-        }
-        
-        /**
-         * Returns the value property defines with the passed-in name value.
-         * @return the value property defines with the passed-in name value.
-         */        
-        protected function getProperty( name:String ):*
-        {
-            /* note:
-               we use a little trick here
-               we can not diretly get a property from JS
-               we can only call a function
-               so we use valueOf() to automatically get the property
-               and yes it will work only with primitives
-            */
-            return ExternalInterface.call( name + ".valueOf" );
-        }
-        
+
+		/**
+		 * Sets the value of a DOM property
+		 */            
         protected function setProperty( path:String, value:* ):void
         {
-            ExternalInterface.call( setProperty_js, path, value );
+            jsExternal( setProperty_js, path, value );
         }
         
         /**
-         * Returns the String property defines with the passed-in name value.
-         * @return the String property defines with the passed-in name value.
-         */
-        protected function getPropertyString( name:String ):String
+        * Returns the value of a DOM object
+        */  
+        public function getProperty( name:String ):*
         {
-            return ExternalInterface.call( name + ".toString" );
-        }
+    		var getFcn:String = "function () { return "+ name +"; }";
+        	
+        	return jsExternal( getFcn );
+        	
+        }    
         
         /**
          * Indicates if the javascript proxy is available.
@@ -121,13 +105,19 @@ package com.google.analytics.external
         public function jsExternal(jsMethodName:String, ... args):*
 		{	
 			var jsResult:*;
-			if(ExternalInterface.available == true)
+			if(ExternalInterface.available)
 			{
 				try
 				{
 
 					if (debug.verbose) {
-						debug.info("Flash calling JS function: "+ jsMethodName +"\nParams: "+ args.join(","));
+						var output:String = "";
+						
+						output = "Flash calling JS function: "+ jsMethodName;
+						if (args.length > 0) {
+							output += "\nParams: "+ args.join(",");
+						} 
+						debug.info(output);
 					}
 
 					args.unshift(jsMethodName);

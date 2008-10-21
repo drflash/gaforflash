@@ -129,7 +129,7 @@ package com.google.analytics
             var acctID:String = "UA-8-3";
             var oName1:String = _bridge.createJSTrackingObject(acctID);
             
-            assertEquals("_GAtrack['"+acctID+"']", oName1);
+            assertEquals("_GATracker['"+acctID+"']", oName1);
         }
         
         
