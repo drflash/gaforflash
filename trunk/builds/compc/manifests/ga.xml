@@ -5,7 +5,7 @@
     <!-- com.google.analytics -->
 
     <component id="com.google.analytics:config"    class="com.google.analytics.config"    />
-    <component id="com.google.analytics:config"    class="com.google.analytics.debug"     />
+    <component id="com.google.analytics:debug"     class="com.google.analytics.debug"     />
     <component id="com.google.analytics:GATracker" class="com.google.analytics.GATracker" />
 
     <!-- com.google.analytics.campaign -->
@@ -22,7 +22,7 @@
     <component id="com.google.analytics.core:Buffer"              class="com.google.analytics.core.Buffer"              />
     <component id="com.google.analytics.core:DocumentInfo"        class="com.google.analytics.core.DocumentInfo"        />
     <component id="com.google.analytics.core:Domain"              class="com.google.analytics.core.Domain"              />
-    <component id="com.google.analytics.core:DomainNameMode"      class="com.google.analytics.core.BrowserInfo"         />
+    <component id="com.google.analytics.core:DomainNameMode"      class="com.google.analytics.core.DomainNameMode"      />
     <component id="com.google.analytics.core:EventTracker"        class="com.google.analytics.core.EventTracker"        />
     <component id="com.google.analytics.core:ga_internal"         class="com.google.analytics.core.ga_internal"         />
     <component id="com.google.analytics.core:GIFRequest"          class="com.google.analytics.core.GIFRequest"          />
@@ -60,6 +60,7 @@
     <component id="com.google.analytics.debug:Label"           class="com.google.analytics.debug.Label"           />
     <component id="com.google.analytics.debug:Layout"          class="com.google.analytics.debug.Layout"          />
     <component id="com.google.analytics.debug:Margin"          class="com.google.analytics.debug.Margin"          />
+    <component id="com.google.analytics.debug:Panel"           class="com.google.analytics.debug.Panel"           />
     <component id="com.google.analytics.debug:Style"           class="com.google.analytics.debug.Style"           />
     <component id="com.google.analytics.debug:SuccessAlert"    class="com.google.analytics.debug.SuccessAlert"    />
     <component id="com.google.analytics.debug:UISprite"        class="com.google.analytics.debug.UISprite"        />
@@ -87,6 +88,7 @@
     <component id="com.google.analytics.utils:trim"                class="com.google.analytics.utils.trim"                />
     <component id="com.google.analytics.utils:URL"                 class="com.google.analytics.utils.URL"                 />
     <component id="com.google.analytics.utils:UserAgent"           class="com.google.analytics.utils.UserAgent"           />
+    <component id="com.google.analytics.utils:Variables"           class="com.google.analytics.utils.Variables"           />
     <component id="com.google.analytics.utils:Version"             class="com.google.analytics.utils.Version"             />
     
     <!-- com.google.analytics.v4 -->
@@ -95,7 +97,5 @@
     <component id="com.google.analytics.v4:Configuration"      class="com.google.analytics.v4.Configuration"      />
     <component id="com.google.analytics.v4:GoogleAnalyticsAPI" class="com.google.analytics.v4.GoogleAnalyticsAPI" />
     <component id="com.google.analytics.v4:Tracker"            class="com.google.analytics.v4.Tracker"            />
-   
-
     
 </componentPackage>
