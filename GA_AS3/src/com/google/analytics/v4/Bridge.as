@@ -106,7 +106,7 @@ package com.google.analytics.v4
  
          	if (!_jsProxy.jsExternal(XMLDom, account)) 
          	{
-         		var msg:String = "The Google Analytcs tracking code was not found on the container page"
+         		var msg:String = "The Google Analytcs tracking code was not found on the container page";
          		debug.warning(msg);
          		throw new Error(msg);
          	}       	

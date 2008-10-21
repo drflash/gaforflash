@@ -64,7 +64,7 @@ package com.google.analytics.v4
         
         private var _organic:Organic = new Organic();
         
-        private var _organicCache:Object  = {};
+        //private var _organicCache:Object  = {};
         
         private var _organicSources:Array = [];
         
@@ -72,19 +72,19 @@ package com.google.analytics.v4
          * Automatic / Organic keyword to ignore.
          * @private
          */
-        private var _organicIgnore:Array = [];
+        //private var _organicIgnore:Array = [];
         
         /**
          * Referral domains to ignore.
          * @private
          */
-        private var _referralIgnore:Array = [];
+        //private var _referralIgnore:Array = [];
         
         /**
          * Substring of host names to ignore when auto decorating href anchor elements for outbound link tracking.
          * @private
          */
-        private var _ignoredOutboundHosts:Array = [];
+        //private var _ignoredOutboundHosts:Array = [];
         
         /**
          * This is the cse path that needs to be ignored for Google.
