@@ -54,40 +54,59 @@ package com.google.analytics.debug
                 switch( target.alignement )
                 {
                     case Align.top:
-                    g.drawRoundRectComplex(0,0,W,H,0,0,R,R);
-                    break;
+                    {
+                        g.drawRoundRectComplex(0,0,W,H,0,0,R,R) ;
+                        break ;
+                    }
                     
-                    case Align.topLeft:
-                    g.drawRoundRectComplex(0,0,W,H,0,0,0,R);
-                    break;
+                    case Align.topLeft :
+                    {
+                        g.drawRoundRectComplex(0,0,W,H,0,0,0,R) ;
+                        break ;
+                    }
                     
                     case Align.topRight:
-                    g.drawRoundRectComplex(0,0,W,H,0,0,R,0);
-                    break;
+                    {
+                        g.drawRoundRectComplex(0,0,W,H,0,0,R,0) ;
+                        break ;
+                    }
                     
-                    case Align.bottom:
-                    g.drawRoundRectComplex(0,0,W,H,R,R,0,0);
-                    break;
+                    case Align.bottom :
+                    {
+                        g.drawRoundRectComplex(0,0,W,H,R,R,0,0);
+                        break;
+                    }
                     
-                    case Align.bottomLeft:
-                    g.drawRoundRectComplex(0,0,W,H,0,R,0,0);
-                    break;
+                    case Align.bottomLeft :
+                    {
+                        g.drawRoundRectComplex(0,0,W,H,0,R,0,0) ;
+                        break ;
+                    }
                     
-                    case Align.bottomRight:
-                    g.drawRoundRectComplex(0,0,W,H,R,0,0,0);
-                    break;
+                    case Align.bottomRight :
+                    {
+                        g.drawRoundRectComplex(0,0,W,H,R,0,0,0) ;
+                        break ;
+                    }
                     
-                    case Align.left:
-                    g.drawRoundRectComplex(0,0,W,H,0,R,0,R);
-                    break;
+                    case Align.left :
+                    {
+                        g.drawRoundRectComplex(0,0,W,H,0,R,0,R) ;
+                        break ;
+                    }
                     
-                    case Align.right:
-                    g.drawRoundRectComplex(0,0,W,H,R,0,R,0);
-                    break;
+                    case Align.right :
+                    {
+                        g.drawRoundRectComplex(0,0,W,H,R,0,R,0) ;
+                        break ;
+                    }
                     
-                    case Align.center:
-                    g.drawRoundRect(0,0,W,H,R,R);
-                    break;
+                    case Align.center :
+                    {
+                        g.drawRoundRect(0,0,W,H,R,R) ;
+                        break ;
+                    }
+                    
                 }
             }
             else

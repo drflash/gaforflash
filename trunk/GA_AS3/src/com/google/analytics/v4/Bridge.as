@@ -255,7 +255,7 @@ import com.google.analytics.core.ServerOperationMode;
         */           
         public function setAllowAnchor(enable:Boolean):void
         {
-        	_callJSObj("_setAllowAnchor", enable)
+        	_callJSObj("_setAllowAnchor", enable);
         }
         
         /**

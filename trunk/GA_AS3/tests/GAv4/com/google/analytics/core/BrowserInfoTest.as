@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,16 +19,13 @@
 
 package com.google.analytics.core
 {
-    import buRRRn.ASTUce.framework.TestCase;
-    
+    import com.google.analytics.core.BrowserInfo;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.FakeEnvironment;
     import com.google.analytics.utils.Variables;
     import com.google.analytics.utils.Version;
-    import com.google.analytics.core.BrowserInfo;
     
-    import flash.net.URLVariables;
-
+    import buRRRn.ASTUce.framework.TestCase;    
 
     public class BrowserInfoTest extends TestCase
     {
