@@ -21,15 +21,14 @@
 package com.google.analytics.external
 {
 	
+	
 	/**
 	 * Proxy access to HTML Document Object Model.
 	 */
     public class HTMLDOM extends JavascriptProxy
     {
         
-        /**
-         * Creates a new HTMLDOM instance.
-         */
+
         public function HTMLDOM()
         {
         }
@@ -107,7 +106,7 @@ package com.google.analytics.external
             {
                 return null;
             }
-            return getPropertyString( "document.location" );
+            return getProperty( "document.location" );
         }
         
         public function get pathname():String

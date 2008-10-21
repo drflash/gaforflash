@@ -52,7 +52,8 @@ package com.google.analytics.external
         {
             if( !_gaGlobalVerified )
             {
-                executeBlock( gaGlobal_js );
+          //      executeBlock( gaGlobal_js );
+                jsExternal( gaGlobal_js );
                 _gaGlobalVerified = true;
             }
         }
@@ -79,7 +80,7 @@ package com.google.analytics.external
             }
             
             _verify();
-            return getPropertyString( "gaGlobal.dh" );
+            return getProperty( "gaGlobal.dh" );
         }
         
         /**
@@ -93,7 +94,7 @@ package com.google.analytics.external
             }
             
             _verify();
-            return getPropertyString( "gaGlobal.hid" );
+            return getProperty( "gaGlobal.hid" );
         }
         
         public function set hid( value:String ):void
@@ -118,7 +119,7 @@ package com.google.analytics.external
             }
             
             _verify();
-            return getPropertyString( "gaGlobal.sid" );
+            return getProperty( "gaGlobal.sid" );
         }
         
         public function set sid( value:String ):void
@@ -146,7 +147,7 @@ package com.google.analytics.external
             }
             
             _verify();
-            return getPropertyString( "gaGlobal.vid" );
+            return getProperty( "gaGlobal.vid" );
         }
         
         public function set vid( value:String ):void
