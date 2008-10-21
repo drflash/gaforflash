@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.data
@@ -22,18 +23,18 @@ package com.google.analytics.data
     public interface Cookie
     {
         /**
-        * Format data to render in the URL.
-        */
+         * Format data to render in the URL.
+         */
         function toURLString():String;
         
         /**
-        * Deserialize data from a simple object.
-        */
+         * Deserialize data from a simple object.
+         */
         function fromSharedObject( data:Object ):void;
         
         /**
-        * Serialize data to a simple object.
-        */
+         * Serialize data to a simple object.
+         */
         function toSharedObject():Object;
     }
 }

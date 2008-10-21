@@ -20,11 +20,9 @@
 
 package com.google.analytics.v4
 {
-	import com.google.analytics.core.ServerOperationMode;
-	import com.google.analytics.external.JavascriptProxy;
-	import com.google.analytics.debug;
-    import com.google.analytics.debug.Layout;
-    
+    import com.google.analytics.debug;
+    import com.google.analytics.external.JavascriptProxy;	
+
     /**
      * This apo use a Javascript bridge to fill the GATracker properties.
      */
@@ -115,8 +113,9 @@ package com.google.analytics.v4
          	
          	
          	return "_GATracker['"+account+"']";
-        }
-        
+}
+
+import com.google.analytics.core.ServerOperationMode;        
         /**
         * Checks to ses if the tracking object Name passed into the functions exists in the DOM
         * and is a real Google Analytics tracking object
