@@ -26,10 +26,10 @@ package com.google.analytics.utils
     
     import flash.system.Capabilities;
     import flash.system.Security;
-    import flash.system.System;
+    import flash.system.System;    
 
     /**
-     * Local Informations provide informations for the local environment.
+     * Environnement provide informations for the local environment.
      */
     public class Environment
     {
@@ -41,12 +41,11 @@ package com.google.analytics.utils
         private var _url:String;
         
         /**
-         * Creates a new LocalInfo instance.
+         * Creates a new Environment instance.
          * @param url The URL of the SWF.
          * @param app The application name
          * @param version The application version
-         * @param dom the HTMLDOM
-         * @param layout a Layout reference
+         * @param dom the HTMLDOM reference.
          */
         public function Environment( url:String = "", app:String = "", version:String = "", dom:HTMLDOM = null )
         {
@@ -102,22 +101,27 @@ package com.google.analytics.utils
                 switch( test )
                 {
                     case "file:":
-                    p = Protocols.file;
-                    break;
-                    
-                    case "http:":
-                    p = Protocols.HTTP;
-                    break;
-                    
-                    case "https":
-                    if(URL.charAt(5) == ":")
                     {
-                        p = Protocols.HTTPS;
+                        p = Protocols.file;
+                        break;
                     }
-                    break;
-                    
+                    case "http:":
+                    {
+                        p = Protocols.HTTP;
+                        break;
+                    }
+                    case "https":
+                    {
+                        if(URL.charAt(5) == ":")
+                        {
+                            p = Protocols.HTTPS;
+                        }
+                        break;
+                    } 
                     default:
-                    _protocol = Protocols.none;
+                    {
+                        _protocol = Protocols.none;
+                    }
                 }
             }
             
@@ -139,23 +143,35 @@ package com.google.analytics.utils
             
             _protocol = p;
         }
-        
+
+        /**
+         * Indicates the name of the application.
+         */        
         public function get appName():String
         {
             return _appName;
         }
         
+        /**
+         * @private
+         */
         public function set appName( value:String ):void
         {
             _appName = value;
             userAgent.applicationProduct = value;
         }
         
+        /**
+         * Indicates the version of the application.
+         */
         public function get appVersion():Version
         {
             return _appVersion;
         }
         
+        /**
+         * @private
+         */
         public function set appVersion( value:Version ):void
         {
             _appVersion = value;
@@ -170,11 +186,17 @@ package com.google.analytics.utils
             _url = value;
         }
         
+        /**
+         * Indicates the location of swf.
+         */
         public function get locationSWFPath():String
         {
             return _url;
         }
         
+        /**
+         * Indicates the referrer value.
+         */        
         public function get referrer():String
         {
             var _referrer:String = _dom.referrer;
@@ -192,6 +214,9 @@ package com.google.analytics.utils
             return "";
         }
         
+        /**
+         * Indicates the title of the document.
+         */
         public function get documentTitle():String
         {
             var _title:String = _dom.title;
@@ -243,6 +268,9 @@ package com.google.analytics.utils
             return "";
         }
         
+        /**
+         * Indicates the locationPath value.
+         */        
         public function get locationPath():String
         {
             var _pathname:String = _dom.pathname;
@@ -255,6 +283,9 @@ package com.google.analytics.utils
             return "";
         }
         
+        /**
+         * Indicates the locationSearch value.
+         */         
         public function get locationSearch():String
         {
             var _search:String = _dom.search;
@@ -272,9 +303,9 @@ package com.google.analytics.utils
          * <p>This object contains the attributes major, minor, build and revision :</p>
          * <p><b>Example :</b></b>
          * <pre class="prettyprint">
-         * import com.google.analytics.utils.LocalInfo ;
+         * import com.google.analytics.utils.Environment ;
          * 
-         * var info:LocalInfo = new LocalInfo( "http://www.domain.com" ) ;
+         * var info:Environment = new Environment( "http://www.domain.com" ) ;
          * var version:Object = info.flashVersion ;
          * 
          * trace( version.major    ) ; // 9
@@ -312,32 +343,24 @@ package com.google.analytics.utils
         }
         
         /**
-        * Return the internal character set used by the flash player
-        * 
-        * logic:
-        * by default flash player use unicode internally
-        * so we return UTF-8
-        * 
-        * if the player use the system code page
-        * then we try to return the char set of the browser
-        * 
-        */
+         * Returns the internal character set used by the flash player
+         * <p>Logic : by default flash player use unicode internally so we return UTF-8.</p>
+         * <p>If the player use the system code page then we try to return the char set of the browser.</p>
+         * @return the internal character set used by the flash player
+         */
         public function get languageEncoding():String
         {
             if( System.useCodePage )
             {
                 var _charset:String = _dom.characterSet;
-                
                 if( _charset )
                 {
                     return _charset;
                 }
-                
                 return "-"; //not found
             }
-            
             //default
-            return "UTF-8";
+            return "UTF-8" ;
         }
         
         /**
@@ -351,7 +374,8 @@ package com.google.analytics.utils
          * <li>"Windows CE" (available only in Flash Player SDK, not in the desktop version)</li>
          * <li>"Linux"</li>
          * <li>"MacOS"</li>
-         * <p>Other strings we can obtain ( not documented : "Mac OS 10.5.4" , "Windows Vista")</p> 
+         * <p>Other strings we can obtain ( not documented : "Mac OS 10.5.4" , "Windows Vista")</p>
+         * @return the operating system string.
          * @see Capabilities.os
          */        
         public function get operatingSystem():String
@@ -366,6 +390,7 @@ package com.google.analytics.utils
          * <li><b>"Desktop"</b>    : for the Adobe AIR runtime (except for SWF content loaded by an HTML page, which has Capabilities.playerType set to "PlugIn").</li>
          * <li><b>"External"</b>   : for the external Flash Player "PlugIn" for the Flash Player browser plug-in (and for SWF content loaded by an HTML page in an AIR application).</li>
          * <li><b>"StandAlone"</b> : for the stand-alone Flash Player.</li>
+         * @return the player type.
          * @see Capabilities.playerType
          */                       
         public function get playerType():String
@@ -394,54 +419,59 @@ package com.google.analytics.utils
             }
             
             return _protocol;
+        }
+        
+        /**
+         * Indicates the height of the screen.
+         * @see Capabilities.screenResolutionY
+         */        
+        public function get screenHeight():Number
+        {
+            return Capabilities.screenResolutionY;
         }        
         
+        /**
+         * Indicates the width of the screen.
+         * @see Capabilities.screenResolutionX
+         */
         public function get screenWidth():Number
         {
             return Capabilities.screenResolutionX;
         }
-        
-        public function get screenHeight():Number
-        {
-            return Capabilities.screenResolutionY;
-        }
-        
-        /* note:
-           in AIR we can use flash.display.Screen
-           to directly get the colorDepth property
-           
-           in flash player we can only access
-           screenColor in flash.system.Capabilities
-           
-           some ref: http://en.wikipedia.org/wiki/Color_depth
-           
-           "color" -> 16-bit or 24-bit or 32-bit
-           "gray"  -> 2-bit
-           "bw"    -> 1-bit
-           
-        */
+                
+        /**
+         * In AIR we can use flash.display.Screen to directly get the colorDepth property 
+         * in flash player we can only access screenColor in flash.system.Capabilities.
+         * <p>Some ref : <a href="http://en.wikipedia.org/wiki/Color_depth">http://en.wikipedia.org/wiki/Color_depth</a></p>
+         * <li>"color" -> 16-bit or 24-bit or 32-bit</li>
+         * <li>"gray"  -> 2-bit</li>
+         * <li>"bw"    -> 1-bit</li>
+         */
         public function get screenColorDepth():String
         {
             var color:String;
-            
             switch( Capabilities.screenColor )
             {
                 case "bw":
-                color = "1";
-                break;
-                
+                {
+                    color = "1";
+                    break;
+                }
                 case "gray":
-                color = "2";
-                break;
-                
+                {
+                    color = "2";
+                    break;
+                }
                 /* note:
                    as we have no way to know if
                    we are in 16-bit, 24-bit or 32-bit
                    we gives 24-bit by default
                 */
-                case "color":
-                default:
-                color = "24";
+                case "color" :
+                default      :
+                {
+                    color = "24" ;
+                }
             }
             
             var _colorDepth:String = _dom.colorDepth;
@@ -456,9 +486,9 @@ package com.google.analytics.utils
         
         /**
          * Defines a custom user agent.
-         * For case where the user would want to define its own application name and version
-         * it is possible to change appName and appVersion which are in sync with
-         * applicationProduct and applicationVersion properties
+         * <p>For case where the user would want to define its own application name and version 
+         * it is possible to change appName and appVersion which are in sync with 
+         * applicationProduct and applicationVersion properties.</p>
          */
         public function get userAgent():UserAgent
         {
@@ -485,14 +515,16 @@ package com.google.analytics.utils
         
         /**
          * Indicates if the SWF is embeded in an HTML page.
-         * @return true if the SWF is embeded in an HTML page.
+         * @return <code class="prettyprint">true</code> if the SWF is embeded in an HTML page.
          */
         public function isInHTML():Boolean
         {
             return Capabilities.playerType == "PlugIn" ;
         }
         
-        //are we running in AIR ?
+        /**
+         * Indicates if the application is running in AIR.
+         */
         public function isAIR():Boolean
         {
             return (playerType == "Desktop") && (Security.sandboxType.toString() == "application");

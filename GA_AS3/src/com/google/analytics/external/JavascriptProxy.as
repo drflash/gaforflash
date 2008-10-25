@@ -123,13 +123,13 @@ package com.google.analytics.external
 					jsResult = ExternalInterface.call.apply(ExternalInterface, args);
 					return jsResult;
 				}
-				catch(er1:SecurityError)
+				catch(e:SecurityError)
 				{
 					debug.warning("ExternalInterface is not available.  Ensure that allowScriptAccess is set to 'always' in the Flash embed HTML.");
 				}
-				catch(er2:Error)
+				catch(e:Error)
 				{
-					debug.warning("ExternalInterface failed to make the call, reason: " + er2.message);
+					debug.warning("ExternalInterface failed to make the call, reason: " + e.message);
 				}
 			}
 			else
