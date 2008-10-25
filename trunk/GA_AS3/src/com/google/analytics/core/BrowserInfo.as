@@ -15,6 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.core
@@ -24,77 +25,73 @@ package com.google.analytics.core
     import com.google.analytics.utils.Variables;
     import com.google.analytics.utils.Version;    
 
+    /**
+     * The BrowserInfo class.
+     */
     public class BrowserInfo
     {
+    	
         private var _info:Environment;
         
+        /**
+         * Creates a new BrowserInfo instance.
+         * @param info The Environment reference of the BrowserInfo instance.
+         */
         public function BrowserInfo( info:Environment )
         {
             _info = info;
         }
         
         /**
-        * Language encoding for the browser.
-        * Some browsers don't set this, in which case it is set to "-".
-        * 
-        * ex:
-        * utmcs=ISO-8859-1
-        */
+         * Language encoding for the browser.
+         * <p>Some browsers don't set this, in which case it is set to "-".</p>
+         * <p>Example : <b>utmcs=ISO-8859-1</b></p>
+         */
         public function get utmcs():String
         {
             return _info.languageEncoding;
         }
         
         /**
-        * Screen resolution
-        * 
-        * ex:
-        * utmsr=2400x1920
-        */
+         * The Screen resolution
+         * <p>Example : <b>utmsr=2400x1920</b></p>
+         */
         public function get utmsr():String
         {
             return _info.screenWidth + "x" + _info.screenHeight;
         }
         
         /**
-        * Screen color depth
-        * 
-        * ex:
-        * utmsc=24-bit
-        */
+         * Screen color depth
+         * <p>Example :<b>utmsc=24-bit</b></p>
+         */
         public function get utmsc():String
         {
             return _info.screenColorDepth + "-bit";
         }
         
         /**
-        * Browser language.
-        * 
-        * ex:
-        * utmul=pt-br
-        */
+         * Browser language.
+         * <p>Example :<b>utmul=pt-br</b></p>
+         */
         public function get utmul():String
         {
             return _info.language.toLowerCase();
         }
         
         /**
-        * Indicates if browser is Java-enabled.
-        * 
-        * ex:
-        * utmje=1
-        */
+         * Indicates if browser is Java-enabled.
+         * <p>Example :<b>utmje=1</b></p>
+         */
         public function get utmje():String
         {
             return "0"; //not supported
         }
         
         /**
-        * Flash Version.
-        * 
-        * ex:
-        * utmfl=9.0%20r48
-        */
+         * Flash Version.
+         * <p>Example :<b>utmfl=9.0%20r48</b></p>
+         */
         public function get utmfl():String
         {
             if( config.detectFlash )
@@ -106,21 +103,27 @@ package com.google.analytics.core
             return "-";
         }
         
+        /**
+         * Returns a Variables object representation.
+         * @return a Variables object representation.
+         */
         public function toVariables():Variables
         {
             var variables:Variables = new Variables();
                 variables.URIencode = true;
-                
                 variables.utmcs = utmcs;
                 variables.utmsr = utmsr;
                 variables.utmsc = utmsc;
                 variables.utmul = utmul;
                 variables.utmje = utmje;
                 variables.utmfl = utmfl;
-                
             return variables;
         }
         
+        /**
+         * Returns the url String representation of the object.
+         * @return the url String representation of the object.
+         */
         public function toURLString():String
         {
             var v:Variables = toVariables();

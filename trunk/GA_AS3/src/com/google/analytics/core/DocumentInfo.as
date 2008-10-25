@@ -38,15 +38,11 @@ package com.google.analytics.core
         /**
          * Creates a new DocumentInfo instance.
          */
-        public function DocumentInfo( info:Environment, formatedReferrer:String,
-                                      pageURL:String = null, adSense:AdSenseGlobals = null )
+        public function DocumentInfo( info:Environment, formatedReferrer:String, pageURL:String = null, adSense:AdSenseGlobals = null )
         {
             _info = info;
-            
             _utmr = formatedReferrer;
-            
             _pageURL = pageURL;
-            
             if( !adSense )
             {
                 adSense = new AdSenseGlobals();
@@ -55,15 +51,11 @@ package com.google.analytics.core
         }
         
         /**
-         * Generates hit id for revenue per page tracking for AdSense.  This method
-         * first examines the DOM for existing hid.  If there is already a hid in DOM,
-         * then this method will return the existing hid.  If there isn't any hid in
-         * DOM, then this method will generate a new hid, and both stores it in DOM, and
-         * returns it to the caller.
-         *
-         * @memberOf _gat
-         * @private
-         * @return {Number} hid used by AdSense for revenue per page tracking
+         * Generates hit id for revenue per page tracking for AdSense. 
+         * <p>This method first examines the DOM for existing hid.</p>  
+         * <p>If there is already a hid in DOM, then this method will return the existing hid.</p> 
+         * <p>If there isn't any hid in DOM, then this method will generate a new hid, and both stores it in DOM, and returns it to the caller.</p>
+         * @return hid used by AdSense for revenue per page tracking
          */
         private function _generateHitId():Number
         {
@@ -119,38 +111,36 @@ package com.google.analytics.core
         }
         
         /**
-        * hit id for revenue per page tracking for AdSense.
-        * 
-        * ex:
-        * utmhid=2059107202
-        */
+         * Hit id for revenue per page tracking for AdSense.
+         * <p><b>Example :<b><code class="prettyprint">utmhid=2059107202</code></p>
+         */
         public function get utmhid():String
         {
             return String( _generateHitId() );
         }
         
         /**
-        * Referral, complete URL.
-        * 
-        * ex:
-        * utmr=http://www.example.com/aboutUs/index.php?var=selected
-        */
+         * Referral, complete URL.
+         * <p><b>Example :<b><code class="prettyprint">utmr=http://www.example.com/aboutUs/index.php?var=selected</code></p>
+         */
         public function get utmr():String
         {
             return _utmr;
         }
         
         /**
-        * Page request of the current page. 
-        * 
-        * ex:
-        * utmp=/testDirectory/myPage.html
-        */
+         * Page request of the current page. 
+         * <p><b>Example :<b><code class="prettyprint">utmp=/testDirectory/myPage.html</code></p>
+         */
         public function get utmp():String
         {
             return _renderPageURL( _pageURL );
         }
         
+        /**
+         * Returns a Variables object representation.
+         * @return a Variables object representation.
+         */        
         public function toVariables():Variables
         {
             var variables:Variables = new Variables();
