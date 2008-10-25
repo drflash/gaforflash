@@ -26,7 +26,7 @@ package com.google.analytics.utils
     
     import flash.system.Capabilities;
     import flash.system.Security;
-    import flash.system.System;    
+    import flash.system.System;
 
     /**
      * Local Informations provide informations for the local environment.
@@ -73,7 +73,7 @@ package com.google.analytics.utils
                 v = Version.fromString( version );
             }
             
-            if( dom == null )
+            if( !dom )
             {
                 dom = new HTMLDOM();
             }
@@ -184,6 +184,11 @@ package com.google.analytics.utils
                 return _referrer;
             }
             
+            if( protocol == Protocols.file )
+            {
+                return "localhost";
+            }
+            
             return "";
         }
         
@@ -228,6 +233,11 @@ package com.google.analytics.utils
                 }
                 
                 return str;
+            }
+        
+            if( protocol == Protocols.file )
+            {
+                return "localhost";
             }
         
             return "";
