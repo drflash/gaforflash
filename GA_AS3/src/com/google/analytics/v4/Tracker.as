@@ -28,8 +28,8 @@ package com.google.analytics.v4
     import com.google.analytics.core.DomainNameMode;
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.ServerOperationMode;
-    import com.google.analytics.debug;
     import com.google.analytics.data.X10;
+    import com.google.analytics.debug;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
@@ -37,8 +37,8 @@ package com.google.analytics.v4
     import com.google.analytics.utils.Variables;
     import com.google.analytics.utils.generate32bitRandom;
     import com.google.analytics.utils.generateHash;
-    import com.google.analytics.utils.validateAccount;
-    
+    import com.google.analytics.utils.validateAccount;    
+
     /**
      * The Tracker class.
      */
@@ -84,7 +84,7 @@ package com.google.analytics.v4
         {
             if( !validateAccount( account ) )
             {
-                var msg:String = "Account \"" + account + "\" is not valid."
+                var msg:String = "Account \"" + account + "\" is not valid." ;
                 debug.warning( msg );
                 throw new Error( msg );
             }

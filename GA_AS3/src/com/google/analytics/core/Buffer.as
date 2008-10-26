@@ -31,8 +31,8 @@ package com.google.analytics.core
     
     import flash.events.NetStatusEvent;
     import flash.net.SharedObject;
-    import flash.net.SharedObjectFlushStatus;
-    
+    import flash.net.SharedObjectFlushStatus;    
+
     /**
      * Google Analytics Tracker Code (GATC)'s memory module.
      * 
@@ -58,6 +58,60 @@ package com.google.analytics.core
         private var _utmk:UTMK;
         private var _utmv:UTMV;
         private var _utmz:UTMZ;
+        
+        private function _onFlushStatus( event:NetStatusEvent ):void
+        {
+            trace("User closed permission dialog...");
+            
+            switch( event.info.code )
+            {
+                case "SharedObject.Flush.Success":
+                trace("User granted permission -- value saved.");
+                break;
+                
+                case "SharedObject.Flush.Failed":
+                trace("User denied permission -- value not saved.");
+                break;
+            }
+            
+            _SO.removeEventListener( NetStatusEvent.NET_STATUS, _onFlushStatus );
+        }
+        
+        private function _createUMTA():void
+        {
+            _utma = new UTMA();
+            _utma.proxy = this;
+        }
+        
+        private function _createUMTB():void
+        {
+            _utmb = new UTMB();
+            _utmb.proxy = this;
+        }
+        
+        private function _createUMTC():void
+        {
+            _utmc = new UTMC();
+            //_utmc.proxy = this;
+        }
+        
+        private function _createUMTK():void
+        {
+            _utmk = new UTMK();
+            _utmk.proxy = this;
+        }
+        
+        private function _createUMTV():void
+        {
+            _utmv = new UTMV();
+            _utmv.proxy = this;
+        }
+        
+        private function _createUMTZ():void
+        {
+            _utmz = new UTMZ();
+            _utmz.proxy = this;
+        }
         
         /**
          * Creates a new Buffer instance.
@@ -166,60 +220,9 @@ package com.google.analytics.core
             
         }
         
-        private function _onFlushStatus( event:NetStatusEvent ):void
-        {
-            trace("User closed permission dialog...");
-            
-            switch( event.info.code )
-            {
-                case "SharedObject.Flush.Success":
-                trace("User granted permission -- value saved.");
-                break;
-                
-                case "SharedObject.Flush.Failed":
-                trace("User denied permission -- value not saved.");
-                break;
-            }
-            
-            _SO.removeEventListener( NetStatusEvent.NET_STATUS, _onFlushStatus );
-        }
-        
-        private function _createUMTA():void
-        {
-            _utma = new UTMA();
-            _utma.proxy = this;
-        }
-        
-        private function _createUMTB():void
-        {
-            _utmb = new UTMB();
-            _utmb.proxy = this;
-        }
-        
-        private function _createUMTC():void
-        {
-            _utmc = new UTMC();
-            //_utmc.proxy = this;
-        }
-        
-        private function _createUMTK():void
-        {
-            _utmk = new UTMK();
-            _utmk.proxy = this;
-        }
-        
-        private function _createUMTV():void
-        {
-            _utmv = new UTMV();
-            _utmv.proxy = this;
-        }
-        
-        private function _createUMTZ():void
-        {
-            _utmz = new UTMZ();
-            _utmz.proxy = this;
-        }
-        
+        /**
+         * Indicates the utma value of the buffer.
+         */          
         public function get utma():UTMA
         {
             if( !hasUTMA() )
@@ -230,6 +233,9 @@ package com.google.analytics.core
             return _utma;
         }
         
+        /**
+         * Indicates the utmb value of the buffer.
+         */         
         public function get utmb():UTMB
         {
             if( !hasUTMB() )
@@ -240,6 +246,9 @@ package com.google.analytics.core
             return _utmb;
         }
         
+        /**
+         * Indicates the utmc value of the buffer.
+         */ 
         public function get utmc():UTMC
         {
             if( !hasUTMC() )
@@ -250,6 +259,9 @@ package com.google.analytics.core
             return _utmc;
         }
         
+        /**
+         * Indicates the utmk value of the buffer.
+         */             
         public function get utmk():UTMK
         {
             if( !hasUTMK() )
@@ -260,6 +272,10 @@ package com.google.analytics.core
             return _utmk;
         }
         
+        
+        /**
+         * Indicates the utmv value of the buffer.
+         */        
         public function get utmv():UTMV
         {
             if( !hasUTMV() )
@@ -270,6 +286,9 @@ package com.google.analytics.core
             return _utmv;
         }
         
+        /**
+         * Indicates the utmz value of the buffer.
+         */
         public function get utmz():UTMZ
         {
             if( !hasUTMZ() )
@@ -280,6 +299,9 @@ package com.google.analytics.core
             return _utmz;
         }
         
+        /**
+         * Indicates if the buffer contains an UTMA value.
+         */          
         public function hasUTMA():Boolean
         {
             if( _utma )
@@ -290,6 +312,9 @@ package com.google.analytics.core
             return false;
         }
         
+        /**
+         * Indicates if the buffer contains an UTMB value.
+         */           
         public function hasUTMB():Boolean
         {
             if( _utmb )
@@ -300,6 +325,9 @@ package com.google.analytics.core
             return false;
         }
         
+        /**
+         * Indicates if the buffer contains an UTMC value.
+         */         
         public function hasUTMC():Boolean
         {
             if( _utmc )
@@ -310,6 +338,9 @@ package com.google.analytics.core
             return false;
         }
         
+        /**
+         * Indicates if the buffer contains an UTMK value.
+         */         
         public function hasUTMK():Boolean
         {
             if( _utmk )
@@ -320,6 +351,9 @@ package com.google.analytics.core
             return false;
         }
         
+        /**
+         * Indicates if the buffer contains an UTMV value.
+         */        
         public function hasUTMV():Boolean
         {
             if( _utmv )
@@ -330,6 +364,9 @@ package com.google.analytics.core
             return false;
         }
         
+        /**
+         * Indicates if the buffer contains an UTMZ value.
+         */
         public function hasUTMZ():Boolean
         {
             if( _utmz )
@@ -340,6 +377,9 @@ package com.google.analytics.core
             return false;
         }
         
+        /**
+         * Indicates if the specified value is stored in the buffer.
+         */
         public function hasStoredValue( name:String ):Boolean
         {
             if( isVolatile() )
@@ -362,6 +402,9 @@ package com.google.analytics.core
             }
         }
         
+        /**
+         * Updates a property in the buffer.
+         */
         public function update( name:String, value:* ):void
         {
             if( isVolatile() )
@@ -375,8 +418,8 @@ package com.google.analytics.core
         }
         
         /**
-        * This method clears all the fields of the cookie.
-        */
+         * This method clears all the fields of the cookie.
+         */
         public function clearCookies():void
         {
             utma.reset();
@@ -388,8 +431,8 @@ package com.google.analytics.core
         }
         
         /**
-        * This method generates a digest of all the __utm* values.
-        */
+         * This method generates a digest of all the __utm* values.
+         */
         public function generateCookiesHash():Number
         {
             var value:String = "";
@@ -402,18 +445,24 @@ package com.google.analytics.core
             return generateHash( value );
         }
         
+        /**
+         * Indicates if the buffer is volatile.
+         */
         public function isVolatile():Boolean
         {
             return _volatile;
         }
         
+        /**
+         * Updates the UTMA value with the specified timestamp value.
+         */
         public function updateUTMA( timestamp:Number ):void
         {
             trace( ">>>> updateUTMA("+timestamp+")" );
             // if __utma value is not empty, update
             if( !utma.isEmpty() )
             {
-                trace( ">>>> utma is not empty" )
+                trace( ">>>> utma is not empty" );
                 // update session count
                 if( isNaN( utma.sessionCount ) )
                 {
@@ -424,7 +473,7 @@ package com.google.analytics.core
                 {
                     utma.sessionCount += 1;
                 }
-                trace( ">>>> sessionCount = " + utma.sessionCount )
+                trace( ">>>> sessionCount = " + utma.sessionCount );
                 
                 // last session time, is current session time (update)
                 utma.lastTime = utma.currentTime;
@@ -434,6 +483,9 @@ package com.google.analytics.core
             }
         }
         
+        /**
+         * Save the buffer.
+         */
         public function save():void
         {
             //we save only when using SharedObject
@@ -457,13 +509,17 @@ package com.google.analytics.core
                 switch( flushStatus )
                 {
                     case SharedObjectFlushStatus.PENDING:
-                    trace("Requesting permission to save object...");
-                    _SO.addEventListener( NetStatusEvent.NET_STATUS, _onFlushStatus );
-                    break;
+                    {
+                        trace("Requesting permission to save object...");
+                        _SO.addEventListener( NetStatusEvent.NET_STATUS, _onFlushStatus );
+                        break;
+                    }
                     
                     case SharedObjectFlushStatus.FLUSHED:
-                    trace("Value flushed to disk.");
-                    break;
+                    {
+                        trace("Value flushed to disk.");
+                        break;
+                    }
                 }
             }
         }

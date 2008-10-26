@@ -43,6 +43,9 @@ package com.google.analytics.external
         
         private var _gaGlobalVerified:Boolean = false;
         
+        /**
+         * Creates a new AdSenseGlobals instance.
+         */
         public function AdSenseGlobals()
         {
             super();

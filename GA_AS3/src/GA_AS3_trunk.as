@@ -19,17 +19,15 @@
  
 package
 {
-    
-    import flash.display.Sprite;
-    import flash.display.StageAlign;
-    import flash.display.StageScaleMode;
-    import flash.events.Event;
-    
-    import com.google.analytics.debug;
     import com.google.analytics.GATracker;
     import com.google.analytics.core.as3_api;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     
+    import flash.display.Sprite;
+    import flash.display.StageAlign;
+    import flash.display.StageScaleMode;
+    import flash.events.Event;    
+
     /* note:
        for testing code we use GATracker
        but ultimately users will use a component (SWC)
