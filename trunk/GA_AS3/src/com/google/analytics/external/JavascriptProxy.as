@@ -1,4 +1,4 @@
-﻿/*
+﻿﻿﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@
 package com.google.analytics.external
 {
     import com.google.analytics.debug;
+    
     import flash.external.ExternalInterface;
     
     /**
@@ -28,39 +29,40 @@ package com.google.analytics.external
      */
     public class JavascriptProxy
     {
-
-    	/**
-    	 * The setProperty Javascript injection.
-    	 */
+        
+        /**
+         * The setProperty Javascript injection.
+         */
         public static var setProperty_js:XML = 
             <script>
                 <![CDATA[
-                function( path , value )
-                {
-                    var paths;
-                    var prop;
-                    if( path.indexOf(".") > 0 )
+                    function( path , value )
                     {
-                        paths = path.split(".");
-                        prop  = paths.pop() ;
+                        var paths;
+                        var prop;
+                        if( path.indexOf(".") > 0 )
+                        {
+                            paths = path.split(".");
+                            prop  = paths.pop() ;
+                        }
+                        else
+                        {
+                            paths = [];
+                            prop  = path;
+                        }
+                        var target = window ;
+                        var len    = paths.length ;
+                        for( var i = 0 ; i < len ; i++ )
+                        {
+                            target = target[ paths[i] ] ;
+                        }
+                        
+                        target[ prop ] = value ;
                     }
-                    else
-                    {
-                        paths = [];
-                        prop  = path;
-                    }
-                    var target = window ;
-                    var len    = paths.length ;
-                    for( var i = 0 ; i < len ; i++ )
-                    {
-                        target = target[ paths[i] ] ;
-                    }
-                    
-                    target[ prop ] = value ;
-                }
                 ]]>
             </script>;
         
+        private var _notAvailableWarning:Boolean = true;
         
         /**
          * Creates a new JavascriptProxy instance.
@@ -68,75 +70,133 @@ package com.google.analytics.external
         public function JavascriptProxy()
         {
         }
-
-		/**
-		 * Sets the value of a DOM property
-		 */            
-        protected function setProperty( path:String, value:* ):void
+        
+        /**
+        * Execute a Javascript injection block (String or XML)
+        * without any parameters and without return values.
+        */
+        public function executeBlock( data:String ):void
         {
-            jsExternal( setProperty_js, path, value );
+            if( isAvailable() )
+            {
+                try
+                {
+                    ExternalInterface.call( data );
+                }
+                catch( e:SecurityError )
+                {
+                    if( debug.javascript )
+                    {
+                        debug.warning( "ExternalInterface is not allowed.\nEnsure that allowScriptAccess is set to \"always\" in the Flash embed HTML." );
+                    }
+                }
+                catch( e:Error )
+                {
+                    if( debug.javascript )
+                    {
+                        debug.warning( "ExternalInterface failed to make the call\nreason: " + e.message );
+                    }
+                }
+            }
         }
         
         /**
-        * Returns the value of a DOM object
-        */  
+         * Returns the value property defines with the passed-in name value.
+         * @return the value property defines with the passed-in name value.
+         */        
         public function getProperty( name:String ):*
         {
-    		var getFcn:String = "function () { return "+ name +"; }";
-        	
-        	return jsExternal( getFcn );
-        	
-        }    
+            /* note:
+               we use a little trick here
+               we can not diretly get a property from JS
+               we can only call a function
+               so we use valueOf() to automatically get the property
+               and yes it will work only with primitives
+            */
+            return ExternalInterface.call( name + ".valueOf" );
+        }
+        
+        /**
+         * Returns the String property defines with the passed-in name value.
+         * @return the String property defines with the passed-in name value.
+         */
+        public function getPropertyString( name:String ):String
+        {
+            return ExternalInterface.call( name + ".toString" );
+        }
+        
+        /**
+        * Create a JS property.
+        */
+        public function setProperty( path:String, value:* ):void
+        {
+            ExternalInterface.call( setProperty_js, path, value );
+        }
+        
+        
+        /**
+        * Call a Javascript injection block (String or XML)
+        * with parameters and return the result.
+        */
+        public function call( functionName:String, ...args ):*
+        {
+            if( isAvailable() )
+            {
+                try
+                {
+                    if( debug.javascript && debug.verbose )
+                    {
+                        var output:String = "";
+                            output  = "Flash->JS: "+ functionName;
+                            output += "( ";
+                        if (args.length > 0)
+                        {
+                            output += args.join(",");
+                        } 
+                            output += " )";
+                        
+                        debug.info( output );
+                    }
+                    
+                    args.unshift( functionName );
+                    return ExternalInterface.call.apply( ExternalInterface, args );
+                }
+                catch( e:SecurityError )
+                {
+                    if( debug.javascript )
+                    {
+                        debug.warning( "ExternalInterface is not allowed.\nEnsure that allowScriptAccess is set to \"always\" in the Flash embed HTML." );
+                    }
+                }
+                catch( e:Error )
+                {
+                    if( debug.javascript )
+                    {
+                        debug.warning( "ExternalInterface failed to make the call\nreason: " + e.message );
+                    }
+                }
+            }
+            
+            return null;
+        }
         
         /**
          * Indicates if the javascript proxy is available.
          */
         public function isAvailable():Boolean
         {
-            return ExternalInterface.available;
-        }
-        
-        /**
-         * This function communicates between Flash and the JS browser DOM. It can except either a string or  
-		 * XML for JS injection. 
-         * 
-         */        
-        public function jsExternal(jsMethodName:String, ... args):*
-		{	
-			var jsResult:*;
-			if(ExternalInterface.available)
-			{
-				try
-				{
-
-					if (debug.verbose) {
-						var output:String = "";
-						
-						output = "Flash calling JS function: "+ jsMethodName;
-						if (args.length > 0) {
-							output += "\nParams: "+ args.join(",");
-						} 
-						debug.info(output);
-					}
-
-					args.unshift(jsMethodName);
-					jsResult = ExternalInterface.call.apply(ExternalInterface, args);
-					return jsResult;
-				}
-				catch(e:SecurityError)
-				{
-					debug.warning("ExternalInterface is not available.  Ensure that allowScriptAccess is set to 'always' in the Flash embed HTML.");
-				}
-				catch(e:Error)
-				{
-					debug.warning("ExternalInterface failed to make the call, reason: " + e.message);
-				}
-			}
-			else
-			{
-				debug.warning("ExternalInterface is not available.");
-			}
-		}
+            var available:Boolean = ExternalInterface.available;
             
+            /* note:
+               we want to notify only once that ExternalInterface is not available.
+            */
+            if( !available && debug.javascript && _notAvailableWarning )
+            {
+                debug.warning( "ExternalInterface is not available." );
+                _notAvailableWarning = false
+            }
+            
+            return available;
+        }
     }
 }

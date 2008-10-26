@@ -24,12 +24,25 @@ package com.google.analytics.utils
     public dynamic class Variables
     {
         public var URIencode:Boolean = false;
+        public var sort:Boolean      = true;
+        public var pre:Array  = [];
+        public var post:Array = [];
         
-        public function Variables( source:String = null )
+        public function Variables( source:String = null, pre:Array = null, post:Array = null )
         {
             if( source )
             {
                 decode( source );
+            }
+            
+            if( pre )
+            {
+                this.pre = pre;
+            }
+            
+            if( post )
+            {
+                this.post = post;
             }
         }
         
@@ -125,7 +138,54 @@ package com.google.analytics.utils
                 data.push( p + "=" + value );
             }
             
-            data.sort();
+            if( sort )
+            {
+                data.sort();
+            }
+            
+            var component:String;
+            var i:int;
+            var j:int;
+            
+            if( pre.length > 0 )
+            {
+                pre.reverse();
+                
+                var priority:String;
+                for( i = 0; i<pre.length; i++ )
+                {
+                    priority = pre[i];
+                    for( j = 0; j<data.length; j++ )
+                    {
+                        component = data[j];
+                        if( component.indexOf( priority ) == 0 )
+                        {
+                            data.unshift( data.splice( j, 1 )[0] );
+                        }
+                    }
+                    
+                }
+                
+                pre.reverse();
+            }
+            
+            if( post.length > 0 )
+            {
+                var last:String;
+                for( i = 0; i<post.length; i++ )
+                {
+                    last = post[i];
+                    for( j = 0; j<data.length; j++ )
+                    {
+                        component = data[j];
+                        if( component.indexOf( last ) == 0 )
+                        {
+                            data.push( data.splice( j, 1 )[0] );
+                        }
+                    }
+                    
+                }
+            }
             
             return data.join( "&" );
         }

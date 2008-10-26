@@ -160,7 +160,7 @@ package com.google.analytics.campaign
                 debug.info( _buffer.utmz.toString() );
             }
             
-            campInfo = new CampaignInfo( false, true );
+            //campInfo = new CampaignInfo( false, true );
             
             return campInfo;
         }

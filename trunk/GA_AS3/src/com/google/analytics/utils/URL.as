@@ -19,6 +19,8 @@
 
 package com.google.analytics.utils
 {
+    import system.cli.SwitchStatus;
+    
     /**
     * Basic URL utility class.
     */
@@ -78,6 +80,50 @@ package com.google.analytics.utils
             
             return hostname;
         }
+        
+        public function get domain():String
+        {
+            if( (hostName != "") && (hostName.indexOf(".") > -1) )
+            {
+                var parts:Array = hostName.split( "." );
+                
+                switch( parts.length )
+                {
+                    //domain.com
+                    case 2:
+                    return hostName;
+                    
+                    //domain.co.uk
+                    //www.domain.com
+                    case 3:
+                    if( parts[1] == "co" )
+                    {
+                        return hostName;
+                    }
+                    parts.shift();
+                    return parts.join( "." );
+                    
+                    //www.domain.co.uk
+                    case 4:
+                    parts.shift();
+                    return parts.join( "." );
+                }
+                
+            }
+            
+            return "";
+        }
+        
+        public function get subDomain():String
+        {
+            if( (domain != "") && (domain != hostName) )
+            {
+                return hostName.split( "."+domain ).join( "" );
+            }
+            
+            return "";
+        }
+        
         
         public function get path():String
         {

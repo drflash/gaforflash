@@ -17,21 +17,6 @@
  *   Zwetan Kjukov <zwetan@gmail.com>.
  */
 
-/* note:
-    these test suites require the following code to be in the HTML 
-    in flexbuilder you can add this into the html-template/GA_Testrunner.html file 
-    and also require to be run in HTML.
-
-        <script src="http://www.google-analytics.com/ga.js"></script>
-        <script language="JavaScript" type="text/javascript">
-        var pT = _gat._getTracker("UA-332-1");
-        var _GATracker = {};
-        _GATracker['test'] = pT;
-        </script>
-
-*/
-
-
 package com.google.analytics
 {
     import buRRRn.ASTUce.framework.TestCase;
@@ -39,6 +24,13 @@ package com.google.analytics
     import com.google.analytics.external.JavascriptProxy;
     import com.google.analytics.v4.Bridge;
     
+    /**
+    * those tests requires
+    * - to be run with a SWF embedded in HTML
+    * - the HTML to include the ga.js code
+    *   <script src="http://www.google-analytics.com/ga.js"></script>
+    * - the flash param allowscriptaccess = always
+    */
     public class BridgeTest extends TestCase
     {
         private var _js:JavascriptProxy;
@@ -58,65 +50,52 @@ package com.google.analytics
                 return;
             }
             
-            _bridge = new Bridge("pT");
+            var data:XML =
+            <script>
+                <![CDATA[
+                    function()
+                    {
+                        pT = _gat._getTracker("UA-332-1");
+                        _GATracker = {};
+                        _GATracker['test'] = pT;
+                        //alert( "pT="+pT );
+                    }
+                ]]>
+            </script>;
+            
+            _js.executeBlock( data );
             
         }
         
-        public function testCreateJSTrackingObject():void
+        public function testAlreadyExistingValidTracker():void
+        {
+            if( !_js.isAvailable() )
+            {
+                return;
+            }
+            _bridge = new Bridge( "test" );
+            
+            assertTrue( _bridge.hasTrackingAccount( "test" ) );
+            assertEquals( "UA-332-1", _bridge.getAccount() );
+        }
+        
+        public function testAlreadyExistingInvalidTracker():void
         {
             if( !_js.isAvailable() )
             {
                 return;
             }
             
-            var acct:String = "UA-5555-1";
-            var b0:Bridge = new Bridge(acct);
-            var test0:Boolean = _bridge.jsTrackingObjExisits("_GATracker['"+acct+"']");
-            
-            assertEquals(true, test0);
-        }
-        
-        public function testJSObjExists():void
-        {
-            if( !_js.isAvailable() )
+            try
+            {
+                _bridge = new Bridge( "foobar" );
+            }
+            catch( e:Error )
             {
                 return;
             }
             
-            var o1:Boolean = _bridge.jsTrackingObjExisits("pT");
-            var o2:Boolean = _bridge.jsTrackingObjExisits("_GATracker['test']");
-            var o3:Boolean = _bridge.jsTrackingObjExisits("_GATracker.test");
-            var o4:Boolean = _bridge.jsTrackingObjExisits("document");		
-            var o5:Boolean = _bridge.jsTrackingObjExisits("_GATracker['testBig']");
-            
-            assertEquals(true, o1);
-            assertEquals(true, o2);
-            assertEquals(true, o3);
-            assertEquals(false, o4);	
-            assertEquals(false, o5);
-        }
-        
-        public function testIsAccountID():void
-        {
-            if( !_js.isAvailable() )
-            {
-                return;
-            }
-            
-            var id1:String = "UA-012345-1";
-            var id2:String = "UA12345-1";
-            var id3:String = "UA123451";
-            var id4:String = "A1234-1";
-            var id5:String = "UA-12";
-            var id6:String = "UA-12-12-1";
-            
-            assertEquals(true, _bridge.isAccountId(id1));
-            assertEquals(false, _bridge.isAccountId(id2));
-            assertEquals(false, _bridge.isAccountId(id3));
-            assertEquals(false, _bridge.isAccountId(id4));
-            assertEquals(false, _bridge.isAccountId(id5));
-            assertEquals(false, _bridge.isAccountId(id6));
-            
+            fail();
         }
         
         public function testCreateTrackingObject():void
@@ -125,12 +104,44 @@ package com.google.analytics
             {
                 return;
             }
+            _bridge = new Bridge( "UA-332-1" );
             
-            var acctID:String = "UA-8-3";
-            var oName1:String = _bridge.createJSTrackingObject(acctID);
-            
-            assertEquals("_GATracker['"+acctID+"']", oName1);
+            assertTrue( _bridge.hasTrackingAccount( "UA-332-1" ) );
+            assertEquals( "UA-332-1", _bridge.getAccount() );
         }
+        
+//        public function testJSObjExists():void
+//        {
+//            if( !_js.isAvailable() )
+//            {
+//                return;
+//            }
+//            
+//            var o1:Boolean = _bridge.jsTrackingObjExists("pT");
+//            var o2:Boolean = _bridge.jsTrackingObjExists("_GATracker['test']");
+//            var o3:Boolean = _bridge.jsTrackingObjExists("_GATracker.test");
+//            var o4:Boolean = _bridge.jsTrackingObjExists("document");		
+//            var o5:Boolean = _bridge.jsTrackingObjExists("_GATracker['testBig']");
+//            
+//            assertEquals(true, o1);
+//            assertEquals(true, o2);
+//            assertEquals(true, o3);
+//            assertEquals(false, o4);	
+//            assertEquals(false, o5);
+//        }
+        
+//        public function testCreateTrackingObject():void
+//        {
+//            if( !_js.isAvailable() )
+//            {
+//                return;
+//            }
+//            
+//            var acctID:String = "UA-8-3";
+//            var oName1:String = _bridge.createJSTrackingObject(acctID);
+//            
+//            assertEquals("_GATracker['"+acctID+"']", oName1);
+//        }
         
         
     }

@@ -28,15 +28,17 @@ package com.google.analytics.v4
     import com.google.analytics.core.DomainNameMode;
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.ServerOperationMode;
-    import com.google.analytics.data.X10;
     import com.google.analytics.debug;
+    import com.google.analytics.data.X10;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
+    import com.google.analytics.utils.URL;
     import com.google.analytics.utils.Variables;
     import com.google.analytics.utils.generate32bitRandom;
-    import com.google.analytics.utils.generateHash;    
-
+    import com.google.analytics.utils.generateHash;
+    import com.google.analytics.utils.validateAccount;
+    
     /**
      * The Tracker class.
      */
@@ -80,6 +82,13 @@ package com.google.analytics.v4
         public function Tracker( account:String, info:Environment, buffer:Buffer, gifRequest:GIFRequest,
                                  adSense:AdSenseGlobals = null )
         {
+            if( !validateAccount( account ) )
+            {
+                var msg:String = "Account \"" + account + "\" is not valid."
+                debug.warning( msg );
+                throw new Error( msg );
+            }
+            
             _account    = account;
             _info       = info;
             _buffer     = buffer;
@@ -233,6 +242,7 @@ package com.google.analytics.v4
                 //We already have __utma value stored in document cookie.
                 if( _buffer.hasUTMA() && !_buffer.utma.isEmpty() )
                 {
+                    trace( ">>>> We already have __utma value stored in document cookie." );
                     /* Either __utmb, __utmc, or both are missing from document cookie.  We
                        take the existing __utma value, and update with new session
                        information.  And then we indicate that there is no session information
@@ -256,6 +266,7 @@ package com.google.analytics.v4
                 */
                 else
                 {
+                    trace( ">>>> create a NEW utma" );
                     _buffer.utma.domainHash   = _domainHash;
                     _buffer.utma.sessionId    = _getUniqueSessionId();
                     _buffer.utma.firstTime    = _timeStamp;
@@ -464,7 +475,7 @@ package com.google.analytics.v4
             var referrer:String = _info.referrer;
             
             //if there is no referrer
-            if( referrer == "" )
+            if( (referrer == "") || (referrer == "localhost") )
             {
                 referrer = "-";
             }
@@ -472,16 +483,24 @@ package com.google.analytics.v4
             else
             {
                 var domainName:String = _info.domainName;
+                var ref:URL = new URL( referrer );
+                var dom:URL = new URL( "http://" + domainName );
+                
+                if( ref.hostName == domainName )
+                {
+                    return "-";
+                }
                 
                 /* If referrer is in the sub-domain of document,
                    then formatted referrer is set to "0".
                 */
-                var pos:int = referrer.indexOf( domainName );
-                
-                //no self-referral
-                if( (pos >= 0) && (pos <= 8) )
+                if( dom.domain == ref.domain )
                 {
-                    referrer = "0";
+                    //no self-referral
+                    if( dom.subDomain != ref.subDomain )
+                    {
+                        referrer = "0";
+                    }
                 }
                 
                 //no referrer if referrer is enclosed in square-brackets

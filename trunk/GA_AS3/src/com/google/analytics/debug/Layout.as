@@ -244,7 +244,7 @@ package com.google.analytics.debug
             
             message = _filterMaxChars( message );
             _hasInfo = true;
-            var i:Info = new Info( message );
+            var i:Info = new Info( message, debug.infoTimeout );
             addToPanel( "analytics", i );
             i.addEventListener( Event.REMOVED_FROM_STAGE, _clearInfo, false, 0, true );
             
@@ -267,7 +267,7 @@ package com.google.analytics.debug
             
             message = _filterMaxChars( message );
             _hasWarning = true;
-            var w:Warning = new Warning( message );
+            var w:Warning = new Warning( message, debug.warningTimeout );
             addToPanel( "analytics", w );
             w.addEventListener( Event.REMOVED_FROM_STAGE, _clearWarning, false, 0, true );
             

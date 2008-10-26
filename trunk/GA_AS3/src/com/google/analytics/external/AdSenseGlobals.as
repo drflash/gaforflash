@@ -52,8 +52,8 @@ package com.google.analytics.external
         {
             if( !_gaGlobalVerified )
             {
-          //      executeBlock( gaGlobal_js );
-                jsExternal( gaGlobal_js );
+                executeBlock( gaGlobal_js );
+                //jsExternal( gaGlobal_js );
                 _gaGlobalVerified = true;
             }
         }

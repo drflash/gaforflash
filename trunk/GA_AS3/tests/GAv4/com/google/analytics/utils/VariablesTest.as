@@ -102,5 +102,45 @@ package com.google.analytics.utils
             assertEquals( v2.c, v.c );
         }
         
+        public function testPre():void
+        {
+            var v:Variables = new Variables();
+                v.first = 1;
+                v.second = 2;
+                v.third = 3;
+                v.foobar = "foobar";
+            
+            var v2:Variables = new Variables();
+                v2.a = 1;
+                v2.b = 2;
+                v2.c = 3;
+                v2.x = "third";
+                v2.y = "second";
+                v2.z = "first";
+            
+            assertEquals( "first=1&foobar=foobar&second=2&third=3", v.toString() );
+            v.pre = [ "first", "second", "third" ];
+            assertEquals( "first=1&second=2&third=3&foobar=foobar", v.toString() );
+            
+            assertEquals( "a=1&b=2&c=3&x=third&y=second&z=first", v2.toString() );
+            v2.pre = [ "z", "y", "x" ];
+            assertEquals( "z=first&y=second&x=third&a=1&b=2&c=3", v2.toString() );
+            assertEquals( "z=first&y=second&x=third&a=1&b=2&c=3", v2.toString() );
+        }
+        
+        //TODO: more tests
+        public function testPost():void
+        {
+            var v:Variables = new Variables();
+                v.a = 0;
+                v.x = 1;
+                v.y = 2;
+                v.z = 3;
+            
+            assertEquals( "a=0&x=1&y=2&z=3", v.toString() );
+            v.post = [ "a" ];
+            assertEquals( "x=1&y=2&z=3&a=0", v.toString() );
+        }
+        
     }
 }
