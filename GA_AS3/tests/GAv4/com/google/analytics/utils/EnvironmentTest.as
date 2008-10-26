@@ -45,7 +45,7 @@ package com.google.analytics.utils
             var env_local:Environment = new Environment( "file://someFolder/someFile.swf" );
             
             assertEquals( Protocols.file, env_local.protocol );
-            assertEquals( "", env_local.domainName );
+            assertEquals( "localhost", env_local.domainName );
         }
         
         public function testBasicHTTP():void

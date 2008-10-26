@@ -59,6 +59,11 @@ package com.google.analytics.debug
         public var traceOutput:Boolean = true;
         
         /**
+        * Allow to debug ExternalInterface calls.
+        */
+        public var javascript:Boolean = true;
+        
+        /**
          * Allow to debug the GIF Request if true, will show a debug panel
          * and a confirmation message to send or not the request.
          */
@@ -79,10 +84,14 @@ package com.google.analytics.debug
          */
         public var showInfos:Boolean = true;
         
+        public var infoTimeout:Number = 500;
+        
         /**
          * Indicates if show warnings in the debug mode.
          */
         public var showWarnings:Boolean = true;
+        
+        public var warningTimeout:Number = 300;
         
         /**
         * Show the visuals minimized on start.

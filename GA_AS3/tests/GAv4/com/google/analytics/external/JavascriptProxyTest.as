@@ -19,65 +19,120 @@
 
 package com.google.analytics.external
 {
-	import buRRRn.ASTUce.framework.TestCase;
-	
-	public class JavascriptProxyTest extends TestCase
-	{
-		
-		private var _jsProxy:JavascriptProxy;
-		
-		public function JavascriptProxyTest(name:String="")
-		{
-			super( name );
-		}
-		
-		public function setUp():void
-		{
-			_jsProxy = new JavascriptProxy();			
-		}
-
-		
-		//
-		//	note this requires flash param allowscriptaccess = always
-		//
-		public function testJsExternal():void
-		{
-			if( !_jsProxy.isAvailable() )
-            {
-                return;
-            }
-                
-			var testXML2:XML =      
-        		<script>
-        			<![CDATA[
-        				function(a, b, c, d, e){ return a + b + c + d + e; }
-        			]]>
-        		</script>;
-        		
-			assertEquals(15, _jsProxy.jsExternal(testXML2, 1,2,3,4,5));			
-		
-		}
-		
-		public function testGetProperty():void
-		{
-			if( !_jsProxy.isAvailable() )
+    import buRRRn.ASTUce.framework.TestCase;
+    
+    /**
+    * those tests requires
+    * - to be run with a SWF embedded in HTML
+    * - the flash param allowscriptaccess = always
+    */
+    public class JavascriptProxyTest extends TestCase
+    {
+        
+        private var _proxy:JavascriptProxy;
+        
+        public function JavascriptProxyTest(name:String="")
+        {
+            super( name );
+        }
+        
+        public function setUp():void
+        {
+            _proxy = new JavascriptProxy();
+        }
+        
+        public function testCall():void
+        {
+            if( !_proxy.isAvailable() )
             {
                 return;
             }
             
-			var testXML:XML = 
-			    <script>
-			        <![CDATA[
-			            function(a){ return a; }
-			        ]]>
-			    </script>;			
-			
-			assertEquals(5, _jsProxy.jsExternal(testXML, 5));
-        	assertEquals("correct", _jsProxy.jsExternal(testXML, "correct"));	
-			
-		}
-		
-
-	}
+            var data:XML =
+                <script>
+                    <![CDATA[
+                        function(a, b, c, d, e)
+                        {
+                            return a + b + c + d + e;
+                        }
+                    ]]>
+                </script>;
+                
+            assertEquals(15, _proxy.call(data, 1,2,3,4,5));
+        }
+        
+        public function testCall2():void
+        {
+            if( !_proxy.isAvailable() )
+            {
+                return;
+            }
+            
+            var data:XML = 
+                <script>
+                    <![CDATA[
+                        function(a)
+                        {
+                            return a;
+                        }
+                    ]]>
+                </script>;
+            
+            assertEquals( 5, _proxy.call(data, 5) );
+            assertEquals( "correct", _proxy.call(data, "correct") );
+        }
+        
+        public function testCall3():void
+        {
+            if( !_proxy.isAvailable() )
+            {
+                return;
+            }
+            
+            var data:XML =
+                <script>
+                    <![CDATA[
+                        function( bool )
+                        {
+                            if( bool )
+                            {
+                                return "pass";
+                            }
+                            else
+                            {
+                                return "fail";
+                            }
+                        }
+                    ]]>
+                </script>;
+                
+            assertEquals( "pass" , _proxy.call(data, true));
+            assertEquals( "fail" , _proxy.call(data, false));
+        }
+        
+        public function testGetSetProperty():void
+        {
+            if( !_proxy.isAvailable() )
+            {
+                return;
+            }
+            
+            _proxy.setProperty( "a", {} );
+            _proxy.setProperty( "a.b", {} );
+            _proxy.setProperty( "a.b.c", 123 );
+            _proxy.setProperty( "a.b.d", true );
+            _proxy.setProperty( "a.b.e", "hello world" );
+            
+            assertEquals( 123, _proxy.getProperty( "a.b.c" ) );
+            assertEquals( true, _proxy.getProperty( "a.b.d" ) );
+            assertEquals( "hello world", _proxy.getProperty( "a.b.e" ) );
+            assertTrue( _proxy.getProperty( "a" ) is Object );
+            assertTrue( _proxy.getProperty( "a.b" ) is Object );
+            assertTrue( _proxy.getProperty( "a.b.c" ) is Number );
+            assertTrue( _proxy.getProperty( "a.b.d" ) is Boolean );
+            assertTrue( _proxy.getProperty( "a.b.e" ) is String );
+        }
+        
+    }
 
 }

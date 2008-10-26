@@ -25,6 +25,7 @@ package
     import flash.display.StageScaleMode;
     import flash.events.Event;
     
+    import com.google.analytics.debug;
     import com.google.analytics.GATracker;
     import com.google.analytics.core.as3_api;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
@@ -51,6 +52,7 @@ package
         
         public function onComplete( evt:Event ):void
         {
+            //debug.minimizedOnStart = true;
             use namespace as3_api;
             _gat = new GATracker( this );
             //pageTracker = _gat.getTracker( "UA-1234-5" );
@@ -63,8 +65,8 @@ package
             //pageTracker.setDomainName( ".zwetan.com" );
             
             //ideally you would want to change the setVar for each different tests
-            pageTracker.setVar( "nihao shijie" );
-            pageTracker.trackPageview( "/test/hello/world/from/AS3/API" );
+            pageTracker.setVar( "Rocktober 020 online" );
+            pageTracker.trackPageview( "/test/hello/world/from/AS3/API/020" );
             
             //pageTracker.setLocalRemoteServerMode();
             //pageTracker.setLocalServerMode();

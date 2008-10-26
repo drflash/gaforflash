@@ -10,24 +10,25 @@
  */
 
 package com.google.analytics
-    {
+{
     import buRRRn.ASTUce.framework.*;
     
     import com.google.analytics.utils.generateHash;
     import com.google.analytics.utils.joinVariables;
+    import com.google.analytics.utils.validateAccount;
     
     import flash.net.URLVariables;
     
     public class UtilitiesTest extends TestCase
-        {
+    {
         
         public function UtilitiesTest( name:String="" )
-            {
+        {
             super( name );
-            }
+        }
         
         public function testGenerateHash():void
-            {
+        {
             var h0:int = generateHash(undefined);
             var h1:int = generateHash(null);
             var h2:int = generateHash("");
@@ -38,7 +39,7 @@ package com.google.analytics
             assertEquals(1, h1);
             assertEquals(1, h2);
             assertFalse(h3 == h4);
-            }
+        }
         
         public function testJoinVariables():void
         {
@@ -65,8 +66,22 @@ package com.google.analytics
             assertEquals( test2.toString(), "" );
         }
         
-   
+        public function testValidateAccount():void
+        {
+            var id1:String = "UA-012345-1";
+            var id2:String = "UA12345-1";
+            var id3:String = "UA123451";
+            var id4:String = "A1234-1";
+            var id5:String = "UA-12";
+            var id6:String = "UA-12-12-1";
+            
+            assertEquals( true,  validateAccount(id1) );
+            assertEquals( false, validateAccount(id2) );
+            assertEquals( false, validateAccount(id3) );
+            assertEquals( false, validateAccount(id4) );
+            assertEquals( false, validateAccount(id5) );
+            assertEquals( false, validateAccount(id6) );
         }
-   
-    
     }
+    
+}

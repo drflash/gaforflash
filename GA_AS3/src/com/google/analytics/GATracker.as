@@ -70,7 +70,7 @@ package com.google.analytics
                
                By default we will define "Flash" for our local tests
             */
-            _dom		= new HTMLDOM();
+            _dom        = new HTMLDOM();
             _localInfo  = new Environment( "", "", "", _dom );
             _buffer     = new Buffer( false );
             _gifRequest = new GIFRequest( _buffer, _localInfo );

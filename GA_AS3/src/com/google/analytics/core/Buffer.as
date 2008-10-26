@@ -107,12 +107,13 @@ package com.google.analytics.core
                 */
                 if( _SO.data.utmc )
                 {
-                    if( !hasUTMC() )
-                    {
-                        _createUMTC();
-                    }
-                    _utmc.fromSharedObject( _SO.data.utmc );
-                    trace( "UTMC = " + _utmc.toString() + " found !!" );
+                    delete _SO.data.utmc;
+//                    if( !hasUTMC() )
+//                    {
+//                        _createUMTC();
+//                    }
+//                    _utmc.fromSharedObject( _SO.data.utmc );
+//                    trace( "UTMC = " + _utmc.toString() + " found !!" );
                 }
                 
                 if( _SO.data.utmk )
@@ -198,7 +199,7 @@ package com.google.analytics.core
         private function _createUMTC():void
         {
             _utmc = new UTMC();
-            _utmc.proxy = this;
+            //_utmc.proxy = this;
         }
         
         private function _createUMTK():void
@@ -408,18 +409,22 @@ package com.google.analytics.core
         
         public function updateUTMA( timestamp:Number ):void
         {
+            trace( ">>>> updateUTMA("+timestamp+")" );
             // if __utma value is not empty, update
             if( !utma.isEmpty() )
             {
+                trace( ">>>> utma is not empty" )
                 // update session count
                 if( isNaN( utma.sessionCount ) )
                 {
+                    
                     utma.sessionCount = 1;
                 }
                 else
                 {
                     utma.sessionCount += 1;
                 }
+                trace( ">>>> sessionCount = " + utma.sessionCount )
                 
                 // last session time, is current session time (update)
                 utma.lastTime = utma.currentTime;

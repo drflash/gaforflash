@@ -51,7 +51,7 @@ package com.google.analytics.utils
             _url7  = new URL( "http://www.domain.com/hello/world/?foo=bar&test=me" );
         }
         
-        private function tearDown():void
+        public function tearDown():void
         {
             _empty = null;
             _url0  = null;
@@ -102,6 +102,36 @@ package com.google.analytics.utils
             assertEquals( "q=hello+world",  _url5.search );
             assertEquals( "a=1&b=2",        _url6.search );
             assertEquals( "foo=bar&test=me", _url7.search );
+        }
+        
+        public function testDomain():void
+        {
+            var a:URL = new URL( "http://www.domain.com" );
+            var b:URL = new URL( "http://www.domain.co.uk" );
+            var c:URL = new URL( "http://domain.com" );
+            var d:URL = new URL( "http://www.domain.co.uk" );
+            var e:URL = new URL( "http://localhost" );
+            
+            assertEquals( "domain.com", a.domain );
+            assertEquals( "domain.co.uk", b.domain );
+            assertEquals( "domain.com", c.domain );
+            assertEquals( "domain.co.uk", d.domain );
+            assertEquals( "", e.domain );
+        }
+        
+        public function testSubDomain():void
+        {
+            var a:URL = new URL( "http://www.domain.com" );
+            var b:URL = new URL( "http://www.domain.co.uk" );
+            var c:URL = new URL( "http://domain.com" );
+            var d:URL = new URL( "http://domain.co.uk" );
+            var e:URL = new URL( "http://test.domain.com" );
+            
+            assertEquals( "www", a.subDomain );
+            assertEquals( "www", b.subDomain );
+            assertEquals( "", c.subDomain );
+            assertEquals( "", d.subDomain );
+            assertEquals( "test", e.subDomain );
         }
         
     }

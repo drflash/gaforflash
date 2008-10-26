@@ -193,30 +193,7 @@ package com.google.analytics.core
         
         private function _debugSend( request:URLRequest ):void
         {
-            var data:String = "url = " + request.url + "\n";
-            for( var param:String in request.data )
-            {
-                if( param == "utmcc" )
-                {
-                    var utmcc:String = decodeURIComponent(request.data[param]);
-                    var fields:Array = utmcc.split(";+");
-                    var tmp:String = param + " = ";
-                    
-                    data += tmp + "\n";
-                    tmp = "";
-                    
-                    for( var i:int = 0; i<fields.length; i++ )
-                    {
-                        data += tmp + fields[i] + "\n";
-                    }
-                    
-                }
-                else
-                {
-                    data += param + " = " + request.data[param] + "\n";
-                }
-            }
-            
+            var data:String = "url = " + request.url;
             debug.alertGifRequest( data, request, this );
         }
         
@@ -245,10 +222,10 @@ package com.google.analytics.core
         
         public function onIOError( event:IOErrorEvent ):void
         {
+            var url:String = _lastRequest.url;
+            
             if( debug.GIFRequests )
             {
-                var url:String = _lastRequest.url;
-                
                 if( !debug.verbose )
                 {
                     if( url.indexOf( "?" ) > -1 )
@@ -260,14 +237,20 @@ package com.google.analytics.core
                 
                 debug.failure( "\"" + url + "\" does not exists or is unreachable" );
             }
+            else
+            {
+                debug.warning( "gif request failed" );
+            }
+            
+            _removeListeners( event.target );
         }
         
         public function onComplete( event:Event ):void
         {
+            var url:String = _lastRequest.url;
+            
             if( debug.GIFRequests )
             {
-                var url:String = _lastRequest.url;
-                
                 if( !debug.verbose )
                 {
                     if( url.indexOf( "?" ) > -1 )
@@ -278,6 +261,10 @@ package com.google.analytics.core
                 }
                 
                 debug.success( "Gif Request sent to \"" + url + "\"" );
+            }
+            else
+            {
+                debug.info( "gif request sent" );
             }
             
             _removeListeners( event.target );
@@ -291,35 +278,30 @@ package com.google.analytics.core
         
         public function sendWithValidation( request:URLRequest ):void
         {
-            //var req:URLLoader = new URLLoader();
+            trace( "sendWithValidation()" );
+            
             var loader:Loader = new Loader();
             var context:LoaderContext = new LoaderContext( false );
             
-            
-            //req.addEventListener( IOErrorEvent.IO_ERROR, onIOError, false, 0, true );
             loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
-            
-            //req.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError, false, 0, true );
-            
-            //req.addEventListener( Event.COMPLETE, onComplete, false, 0, true );
             loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onComplete );
             
             _lastRequest = request;
             
             try
             {
-                //req.load( request );
                 loader.load( request, context );
+                //debug.layout.addToStage( loader );
             }
             catch( e:Error )
             {
-                //debug.failure( "\"URLLoader.load()\" could not instanciate Gif Request" );
                 debug.failure( "\"Loader.load()\" could not instanciate Gif Request" );
             }
         }
         
         public function sendWithoutValidation( request:URLRequest ):void
         {
+            trace( "sendWithoutValidation()" );
             try
             {
                 sendToURL( request );
@@ -357,6 +339,11 @@ package com.google.analytics.core
              }
              
              variables.URIencode = false;
+//             variables.pre  = [ "utmwv", "utmn", "utmhn" ];
+             variables.pre  = [ "utmwv", "utmn", "utmhn", "utmcs",
+                                "utmsr", "utmsc", "utmul", "utmje",
+                                "utmfl", "utmdt", "utmhid", "utmr", "utmp" ];
+             variables.post = [ "utmcc" ];
              
              if( debug.verbose )
              {
