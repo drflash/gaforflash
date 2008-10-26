@@ -87,11 +87,10 @@ package com.google.analytics.v4
             }
             
         }
-        
-        
+                
         /**
-        * Wrapper to simplify readability of External JS object calls in methods above 
-        */
+         * Wrapper to simplify readability of External JS object calls in methods above 
+         */
         private function _call( functionName:String, ...args ):*
         {
             args.unshift( "window."+ _jsContainer +"[\""+ _account +"\"]."+functionName );

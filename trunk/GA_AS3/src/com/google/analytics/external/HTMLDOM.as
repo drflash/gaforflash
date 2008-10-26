@@ -150,6 +150,9 @@ package com.google.analytics.external
             return _language;
         }
         
+        /**
+         * Indicates the characterSet value of the html dom.
+         */        
         public function get characterSet():String
         {
             if( _characterSet )
@@ -175,6 +178,9 @@ package com.google.analytics.external
             
         }
         
+        /**
+         * Indicates the color depth of the html dom.
+         */
         public function get colorDepth():String
         {
             if( _colorDepth )
@@ -213,6 +219,9 @@ package com.google.analytics.external
             return _location;
         }
         
+        /**
+         * Returns the path name value of the html dom.
+         */
         public function get pathname():String
         {
             if( _pathname )
@@ -270,6 +279,9 @@ package com.google.analytics.external
             return _search;
         }
         
+        /**
+         * Returns the referrer value of the html dom.
+         */
         public function get referrer():String
         {
             if( _referrer )
@@ -287,6 +299,9 @@ package com.google.analytics.external
             return _referrer;
         }
         
+        /**
+         * Returns the title value of the html dom.
+         */
         public function get title():String
         {
             if( _title )

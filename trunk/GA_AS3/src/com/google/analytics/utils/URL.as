@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,24 +15,32 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.utils
 {
-    import system.cli.SwitchStatus;
-    
+
     /**
-    * Basic URL utility class.
-    */
+     * Basic URL utility class.
+     */
     public class URL
     {
+    	
         private var _url:String;
         
+        /**
+         * Creates a new URL instance.
+         * @param url The String expression to defines the URL instance.
+         */
         public function URL( url:String = "" )
         {
             _url = url.toLowerCase();
         }
         
+        /**
+         * Indicates the protocol value of the url.
+         */          
         public function get protocol():Protocols
         {
             var proto:String = _url.split( "://" )[0];
@@ -53,6 +61,9 @@ package com.google.analytics.utils
             }
         }
         
+        /**
+         * Indicates the host name value of the url.
+         */        
         public function get hostName():String
         {
             var hostname:String = _url;
@@ -81,6 +92,9 @@ package com.google.analytics.utils
             return hostname;
         }
         
+        /**
+         * Indicates the domain value of the url.
+         */         
         public function get domain():String
         {
             if( (hostName != "") && (hostName.indexOf(".") > -1) )
@@ -114,6 +128,9 @@ package com.google.analytics.utils
             return "";
         }
         
+        /**
+         * Indicates the subdomain value of the url.
+         */
         public function get subDomain():String
         {
             if( (domain != "") && (domain != hostName) )
@@ -124,7 +141,9 @@ package com.google.analytics.utils
             return "";
         }
         
-        
+        /**
+         * Indicates the path value of the url.
+         */
         public function get path():String
         {
             var _path:String = _url;
@@ -152,6 +171,9 @@ package com.google.analytics.utils
             return _path;
         }
         
+        /**
+         * Indicates the search of the url.
+         */
         public function get search():String
         {
             var _search:String = _url;
