@@ -56,8 +56,10 @@ package com.google.analytics
                     function()
                     {
                         pT = _gat._getTracker("UA-332-1");
+                        x = {};
+                        x.y = {};
+                        x.y.z = _gat._getTracker("UA-321-0");
                         _GATracker = {};
-                        _GATracker['test'] = pT;
                         //alert( "pT="+pT );
                     }
                 ]]>
@@ -73,10 +75,24 @@ package com.google.analytics
             {
                 return;
             }
-            _bridge = new Bridge( "test" );
             
-            assertTrue( _bridge.hasTrackingAccount( "test" ) );
+            _bridge = new Bridge( "pT" );
+            
+            assertTrue( _bridge.hasTrackingAccount( "pT" ) );
             assertEquals( "UA-332-1", _bridge.getAccount() );
+        }
+        
+        public function testAlreadyExistingValidTracker2():void
+        {
+            if( !_js.isAvailable() )
+            {
+                return;
+            }
+            
+            _bridge = new Bridge( "x.y.z" );
+            
+            assertTrue( _bridge.hasTrackingAccount( "x.y.z" ) );
+            assertEquals( "UA-321-0", _bridge.getAccount() );
         }
         
         public function testAlreadyExistingInvalidTracker():void
