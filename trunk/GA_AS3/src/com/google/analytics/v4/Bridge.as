@@ -26,7 +26,7 @@ package com.google.analytics.v4
     import com.google.analytics.utils.validateAccount;
     
     /**
-     * This apo use a Javascript bridge to fill the GATracker properties.
+     * This api use a Javascript bridge to fill the GATracker properties.
      */
     public class Bridge implements GoogleAnalyticsAPI
     {
@@ -76,18 +76,25 @@ package com.google.analytics.v4
             {
                 _createTrackingObject( account );
             }
-            else if( !_checkTrackingObject( account ) )
+            else
             {
-                var msg2:String = "";
-                    msg2 += "JS Object _GATracker[\"" + account + "\"] doesn't exist in DOM\n";
-                    msg2 += "Bridge object not created.";
-                
-                debug.warning( msg2 );
-                throw new Error( msg2 );
+                if( _checkTrackingObject( account ) )
+                {
+                    _linkTrackingObject( account );
+                }
+                else
+                {
+                    var msg2:String = "";
+                        msg2 += "JS Object \"" + account + "\" doesn't exist in DOM\n";
+                        msg2 += "Bridge object not created.";
+                    
+                    debug.warning( msg2 );
+                    throw new Error( msg2 );
+                }
             }
             
         }
-                
+        
         /**
          * Wrapper to simplify readability of External JS object calls in methods above 
          */
@@ -139,6 +146,41 @@ package com.google.analytics.v4
             _hasGATracker = true;
         }
         
+        private function _linkTrackingObject( path:String ):void
+        {
+            var data:XML = 
+                <script>
+                    <![CDATA[
+                        function( container , target )
+                        {
+                            var targets;
+                            var name;
+                            if( target.indexOf(".") > 0 )
+                            {
+                                targets = target.split(".");
+                                name    = targets.pop();
+                            }
+                            else
+                            {
+                                targets = [];
+                                name    = target;
+                            }
+                            
+                            var ref   = window;
+                            var depth = targets.length;
+                            for( var j = 0 ; j < depth ; j++ )
+                            {
+                                ref = ref[ targets[j] ] ;
+                            }
+                            
+                            window[container][target] = ref[name] ;
+                        }
+                    ]]>
+                </script>;
+            
+            _proxy.call( data, _jsContainer, path );
+        }
+        
         private function _createTrackingObject( account:String ):void
         {
             var data:XML =
@@ -154,7 +196,7 @@ package com.google.analytics.v4
             _proxy.call( data, account );
         }
         
-        private function _checkTrackingObject( account:String ):Boolean
+        private function _checkValidTrackingObject( account:String ):Boolean
         {
             var data:XML =
                 <script>
@@ -176,6 +218,19 @@ package com.google.analytics.v4
             return _proxy.call( data, account );
         }
         
+        private function _checkTrackingObject( account:String ):Boolean
+        {
+            var hasObj:Boolean = _proxy.hasProperty( account );
+            var isTracker:Boolean = _proxy.hasProperty( account + "._getAccount" );
+            
+            if( hasObj && isTracker )
+            {
+                return true;
+            }
+            
+            return false;
+        }
+        
         public function hasGAJS():Boolean
         {
             return _checkGAJS();
@@ -183,7 +238,14 @@ package com.google.analytics.v4
         
         public function hasTrackingAccount( account:String ):Boolean
         {
-            return _checkTrackingObject( account );
+            if( validateAccount( account ) )
+            {
+                return _checkValidTrackingObject( account );
+            }
+            else
+            {
+                return _checkTrackingObject( account );
+            }
         }
         
         /**

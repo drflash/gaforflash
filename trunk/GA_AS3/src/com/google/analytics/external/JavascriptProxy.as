@@ -62,6 +62,91 @@ package com.google.analytics.external
                 ]]>
             </script>;
         
+        public static var setPropertyRef_js:XML = 
+            <script>
+                <![CDATA[
+                    function( path , target )
+                    {
+                        var paths;
+                        var prop;
+                        if( path.indexOf(".") > 0 )
+                        {
+                            paths = path.split(".");
+                            prop  = paths.pop() ;
+                        }
+                        else
+                        {
+                            paths = [];
+                            prop  = path;
+                        }
+                        alert( "paths:"+paths.length+", prop:"+prop );
+                        
+                        var targets;
+                        var name;
+                        if( target.indexOf(".") > 0 )
+                        {
+                            targets = target.split(".");
+                            name    = targets.pop();
+                        }
+                        else
+                        {
+                            targets = [];
+                            name    = target;
+                        }
+                        alert( "targets:"+targets.length+", name:"+name );
+                        
+                        var root = window;
+                        var len  = paths.length;
+                        for( var i = 0 ; i < len ; i++ )
+                        {
+                            root = root[ paths[i] ] ;
+                        }
+                        
+                        var ref   = window;
+                        var depth = targets.length;
+                        for( var j = 0 ; j < depth ; j++ )
+                        {
+                            ref = ref[ targets[j] ] ;
+                        }
+                        
+                        root[ prop ] = ref[name] ;
+                    }
+                ]]>
+            </script>;
+        
+        public static var hasProperty_js:XML = 
+            <script>
+                <![CDATA[
+                    function( path )
+                    {
+                        var paths;
+                        if( path.indexOf(".") > 0 )
+                        {
+                            paths = path.split(".");
+                        }
+                        else
+                        {
+                            paths = [path];
+                        }
+                        var target = window ;
+                        var len    = paths.length ;
+                        for( var i = 0 ; i < len ; i++ )
+                        {
+                            target = target[ paths[i] ] ;
+                        }
+                        
+                        if( target )
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                ]]>
+            </script>;
+        
         private var _notAvailableWarning:Boolean = true;
         
         /**
@@ -131,6 +216,16 @@ package com.google.analytics.external
         public function setProperty( path:String, value:* ):void
         {
             ExternalInterface.call( setProperty_js, path, value );
+        }
+        
+        public function setPropertyByReference( path:String, target:String ):void
+        {
+            ExternalInterface.call( setPropertyRef_js, path, target );
+        }
+        
+        public function hasProperty( path:String ):Boolean
+        {
+            return ExternalInterface.call( hasProperty_js, path );
         }
         
         
