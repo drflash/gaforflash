@@ -30,6 +30,7 @@ package com.google.analytics
     import com.google.analytics.events.MessageEvent;
     import com.google.analytics.external.HTMLDOM;
     import com.google.analytics.utils.Environment;
+    import com.google.analytics.utils.Version;
     import com.google.analytics.v4.Bridge;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
@@ -57,11 +58,14 @@ package com.google.analytics
         * We mainly use it for internal test and it's basically a factory.
         * 
         */
-        public function GATracker( display:DisplayObject )
+        public function GATracker( display:DisplayObject, debugmode:Boolean = false )
         {
             _display   = display;
-            debug.layout = new Layout( _display );
-            debug.active = true;
+            if( debugmode )
+            {
+                debug.layout = new Layout( _display );
+                debug.active = debugmode;
+            }
             
             /* note:
                for unit testing and to avoid 2 different branches AIR/Flash
@@ -82,7 +86,9 @@ package com.google.analytics
         * note:
         * each components will have also their own version
         */
-        public static var version:String = "0.5.0." + "$Rev$ ".split( " " )[1];
+        public static var version:Version = new Version();
+        include "version.properties"
+        version.revision = "$Rev$ ".split( " " )[1];
         
         private function _onInfo( event:MessageEvent ):void
         {
