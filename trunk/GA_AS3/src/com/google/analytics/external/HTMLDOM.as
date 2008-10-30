@@ -75,6 +75,11 @@ package com.google.analytics.external
         */
         public function cacheProperties():void
         {
+            if( !isAvailable() )
+            {
+                return;
+            }
+            
             var obj:Object = call( cache_properties_js );
             
             _host         = obj.host;
