@@ -37,7 +37,7 @@ package com.google.analytics.v4
     import com.google.analytics.utils.Variables;
     import com.google.analytics.utils.generate32bitRandom;
     import com.google.analytics.utils.generateHash;
-    import com.google.analytics.utils.validateAccount;    
+    import com.google.analytics.utils.validateAccount;
 
     /**
      * The Tracker class.
@@ -592,7 +592,7 @@ package com.google.analytics.v4
         {
             if( debug.verbose )
             {
-                debug.write( "visitCode: " + _buffer.utma.sessionId );
+                debug.info( "visitCode: " + _buffer.utma.sessionId );
             }
             return _buffer.utma.sessionId;
         }
@@ -634,7 +634,7 @@ package com.google.analytics.v4
             */
             if( debug.verbose )
             {
-                debug.write( "takeSample: (" +(_visitCode() % 10000)+ ") < (" +(config.sampleRate * 10000)+ ")" );
+                debug.info( "takeSample: (" +(_visitCode() % 10000)+ ") < (" +(config.sampleRate * 10000)+ ")" );
             }
             return (_visitCode() % 10000) < (config.sampleRate * 10000);
         }

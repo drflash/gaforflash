@@ -21,6 +21,7 @@ package
 {
     import com.google.analytics.GATracker;
     import com.google.analytics.core.as3_api;
+    import com.google.analytics.debug;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     
     import flash.display.Sprite;
@@ -52,7 +53,7 @@ package
         {
             //debug.minimizedOnStart = true;
             use namespace as3_api;
-            _gat = new GATracker( this );
+            _gat = new GATracker( this, true );
             //pageTracker = _gat.getTracker( "UA-1234-5" );
             
             //UA-4241494-2 for gaas3.zwetan.com
