@@ -23,9 +23,9 @@ package com.google.analytics.core
     import com.google.analytics.config;
     import com.google.analytics.debug;
     import com.google.analytics.utils.Environment;
+    import com.google.analytics.utils.generate32bitRandom;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.Variables;
-    import com.google.analytics.utils.generate32bitRandom;
     
     import flash.display.Loader;
     import flash.events.Event;

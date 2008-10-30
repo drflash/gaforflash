@@ -34,7 +34,7 @@ package com.google.analytics.debug
      * The Layout class is a helper who manages
      * as a factory all visual display in the application.
      */
-    public class Layout
+    public class Layout implements ILayout
     {
         private var _display:DisplayObject;
         private var _mainPanel:Panel;

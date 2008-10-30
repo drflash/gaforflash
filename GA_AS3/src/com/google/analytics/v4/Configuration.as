@@ -34,14 +34,14 @@ package com.google.analytics.v4
      * Dispatched when the configuration notify an info.
      * @eventType com.google.analytics.events.MessageEvent.INFO
      */
-    [Event(name="info", type="com.google.analytics.events.MessageEvent")]
+    //[Event(name="info", type="com.google.analytics.events.MessageEvent")]
     
     /**
      * Dispatched when the configuration notify a warning.
      * @eventType com.google.analytics.events.MessageEvent.WARNING
      * @see #addOrganicSource
      */
-    [Event(name="warning", type="com.google.analytics.events.MessageEvent")]
+    //[Event(name="warning", type="com.google.analytics.events.MessageEvent")]
     
     /**
      * Google Analytic Tracker Code (GATC)'s configuration / state component.

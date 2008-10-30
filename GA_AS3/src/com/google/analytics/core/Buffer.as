@@ -31,7 +31,7 @@ package com.google.analytics.core
     
     import flash.events.NetStatusEvent;
     import flash.net.SharedObject;
-    import flash.net.SharedObjectFlushStatus;    
+    import flash.net.SharedObjectFlushStatus;
 
     /**
      * Google Analytics Tracker Code (GATC)'s memory module.

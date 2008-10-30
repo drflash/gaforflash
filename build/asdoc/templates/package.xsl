@@ -17,7 +17,7 @@
 	<xsl:include href="asdoc-util.xsl"/>
 	<xsl:include href="class-files.xsl"/>
 	<xsl:param name="outputPath" select="'../out/'"/>
-	<xsl:param name="packageOverviewFile" select="'../templates/overviews.xml'" />
+	<xsl:param name="packageOverviewFile" select="'../templates/Overviews_Base.xml'" />
 
 	<xsl:template match="/">
 		<xsl:for-each select="asdoc/packages/asPackage">

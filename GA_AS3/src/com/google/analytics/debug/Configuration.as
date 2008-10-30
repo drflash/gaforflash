@@ -51,7 +51,7 @@ package com.google.analytics.debug
         /**
          * Indicates the Layout reference.
          */
-        public var layout:Layout;
+        public var layout:ILayout;
         
         /**
          * To trace infos and warning to the output.
@@ -196,18 +196,18 @@ package com.google.analytics.debug
         /**
          * Writes a message.
          */
-        public function write( message:String ):void
-        {
-            if( layout )
-            {
-                layout.visualDebug.write( message );
-            }
-            
-            if( traceOutput )
-            {
-                trace( message );
-            }
-        }
+//        public function write( message:String ):void
+//        {
+//            if( layout )
+//            {
+//                layout.visualDebug.write( message );
+//            }
+//            
+//            if( traceOutput )
+//            {
+//                trace( message );
+//            }
+//        }
         
         /**
          * Notify an "info" message.

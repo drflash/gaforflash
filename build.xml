@@ -1,17 +1,234 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="GA library AS3" default="main">
+<!--
+   Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
+   
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+   
+     http://www.apache.org/licenses/LICENSE-2.0
+   
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
 
-	<property file="./build.properties"/>
-	
-	<target name="main">
-		
-		<exec executable="${compc}" >
-			
-			<arg line="-load-config+=${config}" />
-		
-		</exec>
-			
-	</target>
-
+<project name="gaffa" default="main" basedir=".">
+    
+	<!-- timestamp of the build -->
+    <tstamp>
+        <format property="TODAY" pattern="dd MMMM yyyy" />
+    </tstamp>
+    
+	<!-- user can override those properties -->
+    <property file="build/user.properties"/>
+    
+	<!--
+	   The build is intended to compile on Windows and Mac OS X
+	-->
+    <condition property="FLEX_HOME" value="${FLEX_HOME_MAC}">
+        <os family="mac"/>
+    </condition>
+    
+    <condition property="FLEX_HOME" value="${FLEX_HOME_WIN}">
+        <os family="windows" />
+    </condition>
+    
+	<!-- define the asdoc executable -->
+    <condition property="asdoc.exe" value="${FLEX_HOME}/bin/asdoc">
+        <os family="mac" />
+    </condition>
+    
+    <condition property="asdoc.exe" value="${FLEX_HOME}/bin/asdoc.exe">
+        <os family="windows" />
+    </condition>
+    
+    <!-- define flexTasks -->
+    <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+    
+    <!-- define svnAnt -->
+    <taskdef resource="org/tigris/subversion/svnant/svnantlib.xml">
+        <classpath >
+            <fileset dir="build/ant/lib" includes="**/*.jar"/>
+        </classpath>
+    </taskdef>
+    
+    <echo message="fetch subversion informations" level="verbose" />
+    <!--
+       load the major, minor, build version number from the AS3 common source directory
+       the same properties file is used in AS3 with an include
+    -->
+    <property file="GA_AS3/src/com/google/analytics/version.properties"/>
+    <svn>
+        <info target="."/>
+    </svn>
+    <!-- define the revision number from the svn information -->
+    <property name="version.revision" value="${svn.info.lastRev}"/>
+    
+    <!-- general properties of the project -->
+    <property file="build/build.properties"/>
+    <echo message="${release.fullname} v${release.version}"/>
+    
+    
+    
+    <target name="clean">
+        <delete dir="${release.dir}" />
+        <delete dir="${release.tmp}" />
+    </target>
+    
+    <target name="init">
+        <mkdir dir="${release.dir}" />
+        
+        <!--
+           export the source code to a temporary location
+           to be able to manipulate some files and/or directories
+         -->
+        <svn>
+            <export srcPath="${gaffa.src}" destPath="${release.tmp}" />
+        </svn>
+        
+        <!-- delete some files we don't want to be included in the documentation or the component -->
+        <delete>
+            <fileset dir="${release.tmp}">
+              <include name="*.as"/>
+            </fileset>
+        </delete>
+        
+    </target>
+    
+    <target name="main" depends="clean,init,documentation,component,commonfiles,package">
+    </target>
+    
+    <target name="clean-documentation">
+        <delete includeemptydirs="true">
+            <fileset dir="${asdoc.output}" includes="**/*" defaultexcludes="false"/>
+        </delete>
+    </target>
+    
+    <target name="documentation" depends="clean-documentation" description="generate the documentation with asdoc">
+        <echo message="generate documentation" level="verbose" />
+        
+        <!-- run asdoc -->
+        <exec executable="${asdoc.exe}">
+            <arg line="-verbose-stacktraces" />
+            <arg line="-doc-sources ${release.tmp}" />
+            <arg line="-output ${asdoc.output}" />
+            <arg line="-package com.google.analytics 'Contains the main Google Analytics API'" />
+            <arg line="-templates-path ${asdoc.template}" />
+            <arg line="-main-title ${asdoc.main.title}" />
+            <arg line="-window-title ${asdoc.window.title}" />
+            <arg line="-footer ${asdoc.footer}" />
+        </exec>
+        
+        <copy todir="${release.dir}/doc">
+			<fileset dir="${asdoc.output}" />
+		</copy>
+        <!--
+        <zip destfile="${release.dir}/${asdoc.zipname}"
+             basedir="${asdoc.output}" 
+        />
+        -->
+        
+    </target>
+    
+    <target name="component" description="build the SWC component">
+        <echo message="building component" level="verbose" />
+        
+        <!-- temporary -->
+        <!--
+        <mxmlc
+            file="${gaffa.src}/GA_AS3_trunk.as"
+            as3="true"
+            output="${basedir}/bin/test.swf"
+        >
+            <default-size width="800" height="600" />
+        </mxmlc>
+        -->
+        
+        <!--
+        <fileset id="sources" dir="${release.tmp}">
+            <include name="**/*.as"/>
+        </fileset>
+        <pathconvert property="classes" pathsep=" " refid="sources">
+            <chainedmapper>
+                <globmapper from="${basedir}/build/tmp/*" to="*"/>
+                <mapper type="package" from="*.as" to="*"/>
+            </chainedmapper>
+        </pathconvert>
+        <echo message="classes is set to = ${classes}"/>
+        -->
+        
+        <!-- include-classes="com.google.analytics.Component com.google.analytics.AnalyticsLibrary" -->
+        
+        <compc
+            output="${release.dir}/lib/${gaffa.swc}"
+        >
+            <namespace uri="${gaffa.namespace}" manifest="${gaffa.manifest}" />
+            <include-namespaces>http://www.google.com/analytics/2009</include-namespaces>
+            <strict>true</strict>
+            <optimize>true</optimize>
+            <warnings>true</warnings>
+            <compute-digest>false</compute-digest>
+            <source-path path-element="${release.tmp}" />
+            <load-config>build/ga-config.xml</load-config>
+            <!--
+            <metadata-title>Google Analytics Component</metadata-title>
+            <metadata-description>Google Analytics for Flash, Flex and AIR</metadata-description>
+            <metadata-date>${TODAY}</metadata-date>
+            <metadata-publisher>Google Inc.</metadata-publisher>
+            <metadata-creator>Google Inc.</metadata-creator>
+            <metadata-creator>Adobe Systems Inc.</metadata-creator>
+            <metadata-contributor>Zwetan Kjukov</metadata-contributor>
+            <metadata-contributor>Marc Alcaraz</metadata-contributor>
+            -->
+        </compc>
+        
+        <!--
+        <exec executable="${compc.exe}">
+            <arg line="-output=${release.dir}/lib/${gaffa.swc}" />
+            <arg line="" />
+            <arg line="" />
+            <arg line="" />
+            <arg line="" />
+            <arg line="" />
+            <arg line="" />
+            <arg line="" />
+            <arg line="" />
+            <arg line="" />
+            
+        </exec>
+        -->
+    </target>
+    
+    <target name="commonfiles">
+        <filter token="project_name" value="${project.name}"/>
+        <filter token="project_fullname" value="${project.fullname}"/>
+        <filter token="project_url" value="${project.url}"/>
+        <filter token="project_group" value="${project.group}"/>
+        <filter token="project_maintenance" value="${project.maintenance}"/>
+        <filter token="release_version" value="${release.version}"/>
+        <copy file="${gaffa.template}/readme.txt" todir="${release.dir}" filtering="true" />
+        <copy file="changelog.txt" todir="${release.dir}" />
+        <copy file="license.txt" todir="${release.dir}" />
+    </target>
+    
+    <target name="package" description="package the release for distribution" unless="devtest">
+        <echo message="generate release zip" level="verbose" />
+        <zip destfile="${release.dir}/${release.zipname}"
+             basedir="${release.dir}" 
+        />
+        
+        <delete includeemptydirs="true">
+            <fileset dir="${release.dir}" includes="**/*" excludes="${release.zipname}" defaultexcludes="false"/>
+        </delete>
+        
+    </target>
+    
+    <!-- reset the build to its default state -->
+    <target name="reset" depends="clean,clean-documentation" description="to reset the build to its default state" >
+    </target>
+    
 </project>
