@@ -148,7 +148,7 @@
         </mxmlc>
         -->
         
-        <!--
+        
         <fileset id="sources" dir="${release.tmp}">
             <include name="**/*.as"/>
         </fileset>
@@ -159,21 +159,23 @@
             </chainedmapper>
         </pathconvert>
         <echo message="classes is set to = ${classes}"/>
-        -->
+        
         
         <!-- include-classes="com.google.analytics.Component com.google.analytics.AnalyticsLibrary" -->
         
         <compc
-            output="${release.dir}/lib/${gaffa.swc}"
+            output="${release.dir}/lib/flex_${gaffa.swc}"
+            include-classes="${classes}"
         >
-            <namespace uri="${gaffa.namespace}" manifest="${gaffa.manifest}" />
-            <include-namespaces>http://www.google.com/analytics/2009</include-namespaces>
+            <!-- <namespace uri="${gaffa.namespace}" manifest="${gaffa.manifest}" /> -->
+            <!-- <include-namespaces>http://www.google.com/analytics/2009</include-namespaces> -->
             <strict>true</strict>
             <optimize>true</optimize>
             <warnings>true</warnings>
             <compute-digest>false</compute-digest>
             <source-path path-element="${release.tmp}" />
-            <load-config>build/ga-config.xml</load-config>
+
+            <!-- <load-config>build/ga-config.xml</load-config> -->
             <!--
             <metadata-title>Google Analytics Component</metadata-title>
             <metadata-description>Google Analytics for Flash, Flex and AIR</metadata-description>
@@ -184,6 +186,24 @@
             <metadata-contributor>Zwetan Kjukov</metadata-contributor>
             <metadata-contributor>Marc Alcaraz</metadata-contributor>
             -->
+        </compc>
+        
+        <compc
+            output="${release.dir}/lib/${gaffa.swc}"
+            include-classes="${classes}"
+        >
+            <strict>true</strict>
+            <optimize>true</optimize>
+            <warnings>true</warnings>
+            <compute-digest>false</compute-digest>
+            <source-path path-element="${release.tmp}" />
+            <load-config>build/ga-config.xml</load-config>
+            <include-libraries dir="build/templates/" append="true">
+                <include name="analytics_flash_stub.swc" />
+            </include-libraries>
+            <include-libraries dir="${release.dir}" append="true">
+                <include name="flex_${gaffa.swc}" />
+            </include-libraries>
         </compc>
         
         <!--

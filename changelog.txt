@@ -1,0 +1,4 @@
+* 0.6.0.130
+- automated build with Ant
+- Flash component
+- Flex component

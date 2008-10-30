@@ -27,7 +27,7 @@ package
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
-    import flash.events.Event;    
+    import flash.events.Event;
 
     /* note:
        for testing code we use GATracker
