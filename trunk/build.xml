@@ -72,6 +72,9 @@
     <property file="build/build.properties"/>
     <echo message="${release.fullname} v${release.version}"/>
     
+    <condition property="includesource">
+        <isfalse value="${no.source}"/>
+    </condition>
     
     
     <target name="clean">
@@ -99,17 +102,21 @@
         
     </target>
     
-    <target name="main" depends="clean,init,documentation,component,commonfiles,package">
+    <target name="main" depends="clean,init,documentation,component,templates,commonfiles,package">
     </target>
     
     <target name="clean-documentation">
+        <delete dir="${asdoc.output}" />
+        <!--
         <delete includeemptydirs="true">
             <fileset dir="${asdoc.output}" includes="**/*" defaultexcludes="false"/>
         </delete>
+        -->
     </target>
     
     <target name="documentation" depends="clean-documentation" description="generate the documentation with asdoc">
         <echo message="generate documentation" level="verbose" />
+        <mkdir dir="${asdoc.output}" />
         
         <!-- run asdoc -->
         <exec executable="${asdoc.exe}">
@@ -125,13 +132,7 @@
         
         <copy todir="${release.dir}/doc">
 			<fileset dir="${asdoc.output}" />
-		</copy>
-        <!--
-        <zip destfile="${release.dir}/${asdoc.zipname}"
-             basedir="${asdoc.output}" 
-        />
-        -->
-        
+		</copy>        
     </target>
     
     <target name="component" description="build the SWC component">
@@ -148,7 +149,7 @@
         </mxmlc>
         -->
         
-        
+        <!-- iterate trough the src and generate the list of classes to insert in the component -->
         <fileset id="sources" dir="${release.tmp}">
             <include name="**/*.as"/>
         </fileset>
@@ -158,72 +159,29 @@
                 <mapper type="package" from="*.as" to="*"/>
             </chainedmapper>
         </pathconvert>
-        <echo message="classes is set to = ${classes}"/>
+        <echo message="classes is set to = ${classes}" level="verbose" />
         
-        
-        <!-- include-classes="com.google.analytics.Component com.google.analytics.AnalyticsLibrary" -->
-        
+        <!--  generate the SWC component for Flex -->
         <compc
-            output="${release.dir}/lib/flex_${gaffa.swc}"
+            output="${release.dir}/lib/${gaffa.flexswc}"
             include-classes="${classes}"
         >
-            <!-- <namespace uri="${gaffa.namespace}" manifest="${gaffa.manifest}" /> -->
-            <!-- <include-namespaces>http://www.google.com/analytics/2009</include-namespaces> -->
+            <namespace uri="${gaffa.namespace}" manifest="${gaffa.manifest}" />
+            <include-namespaces>http://www.google.com/analytics/2009</include-namespaces>
             <strict>true</strict>
             <optimize>true</optimize>
             <warnings>true</warnings>
             <compute-digest>false</compute-digest>
             <source-path path-element="${release.tmp}" />
-
-            <!-- <load-config>build/ga-config.xml</load-config> -->
-            <!--
-            <metadata-title>Google Analytics Component</metadata-title>
-            <metadata-description>Google Analytics for Flash, Flex and AIR</metadata-description>
-            <metadata-date>${TODAY}</metadata-date>
-            <metadata-publisher>Google Inc.</metadata-publisher>
-            <metadata-creator>Google Inc.</metadata-creator>
-            <metadata-creator>Adobe Systems Inc.</metadata-creator>
-            <metadata-contributor>Zwetan Kjukov</metadata-contributor>
-            <metadata-contributor>Marc Alcaraz</metadata-contributor>
-            -->
         </compc>
         
-        <compc
-            output="${release.dir}/lib/${gaffa.swc}"
-            include-classes="${classes}"
-        >
-            <strict>true</strict>
-            <optimize>true</optimize>
-            <warnings>true</warnings>
-            <compute-digest>false</compute-digest>
-            <source-path path-element="${release.tmp}" />
-            <load-config>build/ga-config.xml</load-config>
-            <include-libraries dir="build/templates/" append="true">
-                <include name="analytics_flash_stub.swc" />
-            </include-libraries>
-            <include-libraries dir="${release.dir}" append="true">
-                <include name="flex_${gaffa.swc}" />
-            </include-libraries>
-        </compc>
-        
-        <!--
-        <exec executable="${compc.exe}">
-            <arg line="-output=${release.dir}/lib/${gaffa.swc}" />
-            <arg line="" />
-            <arg line="" />
-            <arg line="" />
-            <arg line="" />
-            <arg line="" />
-            <arg line="" />
-            <arg line="" />
-            <arg line="" />
-            <arg line="" />
-            
-        </exec>
-        -->
     </target>
     
-    <target name="commonfiles">
+    <!--
+        parse the templates for the release
+        can be use also to generate samples, mxml, as, etc.
+    -->
+    <target name="templates" description="generate files from templates">
         <filter token="project_name" value="${project.name}"/>
         <filter token="project_fullname" value="${project.fullname}"/>
         <filter token="project_url" value="${project.url}"/>
@@ -231,10 +189,22 @@
         <filter token="project_maintenance" value="${project.maintenance}"/>
         <filter token="release_version" value="${release.version}"/>
         <copy file="${gaffa.template}/readme.txt" todir="${release.dir}" filtering="true" />
+    </target>
+    
+    <!-- include the source code in the release -->
+    <target name="include-source" if="includesource">
+        <copy todir="${release.dir}/src">
+            <fileset dir="${release.tmp}"/>
+        </copy>
+    </target>
+    
+    <!-- add commen files to the release -->
+    <target name="commonfiles" depends="include-source" description="copy common files">
         <copy file="changelog.txt" todir="${release.dir}" />
         <copy file="license.txt" todir="${release.dir}" />
     </target>
     
+    <!-- package the release to a versioned zip file -->
     <target name="package" description="package the release for distribution" unless="no.package">
         <echo message="generate release zip" level="verbose" />
         <zip destfile="${release.dir}/${release.zipname}"
@@ -251,18 +221,28 @@
     <target name="reset" depends="clean,clean-documentation" description="to reset the build to its default state" >
     </target>
     
+    <!-- documentation of the build -->
     <target name="help" description="documentation of the build">
-        <echo message="a) to build a normal release" />
+        <echo message="the release files will appears in ${release.dir}/" />
+        <echo message="" />
+        <echo message="a) to build a normal release (default)" />
         <echo message="   doc + component (no source code) packaged in a zip" />
-        <echo message="   ant main" />
+        <echo message="   ant main, ant" />
         <echo message="" />
         <echo message="b) to build a test release" />
         <echo message="   doc + component (not zipped)" />
         <echo message="   ant -Dno.package=true" />
         <echo message="" />
+        <echo message="c) to reset the build to its default state" />
+        <echo message="   ant reset" />
         <echo message="" />
+        <echo message="d) to build a dev release" />
+        <echo message="   doc + component + source code" />
+        <echo message="   ant -Dno.source=false" />
         <echo message="" />
-        <echo message="" />
+        <echo message="z) you can combine different options" />
+        <echo message="   ant -Dno.source=false -Dno.package=true" />
+        <echo message="   will generate /lib /doc /src without packaging them as zip" />
         <echo message="" />
     </target>
     
