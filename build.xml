@@ -235,7 +235,7 @@
         <copy file="license.txt" todir="${release.dir}" />
     </target>
     
-    <target name="package" description="package the release for distribution" unless="devtest">
+    <target name="package" description="package the release for distribution" unless="no.package">
         <echo message="generate release zip" level="verbose" />
         <zip destfile="${release.dir}/${release.zipname}"
              basedir="${release.dir}" 
@@ -249,6 +249,21 @@
     
     <!-- reset the build to its default state -->
     <target name="reset" depends="clean,clean-documentation" description="to reset the build to its default state" >
+    </target>
+    
+    <target name="help" description="documentation of the build">
+        <echo message="a) to build a normal release" />
+        <echo message="   doc + component (no source code) packaged in a zip" />
+        <echo message="   ant main" />
+        <echo message="" />
+        <echo message="b) to build a test release" />
+        <echo message="   doc + component (not zipped)" />
+        <echo message="   ant -Dno.package=true" />
+        <echo message="" />
+        <echo message="" />
+        <echo message="" />
+        <echo message="" />
+        <echo message="" />
     </target>
     
 </project>
