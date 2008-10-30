@@ -1,2 +1,7 @@
+* 0.6.0.134
+- Flex SWC tested, be careful the namespace are not showing
+  in the syntax completion (cf: com.google.analytics.core.as3_api)
+- use "ant help" for the documentation of the build
+
 * 0.6.0.132
 - automated build with Ant
