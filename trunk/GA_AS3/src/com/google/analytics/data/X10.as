@@ -440,19 +440,41 @@ package com.google.analytics.data
          */
         public function renderUrlString():String
         {
-        	
-        	/* TODO:
+            
+            /* TODO:
              * - rename to toURLString, better naming
              * - add a static parseURLString method (even if it's only to help debugging,testing)
              * - check if we need to sort the data, see X10Test.testRenderUrlString7()
-        	 */
-        	
+             */
+            
             var result:Array = [];
             var projectId:String;
             
             for( projectId in _projectData )
             {
                 if( hasProject( Number(projectId) ) )
+                {
+                    result.push( projectId + _renderProject(_projectData[projectId]) );
+                }
+            }
+            
+            return result.join("");
+        }
+        
+        public function renderMergedUrlString( extObject:X10 = null ):String
+        {
+            if( !extObject )
+            {
+                return renderUrlString();
+            }
+            
+            var result:Array = [ extObject.renderUrlString() ];
+            var projectId:String;
+            
+            for( projectId in _projectData )
+            {
+                if( hasProject( Number(projectId) ) &&
+                    !extObject.hasProject( Number(projectId) ) )
                 {
                     result.push( projectId + _renderProject(_projectData[projectId]) );
                 }

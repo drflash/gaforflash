@@ -340,8 +340,8 @@ package com.google.analytics.core
              
              variables.URIencode = false;
 //             variables.pre  = [ "utmwv", "utmn", "utmhn" ];
-             variables.pre  = [ "utmwv", "utmn", "utmhn", "utmcs",
-                                "utmsr", "utmsc", "utmul", "utmje",
+             variables.pre  = [ "utmwv", "utmn", "utmhn", "utmt", "utme",
+                                "utmcs", "utmsr", "utmsc", "utmul", "utmje",
                                 "utmfl", "utmdt", "utmhid", "utmr", "utmp" ];
              variables.post = [ "utmcc" ];
              

@@ -34,11 +34,9 @@ package com.google.analytics.core
             _parent   = parent;
         }
         
-        public function trackEvent( type:String, label:String = "", value:String = "" ):Boolean
+        public function trackEvent( action:String, label:String = null, value:Number = NaN ):Boolean
         {
-            //not implemented
-            //see issue 23
-            return false;
+            return _parent.trackEvent( name, action, label, value );
         }
         
     }
