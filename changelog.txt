@@ -1,3 +1,10 @@
+* 0.6.0.137
+- Event Tracking added
+- EventInfo works as DocumentInfo etc.
+- Users should be able to extends or create instance
+  of EvenTracker to automate their repetitive even tracking
+- You can also create EventTracker instance in AS3 for the Bridge mode
+
 * 0.6.0.134
 - Flex SWC tested, be careful the namespace are not showing
   in the syntax completion (cf: com.google.analytics.core.as3_api)

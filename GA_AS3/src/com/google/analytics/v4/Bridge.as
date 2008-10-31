@@ -20,6 +20,7 @@
 
 package com.google.analytics.v4
 {
+    import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.debug;
     import com.google.analytics.external.JavascriptProxy;
@@ -680,7 +681,20 @@ package com.google.analytics.v4
         // END ECOMMERCE TRACKING
         // -----------------------------------------------------------------------------
         // START EVENT TRACKING
-     
+        
+        public function createEventTracker( objName:String ):EventTracker
+        {
+            /* note:
+               we don't need to forward to a JS call
+               as ultimately the EventTracker.trackEvent()
+               will redirect to the Bridge which then proxy to JS.
+               
+               In short, JS EventTrackers should be stored JS side
+               and AS3 EventTrackers should be stored AS3 side.
+            */
+            return new EventTracker( objName, this );
+        }
+        
        /**
         * Constructs and sends the event tracking call to the Google Analytics Tracking Code. 
         * Use this to track visitor behavior on your website that is not related to a web page visit, 
@@ -694,9 +708,34 @@ package com.google.analytics.v4
         * 
         * @return whether the event was sucessfully sent
         */
-        public function trackEvent(category:String, action:String, opt_label:String="", opt_value:int=0):Boolean
+        public function trackEvent( category:String, action:String, label:String = null, value:Number = NaN ):Boolean
         {
-            return _call( "_trackEvent", category, action, opt_label, opt_value );
+            var param:int = 2;
+            
+            if( label && (label != "") )
+            {
+                param = 3;
+            }
+            
+            //check if value=0 can pass
+            if( (param == 3) && !isNaN(value) )
+            {
+                param = 4;
+            }
+            
+            switch( param )
+            {
+                case 4:
+                return _call( "_trackEvent", category, action, label, value );
+                
+                case 3:
+                return _call( "_trackEvent", category, action, label );
+                
+                case 2:
+                default:
+                return _call( "_trackEvent", category, action );
+            }
+            
         }
         
         // END EVENT TRACKING

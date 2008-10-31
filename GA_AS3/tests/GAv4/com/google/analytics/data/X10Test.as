@@ -21,8 +21,6 @@ package com.google.analytics.data
 {
     import buRRRn.ASTUce.framework.TestCase;
     
-    import com.google.analytics.data.X10;
-    
     public class X10Test extends TestCase
     {
         private var xmod1:X10;
@@ -202,6 +200,72 @@ package com.google.analytics.data
             */
             assertEquals( "4(the big)(456)2(hello)(123)6(world)(789)", xmod1.renderUrlString() ); 
         }
+        
+        public function testRenderMergedUrlString():void
+        {
+            xmod1.setKey(   2, 1, "hello" );
+            xmod1.setValue( 2, 1, 123 );
+            xmod1.setKey(   4, 1, "the big" );
+            xmod1.setValue( 4, 1, 456 );
+            xmod1.setKey(   6, 1, "world" );
+            xmod1.setValue( 6, 1, 789 );
+            
+            //different project id
+            var xmod2:X10 = new X10();
+                xmod2.setKey(   3, 1, "bonjour" );
+                xmod2.setValue( 3, 1, 321 );
+                xmod2.setKey(   5, 1, "le grand" );
+                xmod2.setValue( 5, 1, 654 );
+                xmod2.setKey(   7, 1, "monde" );
+                xmod2.setValue( 7, 1, 987 );
+            
+            assertEquals( "7(monde)(987)5(le grand)(654)3(bonjour)(321)4(the big)(456)2(hello)(123)6(world)(789)", xmod1.renderMergedUrlString( xmod2 ) );
+            
+        }
+        
+        public function testRenderMergedUrlString2():void
+        {
+            xmod1.setKey(   2, 1, "hello" );
+            xmod1.setValue( 2, 1, 123 );
+            xmod1.setKey(   4, 1, "the big" );
+            xmod1.setValue( 4, 1, 456 );
+            xmod1.setKey(   6, 1, "world" );
+            xmod1.setValue( 6, 1, 789 );
+            
+            //same project id
+            var xmod2:X10 = new X10();
+                xmod2.setKey(   2, 1, "bonjour" );
+                xmod2.setValue( 2, 1, 321 );
+                xmod2.setKey(   4, 1, "le grand" );
+                xmod2.setValue( 4, 1, 654 );
+                xmod2.setKey(   6, 1, "monde" );
+                xmod2.setValue( 6, 1, 987 );
+            
+            assertEquals( "4(le grand)(654)2(bonjour)(321)6(monde)(987)", xmod1.renderMergedUrlString( xmod2 ) );
+        }
+        
+        public function testRenderMergedUrlString3():void
+        {
+            xmod1.setKey(   2, 1, "hello" );
+            xmod1.setValue( 2, 1, 123 );
+            xmod1.setKey(   4, 1, "the big" );
+            xmod1.setValue( 4, 1, 456 );
+            xmod1.setKey(   6, 1, "world" );
+            xmod1.setValue( 6, 1, 789 );
+            
+            //diff project id, "the big" will be ignored
+            var xmod2:X10 = new X10();
+                xmod2.setKey(   3, 1, "bonjour" );
+                xmod2.setValue( 3, 1, 321 );
+                xmod2.setKey(   4, 1, "le grand" );
+                xmod2.setValue( 4, 1, 654 );
+                xmod2.setKey(   7, 1, "monde" );
+                xmod2.setValue( 7, 1, 987 );
+            
+            assertEquals( "4(le grand)(654)7(monde)(987)3(bonjour)(321)2(hello)(123)6(world)(789)", xmod1.renderMergedUrlString( xmod2 ) );
+            assertEquals( -1, xmod1.renderMergedUrlString( xmod2 ).indexOf( "(the big)" ) );
+        }
+        
     }
 }
 

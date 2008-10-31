@@ -26,6 +26,8 @@ package com.google.analytics.v4
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.DocumentInfo;
     import com.google.analytics.core.DomainNameMode;
+    import com.google.analytics.core.EventInfo;
+    import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.data.X10;
@@ -66,6 +68,11 @@ package com.google.analytics.v4
         private var _campaignInfo:CampaignInfo;
         
         //other
+        private const EVENT_TRACKER_PROJECT_ID:int          = 5;
+        private const EVENT_TRACKER_OBJECT_NAME_KEY_NUM:int = 1;
+        private const EVENT_TRACKER_TYPE_KEY_NUM:int        = 2;
+        private const EVENT_TRACKER_LABEL_KEY_NUM:int       = 3;
+        private const EVENT_TRACKER_VALUE_VALUE_NUM:int     = 1;
         private var _campaign:CampaignManager;
         private var _eventTracker:X10;
         private var _x10Module:X10;
@@ -829,13 +836,13 @@ package com.google.analytics.v4
                 var searchVariables:Variables = new Variables();
                     searchVariables.URIencode = true;
                 
-                var x10vars:Variables = new Variables();
-                    x10vars.URIencode = true;
+                var x10vars:Variables;
                 
                 //X10
                 if( _x10Module && _x10Module.hasData() )
                 {
-                    x10vars.utme = _x10Module.renderUrlString();
+                    var eventInfo:EventInfo = new EventInfo( false, _x10Module );
+                    x10vars = eventInfo.toVariables();
                 }
                 
                 //Browser, campaign, and document information.
@@ -1173,6 +1180,134 @@ package com.google.analytics.v4
             debug.warning( "trackTrans() not implemented" );
         }
         
+        // ----------------------------------------
+        // Event Tracking interface
+        // note: not available in the public API
+        
+        /**
+         * @private
+         * Public interface for setting an X10 string key.
+         *
+         * @param {Number} projectId The project ID for which to set a value.
+         * @param {Number} num The numeric index for which to set a value.
+         * @param {String} value The value to be set into the specified indices.
+         */
+        private function _setXKey( projectId:Number, num:Number, value:String ):void
+        {
+            _x10Module.setKey( projectId, num, value );
+        }
+        
+        /**
+         * @private
+         * Public Interface for getting an X10 string key.
+         *
+         * @param {Number} projectId The project ID for which to get a value.
+         * @param {Number} num The numeric index for which to get a value.
+         *
+         * @return {String} The requested key, null if not found.
+         */
+        private function _getXKey( projectId:Number, num:Number ):String
+        {
+            return _x10Module.getKey( projectId, num );
+        }
+        
+        /**
+        * @private
+         * Public interface for clearing all X10 string keys for a given project ID.
+         *
+         * @param {Number} projectId The project ID for which to clear all keys.
+         */
+        private function _clearXKey( projectId:Number ):void
+        {
+            _x10Module.clearKey( projectId );
+        }
+        
+        /**
+        * @private
+         * Public interface for setting an X10 integer value.
+         *
+         * @param {Number} projectId The project ID for which to set a value.
+         * @param {Number} num The numeric index for which to set a value.
+         * @param {Number} value The value to be set into the specified indices.
+         */
+        private function _setXValue( projectId:Number, num:Number, value:Number ):void
+        {
+            _x10Module.setValue( projectId, num, value );
+        }
+        
+        /**
+         * @private
+         * Public interface for getting an X10 integer value.
+         *
+         * @param {Number} projectId The project ID for which to get a value.
+         * @param {Number} num The numeric index for which to get a value.
+         *
+         * @return {String} The requested value in string form, null if not found.
+         */
+        private function _getXValue( projectId:Number, num:Number ):*
+        {
+            return _x10Module.getValue( projectId, num );
+        }
+        
+        /**
+         * @private
+         * Public interface for clearing all X10 integer values for a given project ID.
+         *
+         * @param {Number} projectId The project ID for which to clear all values.
+         */
+        private function _clearXValue( projectId:Number ):void
+        {
+            _x10Module.clearValue( projectId );
+        }
+        
+        /**
+         * @private
+         * Public interface for spawning new X10 objects. These are used to keep
+         * track of event-based data (as opposed to the persistent data kept on
+         * the self.X10Module_ object) that need to be stored separately.
+         *
+         * @return {_gat.GA_X10_} new X10 object.
+         */
+        private function _createXObj():X10
+        {
+            _initData()
+            
+            return new X10();
+        }
+        
+        /**
+         * @private
+         * Public interface for sending an event. This will render all event-based
+         * data along with Analytics data previously collected on pageview and send
+         * the event to collectors.
+         *
+         * @param {_gat.GA_X10_} opt_xObj Event-based X10 data that we may want to
+         *     augment to the persistent X10 data stored on the tracker object
+         *     instance.
+         */
+        private function _sendXEvent( opt_xObj:X10 = null ):void
+        {
+            _initData();
+            
+            if( _takeSample() )
+            {
+                var searchVariables:Variables = new Variables();
+                    searchVariables.URIencode = true;
+                
+                var eventInfo:EventInfo = new EventInfo( true, _x10Module, opt_xObj );
+                
+                var eventvars:Variables   = eventInfo.toVariables();
+                var generalvars:Variables = _renderMetricsSearchVariables();
+                
+                searchVariables.join( eventvars, generalvars );
+                
+                _gifRequest.send( _account, searchVariables, false, true );
+            }
+        }
+        
+        // ----------------------------------------
+        
+        
         /**
          * Creates an event tracking object with the specified name.
          * Call this method when you want to create a new web page object
@@ -1182,28 +1317,12 @@ package com.google.analytics.v4
          * @param objName The name of the tracked object.
          * @return A new event tracker instance.
          */
- /*       public function createEventTracker(objName:String):Object
+        public function createEventTracker( objName:String ):EventTracker
         {
-            debug.warning( "createEventTracker() not implemented" );
-            return null;
+            return new EventTracker( objName, this );
         }
-   */     
-        /**
-         * Constructs and sends the event tracking call to GATC.
-         * 
-         * @param eventType The type name for the event.
-         * @param label An optional descriptor for the event.
-         * @param value An optional value to be aggregated with the event.
-         * 
-         * @return whether the event was successfully sent.
-         */        
- /*       public function trackEvent(eventType:String, label:String="", value:int=0):Boolean
-        {
-            debug.warning( "trackEvent() not implemented" );
-            return false;
-        }
-  */   
-  	   /**
+        
+       /**
         * Constructs and sends the event tracking call to the Google Analytics Tracking Code. 
         * Use this to track visitor behavior on your website that is not related to a web page visit, 
         * such as interaction with a Flash video movie control or any user event that does not
@@ -1215,14 +1334,73 @@ package com.google.analytics.v4
         * @param opt_value An optional value to be aggregated with the event.
         * 
         * @return whether the event was sucessfully sent
-        */   
-  		public function trackEvent(category:String, action:String, opt_label:String="", opt_value:int=0):Boolean
-  		{
-  			debug.warning( "trackEvent() not implemented" );
-            return false;
-  		}
-  
-  
+        */
+        /**
+         * Constructs and sends the event tracking call to GATC.
+         * 
+         * @param eventType The type name for the event.
+         * @param label An optional descriptor for the event.
+         * @param value An optional value to be aggregated with the event.
+         * 
+         * @return whether the event was successfully sent.
+         */
+        public function trackEvent( category:String, action:String, label:String = null, value:Number = NaN ):Boolean
+        {
+            var success:Boolean = true;
+            
+            // If event tracking call is valid
+            if( (category != "") && (action != "") )
+            {
+                // clear event tracker data
+                _eventTracker.clearKey( EVENT_TRACKER_PROJECT_ID );
+                _eventTracker.clearValue( EVENT_TRACKER_PROJECT_ID );
+                
+                // object / category
+                success = _eventTracker.setKey( EVENT_TRACKER_PROJECT_ID,
+                                                EVENT_TRACKER_OBJECT_NAME_KEY_NUM,
+                                                category );
+                
+                // event type / action
+                success = _eventTracker.setKey( EVENT_TRACKER_PROJECT_ID,
+                                                EVENT_TRACKER_TYPE_KEY_NUM,
+                                                action );
+                
+                if( label && label != "" )
+                {
+                    // event description / label
+                    success = _eventTracker.setKey( EVENT_TRACKER_PROJECT_ID,
+                                                    EVENT_TRACKER_LABEL_KEY_NUM,
+                                                    label );
+                    
+                    // aggregate value
+                    if( !isNaN(value) )
+                    {
+                        success = _eventTracker.setKey( EVENT_TRACKER_PROJECT_ID,
+                                                        EVENT_TRACKER_VALUE_VALUE_NUM,
+                                                        label );
+                    }
+                    
+                }
+                
+                // event tracker is set successfully
+                if( success )
+                {
+                    debug.info( "valid event tracking call\ncategory: "+category+"\naction: "+action );
+                    _sendXEvent( _eventTracker );
+                }
+                
+            }
+            else
+            {
+                // event tracking call is not valid, failed!
+                debug.warning( "event tracking call is not valid, failed!\ncategory: "+category+"\naction: "+action );
+                success = false;
+            }
+            
+            return success;
+        }
+        
+        
         // ----------------------------------------
         // Search Engines and Referrers
         // Methods that you use for customizing search engines and referral traffic in Google Analytics reporting.

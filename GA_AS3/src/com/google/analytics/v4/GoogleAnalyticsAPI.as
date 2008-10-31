@@ -19,6 +19,7 @@
 
 package com.google.analytics.v4
 {
+    import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.ServerOperationMode;
     
     /**
@@ -391,7 +392,7 @@ package com.google.analytics.v4
          * @param objName The name of the tracked object.
          * @return A new event tracker instance.
          */
- //       function createEventTracker(objName:String):Object;
+        function createEventTracker( objName:String ):EventTracker;
         
         /**
          * Constructs and sends the event tracking call to GATC.
@@ -402,7 +403,7 @@ package com.google.analytics.v4
          * 
          * @return whether the event was successfully sent.
          */
- //       function trackEvent(eventType:String, label:String = "", value:int = 0):Boolean;
+        function trackEvent( category:String, action:String, label:String = null, value:Number = NaN ):Boolean;
         
         /**
         * Constructs and sends the event tracking call to the Google Analytics Tracking Code. 
@@ -417,7 +418,7 @@ package com.google.analytics.v4
         * 
         * @return whether the event was sucessfully sent
         */
-        function trackEvent(category:String, action:String, opt_label:String = "", opt_value:int = 0):Boolean;
+        //function trackEvent(category:String, action:String, opt_label:String = "", opt_value:int = 0):Boolean;
         
         
         // ----------------------------------------

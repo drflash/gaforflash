@@ -64,9 +64,10 @@ package
             //pageTracker.setDomainName( ".zwetan.com" );
             
             //ideally you would want to change the setVar for each different tests
-            pageTracker.setVar( "Rocktober 020 online" );
-            pageTracker.trackPageview( "/test/hello/world/from/AS3/API/020" );
-            
+            //pageTracker.setVar( "Rocktober 020 online" );
+            //pageTracker.trackPageview( "/test/hello/world/from/AS3/API/020" );
+            pageTracker.trackEvent( "AS3_videos2", "play" );
+            pageTracker.trackEvent( "AS3_say2", "hello world" );
             //pageTracker.setLocalRemoteServerMode();
             //pageTracker.setLocalServerMode();
             //pageTracker.setRemoteServerMode();
