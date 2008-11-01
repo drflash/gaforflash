@@ -19,6 +19,8 @@
 
 package com.google.analytics.external
 {
+    import com.google.analytics.debug.DebugConfiguration;
+    
     /**
     * Globals used by AdSense for revenue per page tracking.
     */
@@ -46,9 +48,9 @@ package com.google.analytics.external
         /**
          * Creates a new AdSenseGlobals instance.
          */
-        public function AdSenseGlobals()
+        public function AdSenseGlobals( debug:DebugConfiguration )
         {
-            super();
+            super( debug );
         }
         
         private function _verify():void

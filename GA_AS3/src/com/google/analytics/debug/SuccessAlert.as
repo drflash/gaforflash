@@ -20,8 +20,6 @@
 
 package com.google.analytics.debug
 {
-    import com.google.analytics.debug;
-    
     /**
     * The SuccessAlert allow to indicates visualy a success.
     * 
@@ -34,7 +32,7 @@ package com.google.analytics.debug
     */
     public class SuccessAlert extends Alert
     {
-        public function SuccessAlert( text:String, actions:Array )
+        public function SuccessAlert( debug:DebugConfiguration, text:String, actions:Array )
         {
             var alignement:Align = Align.bottomLeft;
             var stickToEdge:Boolean = true;

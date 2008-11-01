@@ -20,18 +20,20 @@
 
 package com.google.analytics.campaign
 {
-    import com.google.analytics.config;
-    import com.google.analytics.debug;
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.OrganicReferrer;
+    import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.URL;
+    import com.google.analytics.v4.Configuration;
     
     /**
      * The CampaignManager class.
      */
     public class CampaignManager
     {
+        private var _config:Configuration;
+        private var _debug:DebugConfiguration;
         private var _buffer:Buffer;
         
         private var _domainHash:Number;
@@ -46,8 +48,11 @@ package com.google.analytics.campaign
         /**
          * Creates a new CampaignManager instance.
          */
-        public function CampaignManager( buffer:Buffer, domainHash:Number, referrer:String, timeStamp:Number )
+        public function CampaignManager( config:Configuration, debug:DebugConfiguration, buffer:Buffer,
+                                         domainHash:Number, referrer:String, timeStamp:Number )
         {
+            _config     = config;
+            _debug      = debug;
             _buffer     = buffer;
             
             _domainHash = domainHash;
@@ -93,7 +98,7 @@ package com.google.analytics.campaign
          * @private
          * @return <code class="prettyprint">true</code> if the referrer is from google custom search engine.
          */
-        public static function isFromGoogleCSE( referrer:String ):Boolean
+        public static function isFromGoogleCSE( referrer:String, config:Configuration ):Boolean
         {
             var url:URL = new URL( referrer );
             
@@ -147,7 +152,7 @@ package com.google.analytics.campaign
                for now we use a default direct campaign
             */
             campaignTracker = getDirectCampaign();
-            debug.info( "campaign tracking: " + campaignTracker.toTrackerString() );
+            _debug.info( "campaign tracking: " + campaignTracker.toTrackerString() );
             
             _buffer.utmz.domainHash       = _domainHash;
             _buffer.utmz.campaignCreation = _timeStamp;
@@ -155,9 +160,9 @@ package com.google.analytics.campaign
             _buffer.utmz.responseCount    = 1;
             _buffer.utmz.campaignTracking = campaignTracker.toTrackerString();
             
-            if( debug.verbose )
+            if( _debug.verbose )
             {
-                debug.info( _buffer.utmz.toString() );
+                _debug.info( _buffer.utmz.toString() );
             }
             
             //campInfo = new CampaignInfo( false, true );
@@ -176,7 +181,7 @@ package com.google.analytics.campaign
             
             // if there is no referrer, or referrer is not a valid URL, or the referrer
             // is google custom search engine, return an empty tracker
-            if( isInvalidReferrer( _referrer ) && isFromGoogleCSE( _referrer ) )
+            if( isInvalidReferrer( _referrer ) && isFromGoogleCSE( _referrer, _config ) )
             {
                 return camp;
             }
@@ -207,12 +212,12 @@ package com.google.analytics.campaign
             }
             
             // organic source match
-            if( config.organic.match( name ) )
+            if( _config.organic.match( name ) )
             {
-                var currentOrganicSource:OrganicReferrer = config.organic.getReferrerByName( name );
+                var currentOrganicSource:OrganicReferrer = _config.organic.getReferrerByName( name );
                 
                 // extract keyword value from query string
-                var keyword:String = config.organic.getKeywordValue( currentOrganicSource, _referrer );
+                var keyword:String = _config.organic.getKeywordValue( currentOrganicSource, _referrer );
                 
                 camp = new CampaignTracker();
                 camp.source = currentOrganicSource.engine;

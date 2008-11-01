@@ -22,6 +22,7 @@ package com.google.analytics.core
 {
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     
+    //TODO: create exemple in doc, upcast EventTracker, create a custom tracker class, etc.
     public class EventTracker
     {
         private var _parent:GoogleAnalyticsAPI;

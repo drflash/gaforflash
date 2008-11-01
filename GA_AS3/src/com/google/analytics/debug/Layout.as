@@ -22,7 +22,6 @@ package com.google.analytics.debug
 {
     import com.google.analytics.GATracker;
     import com.google.analytics.core.GIFRequest;
-    import com.google.analytics.debug;
     
     import flash.display.DisplayObject;
     import flash.events.Event;
@@ -37,6 +36,7 @@ package com.google.analytics.debug
     public class Layout implements ILayout
     {
         private var _display:DisplayObject;
+        private var _debug:DebugConfiguration;
         private var _mainPanel:Panel;
         
         private var _hasWarning:Boolean;
@@ -56,14 +56,15 @@ package com.google.analytics.debug
         /**
          * Creates a new Layout instance.
          */
-        public function Layout( display:DisplayObject )
+        public function Layout( debug:DebugConfiguration, display:DisplayObject )
         {
             super();
-            _display   = display;
-            _hasWarning = false;
-            _hasInfo    = false;
-            _hasDebug   = false;
-            _hasGRAlert = false;
+            _display      = display;
+            _debug        = debug;
+            _hasWarning   = false;
+            _hasInfo      = false;
+            _hasDebug     = false;
+            _hasGRAlert   = false;
             _warningQueue = [];
             _infoQueue    = [];
             _GRAlertQueue = [];
@@ -85,7 +86,7 @@ package com.google.analytics.debug
             addToStage( mp );
             bringToFront( mp );
             
-            if( debug.minimizedOnStart )
+            if( _debug.minimizedOnStart )
             {
                 _mainPanel.onToggle();
             }
@@ -97,8 +98,8 @@ package com.google.analytics.debug
         
         public function destroy():void
         {
-            debug.layout = null;
             _mainPanel.close();
+            _debug.layout = null;
         }
         
         private function onKey( event:KeyboardEvent = null ):void
@@ -244,7 +245,7 @@ package com.google.analytics.debug
             
             message = _filterMaxChars( message );
             _hasInfo = true;
-            var i:Info = new Info( message, debug.infoTimeout );
+            var i:Info = new Info( message, _debug.infoTimeout );
             addToPanel( "analytics", i );
             i.addEventListener( Event.REMOVED_FROM_STAGE, _clearInfo, false, 0, true );
             
@@ -267,7 +268,7 @@ package com.google.analytics.debug
             
             message = _filterMaxChars( message );
             _hasWarning = true;
-            var w:Warning = new Warning( message, debug.warningTimeout );
+            var w:Warning = new Warning( message, _debug.warningTimeout );
             addToPanel( "analytics", w );
             w.addEventListener( Event.REMOVED_FROM_STAGE, _clearWarning, false, 0, true );
             
@@ -299,7 +300,7 @@ package com.google.analytics.debug
         {
             var actionClose:AlertAction;
             
-            if( debug.verbose )
+            if( _debug.verbose )
             {
                 message = _filterMaxChars( message );
                 actionClose = new AlertAction("Close","close","close");
@@ -309,12 +310,12 @@ package com.google.analytics.debug
                 actionClose = new AlertAction("X","close","close");
             }
             
-            var fa:Alert = new FailureAlert( message, [ actionClose ] );
+            var fa:Alert = new FailureAlert( _debug, message, [ actionClose ] );
             addToPanel( "analytics", fa );
             
             if( _hasDebug )
             {
-                if( debug.verbose )
+                if( _debug.verbose )
                 {
                     message = message.split("\n").join("");
                     message = _filterMaxChars( message, 66 );
@@ -330,7 +331,7 @@ package com.google.analytics.debug
         {
             var actionClose:AlertAction;
             
-            if( debug.verbose )
+            if( _debug.verbose )
             {
                 message = _filterMaxChars( message );
                 actionClose = new AlertAction("Close","close","close");
@@ -339,12 +340,12 @@ package com.google.analytics.debug
             {
                 actionClose = new AlertAction("X","close","close");
             }
-            var sa:Alert = new SuccessAlert( message, [ actionClose ] );
+            var sa:Alert = new SuccessAlert( _debug, message, [ actionClose ] );
             addToPanel( "analytics", sa );
             
             if( _hasDebug )
             {
-                if( debug.verbose )
+                if( _debug.verbose )
                 {
                     message = message.split("\n").join("");
                     message = _filterMaxChars( message, 66 );
@@ -379,7 +380,7 @@ package com.google.analytics.debug
             
             if( _hasDebug )
             {
-                if( debug.verbose )
+                if( _debug.verbose )
                 {
                     message = message.split("\n").join("");
                     message = _filterMaxChars( message, 66 );

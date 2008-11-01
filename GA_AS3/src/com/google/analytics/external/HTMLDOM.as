@@ -20,6 +20,8 @@
 
 package com.google.analytics.external
 {
+    import com.google.analytics.debug.DebugConfiguration;
+    
     
     /**
      * Proxy access to HTML Document Object Model.
@@ -66,8 +68,9 @@ package com.google.analytics.external
         /**
          * Creates a new HTMLDOM instance.
          */
-        public function HTMLDOM()
+        public function HTMLDOM( debug:DebugConfiguration )
         {
+            super( debug );
         }
         
         /**

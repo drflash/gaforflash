@@ -19,16 +19,17 @@
 
 package com.google.analytics.core
 {
-    import com.google.analytics.config;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.utils.Environment;
-    import com.google.analytics.utils.Variables;    
-
+    import com.google.analytics.utils.Variables;
+    import com.google.analytics.v4.Configuration;
+    
     /**
      * The DocumentInfo class.
      */
     public class DocumentInfo
     {
+        private var _config:Configuration;
         private var _info:Environment;
         private var _adSense:AdSenseGlobals;
         
@@ -38,15 +39,13 @@ package com.google.analytics.core
         /**
          * Creates a new DocumentInfo instance.
          */
-        public function DocumentInfo( info:Environment, formatedReferrer:String, pageURL:String = null, adSense:AdSenseGlobals = null )
+        public function DocumentInfo( config:Configuration, info:Environment, formatedReferrer:String,
+                                      pageURL:String = null, adSense:AdSenseGlobals = null )
         {
-            _info = info;
-            _utmr = formatedReferrer;
+            _config  = config;
+            _info    = info;
+            _utmr    = formatedReferrer;
             _pageURL = pageURL;
-            if( !adSense )
-            {
-                adSense = new AdSenseGlobals();
-            }
             _adSense = adSense;
         }
         
@@ -125,6 +124,11 @@ package com.google.analytics.core
          */
         public function get utmr():String
         {
+            if( !_utmr )
+            {
+                return "-";
+            }
+            
             return _utmr;
         }
         
@@ -146,7 +150,7 @@ package com.google.analytics.core
             var variables:Variables = new Variables();
                 variables.URIencode = true;
                 
-                if( config.detectTitle && ( utmdt != "") )
+                if( _config.detectTitle && ( utmdt != "") )
                 {
                     variables.utmdt = utmdt;
                 }
