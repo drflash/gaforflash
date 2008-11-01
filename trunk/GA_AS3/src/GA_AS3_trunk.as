@@ -21,13 +21,14 @@ package
 {
     import com.google.analytics.GATracker;
     import com.google.analytics.core.as3_api;
-    import com.google.analytics.debug;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     
+    import flash.display.Loader;
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
     import flash.events.Event;
+    import flash.net.URLRequest;
 
     /* note:
        for testing code we use GATracker
@@ -41,19 +42,60 @@ package
         private var _gat:GATracker;
         public var pageTracker:GoogleAnalyticsAPI;
         
+        private var _count:int = 0;
+        
+        public var content:Loader;
+        
         public function GA_AS3_trunk()
         {
             this.stage.align = StageAlign.TOP_LEFT;
             this.stage.scaleMode = StageScaleMode.NO_SCALE;
             
-            addEventListener( Event.ADDED_TO_STAGE, onComplete );
+            var url:String = "downtown08_1024x768.jpg";
+            
+            //load some basic content
+            content = new Loader();
+            content.load( new URLRequest( url ) );
+            addChild( content );
+            
+            addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+        }
+        
+        public function onAddedToStage( evt:Event ):void
+        {
+            addEventListener( Event.ENTER_FRAME, onComplete );
         }
         
         public function onComplete( evt:Event ):void
         {
+            //wait 3 frames
+            if( _count++ < 3 )
+            {
+                trace( "wait..." );
+                return;
+            }
+            
+            removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+            removeEventListener( Event.ENTER_FRAME, onComplete );
+            
+            /* note:
+               IMPORTANT
+               when we instanciate GATracker without the debug
+               the Gif Request does not send anymore
+               
+               thing tested so far:
+               - create a 300ms delay in the GATracker
+               - load some content at the beginning
+               - wait 3 frames at the beginning
+               
+               my guess the bug is in the Gif Request
+               that just does not init a Loader.load()
+               if some debug paraeters are missing
+            */
+            
             //debug.minimizedOnStart = true;
             use namespace as3_api;
-            _gat = new GATracker( this, true );
+            _gat = new GATracker( this, false );
             //pageTracker = _gat.getTracker( "UA-1234-5" );
             
             //UA-4241494-2 for gaas3.zwetan.com
@@ -64,10 +106,10 @@ package
             //pageTracker.setDomainName( ".zwetan.com" );
             
             //ideally you would want to change the setVar for each different tests
-            //pageTracker.setVar( "Rocktober 020 online" );
-            //pageTracker.trackPageview( "/test/hello/world/from/AS3/API/020" );
-            pageTracker.trackEvent( "AS3_videos2", "play" );
-            pageTracker.trackEvent( "AS3_say2", "hello world" );
+            pageTracker.setVar( "Rocktober 022 online" );
+            pageTracker.trackPageview( "/test/hello/world/from/AS3/API/022" );
+            pageTracker.trackEvent( "AS3_videos022", "play" );
+            pageTracker.trackEvent( "AS3_say022", "hello world" );
             //pageTracker.setLocalRemoteServerMode();
             //pageTracker.setLocalServerMode();
             //pageTracker.setRemoteServerMode();

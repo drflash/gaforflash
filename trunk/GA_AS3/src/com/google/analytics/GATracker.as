@@ -26,16 +26,21 @@ package com.google.analytics
     import com.google.analytics.core.as3_api;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.core.js_bridge;
+    import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.Layout;
     import com.google.analytics.events.MessageEvent;
+    import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.external.HTMLDOM;
+    import com.google.analytics.external.JavascriptProxy;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Version;
     import com.google.analytics.v4.Bridge;
+    import com.google.analytics.v4.Configuration;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
     
     import flash.display.DisplayObject;
+    import flash.utils.getTimer;
     
     
     /**
@@ -45,10 +50,16 @@ package com.google.analytics
     public class GATracker
     {
         private var _display:DisplayObject;
-        private var _localInfo:Environment;
+        
+        private var _config:Configuration;
+        private var _debug:DebugConfiguration;
+        private var _env:Environment;
         private var _buffer:Buffer;
         private var _gifRequest:GIFRequest;
+        private var _jsproxy:JavascriptProxy;
         private var _dom:HTMLDOM;
+        private var _adSense:AdSenseGlobals;
+        
         
         /**
         * note:
@@ -60,28 +71,37 @@ package com.google.analytics
         */
         public function GATracker( display:DisplayObject, debugmode:Boolean = false )
         {
-            _display   = display;
+            _display = display;
+            
+            _debug   = new DebugConfiguration();
+            _config  = new Configuration( _debug );
+            _jsproxy = new JavascriptProxy( _debug );
+            
             if( debugmode )
             {
-                debug.layout = new Layout( _display );
-                debug.active = debugmode;
+                _debug.layout = new Layout( _debug, _display );
+                _debug.active = debugmode;
+            }
+            else
+            {
+                //force a delay of 300ms
+                _delay( 300 ); //ms
             }
             
-            /* note:
-               for unit testing and to avoid 2 different branches AIR/Flash
-               here we will detect if we are in the Flash Player or AIR
-               and pass the infos to the LocalInfo
-               
-               By default we will define "Flash" for our local tests
-            */
-            _dom        = new HTMLDOM();
-            _dom.cacheProperties();
+        }
+        
+        private function _delay( delay:uint ):void
+        {
+            var current:Number = getTimer();
+            var start:Number   = current;
             
-            _localInfo  = new Environment( "", "", "", _dom );
+            trace( "start: " + start );
+            while( start+delay > current )
+            {
+                current = getTimer();
+            }
+            trace( "current: " + current );
             
-            _buffer     = new Buffer( false );
-            
-            _gifRequest = new GIFRequest( _buffer, _localInfo );
         }
         
         /**
@@ -96,12 +116,12 @@ package com.google.analytics
         
         private function _onInfo( event:MessageEvent ):void
         {
-            debug.info( event.message );
+            _debug.info( event.message );
         }
         
         private function _onWarning( event:MessageEvent ):void
         {
-            debug.warning( event.message );
+            _debug.warning( event.message );
         }
         
         /**
@@ -112,10 +132,27 @@ package com.google.analytics
         */
         as3_api function getTracker( account:String ):GoogleAnalyticsAPI
         {
-            debug.info( "GATracker v" + version +"\naccount: " + account );
+            _debug.info( "GATracker v" + version +"\naccount: " + account );
             
-            config.addEventListener( MessageEvent.INFO, _onInfo );
-            config.addEventListener( MessageEvent.WARNING, _onWarning );
+            /* note:
+               for unit testing and to avoid 2 different branches AIR/Flash
+               here we will detect if we are in the Flash Player or AIR
+               and pass the infos to the LocalInfo
+               
+               By default we will define "Flash" for our local tests
+            */
+            
+            
+            _adSense   = new AdSenseGlobals( _debug );
+            
+            _dom        = new HTMLDOM( _debug );
+            _dom.cacheProperties();
+            
+            _env        = new Environment( "", "", "", _debug, _dom );
+            
+            _buffer     = new Buffer( _config, _debug, false );
+            
+            _gifRequest = new GIFRequest( _config, _debug, _buffer, _env );
             
             /* note:
                To be able to obtain the URL of the main SWF containing the GA API
@@ -126,8 +163,8 @@ package com.google.analytics
                We keep the implementation internal to be able to change it if required later.
             */
             use namespace ga_internal;
-            _localInfo.url = _display.stage.loaderInfo.url;
-            return new Tracker( account, _localInfo, _buffer, _gifRequest, null );
+            _env.url = _display.stage.loaderInfo.url;
+            return new Tracker( account, _config, _debug, _env, _buffer, _gifRequest, _adSense );
         }
         
         /**
@@ -135,7 +172,7 @@ package com.google.analytics
         */
         js_bridge function getTracker( account:String ):GoogleAnalyticsAPI
         {
-            return new Bridge( account );
+            return new Bridge( account, _debug, _jsproxy );
         }
         
     }

@@ -20,12 +20,12 @@
 
 package com.google.analytics.core
 {
-    import com.google.analytics.config;
-    import com.google.analytics.debug;
+    import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.utils.Environment;
-    import com.google.analytics.utils.generate32bitRandom;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.Variables;
+    import com.google.analytics.utils.generate32bitRandom;
+    import com.google.analytics.v4.Configuration;
     
     import flash.display.Loader;
     import flash.events.Event;
@@ -42,6 +42,8 @@ package com.google.analytics.core
      */
     public class GIFRequest
     {
+        private var _config:Configuration;
+        private var _debug:DebugConfiguration;
         private var _buffer:Buffer;
         private var _info:Environment;
         
@@ -51,8 +53,10 @@ package com.google.analytics.core
         /**
          * Creates a new GIFRequest instance.
          */
-        public function GIFRequest( buffer:Buffer, info:Environment )
+        public function GIFRequest( config:Configuration, debug:DebugConfiguration, buffer:Buffer, info:Environment )
         {
+            _config = config;
+            _debug  = debug;
             _buffer = buffer;
             _info   = info;
         }
@@ -76,7 +80,7 @@ package com.google.analytics.core
         */
         public function get utmwv():String
         {
-            return config.version;
+            return _config.version;
         }
         
         /**
@@ -106,7 +110,7 @@ package com.google.analytics.core
         */
         public function get utmsp():String
         {
-            return (config.sampleRate * 100) as String;
+            return (_config.sampleRate * 100) as String;
         }
         
         /**
@@ -169,23 +173,23 @@ package com.google.analytics.core
             var tokenDelta:Number;
             
             // calculate the token count increase since last update
-            tokenDelta = (timestamp - _buffer.utmb.lastTime) * (config.tokenRate / 1000);
+            tokenDelta = (timestamp - _buffer.utmb.lastTime) * (_config.tokenRate / 1000);
             
-            if( debug.verbose )
+            if( _debug.verbose )
             {
-                debug.info( "tokenDelta: " + tokenDelta );
+                _debug.info( "tokenDelta: " + tokenDelta );
             }
             
             // only update token when there is a change
             if( tokenDelta >= 1 )
             {
                 //Only fill bucket to capacity
-                _buffer.utmb.token    = Math.min( Math.floor( _buffer.utmb.token + tokenDelta ) , config.bucketCapacity );
+                _buffer.utmb.token    = Math.min( Math.floor( _buffer.utmb.token + tokenDelta ) , _config.bucketCapacity );
                 _buffer.utmb.lastTime = timestamp;
                 
-                if( debug.verbose )
+                if( _debug.verbose )
                 {
-                    debug.info( _buffer.utmb.toString() );
+                    _debug.info( _buffer.utmb.toString() );
                 }
                 
             }
@@ -194,7 +198,7 @@ package com.google.analytics.core
         private function _debugSend( request:URLRequest ):void
         {
             var data:String = "url = " + request.url;
-            debug.alertGifRequest( data, request, this );
+            _debug.alertGifRequest( data, request, this );
         }
         
         private function _shortenURL( url:String ):String
@@ -214,9 +218,9 @@ package com.google.analytics.core
         
         public function onSecurityError( event:SecurityErrorEvent ):void
         {
-            if( debug.GIFRequests )
+            if( _debug.GIFRequests )
             {
-                debug.failure( event.text );
+                _debug.failure( event.text );
             }
         }
         
@@ -224,9 +228,9 @@ package com.google.analytics.core
         {
             var url:String = _lastRequest.url;
             
-            if( debug.GIFRequests )
+            if( _debug.GIFRequests )
             {
-                if( !debug.verbose )
+                if( !_debug.verbose )
                 {
                     if( url.indexOf( "?" ) > -1 )
                     {
@@ -235,23 +239,23 @@ package com.google.analytics.core
                     url = _shortenURL( url );
                 }
                 
-                debug.failure( "\"" + url + "\" does not exists or is unreachable" );
+                _debug.failure( "\"" + url + "\" does not exists or is unreachable" );
             }
             else
             {
-                debug.warning( "gif request failed" );
+                _debug.warning( "gif request failed" );
             }
             
-            _removeListeners( event.target );
+            //_removeListeners( event.target );
         }
         
         public function onComplete( event:Event ):void
         {
             var url:String = _lastRequest.url;
             
-            if( debug.GIFRequests )
+            if( _debug.GIFRequests )
             {
-                if( !debug.verbose )
+                if( !_debug.verbose )
                 {
                     if( url.indexOf( "?" ) > -1 )
                     {
@@ -260,14 +264,14 @@ package com.google.analytics.core
                     url = _shortenURL( url );
                 }
                 
-                debug.success( "Gif Request sent to \"" + url + "\"" );
+                _debug.success( "Gif Request sent to \"" + url + "\"" );
             }
             else
             {
-                debug.info( "gif request sent" );
+                _debug.info( "gif request sent" );
             }
             
-            _removeListeners( event.target );
+            //_removeListeners( event.target );
         }
         
         private function _removeListeners( target:Object ):void
@@ -280,6 +284,18 @@ package com.google.analytics.core
         {
             trace( "sendWithValidation()" );
             
+            /* note:
+               when the gif request is send too fast
+               we are probably confusing our listeners order
+               
+               we should put each request in an ndexed array
+               and pass the index value in the loader.name or something
+               so when we get the event.target we can fnd back the current index
+               
+               by commenting the _removeListeners call
+               I can see gif requests in Google Chrome
+               Firefox still does not shows those request
+            */
             var loader:Loader = new Loader();
             var context:LoaderContext = new LoaderContext( false );
             
@@ -295,7 +311,7 @@ package com.google.analytics.core
             }
             catch( e:Error )
             {
-                debug.failure( "\"Loader.load()\" could not instanciate Gif Request" );
+                _debug.failure( "\"Loader.load()\" could not instanciate Gif Request" );
             }
         }
         
@@ -308,13 +324,13 @@ package com.google.analytics.core
             }
             catch( e:Error )
             {
-                debug.failure( "\"sendToURL()\" could not instanciate Gif Request" );
+                _debug.failure( "\"sendToURL()\" could not instanciate Gif Request" );
             }
         }
         
         public function sendRequest( request:URLRequest ):void
         {
-            if( debug.validateGIFRequest )
+            if( _debug.validateGIFRequest )
             {
                 sendWithValidation( request );
             }
@@ -345,16 +361,16 @@ package com.google.analytics.core
                                 "utmfl", "utmdt", "utmhid", "utmr", "utmp" ];
              variables.post = [ "utmcc" ];
              
-             if( debug.verbose )
+             if( _debug.verbose )
              {
-                 debug.info( "tracking: " + _buffer.utmb.trackCount+"/"+config.trackingLimitPerSession );
+                 _debug.info( "tracking: " + _buffer.utmb.trackCount+"/"+_config.trackingLimitPerSession );
              }
              
              /* Only send request if
                 1. We havn't reached the limit yet.
                 2. User forced gif hit
              */
-            if( (_buffer.utmb.trackCount < config.trackingLimitPerSession) || force )
+            if( (_buffer.utmb.trackCount < _config.trackingLimitPerSession) || force )
             {
                 //update token bucket
                 if( rateLimit )
@@ -374,9 +390,9 @@ package com.google.analytics.core
                     //increment request count
                     _buffer.utmb.trackCount += 1;
                     
-                    if( debug.verbose )
+                    if( _debug.verbose )
                     {
-                        debug.info( _buffer.utmb.toString() );
+                        _debug.info( _buffer.utmb.toString() );
                     }
                     
                     
@@ -388,16 +404,16 @@ package com.google.analytics.core
                         variables.utmhn = _info.domainName;
                     }
                     
-                    if( config.sampleRate < 1 )
+                    if( _config.sampleRate < 1 )
                     {
-                        variables.utmsp = config.sampleRate * 100;
+                        variables.utmsp = _config.sampleRate * 100;
                     }
                     
                      /* If service mode is send to local (or both),
                         then we'll sent metrics via a local GIF request.
                      */
-                     if( (config.serverMode = ServerOperationMode.local) ||
-                         (config.serverMode = ServerOperationMode.both) )
+                     if( (_config.serverMode = ServerOperationMode.local) ||
+                         (_config.serverMode = ServerOperationMode.both) )
                          {
                              var localPath:String = _info.locationSWFPath;
                              
@@ -407,12 +423,12 @@ package com.google.analytics.core
                              }
                              
                              var localImage:URLRequest = new URLRequest();
-                                 localImage.url  = localPath + config.localGIFpath;
+                                 localImage.url  = localPath + _config.localGIFpath;
                                  
                                  //localImage.data = variables;
                                  localImage.url +=  "?"+variables.toString();
                              
-                             if( debug.GIFRequests )
+                             if( _debug.active && _debug.GIFRequests )
                              {
                                  _debugSend( localImage );
                              }
@@ -425,8 +441,8 @@ package com.google.analytics.core
                      /* If service mode is set to remote (or both),
                         then we'll sent metrics via a remote GIF request.
                      */
-                     if( (config.serverMode = ServerOperationMode.remote) ||
-                         (config.serverMode = ServerOperationMode.both) )
+                     if( (_config.serverMode = ServerOperationMode.remote) ||
+                         (_config.serverMode = ServerOperationMode.both) )
                          {
                              var remoteImage:URLRequest = new URLRequest();
                              
@@ -435,16 +451,16 @@ package com.google.analytics.core
                              */
                              if( _info.protocol == Protocols.HTTPS )
                              {
-                                 remoteImage.url = config.secureRemoteGIFpath;
+                                 remoteImage.url = _config.secureRemoteGIFpath;
                              }
                              else if( _info.protocol == Protocols.HTTP )
                              {
-                                 remoteImage.url = config.remoteGIFpath;
+                                 remoteImage.url = _config.remoteGIFpath;
                              }
                              else
                              {
                                  trace( "## we are in a local file:// !! ##" );
-                                 remoteImage.url = config.remoteGIFpath;
+                                 remoteImage.url = _config.remoteGIFpath;
                              }
                              
                              variables.utmac = utmac;
@@ -453,7 +469,7 @@ package com.google.analytics.core
                              //remoteImage.data = variables;
                              remoteImage.url +=  "?"+variables.toString();
                              
-                             if( debug.GIFRequests )
+                             if( _debug.active && _debug.GIFRequests )
                              {
                                  _debugSend( remoteImage );
                              }

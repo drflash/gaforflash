@@ -22,7 +22,7 @@ package com.google.analytics.v4
 {
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.ServerOperationMode;
-    import com.google.analytics.debug;
+    import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.external.JavascriptProxy;
     import com.google.analytics.utils.validateAccount;
     
@@ -32,6 +32,7 @@ package com.google.analytics.v4
     public class Bridge implements GoogleAnalyticsAPI
     {
         private var _account:String;
+        private var _debug:DebugConfiguration;
         private var _proxy:JavascriptProxy;
         
         private var _hasGATracker:Boolean = false;
@@ -46,10 +47,11 @@ package com.google.analytics.v4
          * 
          * @param account Urchin Account to record metrics in.
          */
-        public function Bridge( account:String )
+        public function Bridge( account:String, debug:DebugConfiguration, jsproxy:JavascriptProxy )
         {
             _account = account;
-            _proxy   = new JavascriptProxy();
+            _debug   = debug;
+            _proxy   = jsproxy;
             
             if( !_checkGAJS() )
             {
@@ -57,18 +59,18 @@ package com.google.analytics.v4
                     msg0 += "ga.js not found, be sure to check if\n";
                     msg0 += "<script src=\"http://www.google-analytics.com/ga.js\"></script>\n";
                     msg0 += "is included in the HTML.";
-                debug.warning( msg0 );
+                _debug.warning( msg0 );
                 throw new Error( msg0 );
             }
             
             if( !_hasGATracker )
             {
-                if( debug.javascript && debug.verbose )
+                if( _debug.javascript && _debug.verbose )
                 {
                     var msg1:String = ""; 
                         msg1 += "The Google Analytics tracking code was not found on the container page\n";
                         msg1 += "we create it";
-                    debug.info( msg1 );
+                    _debug.info( msg1 );
                 }
                 _injectTrackingObject();
             }
@@ -89,7 +91,7 @@ package com.google.analytics.v4
                         msg2 += "JS Object \"" + account + "\" doesn't exist in DOM\n";
                         msg2 += "Bridge object not created.";
                     
-                    debug.warning( msg2 );
+                    _debug.warning( msg2 );
                     throw new Error( msg2 );
                 }
             }

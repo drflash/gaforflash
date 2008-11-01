@@ -1,3 +1,9 @@
+* 0.6.0.138
+- fixing some code for when we don't initialize the visual debug
+  (note: there is still a bug, we do not have requests without debug)
+- removed the two singleton config and debug,
+  they are now initialized in the GATracker factory
+
 * 0.6.0.137
 - Event Tracking added
 - EventInfo works as DocumentInfo etc.

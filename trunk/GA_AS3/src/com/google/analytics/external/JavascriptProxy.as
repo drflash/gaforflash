@@ -20,7 +20,7 @@
 
 package com.google.analytics.external
 {
-    import com.google.analytics.debug;
+    import com.google.analytics.debug.DebugConfiguration;
     
     import flash.external.ExternalInterface;
     
@@ -147,13 +147,15 @@ package com.google.analytics.external
                 ]]>
             </script>;
         
+        private var _debug:DebugConfiguration;
         private var _notAvailableWarning:Boolean = true;
         
         /**
          * Creates a new JavascriptProxy instance.
          */
-        public function JavascriptProxy()
+        public function JavascriptProxy( debug:DebugConfiguration )
         {
+            _debug = debug;
         }
         
         /**
@@ -170,16 +172,16 @@ package com.google.analytics.external
                 }
                 catch( e:SecurityError )
                 {
-                    if( debug.javascript )
+                    if( _debug.javascript )
                     {
-                        debug.warning( "ExternalInterface is not allowed.\nEnsure that allowScriptAccess is set to \"always\" in the Flash embed HTML." );
+                        _debug.warning( "ExternalInterface is not allowed.\nEnsure that allowScriptAccess is set to \"always\" in the Flash embed HTML." );
                     }
                 }
                 catch( e:Error )
                 {
-                    if( debug.javascript )
+                    if( _debug.javascript )
                     {
-                        debug.warning( "ExternalInterface failed to make the call\nreason: " + e.message );
+                        _debug.warning( "ExternalInterface failed to make the call\nreason: " + e.message );
                     }
                 }
             }
@@ -239,7 +241,7 @@ package com.google.analytics.external
             {
                 try
                 {
-                    if( debug.javascript && debug.verbose )
+                    if( _debug.javascript && _debug.verbose )
                     {
                         var output:String = "";
                             output  = "Flash->JS: "+ functionName;
@@ -250,7 +252,7 @@ package com.google.analytics.external
                         } 
                             output += " )";
                         
-                        debug.info( output );
+                        _debug.info( output );
                     }
                     
                     args.unshift( functionName );
@@ -258,16 +260,16 @@ package com.google.analytics.external
                 }
                 catch( e:SecurityError )
                 {
-                    if( debug.javascript )
+                    if( _debug.javascript )
                     {
-                        debug.warning( "ExternalInterface is not allowed.\nEnsure that allowScriptAccess is set to \"always\" in the Flash embed HTML." );
+                        _debug.warning( "ExternalInterface is not allowed.\nEnsure that allowScriptAccess is set to \"always\" in the Flash embed HTML." );
                     }
                 }
                 catch( e:Error )
                 {
-                    if( debug.javascript )
+                    if( _debug.javascript )
                     {
-                        debug.warning( "ExternalInterface failed to make the call\nreason: " + e.message );
+                        _debug.warning( "ExternalInterface failed to make the call\nreason: " + e.message );
                     }
                 }
             }
@@ -285,9 +287,9 @@ package com.google.analytics.external
             /* note:
                we want to notify only once that ExternalInterface is not available.
             */
-            if( !available && debug.javascript && _notAvailableWarning )
+            if( !available && _debug.javascript && _notAvailableWarning )
             {
-                debug.warning( "ExternalInterface is not available." );
+                _debug.warning( "ExternalInterface is not available." );
                 _notAvailableWarning = false
             }
             

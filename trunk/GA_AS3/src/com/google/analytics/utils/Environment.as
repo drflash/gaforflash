@@ -21,19 +21,21 @@
 package com.google.analytics.utils
 {
     import com.google.analytics.core.ga_internal;
-    import com.google.analytics.debug;
+    import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.external.HTMLDOM;
     
     import flash.system.Capabilities;
     import flash.system.Security;
-    import flash.system.System;    
-
+    import flash.system.System;
+    
     /**
      * Environnement provide informations for the local environment.
      */
     public class Environment
     {
+        private var _debug:DebugConfiguration;
         private var _dom:HTMLDOM;
+        
         private var _protocol:Protocols;
         private var _appName:String;
         private var _appVersion:Version;
@@ -47,7 +49,8 @@ package com.google.analytics.utils
          * @param version The application version
          * @param dom the HTMLDOM reference.
          */
-        public function Environment( url:String = "", app:String = "", version:String = "", dom:HTMLDOM = null )
+        public function Environment( url:String = "", app:String = "", version:String = "",
+                                     debug:DebugConfiguration = null, dom:HTMLDOM = null )
         {
             var v:Version;
             
@@ -72,14 +75,11 @@ package com.google.analytics.utils
                 v = Version.fromString( version );
             }
             
-            if( !dom )
-            {
-                dom = new HTMLDOM();
-            }
-            
             _url        = url;
             _appName    = app;
             _appVersion = v;
+            
+            _debug      = debug;
             _dom        = dom;
         }
         
@@ -136,9 +136,9 @@ package com.google.analytics.utils
             
             var proto:String = (p.toString()+":").toLowerCase();
             
-            if( _proto && _proto != proto )
+            if( _proto && _proto != proto && _debug )
             {
-                debug.warning( "Protocol mismatch: SWF="+proto+", DOM="+_proto );
+                _debug.warning( "Protocol mismatch: SWF="+proto+", DOM="+_proto );
             }
             
             _protocol = p;

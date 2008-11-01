@@ -26,10 +26,11 @@ package com.google.analytics.core
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.FakeEnvironment;
     import com.google.analytics.utils.Variables;
-    import com.google.analytics.config;
+    import com.google.analytics.v4.Configuration;
     
     public class DocumentInfoTest extends TestCase
     {
+        private var _config:Configuration;
         private var _emptyDocInfo0:DocumentInfo;
         private var _emptyDocInfo1:DocumentInfo;
         private var _env0:Environment;
@@ -44,12 +45,13 @@ package com.google.analytics.core
         
         public function setUp():void
         {
+            _config = new Configuration();
             _env0 = new Environment( "http://www.domain.com" );
             _env1 = new FakeEnvironment("",null,"","","a simple title","","/some/path/page.html","?a=1&b=2");
             _adSense0 = new FakeAdSenseGlobals();
             _adSense1 = new FakeAdSenseGlobals( null, "", "12345" );
-            _emptyDocInfo0 = new DocumentInfo( _env0, "", null, _adSense0 );
-            _emptyDocInfo1 = new DocumentInfo( _env0, "", null, _adSense1 );
+            _emptyDocInfo0 = new DocumentInfo( _config, _env0, "", null, _adSense0 );
+            _emptyDocInfo1 = new DocumentInfo( _config, _env0, "", null, _adSense1 );
             
         }
          
@@ -67,11 +69,11 @@ package com.google.analytics.core
        
         public function testPageTitle():void
         {
-            var docInfo:DocumentInfo = new DocumentInfo( _env1, "", null, _adSense0 );
+            var docInfo:DocumentInfo = new DocumentInfo( _config, _env1, "", null, _adSense0 );
             
             assertEquals( "a simple title", docInfo.utmdt );
             
-            if( config.detectTitle )
+            if( _config.detectTitle )
             {
                 var vars:Variables = docInfo.toVariables();
                 var vars2:Variables = new Variables();
@@ -86,8 +88,8 @@ package com.google.analytics.core
         
         public function testPageURL():void
         {
-            var docInfo0:DocumentInfo = new DocumentInfo( _env1, "", null, _adSense0 );
-            var docInfo1:DocumentInfo = new DocumentInfo( _env1, "", "/some/other/path/index.html", _adSense0 );
+            var docInfo0:DocumentInfo = new DocumentInfo( _config, _env1, "", null, _adSense0 );
+            var docInfo1:DocumentInfo = new DocumentInfo( _config, _env1, "", "/some/other/path/index.html", _adSense0 );
             
             assertEquals( "/some/path/page.html?a=1&b=2", docInfo0.utmp );
             assertEquals( "/some/other/path/index.html", docInfo1.utmp );

@@ -20,26 +20,27 @@
 
 package com.google.analytics.core
 {
-    import com.google.analytics.config;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Variables;
-    import com.google.analytics.utils.Version;    
+    import com.google.analytics.utils.Version;
+    import com.google.analytics.v4.Configuration;
 
     /**
      * The BrowserInfo class.
      */
     public class BrowserInfo
     {
-    	
+        private var _config:Configuration;
         private var _info:Environment;
         
         /**
          * Creates a new BrowserInfo instance.
          * @param info The Environment reference of the BrowserInfo instance.
          */
-        public function BrowserInfo( info:Environment )
+        public function BrowserInfo( config:Configuration, info:Environment )
         {
-            _info = info;
+            _config = config;
+            _info   = info;
         }
         
         /**
@@ -94,7 +95,7 @@ package com.google.analytics.core
          */
         public function get utmfl():String
         {
-            if( config.detectFlash )
+            if( _config.detectFlash )
             {
                 var v:Version = _info.flashVersion;
                 return v.major+"."+v.minor+" r"+v.build;

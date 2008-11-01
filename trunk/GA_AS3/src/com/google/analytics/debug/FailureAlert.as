@@ -20,8 +20,6 @@
 
 package com.google.analytics.debug
 {
-    import com.google.analytics.debug;
-    
     /**
     * The FailureAlert allow to indicates visualy a failure.
     * 
@@ -34,7 +32,7 @@ package com.google.analytics.debug
     */
     public class FailureAlert extends Alert
     {
-        public function FailureAlert( text:String, actions:Array )
+        public function FailureAlert( debug:DebugConfiguration, text:String, actions:Array )
         {
             var alignement:Align = Align.bottomLeft;
             var stickToEdge:Boolean = true;

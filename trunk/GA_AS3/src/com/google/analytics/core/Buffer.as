@@ -20,19 +20,20 @@
 
 package com.google.analytics.core
 {
-    import com.google.analytics.config;
     import com.google.analytics.data.UTMA;
     import com.google.analytics.data.UTMB;
     import com.google.analytics.data.UTMC;
     import com.google.analytics.data.UTMK;
     import com.google.analytics.data.UTMV;
     import com.google.analytics.data.UTMZ;
+    import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.utils.generateHash;
+    import com.google.analytics.v4.Configuration;
     
     import flash.events.NetStatusEvent;
     import flash.net.SharedObject;
     import flash.net.SharedObjectFlushStatus;
-
+    
     /**
      * Google Analytics Tracker Code (GATC)'s memory module.
      * 
@@ -42,8 +43,10 @@ package com.google.analytics.core
      */
     public dynamic class Buffer
     {
-        private var _SO:SharedObject;
+        private var _config:Configuration;
+        private var _debug:DebugConfiguration;
         
+        private var _SO:SharedObject;
         private var _OBJ:Object;
         
         /* indicates if the buffer has a volatile memory
@@ -61,16 +64,16 @@ package com.google.analytics.core
         
         private function _onFlushStatus( event:NetStatusEvent ):void
         {
-            trace("User closed permission dialog...");
+            _debug.info("User closed permission dialog...");
             
             switch( event.info.code )
             {
                 case "SharedObject.Flush.Success":
-                trace("User granted permission -- value saved.");
+                _debug.info("User granted permission -- value saved.");
                 break;
                 
                 case "SharedObject.Flush.Failed":
-                trace("User denied permission -- value not saved.");
+                _debug.info("User denied permission -- value not saved.");
                 break;
             }
             
@@ -123,11 +126,15 @@ package com.google.analytics.core
          * data should be used to inject the data from the query string
          * 
          */
-        public function Buffer( volatile:Boolean = false, data:Object = null )
+        public function Buffer( config:Configuration, debug:DebugConfiguration,
+                                volatile:Boolean = false, data:Object = null )
         {
+            _config = config;
+            _debug  = debug;
+            
             if( !volatile )
             {
-                _SO = SharedObject.getLocal( config.cookieName, config.cookiePath );
+                _SO = SharedObject.getLocal( _config.cookieName, _config.cookiePath );
                 //_SO.clear();
                 
                 trace( "---------------------------" );
@@ -140,8 +147,13 @@ package com.google.analytics.core
                     {
                         _createUMTA();
                     }
+                    
                     _utma.fromSharedObject( _SO.data.utma );
-                    trace( "UTMA = " + _utma.toString() + " found !!" );
+                    
+                    if( _debug.verbose )
+                    {
+                        _debug.info( "UTMA = " + _utma.toString() + " found !!" );
+                    }
                 }
                 
                 if( _SO.data.utmb )
@@ -150,8 +162,13 @@ package com.google.analytics.core
                     {
                         _createUMTB();
                     }
+                    
                     _utmb.fromSharedObject( _SO.data.utmb );
-                    trace( "UTMB = " + _utmb.toString() + " found !!" );
+                    
+                    if( _debug.verbose )
+                    {
+                        _debug.info( "UTMB = " + _utmb.toString() + " found !!" );
+                    }
                 }
                 
                 /* note:
@@ -162,12 +179,6 @@ package com.google.analytics.core
                 if( _SO.data.utmc )
                 {
                     delete _SO.data.utmc;
-//                    if( !hasUTMC() )
-//                    {
-//                        _createUMTC();
-//                    }
-//                    _utmc.fromSharedObject( _SO.data.utmc );
-//                    trace( "UTMC = " + _utmc.toString() + " found !!" );
                 }
                 
                 if( _SO.data.utmk )
@@ -176,8 +187,13 @@ package com.google.analytics.core
                     {
                         _createUMTK();
                     }
+                    
                     _utmk.fromSharedObject( _SO.data.utmk );
-                    trace( "UTMK = " + _utmk.toString() + " found !!" );
+                    
+                    if( _debug.verbose )
+                    {
+                        _debug.info( "UTMK = " + _utmk.toString() + " found !!" );
+                    }
                 }
                 
                 if( _SO.data.utmv )
@@ -186,8 +202,13 @@ package com.google.analytics.core
                     {
                         _createUMTV();
                     }
+                    
                     _utmv.fromSharedObject( _SO.data.utmv );
-                    trace( "UTMV = " + _utmv.toString() + " found !!" );
+                    
+                    if( _debug.verbose )
+                    {
+                        _debug.info( "UTMV = " + _utmv.toString() + " found !!" );
+                    }
                 }
                 
                 if( _SO.data.utmz )
@@ -196,8 +217,13 @@ package com.google.analytics.core
                     {
                         _createUMTZ();
                     }
+                    
                     _utmv.fromSharedObject( _SO.data.utmz );
-                    trace( "UTMZ = " + _utmz.toString() + " found !!" );
+                    
+                    if( _debug.verbose )
+                    {
+                        _debug.info( "UTMZ = " + _utmz.toString() + " found !!" );
+                    }
                 }
                 
             }
@@ -222,7 +248,7 @@ package com.google.analytics.core
         
         /**
          * Indicates the utma value of the buffer.
-         */          
+         */
         public function get utma():UTMA
         {
             if( !hasUTMA() )
@@ -377,30 +403,30 @@ package com.google.analytics.core
             return false;
         }
         
-        /**
-         * Indicates if the specified value is stored in the buffer.
-         */
-        public function hasStoredValue( name:String ):Boolean
-        {
-            if( isVolatile() )
-            {
-                if( _OBJ[name] )
-                {
-                    return true;
-                }
-                
-                return false;
-            }
-            else
-            {
-                if( _SO.data[name] )
-                {
-                    return true;
-                }
-                
-                return false;
-            }
-        }
+//        /**
+//         * Indicates if the specified value is stored in the buffer.
+//         */
+//        public function hasStoredValue( name:String ):Boolean
+//        {
+//            if( isVolatile() )
+//            {
+//                if( _OBJ[name] )
+//                {
+//                    return true;
+//                }
+//                
+//                return false;
+//            }
+//            else
+//            {
+//                if( _SO.data[name] )
+//                {
+//                    return true;
+//                }
+//                
+//                return false;
+//            }
+//        }
         
         /**
          * Updates a property in the buffer.
@@ -458,11 +484,14 @@ package com.google.analytics.core
          */
         public function updateUTMA( timestamp:Number ):void
         {
-            trace( ">>>> updateUTMA("+timestamp+")" );
+            if( _debug.verbose )
+            {
+                _debug.info( "updateUTMA( "+timestamp+" )" );
+            }
+            
             // if __utma value is not empty, update
             if( !utma.isEmpty() )
             {
-                trace( ">>>> utma is not empty" );
                 // update session count
                 if( isNaN( utma.sessionCount ) )
                 {
@@ -473,7 +502,6 @@ package com.google.analytics.core
                 {
                     utma.sessionCount += 1;
                 }
-                trace( ">>>> sessionCount = " + utma.sessionCount );
                 
                 // last session time, is current session time (update)
                 utma.lastTime = utma.currentTime;
@@ -503,21 +531,24 @@ package com.google.analytics.core
                        This error might occur if the user has permanently disallowed local
                        information storage for objects from this domain. 
                     */
-                    trace("Error...Could not write SharedObject to disk");
+                    //trace("Error...Could not write SharedObject to disk");
+                    _debug.warning( "Error...Could not write SharedObject to disk" );
                 }
                 
                 switch( flushStatus )
                 {
                     case SharedObjectFlushStatus.PENDING:
                     {
-                        trace("Requesting permission to save object...");
+                        //trace("Requesting permission to save object...");
+                        _debug.info( "Requesting permission to save object..." );
                         _SO.addEventListener( NetStatusEvent.NET_STATUS, _onFlushStatus );
                         break;
                     }
                     
                     case SharedObjectFlushStatus.FLUSHED:
                     {
-                        trace("Value flushed to disk.");
+                        //trace("Value flushed to disk.");
+                        _debug.info( "Value flushed to disk." );
                         break;
                     }
                 }

@@ -25,23 +25,10 @@ package com.google.analytics.v4
     import com.google.analytics.core.DomainNameMode;
     import com.google.analytics.core.Organic;
     import com.google.analytics.core.ServerOperationMode;
+    import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.events.MessageEvent;
-    import com.google.analytics.debug;
     
     import flash.events.EventDispatcher;
-
-    /**
-     * Dispatched when the configuration notify an info.
-     * @eventType com.google.analytics.events.MessageEvent.INFO
-     */
-    //[Event(name="info", type="com.google.analytics.events.MessageEvent")]
-    
-    /**
-     * Dispatched when the configuration notify a warning.
-     * @eventType com.google.analytics.events.MessageEvent.WARNING
-     * @see #addOrganicSource
-     */
-    //[Event(name="warning", type="com.google.analytics.events.MessageEvent")]
     
     /**
      * Google Analytic Tracker Code (GATC)'s configuration / state component.
@@ -49,14 +36,15 @@ package com.google.analytics.v4
      */
     public class Configuration extends EventDispatcher
     {
+        private var _debug:DebugConfiguration;
         
-        private var _version:String          = "4.3as";
+        private var _version:String = "4.3as";
         
         /**
          * Sampling percentage of visitors to track.
          * @private
          */
-        private var _sampleRate:Number       = 1; //100%
+        private var _sampleRate:Number = 1; //100%
         
         private var _trackingLimitPerSession:int = 500;
         
@@ -229,53 +217,6 @@ package com.google.analytics.v4
          */
         public var domainName:String = "";
         
-        //---- Not part of GA API ----
-        
-        /**
-         * Indicates the debug mode activity.
-         */
-        //public var debug:Boolean = true;
-        
-        /**
-         * To trace infos and warnign to the output.
-         */
-        //public var debugTrace:Boolean = true;
-        
-        /**
-         * To show more debug used internally.
-         */
-        //public var debugVerbose:Boolean = true;
-        
-        /**
-         * Send a Gir Request with validation or not without validation (use sendToURL()) it's fire and forget
-         * ok: send the request but does not returns any success or failure 
-         * cancel: does not send the request with validation (use URLLoader.load())
-         * ok: returns success when received by the the server
-         * returns failure if not received by the server, or gif not found, or error etc.
-         * cancel: does not send the request
-         */
-        //public var validateGIFRequest:Boolean = true;
-        
-        /**
-         * Allow to debug the GIF Request if true, will show a debug panel and a confirmation message to send or not the request.
-         */
-        //public var debugGIFRequest:Boolean = true;
-        
-        /**
-         * To show extended info and warning messages from the GA docs.
-         */
-        //public var verbose:Boolean = true;
-        
-        /**
-         * Indicates if show infos in the debug mode.
-         */        
-        //public var showInfos:Boolean = true;
-        
-        /**
-         * Indicates if show warnings in the debug mode.
-         */                
-        //public var showWarnings:Boolean = true;
-        
         /**
          * To be able to track in local mode (when protocol is file://)
          */
@@ -284,8 +225,9 @@ package com.google.analytics.v4
         /**
          * Creates a new Configuration instance.
          */
-        public function Configuration()
+        public function Configuration( debug:DebugConfiguration = null )
         {
+            _debug = debug;
             _initOrganicSources();
         }
         
@@ -461,10 +403,9 @@ package com.google.analytics.v4
             }
             catch( e:Error )
             {
-                if( debug.active )
+                if( _debug && _debug.active )
                 {
-                    trace( "## WARNING: " + e.message + " ##" ) ;
-                    dispatchEvent( new MessageEvent(MessageEvent.WARNING,false,true, e.message ) );
+                    _debug.warning( e.message );
                 }
             }
             

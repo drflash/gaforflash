@@ -25,7 +25,7 @@ package com.google.analytics.debug
     import flash.net.URLRequest;
     import flash.utils.getTimer;
     
-    public class Configuration
+    public class DebugConfiguration
     {
         private var _active:Boolean = false;
         private var _verbose:Boolean = true;
@@ -98,7 +98,7 @@ package com.google.analytics.debug
         */
         public var minimizedOnStart:Boolean = false;
         
-        public function Configuration(  )
+        public function DebugConfiguration(  )
         {
         }
         
@@ -177,12 +177,12 @@ package com.google.analytics.debug
          */
         public function get verbose():Boolean
         {
-            if( active )
-            {
+//            if( active )
+//            {
                 return _verbose;
-            }
-            
-            return false;
+//            }
+//            
+//            return false;
         }
         
         /**

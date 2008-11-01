@@ -20,12 +20,24 @@
 package com.google.analytics.campaign
 {
     import buRRRn.ASTUce.framework.TestCase;
-
+    
+    import com.google.analytics.debug.DebugConfiguration;
+    import com.google.analytics.v4.Configuration;
+    
     public class CampaignManagerTest extends TestCase
     {
+        private var _debug:DebugConfiguration;
+        private var _config:Configuration;
+        
         public function CampaignManagerTest(name:String="")
         {
             super(name);
+        }
+        
+        public function setUp():void
+        {
+            _debug = new DebugConfiguration();
+            _config = new Configuration( _debug );
         }
         
         public function testIsInvalidReferrer():void
@@ -39,9 +51,9 @@ package com.google.analytics.campaign
         
         public function testIsFromGoogleCSE():void
         {
-            assertTrue( CampaignManager.isFromGoogleCSE( "http://www.google.com/cse?q=keyword" ) );
-            assertTrue( CampaignManager.isFromGoogleCSE( "https://www.google.org/cse?q=keyword" ) );
-            assertTrue( CampaignManager.isFromGoogleCSE( "http://google.com/cse?q=keyword" ) );
+            assertTrue( CampaignManager.isFromGoogleCSE( "http://www.google.com/cse?q=keyword", _config ) );
+            assertTrue( CampaignManager.isFromGoogleCSE( "https://www.google.org/cse?q=keyword", _config ) );
+            assertTrue( CampaignManager.isFromGoogleCSE( "http://google.com/cse?q=keyword", _config ) );
         }
         
     }
