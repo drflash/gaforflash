@@ -39,7 +39,6 @@ package com.google.analytics
             {
             var suite:TestSuite = new TestSuite( "Google Analytics tests" );
             
-            suite.addTestSuite( UtilitiesTest );
             suite.addTestSuite( ConfigurationTest );
             suite.addTestSuite( BridgeTest );
             
