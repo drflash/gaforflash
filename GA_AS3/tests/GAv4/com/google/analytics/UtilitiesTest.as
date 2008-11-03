@@ -13,9 +13,7 @@ package com.google.analytics
 {
     import buRRRn.ASTUce.framework.*;
     
-    import com.google.analytics.utils.generateHash;
-    import com.google.analytics.utils.joinVariables;
-    import com.google.analytics.utils.validateAccount;
+    import com.google.analytics.core.Utils;
     
     import flash.net.URLVariables;
     
@@ -29,11 +27,11 @@ package com.google.analytics
         
         public function testGenerateHash():void
         {
-            var h0:int = generateHash(undefined);
-            var h1:int = generateHash(null);
-            var h2:int = generateHash("");
-            var h3:int = generateHash("http://www.google.com");
-            var h4:int = generateHash("https://www.google.com");
+            var h0:int = Utils.generateHash(undefined);
+            var h1:int = Utils.generateHash(null);
+            var h2:int = Utils.generateHash("");
+            var h3:int = Utils.generateHash("http://www.google.com");
+            var h4:int = Utils.generateHash("https://www.google.com");
             
             assertEquals(1, h0);
             assertEquals(1, h1);
@@ -41,30 +39,30 @@ package com.google.analytics
             assertFalse(h3 == h4);
         }
         
-        public function testJoinVariables():void
-        {
-            var vars1:URLVariables = new URLVariables();
-                vars1.a = 1;
-                vars1.b = 2;
-            
-            var vars2:URLVariables = new URLVariables();
-                vars2.c = 3;
-                vars2.d = 4;
-            
-            var varsnull:URLVariables = null;
-            var varsundef:URLVariables;
-            
-            var test1:URLVariables = joinVariables( vars1, vars2 );
-            
-            assertEquals( test1.a, 1 );
-            assertEquals( test1.b, 2 );
-            assertEquals( test1.c, 3 );
-            assertEquals( test1.d, 4 );
-            
-            var test2:URLVariables = joinVariables( varsnull, varsundef );
-            
-            assertEquals( test2.toString(), "" );
-        }
+//        public function testJoinVariables():void
+//        {
+//            var vars1:URLVariables = new URLVariables();
+//                vars1.a = 1;
+//                vars1.b = 2;
+//            
+//            var vars2:URLVariables = new URLVariables();
+//                vars2.c = 3;
+//                vars2.d = 4;
+//            
+//            var varsnull:URLVariables = null;
+//            var varsundef:URLVariables;
+//            
+//            var test1:URLVariables = joinVariables( vars1, vars2 );
+//            
+//            assertEquals( test1.a, 1 );
+//            assertEquals( test1.b, 2 );
+//            assertEquals( test1.c, 3 );
+//            assertEquals( test1.d, 4 );
+//            
+//            var test2:URLVariables = joinVariables( varsnull, varsundef );
+//            
+//            assertEquals( test2.toString(), "" );
+//        }
         
         public function testValidateAccount():void
         {
@@ -75,12 +73,12 @@ package com.google.analytics
             var id5:String = "UA-12";
             var id6:String = "UA-12-12-1";
             
-            assertEquals( true,  validateAccount(id1) );
-            assertEquals( false, validateAccount(id2) );
-            assertEquals( false, validateAccount(id3) );
-            assertEquals( false, validateAccount(id4) );
-            assertEquals( false, validateAccount(id5) );
-            assertEquals( false, validateAccount(id6) );
+            assertEquals( true,  Utils.validateAccount(id1) );
+            assertEquals( false, Utils.validateAccount(id2) );
+            assertEquals( false, Utils.validateAccount(id3) );
+            assertEquals( false, Utils.validateAccount(id4) );
+            assertEquals( false, Utils.validateAccount(id5) );
+            assertEquals( false, Utils.validateAccount(id6) );
         }
     }
     

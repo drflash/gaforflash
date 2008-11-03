@@ -23,6 +23,7 @@ package com.google.analytics.external
     import com.google.analytics.debug.DebugConfiguration;
     
     import flash.external.ExternalInterface;
+    import flash.system.Capabilities;
     
     /**
      * Javascript proxy access class.
@@ -283,6 +284,16 @@ package com.google.analytics.external
         public function isAvailable():Boolean
         {
             var available:Boolean = ExternalInterface.available;
+            
+            if( available && (Capabilities.playerType == "External") )
+            {
+                /* note:
+                   ExternalInterface is available when testing
+                   from the Flash IDE (publish)
+                   to allow testing loally we desactivate it
+                */
+                available = false;
+            }
             
             /* note:
                we want to notify only once that ExternalInterface is not available.

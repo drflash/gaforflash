@@ -21,7 +21,7 @@ package com.google.analytics.data
 {
     import buRRRn.ASTUce.framework.TestCase;
     
-    import com.google.analytics.utils.generateHash;
+    import com.google.analytics.core.Utils;
     
     public class UTMATest extends TestCase
     {
@@ -42,7 +42,7 @@ package com.google.analytics.data
             _time0 = 1223210053;
             
             _utma0 = new UTMA();
-            _utma0.domainHash = generateHash( "http://www.domain.com" );
+            _utma0.domainHash = Utils.generateHash( "http://www.domain.com" );
             _utma0.sessionId  = _sessionId0;
             _utma0.currentTime = _time0;
             _utma0.lastTime = _time0;
@@ -66,7 +66,7 @@ package com.google.analytics.data
         
         public function testDomainHash():void
         {
-            var domainHash:Number = generateHash( "http://www.domain.com" );
+            var domainHash:Number = Utils.generateHash( "http://www.domain.com" );
             _emptyUTMA.domainHash = domainHash;
             
             assertEquals( domainHash, _emptyUTMA.domainHash );

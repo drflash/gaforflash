@@ -19,6 +19,7 @@
 
 package com.google.analytics.utils
 {
+    import com.google.analytics.core.Utils;
     import flash.system.Capabilities;
     import flash.system.System;
     
@@ -168,7 +169,7 @@ package com.google.analytics.utils
             
             if( System.vmVersion )
             {
-                return "Tamarin/" + trim( System.vmVersion, true ) ;
+                return "Tamarin/" + Utils.trim( System.vmVersion, true ) ;
             }
             else
             {

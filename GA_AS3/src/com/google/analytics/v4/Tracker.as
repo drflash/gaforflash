@@ -29,6 +29,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.ServerOperationMode;
+    import com.google.analytics.core.Utils;
     import com.google.analytics.data.X10;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.external.AdSenseGlobals;
@@ -36,9 +37,6 @@ package com.google.analytics.v4
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.URL;
     import com.google.analytics.utils.Variables;
-    import com.google.analytics.utils.generate32bitRandom;
-    import com.google.analytics.utils.generateHash;
-    import com.google.analytics.utils.validateAccount;
 
     /**
      * The Tracker class.
@@ -91,7 +89,7 @@ package com.google.analytics.v4
                                  config:Configuration, debug:DebugConfiguration,
                                  info:Environment, buffer:Buffer, gifRequest:GIFRequest, adSense:AdSenseGlobals )
         {
-            if( !validateAccount( account ) )
+            if( !Utils.validateAccount( account ) )
             {
                 var msg:String = "Account \"" + account + "\" is not valid." ;
                 _debug.warning( msg );
@@ -534,7 +532,7 @@ package com.google.analytics.v4
                 hash       += _info.screenWidth+"x"+_info.screenHeight+_info.screenColorDepth;
                 hash       += _info.referrer;
                 
-            return generateHash(hash);
+            return Utils.generateHash(hash);
         }
         
         /**
@@ -546,7 +544,7 @@ package com.google.analytics.v4
          */
         private function _getUniqueSessionId():Number
         {
-            var sessionID:Number = (generate32bitRandom() ^ _generateUserDataHash()) * 0x7fffffff;
+            var sessionID:Number = (Utils.generate32bitRandom() ^ _generateUserDataHash()) * 0x7fffffff;
             _debug.info( "Session ID: " + sessionID );
             return sessionID;
         }
@@ -579,7 +577,7 @@ package com.google.analytics.v4
             
             if( _config.allowDomainHash )
             {
-                return generateHash( _config.domainName );
+                return Utils.generateHash( _config.domainName );
             }
             else
             {

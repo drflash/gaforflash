@@ -42,23 +42,12 @@ package
         private var _gat:GATracker;
         public var pageTracker:GoogleAnalyticsAPI;
         
-        private var _count:int = 0;
-        
-        public var content:Loader;
-        
         public function GA_AS3_trunk()
         {
             this.stage.align = StageAlign.TOP_LEFT;
             this.stage.scaleMode = StageScaleMode.NO_SCALE;
             
-            var url:String = "downtown08_1024x768.jpg";
-            
-            //load some basic content
-            content = new Loader();
-            content.load( new URLRequest( url ) );
-            addChild( content );
-            
-            addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+            addEventListener( Event.ADDED_TO_STAGE, onComplete );
         }
         
         public function onAddedToStage( evt:Event ):void
@@ -68,34 +57,11 @@ package
         
         public function onComplete( evt:Event ):void
         {
-            //wait 3 frames
-            if( _count++ < 3 )
-            {
-                trace( "wait..." );
-                return;
-            }
-            
-            removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-            removeEventListener( Event.ENTER_FRAME, onComplete );
-            
-            /* note:
-               IMPORTANT
-               when we instanciate GATracker without the debug
-               the Gif Request does not send anymore
-               
-               thing tested so far:
-               - create a 300ms delay in the GATracker
-               - load some content at the beginning
-               - wait 3 frames at the beginning
-               
-               my guess the bug is in the Gif Request
-               that just does not init a Loader.load()
-               if some debug paraeters are missing
-            */
+            removeEventListener( Event.ADDED_TO_STAGE, onComplete );
             
             //debug.minimizedOnStart = true;
             use namespace as3_api;
-            _gat = new GATracker( this, false );
+            _gat = new GATracker( this, true );
             //pageTracker = _gat.getTracker( "UA-1234-5" );
             
             //UA-4241494-2 for gaas3.zwetan.com
@@ -106,10 +72,10 @@ package
             //pageTracker.setDomainName( ".zwetan.com" );
             
             //ideally you would want to change the setVar for each different tests
-            pageTracker.setVar( "Rocktober 022 online" );
-            pageTracker.trackPageview( "/test/hello/world/from/AS3/API/022" );
-            pageTracker.trackEvent( "AS3_videos022", "play" );
-            pageTracker.trackEvent( "AS3_say022", "hello world" );
+            pageTracker.setVar( "Rocktober 023 online" );
+            pageTracker.trackPageview( "/test/hello/world/from/AS3/API/023" );
+            pageTracker.trackEvent( "AS3_videos023", "play" );
+            pageTracker.trackEvent( "AS3_say023", "hello world" );
             //pageTracker.setLocalRemoteServerMode();
             //pageTracker.setLocalServerMode();
             //pageTracker.setRemoteServerMode();
