@@ -149,7 +149,11 @@
         </mxmlc>
         -->
         
-        <!-- iterate trough the src and generate the list of classes to insert in the component -->
+        <!--
+            iterate trough the src and generate the list of classes to insert in the component
+            this way we are assured that all classes without exception will be included
+            in thebytecode and no need to edit by hand a "library" class.
+        -->
         <fileset id="sources" dir="${release.tmp}">
             <include name="**/*.as"/>
         </fileset>
@@ -163,7 +167,7 @@
         
         <!--  generate the SWC component for Flex -->
         <compc
-            output="${release.dir}/lib/${gaffa.flexswc}"
+            output="${release.dir}/lib/${gaffa.swc}"
             include-classes="${classes}"
         >
             <namespace uri="${gaffa.namespace}" manifest="${gaffa.manifest}" />

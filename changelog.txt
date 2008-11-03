@@ -1,3 +1,9 @@
+* 0.6.0.141
+- all package-level declarations are removed
+- now we can generate a SWC compatible with Flash CS3
+- Gif Requests are stored by id as GifRequestObject
+  which allow a better handling of add/remove events
+
 * 0.6.0.138
 - fixing some code for when we don't initialize the visual debug
   (note: there is still a bug, we do not have requests without debug)
