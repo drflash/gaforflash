@@ -9,7 +9,7 @@
  * limitations under the License.
  */
 
-package com.google.analytics
+package com.google.analytics.core
 {
     import buRRRn.ASTUce.framework.*;
     
@@ -38,31 +38,6 @@ package com.google.analytics
             assertEquals(1, h2);
             assertFalse(h3 == h4);
         }
-        
-//        public function testJoinVariables():void
-//        {
-//            var vars1:URLVariables = new URLVariables();
-//                vars1.a = 1;
-//                vars1.b = 2;
-//            
-//            var vars2:URLVariables = new URLVariables();
-//                vars2.c = 3;
-//                vars2.d = 4;
-//            
-//            var varsnull:URLVariables = null;
-//            var varsundef:URLVariables;
-//            
-//            var test1:URLVariables = joinVariables( vars1, vars2 );
-//            
-//            assertEquals( test1.a, 1 );
-//            assertEquals( test1.b, 2 );
-//            assertEquals( test1.c, 3 );
-//            assertEquals( test1.d, 4 );
-//            
-//            var test2:URLVariables = joinVariables( varsnull, varsundef );
-//            
-//            assertEquals( test2.toString(), "" );
-//        }
         
         public function testValidateAccount():void
         {
