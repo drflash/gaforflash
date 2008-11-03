@@ -20,11 +20,11 @@
 
 package com.google.analytics.core
 {
+    import com.google.analytics.core.Utils;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.Variables;
-    import com.google.analytics.utils.generate32bitRandom;
     import com.google.analytics.v4.Configuration;
     
     import flash.display.Loader;
@@ -50,6 +50,17 @@ package com.google.analytics.core
         private var _utmac:String;
         private var _lastRequest:URLRequest;
         
+        private var _count:int;
+        
+        /**
+        * @private
+        * contains the list of the different requests
+        * in a simple object form
+        * { start:Date, request:URLRequest, end:Date }
+        * the index of the array as the id (or order) of the request
+        */
+        private var _requests:Array;
+        
         /**
          * Creates a new GIFRequest instance.
          */
@@ -59,6 +70,9 @@ package com.google.analytics.core
             _debug  = debug;
             _buffer = buffer;
             _info   = info;
+            
+            _count    = 0;
+            _requests = [];
         }
         
         /**
@@ -91,7 +105,7 @@ package com.google.analytics.core
         */
         public function get utmn():String
         {
-            return generate32bitRandom() as String;
+            return Utils.generate32bitRandom() as String;
         }
         
         /**
@@ -227,6 +241,10 @@ package com.google.analytics.core
         public function onIOError( event:IOErrorEvent ):void
         {
             var url:String = _lastRequest.url;
+//            var id:String = String(_requests.length-1);
+//            
+//            trace( _requests[ id ].toString() );
+//            trace( "\n"+url + "\n" + _requests[ id ].request.url );
             
             if( _debug.GIFRequests )
             {
@@ -246,12 +264,15 @@ package com.google.analytics.core
                 _debug.warning( "gif request failed" );
             }
             
-            //_removeListeners( event.target );
+            _removeListeners( event.target );
         }
         
         public function onComplete( event:Event ):void
         {
-            var url:String = _lastRequest.url;
+            var id:String = event.target.loader.name;
+            _requests[ id ].complete();
+            
+            var url:String = _requests[ id ].request.url;
             
             if( _debug.GIFRequests )
             {
@@ -271,7 +292,7 @@ package com.google.analytics.core
                 _debug.info( "gif request sent" );
             }
             
-            //_removeListeners( event.target );
+            _removeListeners( event.target );
         }
         
         private function _removeListeners( target:Object ):void
@@ -297,12 +318,15 @@ package com.google.analytics.core
                Firefox still does not shows those request
             */
             var loader:Loader = new Loader();
+                loader.name   = String(_count++);
+                trace( "set request name: " + loader.name );
             var context:LoaderContext = new LoaderContext( false );
             
             loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
             loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onComplete );
             
             _lastRequest = request;
+            _requests[ loader.name ] = new RequestObject( request );
             
             try
             {
@@ -315,7 +339,7 @@ package com.google.analytics.core
             }
         }
         
-        public function sendWithoutValidation( request:URLRequest ):void
+        public function _send( request:URLRequest ):void
         {
             trace( "sendWithoutValidation()" );
             try
@@ -336,7 +360,7 @@ package com.google.analytics.core
             }
             else
             {
-                sendWithoutValidation( request );
+                _send( request );
             }
         }
         
@@ -397,7 +421,7 @@ package com.google.analytics.core
                     
                     
                     variables.utmwv = utmwv;
-                    variables.utmn  = generate32bitRandom();
+                    variables.utmn  = Utils.generate32bitRandom();
                     
                     if( _info.domainName != "" )
                     {

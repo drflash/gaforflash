@@ -22,9 +22,9 @@ package com.google.analytics.v4
 {
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.ServerOperationMode;
+    import com.google.analytics.core.Utils;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.external.JavascriptProxy;
-    import com.google.analytics.utils.validateAccount;
     
     /**
      * This api use a Javascript bridge to fill the GATracker properties.
@@ -75,7 +75,7 @@ package com.google.analytics.v4
                 _injectTrackingObject();
             }
             
-            if( validateAccount( account ) )
+            if( Utils.validateAccount( account ) )
             {
                 _createTrackingObject( account );
             }
@@ -241,7 +241,7 @@ package com.google.analytics.v4
         
         public function hasTrackingAccount( account:String ):Boolean
         {
-            if( validateAccount( account ) )
+            if( Utils.validateAccount( account ) )
             {
                 return _checkValidTrackingObject( account );
             }

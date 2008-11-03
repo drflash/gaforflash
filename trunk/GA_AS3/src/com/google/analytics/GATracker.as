@@ -23,6 +23,7 @@ package com.google.analytics
     
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.GIFRequest;
+    import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.as3_api;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.core.js_bridge;
@@ -40,7 +41,6 @@ package com.google.analytics
     import com.google.analytics.v4.Tracker;
     
     import flash.display.DisplayObject;
-    import flash.utils.getTimer;
     
     
     /**
@@ -75,6 +75,8 @@ package com.google.analytics
             
             _debug   = new DebugConfiguration();
             _config  = new Configuration( _debug );
+            _config.serverMode = ServerOperationMode.local;
+            
             _jsproxy = new JavascriptProxy( _debug );
             
             if( debugmode )
@@ -82,26 +84,6 @@ package com.google.analytics
                 _debug.layout = new Layout( _debug, _display );
                 _debug.active = debugmode;
             }
-            else
-            {
-                //force a delay of 300ms
-                _delay( 300 ); //ms
-            }
-            
-        }
-        
-        private function _delay( delay:uint ):void
-        {
-            var current:Number = getTimer();
-            var start:Number   = current;
-            
-            trace( "start: " + start );
-            while( start+delay > current )
-            {
-                current = getTimer();
-            }
-            trace( "current: " + current );
-            
         }
         
         /**

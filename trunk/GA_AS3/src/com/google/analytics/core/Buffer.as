@@ -20,6 +20,7 @@
 
 package com.google.analytics.core
 {
+    import com.google.analytics.core.Utils;
     import com.google.analytics.data.UTMA;
     import com.google.analytics.data.UTMB;
     import com.google.analytics.data.UTMC;
@@ -27,7 +28,6 @@ package com.google.analytics.core
     import com.google.analytics.data.UTMV;
     import com.google.analytics.data.UTMZ;
     import com.google.analytics.debug.DebugConfiguration;
-    import com.google.analytics.utils.generateHash;
     import com.google.analytics.v4.Configuration;
     
     import flash.events.NetStatusEvent;
@@ -468,7 +468,7 @@ package com.google.analytics.core
                 value += utmz.valueOf();
                 value += utmv.valueOf();
             
-            return generateHash( value );
+            return Utils.generateHash( value );
         }
         
         /**
