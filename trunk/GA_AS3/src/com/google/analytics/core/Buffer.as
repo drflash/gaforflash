@@ -218,7 +218,7 @@ package com.google.analytics.core
                         _createUMTZ();
                     }
                     
-                    _utmv.fromSharedObject( _SO.data.utmz );
+                    _utmz.fromSharedObject( _SO.data.utmz );
                     
                     if( _debug.verbose )
                     {

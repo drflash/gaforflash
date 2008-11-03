@@ -1,3 +1,7 @@
+* 0.6.0.142
+- fix a small bug in Buffer
+  now stored utmz are read correctly
+
 * 0.6.0.141
 - all package-level declarations are removed
 - now we can generate a SWC compatible with Flash CS3

@@ -95,7 +95,7 @@ package com.google.analytics
         public static var version:Version = new Version();
         include "version.properties"
         version.revision = "$Rev$ ".split( " " )[1];
-         
+        
         private function _onInfo( event:MessageEvent ):void
         {
             _debug.info( event.message );
