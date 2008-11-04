@@ -85,16 +85,19 @@ package com.google.analytics.external
             
             var obj:Object = call( cache_properties_js );
             
-            _host         = obj.host;
-            _language     = obj.language;
-            _characterSet = obj.characterSet;
-            _colorDepth   = obj.colorDepth;
-            _location     = obj.location;
-            _pathname     = obj.pathname;
-            _protocol     = obj.protocol;
-            _search       = obj.search;
-            _referrer     = obj.referrer;
-            _title        = obj.title;
+            if( obj )
+            {
+                _host         = obj.host;
+                _language     = obj.language;
+                _characterSet = obj.characterSet;
+                _colorDepth   = obj.colorDepth;
+                _location     = obj.location;
+                _pathname     = obj.pathname;
+                _protocol     = obj.protocol;
+                _search       = obj.search;
+                _referrer     = obj.referrer;
+                _title        = obj.title;
+            }
         }
         
         /**
