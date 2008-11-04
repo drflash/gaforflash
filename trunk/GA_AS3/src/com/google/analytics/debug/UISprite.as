@@ -59,6 +59,7 @@ package com.google.analytics.debug
         public function UISprite( alignTarget:DisplayObject = null )
         {
             super();
+            
             listenResize = false;
             
             alignement   = Align.none;

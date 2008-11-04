@@ -73,8 +73,12 @@ package com.google.analytics.debug
             _title.margin.top = 0.6;
             _title.margin.left = 0.6;
             _title.addEventListener( MouseEvent.CLICK, onToggle );
+            _title.mouseChildren = false;
+            
             _border      = new Shape();
             _mask        = new Sprite();
+            _mask.useHandCursor = false;
+            _mask.mouseEnabled  = false;
             
             if( alignement == null )
             {
@@ -188,6 +192,7 @@ package com.google.analytics.debug
         
         public function onToggle( event:MouseEvent = null ):void
         {
+            trace( "onToggle()" );
             if( _colapsed )
             {
                 _data.visible = true;

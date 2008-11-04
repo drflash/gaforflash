@@ -133,7 +133,7 @@ package com.google.analytics.debug
         
         public function onLink( event:TextEvent ):void
         {
-            //trace( "onLink()" );
+            trace( "onLink()" );
         }
         
         /**

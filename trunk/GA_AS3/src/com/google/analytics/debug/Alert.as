@@ -49,6 +49,12 @@ package com.google.analytics.debug
             
             super(text, tag, color, alignement, stickToEdge );
             
+            this.selectable = true;
+            super.mouseChildren = true;
+            this.buttonMode   = true;
+            this.mouseEnabled = true;
+            this.useHandCursor = true;
+            
             this.actionOnNextLine = actionOnNextLine;
             _actions = [];
             
@@ -146,6 +152,7 @@ package com.google.analytics.debug
          */
         public override function onLink( event:TextEvent ):void
         {
+            trace( "onLink( " + event.text + " )" );
             if( isValidAction( event.text ) )
             {
                 var action:AlertAction = getAction( event.text );
