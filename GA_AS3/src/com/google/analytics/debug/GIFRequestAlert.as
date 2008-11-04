@@ -20,6 +20,8 @@
 
 package com.google.analytics.debug
 {
+    import flash.events.TextEvent;
+    
     
     /**
     * An Alert dedicated to the Gif Request.
