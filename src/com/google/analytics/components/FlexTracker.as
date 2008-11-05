@@ -43,6 +43,10 @@ package com.google.analytics.components
     
     import mx.core.UIComponent;
     
+    /**
+    * The Flex visual component.
+    */
+    [IconFile("analytics.png")]
     public class FlexTracker extends UIComponent implements AnalyticsTracker
     {
         private var _display:DisplayObject;
@@ -63,6 +67,7 @@ package com.google.analytics.components
         private var _mode:String         = "AS3";
         private var _visualDebug:Boolean = false;
         
+        [IconFile("analytics.png")]
         public function FlexTracker()
         {
             super();
@@ -73,6 +78,12 @@ package com.google.analytics.components
             this.maxWidth  = 0;
             this.maxHeight = 0;
             
+            /* note:
+               here at the contrary of Flash we can
+               use the ADDED_TO_STAGE event
+               because in a Flex application the
+               app render on the 2nd frame of a SWF.
+            */
             addEventListener( Event.ADDED_TO_STAGE, _factory );
         }
         
