@@ -89,13 +89,6 @@ package com.google.analytics.v4
                                  config:Configuration, debug:DebugConfiguration,
                                  info:Environment, buffer:Buffer, gifRequest:GIFRequest, adSense:AdSenseGlobals )
         {
-            if( !Utils.validateAccount( account ) )
-            {
-                var msg:String = "Account \"" + account + "\" is not valid." ;
-                _debug.warning( msg );
-                throw new Error( msg );
-            }
-            
             _account    = account;
             
             _config     = config;
@@ -104,6 +97,13 @@ package com.google.analytics.v4
             _buffer     = buffer;
             _gifRequest = gifRequest;
             _adSense   = adSense;
+            
+            if( !Utils.validateAccount( account ) )
+            {
+                var msg:String = "Account \"" + account + "\" is not valid." ;
+                _debug.warning( msg );
+                throw new Error( msg );
+            }
             
             _initData();
         }

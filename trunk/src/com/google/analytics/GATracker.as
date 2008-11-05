@@ -20,16 +20,13 @@
 package com.google.analytics
 {
     
-    import com.google.analytics.API;
     import com.google.analytics.core.Buffer;
+    import com.google.analytics.core.EventTracker; EventTracker;
     import com.google.analytics.core.GIFRequest;
-    import com.google.analytics.core.ServerOperationMode;
-    import com.google.analytics.core.as3_api;
     import com.google.analytics.core.ga_internal;
-    import com.google.analytics.core.js_bridge;
+    import com.google.analytics.core.ServerOperationMode; ServerOperationMode;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.Layout;
-    import com.google.analytics.events.MessageEvent;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.external.HTMLDOM;
     import com.google.analytics.external.JavascriptProxy;
@@ -42,15 +39,18 @@ package com.google.analytics
     
     import flash.display.DisplayObject;
     
-    
     /**
-    * @fileoverview Google Analytic Tracker Code (GATC)'s main component.
+    * Google Analytic Tracker Code (GATC)'s code-only component.
+    * 
     */
-    
-    public class GATracker
+    public class GATracker implements AnalyticsTracker
     {
-        private var _display:DisplayObject;
+        private var _built:Boolean = false;
         
+        private var _display:DisplayObject;
+        private var _tracker:GoogleAnalyticsAPI;
+        
+        //factory
         private var _config:Configuration;
         private var _debug:DebugConfiguration;
         private var _env:Environment;
@@ -60,6 +60,10 @@ package com.google.analytics
         private var _dom:HTMLDOM;
         private var _adSense:AdSenseGlobals;
         
+        //object properties
+        private var _account:String;
+        private var _mode:String;
+        private var _visualDebug:Boolean;
         
         /**
         * note:
@@ -69,44 +73,74 @@ package com.google.analytics
         * We mainly use it for internal test and it's basically a factory.
         * 
         */
-        public function GATracker( display:DisplayObject, debugmode:Boolean = false )
+        public function GATracker( display:DisplayObject, account:String,
+                                   mode:String = "AS3", visualDebug:Boolean = false,
+                                   config:Configuration = null, debug:DebugConfiguration = null )
         {
             _display = display;
             
-            _debug   = new DebugConfiguration();
-            _config  = new Configuration( _debug );
-            _config.serverMode = ServerOperationMode.local;
+            this.account     = account;
+            this.mode        = mode;
+            this.visualDebug = visualDebug;
             
-            _jsproxy = new JavascriptProxy( _debug );
-            
-            if( debugmode )
+            if( !debug )
             {
-                _debug.layout = new Layout( _debug, _display );
-                _debug.active = debugmode;
+                this.debug = new DebugConfiguration();
+            }
+            
+            if( !config )
+            {
+                this.config = new Configuration( debug );
+            }
+            
+            if( autobuild )
+            {
+                _factory();
             }
         }
         
         public static var version:Version = API.version;
         
-        private function _onInfo( event:MessageEvent ):void
-        {
-            _debug.info( event.message );
-        }
+        public static var autobuild:Boolean = true;
         
-        private function _onWarning( event:MessageEvent ):void
+        /**
+        * @private
+        * Factory to build the different trackers
+        */
+        private function _factory():void
         {
-            _debug.warning( event.message );
+            _built = true;
+            
+            _jsproxy = new JavascriptProxy( debug );
+            
+            if( visualDebug )
+            {
+                debug.layout = new Layout( debug, _display );
+                debug.active = visualDebug;
+            }
+            
+            switch( mode )
+            {
+                case "Bridge":
+                _tracker = _bridgeFactory();
+                break;
+                
+                case "AS3":
+                default:
+                _tracker = _trackerFactory();
+            }
+            
         }
         
         /**
-        * Factory method for returning a tracker object.
+        * @private
+        * Factory method for returning a Tracker object.
         * 
-        * @param {String} account Urchin Account to record metrics in.
         * @return {GoogleAnalyticsAPI}
         */
-        as3_api function getTracker( account:String ):GoogleAnalyticsAPI
+        private function _trackerFactory():GoogleAnalyticsAPI
         {
-            _debug.info( "GATracker v" + version +"\naccount: " + account );
+            debug.info( "GATracker (AS3) v" + version +"\naccount: " + account );
             
             /* note:
                for unit testing and to avoid 2 different branches AIR/Flash
@@ -117,16 +151,16 @@ package com.google.analytics
             */
             
             
-            _adSense   = new AdSenseGlobals( _debug );
+            _adSense   = new AdSenseGlobals( debug );
             
-            _dom        = new HTMLDOM( _debug );
+            _dom        = new HTMLDOM( debug );
             _dom.cacheProperties();
             
-            _env        = new Environment( "", "", "", _debug, _dom );
+            _env        = new Environment( "", "", "", debug, _dom );
             
-            _buffer     = new Buffer( _config, _debug, false );
+            _buffer     = new Buffer( config, debug, false );
             
-            _gifRequest = new GIFRequest( _config, _debug, _buffer, _env );
+            _gifRequest = new GIFRequest( config, debug, _buffer, _env );
             
             /* note:
                To be able to obtain the URL of the main SWF containing the GA API
@@ -138,16 +172,82 @@ package com.google.analytics
             */
             use namespace ga_internal;
             _env.url = _display.stage.loaderInfo.url;
-            return new Tracker( account, _config, _debug, _env, _buffer, _gifRequest, _adSense );
+            
+            return new Tracker( account, config, debug, _env, _buffer, _gifRequest, _adSense );
         }
         
         /**
         * @private
+        * Factory method for returning a Bridge object.
+        * 
+        * @return {GoogleAnalyticsAPI}
         */
-        js_bridge function getTracker( account:String ):GoogleAnalyticsAPI
+        private function _bridgeFactory():GoogleAnalyticsAPI
         {
+            debug.info( "GATracker (Bridge) v" + version +"\naccount: " + account );
+            
             return new Bridge( account, _debug, _jsproxy );
         }
+        
+        public function get account():String
+        {
+            return _account;
+        }
+        
+        public function set account( value:String ):void
+        {
+            _account = value;
+        }
+        
+        public function get mode():String
+        {
+            return _mode;
+        }
+        
+        public function set mode( value:String ):void
+        {
+            _mode = value;
+        }
+        
+        public function get visualDebug():Boolean
+        {
+            return _visualDebug;
+        }
+        
+        public function set visualDebug( value:Boolean ):void
+        {
+            _visualDebug = value;
+        }
+        
+        public function get config():Configuration
+        {
+            return _config;
+        }
+        
+        public function set config( value:Configuration ):void
+        {
+            _config = value;
+        }
+        
+        public function get debug():DebugConfiguration
+        {
+            return _debug;
+        }
+        
+        public function set debug( value:DebugConfiguration ):void
+        {
+            _debug = value;
+        }
+        
+        public function build():void
+        {
+            if( !_built )
+            {
+                _factory();
+            }
+        }
+        
+        include "common.as"
         
     }
 }
