@@ -62,7 +62,7 @@
        the same properties file is used in AS3 with an include
     -->
     <property file="src/com/google/analytics/version.properties"/>
-    <svn>
+    <svn username="${contributor.username}" password="${contributor.password}">
         <info target="."/>
     </svn>
     <!-- define the revision number from the svn information -->
