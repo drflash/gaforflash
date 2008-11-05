@@ -20,7 +20,7 @@
 package com.google.analytics
 {
     
-    
+    import com.google.analytics.API;
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.ServerOperationMode;
@@ -86,15 +86,7 @@ package com.google.analytics
             }
         }
         
-        /**
-        * version of our source code (not version of the GA API)
-        * 
-        * note:
-        * each components will have also their own version
-        */
-        public static var version:Version = new Version();
-        include "version.properties"
-        version.revision = "$Rev$ ".split( " " )[1];
+        public static var version:Version = API.version;
         
         private function _onInfo( event:MessageEvent ):void
         {

@@ -16,26 +16,32 @@
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
  */
-
-package com.google.analytics
+ 
+package com.google.analytics.components
 {
+    import com.google.analytics.API;
     import com.google.analytics.utils.Version;
     
-    public class API
+    import flash.display.MovieClip;
+    
+    /**
+    * The basic GA Tracker Library
+    * to be included in the SWC.
+    * 
+    * note:
+    * this class is not a component, it just a shim
+    * that allow to declare the SWC manifest and
+    * associate an icon file.
+    */
+    [IconFile("analytics.png")]
+    public class GATrackerLibrary extends MovieClip
     {
-        public function API()
+        public function GATrackerLibrary()
         {
+            super();
         }
         
-        /**
-        * version of Google Analytics AS3 API
-        * 
-        * note:
-        * each components share the same code base and so the same version
-        */
-        public static var version:Version = new Version();
-        include "version.properties"
-        version.revision = "$Rev$ ".split( " " )[1];
+        public static var version:Version = API.version;
         
     }
 }
