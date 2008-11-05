@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application
+    xmlns:mx="http://www.adobe.com/2006/mxml"
+    layout="absolute"
+    width="800"
+    height="600"
+    addedToStage="onComplete()"
+    >
+    <mx:Script>
+        <![CDATA[
+            import com.google.analytics.GATracker;
+            import com.google.analytics.AnalyticsTracker;
+            
+            public var tracker:AnalyticsTracker;
+            
+            public function onButtonClick():void
+            {
+                tracker.trackEvent( "Button", "click", "hello world" );
+            }
+            
+            private function onComplete():void
+            {
+                tracker = new GATracker( this, "UA-111-222", "AS3", true );
+                tracker.debug.traceOutput = false;
+                tracker.debug.verbose = true;
+                
+                tracker.trackPageview( "/hello/world" );
+            }
+            
+        ]]>
+    </mx:Script>
+    
+    <mx:Button id="mybutton" label="hello world" click="onButtonClick()" />
+    
+</mx:Application>
