@@ -20,11 +20,17 @@ package com.google.analytics.components
     import com.google.analytics.v4.Tracker;
     
     import flash.display.DisplayObject;
+    import flash.display.Sprite;
     import flash.events.Event;
+    import flash.display.MovieClip;
+    import flash.display.Graphics;
+    import flash.utils.getQualifiedClassName;
     
-    import fl.core.UIComponent;
-    
-    public class FlashTracker extends UIComponent implements AnalyticsTracker
+    /**
+    * The Flash visual component.
+    */
+    [IconFile("analytics.png")]
+    public class FlashTracker extends Sprite implements AnalyticsTracker
     {
         private var _display:DisplayObject;
         private var _tracker:GoogleAnalyticsAPI;
@@ -44,14 +50,75 @@ package com.google.analytics.components
         private var _mode:String         = "AS3";
         private var _visualDebug:Boolean = false;
         
+        //component
+        private var preview:MovieClip;
+        private var isLivePreview:Boolean;
+        private var livePreviewWidth:Number;
+        private var livePreviewHeight:Number;
+        
+        private var _width:Number = 0;
+        private var _height:Number = 0; 
+        private var _componentInspectorSetting:Boolean;
+        
+        public var boundingBox_mc:DisplayObject;
+        
+        [IconFile("analytics.png")]
         public function FlashTracker()
         {
             super();
             
-            addEventListener( Event.ADDED_TO_STAGE, _factory );
+            isLivePreview = (parent != null && getQualifiedClassName(parent) == "fl.livepreview::LivePreviewParent");
+            _componentInspectorSetting = false;
+            
+            boundingBox_mc.visible = false;
+            removeChild( boundingBox_mc );
+            boundingBox_mc = null;
+            
+            if( isLivePreview )
+            {
+                _createLivePreview();
+            }
+            
+            /* note:
+               we have to use the ENTER_FRAME event
+               to wait 1 frame so we can add to the display list
+               and get the values declared in the component inspector.
+            */
+            addEventListener( Event.ENTER_FRAME, _factory );
         }
         
         public static var version:Version = API.version;
+        
+        private function _createLivePreview():void
+        {
+            preview = new MovieClip();
+            
+            var g:Graphics = preview.graphics;
+            g.beginFill(0x000000);
+            g.moveTo(0, 0);
+            g.lineTo(0, 100);
+            g.lineTo(100, 100);
+            g.lineTo(100, 0);
+            g.lineTo(0, 0);
+            g.endFill();
+            
+            //decalred in the FLA
+            preview.icon_mc = new Icon();
+            preview.icon_mc.name = "icon_mc";
+            preview.addChild(preview.icon_mc);
+            
+            addChild( preview );
+        }
+        
+        public function set componentInspectorSetting( value:Boolean ):void
+        {
+            _componentInspectorSetting = value;
+        }
+        
+        public function setSize( w:Number, h:Number ):void
+        {
+            
+        }
         
         /**
         * @private
@@ -59,7 +126,7 @@ package com.google.analytics.components
         */
         private function _factory( event:Event ):void
         {
-            removeEventListener( Event.ADDED_TO_STAGE, _factory );
+            removeEventListener( Event.ENTER_FRAME, _factory );
             
             _display = this;
             
@@ -73,13 +140,13 @@ package com.google.analytics.components
                 this.config = new Configuration( debug );
             }
             
-            _jsproxy = new JavascriptProxy( debug );
-            
             if( visualDebug )
             {
                 debug.layout = new Layout( debug, _display );
                 debug.active = visualDebug;
             }
+            
+            _jsproxy = new JavascriptProxy( debug );
             
             switch( mode )
             {
