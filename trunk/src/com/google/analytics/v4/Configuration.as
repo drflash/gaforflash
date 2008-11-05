@@ -26,15 +26,12 @@ package com.google.analytics.v4
     import com.google.analytics.core.Organic;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.debug.DebugConfiguration;
-    import com.google.analytics.events.MessageEvent;
-    
-    import flash.events.EventDispatcher;
     
     /**
      * Google Analytic Tracker Code (GATC)'s configuration / state component.
      * This encapsulates all the configurations for the entire GATC module.
      */
-    public class Configuration extends EventDispatcher
+    public class Configuration
     {
         private var _debug:DebugConfiguration;
         
@@ -384,19 +381,6 @@ package com.google.analytics.v4
          */
         public function addOrganicSource(engine:String, keyword:String):void
         {
-//            var orgref:OrganicReferrer = new OrganicReferrer(engine, keyword);
-//            if( !_organicCache[orgref.toString()] )
-//            {
-//                _organicSources.push(orgref);
-//                _organicCache[orgref.toString()] = true ;
-//            }
-//            else if( debug )
-//            {
-//                var message:String = orgref.toString()+" already exists, we don't add it";
-//                trace( "## WARNING: "+message+" ##" );
-//                dispatchEvent( new MessageEvent(MessageEvent.WARNING,false,true, message ) );
-//            }
-            
             try
             {
                 _organic.addSource( engine, keyword );
