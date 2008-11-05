@@ -111,6 +111,8 @@
             </fileset>
         </delete>
         
+        <delete file="${release.tmp}/com/google/analytics/components/FlashTracker.as" />
+        <delete file="${release.tmp2}/com/google/analytics/components/FlashTracker.as" />
         <delete file="${release.tmp2}/com/google/analytics/components/FlexTracker.as" />
         
     </target>
@@ -135,6 +137,7 @@
         <chmod file="${asdoc.template}/asDocHelper" perm="+x"/>
         
         <!-- run asdoc -->
+        
         <exec executable="${asdoc.exe}">
             <arg line="-verbose-stacktraces" />
             <arg line="-doc-sources ${release.tmp}" />
@@ -148,7 +151,8 @@
         
         <copy todir="${release.dir}/doc">
 			<fileset dir="${asdoc.output}" />
-		</copy>        
+		</copy>
+		
     </target>
     
     <target name="flex_component" description="build the Flex SWC component">
@@ -225,7 +229,7 @@
             <warnings>true</warnings>
             <verbose-stacktraces>true</verbose-stacktraces>
             <compute-digest>false</compute-digest>
-            <source-path path-element="${release.tmp}" />
+            <source-path path-element="${release.tmp2}" />
             <metadata date="${TODAY}" title="${project.name}">
                 <publisher name="Adobe Systems Inc." />
                 <publisher name="Google Inc." />
@@ -263,6 +267,7 @@
     <target name="commonfiles" depends="include-source" description="copy common files">
         <copy file="changelog.txt" todir="${release.dir}" />
         <copy file="license.txt" todir="${release.dir}" />
+        <copy file="fla/analytics_flash.swc" todir="${release.dir}/lib" />
     </target>
     
     <!-- package the release to a versioned zip file -->
