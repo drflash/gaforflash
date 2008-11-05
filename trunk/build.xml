@@ -61,7 +61,7 @@
        load the major, minor, build version number from the AS3 common source directory
        the same properties file is used in AS3 with an include
     -->
-    <property file="GA_AS3/src/com/google/analytics/version.properties"/>
+    <property file="src/com/google/analytics/version.properties"/>
     <svn>
         <info target="."/>
     </svn>
@@ -137,18 +137,6 @@
     
     <target name="component" description="build the SWC component">
         <echo message="building component" level="verbose" />
-        
-        <!-- temporary -->
-        <!--
-        <mxmlc
-            file="${gaffa.src}/GA_AS3_trunk.as"
-            as3="true"
-            output="${basedir}/bin/test.swf"
-        >
-            <default-size width="800" height="600" />
-        </mxmlc>
-        -->
-        
         <!--
             iterate trough the src and generate the list of classes to insert in the component
             this way we are assured that all classes without exception will be included
@@ -165,18 +153,27 @@
         </pathconvert>
         <echo message="classes is set to = ${classes}" level="verbose" />
         
-        <!--  generate the SWC component for Flex -->
+        <!--  generate the SWC component -->
         <compc
             output="${release.dir}/lib/${gaffa.swc}"
             include-classes="${classes}"
+            target-player="9.0.45"
         >
             <namespace uri="${gaffa.namespace}" manifest="${gaffa.manifest}" />
-            <include-namespaces>http://www.google.com/analytics/2009</include-namespaces>
+            <include-namespaces uri="${gaffa.namespace}" />
             <strict>true</strict>
             <optimize>true</optimize>
             <warnings>true</warnings>
+            <verbose-stacktraces>true</verbose-stacktraces>
             <compute-digest>false</compute-digest>
             <source-path path-element="${release.tmp}" />
+            <metadata date="${TODAY}" title="${project.name}">
+                <publisher name="Adobe Systems Inc." />
+                <publisher name="Google Inc." />
+                <creator name="Google Inc." />
+                <contributor name="Zwetan Kjukov" />
+                <contributor name="Marc Alcaraz" />
+            </metadata>
         </compc>
         
     </target>
