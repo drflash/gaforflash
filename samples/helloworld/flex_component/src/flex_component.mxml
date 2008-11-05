@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application
+    xmlns:mx="http://www.adobe.com/2006/mxml"
+    layout="absolute"
+    width="800"
+    height="600"
+    >
+    
+    <mx:Script>
+        <![CDATA[
+            public function onComplete():void
+            {
+                tracker.trackPageview( "/hello/world" );
+            }
+            
+            public function onButtonClick():void
+            {
+                tracker.trackEvent( "Button", "click", "hello world" );
+            }
+        ]]>
+    </mx:Script>
+    
+    <analytics:FlexTracker
+        xmlns:analytics="com.google.analytics.components.*"
+        id="tracker"
+        account="UA-111-222"
+        mode="AS3"
+        visualDebug="true"
+        addedToStage="onComplete()"
+     />
+    
+    <mx:Button id="mybutton" label="hello world" click="onButtonClick()" />
+    
+</mx:Application>
