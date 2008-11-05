@@ -19,23 +19,25 @@
 
 package com.google.analytics
 {
-    import com.google.analytics.utils.Version;
+    import com.google.analytics.debug.DebugConfiguration;
+    import com.google.analytics.v4.Configuration;
+    import com.google.analytics.v4.GoogleAnalyticsAPI;
     
-    public class API
+    public interface AnalyticsTracker extends GoogleAnalyticsAPI
     {
-        public function API()
-        {
-        }
+        function get account():String;
+        function set account( value:String ):void;
         
-        /**
-        * version of Google Analytics AS3 API
-        * 
-        * note:
-        * each components share the same code base and so the same version
-        */
-        public static var version:Version = new Version();
-        include "version.properties"
-        version.revision = "$Rev$ ".split( " " )[1];
+        function get mode():String;
+        function set mode( value:String ):void;
         
+        function get visualDebug():Boolean;
+        function set visualDebug( value:Boolean ):void;
+        
+        function get config():Configuration;
+        function set config( value:Configuration ):void;
+        
+        function get debug():DebugConfiguration;
+        function set debug( value:DebugConfiguration ):void;
     }
 }
