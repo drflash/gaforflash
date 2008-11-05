@@ -1,3 +1,30 @@
+* 0.7.0.177
+- directory structure reorganization
+  instead of having different project roots
+  as GA-AS3, GA_Flex, GA_Flash
+  we keep all under one root
+  easier for maintenance and code sync
+- Full component architecture
+  based on AnalyticsTracker
+  we have
+  FlashTracker (analytics_flash.swc, Flash CS3 visual component)
+  FlexTracker (analytics_flex.swc, Flex 3 visual component)
+  GATrackerLibrary/GATracker (analytics.swc, AS3 code library)
+- fix bug with HTMLDOM cacheproperties
+- fix bug with visual debug compiled in Flex
+- added component logo
+- modified the build to generate 2 SWC: analytics.swc and analytics_felx.swc
+- analytics_flash.swc need to be generated from Flash CS3
+  open /fla/Analytics.fla
+  right click 'Analytics'(compiled clip), select 'Component Definition...', click 'OK'
+  right click 'Analytics'(compiled clip), select 'Export SWC File...', save as 'analytics_flash.swc'
+- hello world samples
+
+* 0.6.0.149
+- Library component
+- Flex component
+- Flash component
+
 * 0.6.0.142
 - fix a small bug in Buffer
   now stored utmz are read correctly

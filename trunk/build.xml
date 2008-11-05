@@ -18,17 +18,17 @@
 
 <project name="gaffa" default="main" basedir=".">
     
-	<!-- timestamp of the build -->
+    <!-- timestamp of the build -->
     <tstamp>
         <format property="TODAY" pattern="dd MMMM yyyy" />
     </tstamp>
     
-	<!-- user can override those properties -->
+    <!-- user can override those properties -->
     <property file="build/user.properties"/>
     
-	<!--
-	   The build is intended to compile on Windows and Mac OS X
-	-->
+    <!--
+       The build is intended to compile on Windows and Mac OS X
+    -->
     <condition property="FLEX_HOME" value="${FLEX_HOME_MAC}">
         <os family="mac"/>
     </condition>
@@ -37,7 +37,7 @@
         <os family="windows" />
     </condition>
     
-	<!-- define the asdoc executable -->
+    <!-- define the asdoc executable -->
     <condition property="asdoc.exe" value="${FLEX_HOME}/bin/asdoc">
         <os family="mac" />
     </condition>
@@ -80,7 +80,7 @@
     <target name="clean">
         <delete dir="${release.dir}" />
         <delete dir="${release.tmp}" />
-        <delete dir="${release.tmp2}" />
+        <delete dir="${release.tmplib}" />
     </target>
     
     <target name="init">
@@ -95,7 +95,7 @@
         </svn>
         
         <svn>
-            <export srcPath="${gaffa.src}" destPath="${release.tmp2}" />
+            <export srcPath="${gaffa.src}" destPath="${release.tmplib}" />
         </svn>
         
         <!-- delete some files we don't want to be included in the documentation or the component -->
@@ -106,18 +106,18 @@
         </delete>
         
         <delete>
-            <fileset dir="${release.tmp2}">
+            <fileset dir="${release.tmplib}">
               <include name="*.as"/>
             </fileset>
         </delete>
         
         <delete file="${release.tmp}/com/google/analytics/components/FlashTracker.as" />
-        <delete file="${release.tmp2}/com/google/analytics/components/FlashTracker.as" />
-        <delete file="${release.tmp2}/com/google/analytics/components/FlexTracker.as" />
+        <delete file="${release.tmplib}/com/google/analytics/components/FlashTracker.as" />
+        <delete file="${release.tmplib}/com/google/analytics/components/FlexTracker.as" />
         
     </target>
     
-    <target name="main" depends="clean,init,documentation,flex_component,flash_component,templates,commonfiles,package">
+    <target name="main" depends="clean,init,documentation,flex_component,library_component,templates,commonfiles,package">
     </target>
     
     <target name="clean-documentation">
@@ -150,9 +150,9 @@
         </exec>
         
         <copy todir="${release.dir}/doc">
-			<fileset dir="${asdoc.output}" />
-		</copy>
-		
+            <fileset dir="${asdoc.output}" />
+        </copy>
+        
     </target>
     
     <target name="flex_component" description="build the Flex SWC component">
@@ -173,7 +173,7 @@
         </pathconvert>
         <echo message="classes is set to = ${classes}" level="verbose" />
         
-        <!--  generate the SWC component -->
+        <!--  generate the Flex SWC component -->
         <compc
             output="${release.dir}/lib/${gaffa.flexswc}"
             include-classes="${classes}"
@@ -198,28 +198,28 @@
         
     </target>
     
-    <target name="flash_component" description="build the Flash CS3 SWC component">
-        <echo message="building flash component" level="verbose" />
+    <target name="library_component" description="build the Library SWC component">
+        <echo message="building library component" level="verbose" />
         <!--
             iterate trough the src and generate the list of classes to insert in the component
             this way we are assured that all classes without exception will be included
             in thebytecode and no need to edit by hand a "library" class.
         -->
-        <fileset id="sources" dir="${release.tmp2}">
+        <fileset id="sources" dir="${release.tmplib}">
             <include name="**/*.as"/>
         </fileset>
-        <pathconvert property="classes2" pathsep=" " refid="sources">
+        <pathconvert property="classeslib" pathsep=" " refid="sources">
             <chainedmapper>
-                <globmapper from="${basedir}/build/tmp2/*" to="*"/>
+                <globmapper from="${basedir}/build/tmplib/*" to="*"/>
                 <mapper type="package" from="*.as" to="*"/>
             </chainedmapper>
         </pathconvert>
-        <echo message="classes is set to = ${classes2}" level="verbose" />
+        <echo message="classeslib is set to = ${classeslib}" level="verbose" />
         
         <!--  generate the SWC component -->
         <compc
             output="${release.dir}/lib/${gaffa.swc}"
-            include-classes="${classes2}"
+            include-classes="${classeslib}"
             target-player="9.0.45"
         >
             <namespace uri="${gaffa.namespace}" manifest="${gaffa.manifest}" />
@@ -229,7 +229,7 @@
             <warnings>true</warnings>
             <verbose-stacktraces>true</verbose-stacktraces>
             <compute-digest>false</compute-digest>
-            <source-path path-element="${release.tmp2}" />
+            <source-path path-element="${release.tmplib}" />
             <metadata date="${TODAY}" title="${project.name}">
                 <publisher name="Adobe Systems Inc." />
                 <publisher name="Google Inc." />
@@ -263,11 +263,11 @@
         </copy>
     </target>
     
-    <!-- add commen files to the release -->
+    <!-- add common files to the release -->
     <target name="commonfiles" depends="include-source" description="copy common files">
         <copy file="changelog.txt" todir="${release.dir}" />
         <copy file="license.txt" todir="${release.dir}" />
-        <copy file="fla/analytics_flash.swc" todir="${release.dir}/lib" />
+        <copy file="${gaffa.flashswc}" todir="${release.dir}/lib" />
     </target>
     
     <!-- package the release to a versioned zip file -->

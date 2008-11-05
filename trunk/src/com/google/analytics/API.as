@@ -36,6 +36,6 @@ package com.google.analytics
         public static var version:Version = new Version();
         include "version.properties"
         version.revision = "$Rev$ ".split( " " )[1];
-        
+         
     }
 }
