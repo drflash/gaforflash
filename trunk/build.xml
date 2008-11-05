@@ -118,6 +118,9 @@
         <echo message="generate documentation" level="verbose" />
         <mkdir dir="${asdoc.output}" />
         
+        <!-- fix permission for OSX -->
+        <chmod file="${asdoc.template}/asDocHelper" perm="+x"/>
+        
         <!-- run asdoc -->
         <exec executable="${asdoc.exe}">
             <arg line="-verbose-stacktraces" />
