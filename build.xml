@@ -80,6 +80,7 @@
     <target name="clean">
         <delete dir="${release.dir}" />
         <delete dir="${release.tmp}" />
+        <delete dir="${release.tmp2}" />
     </target>
     
     <target name="init">
@@ -93,6 +94,10 @@
             <export srcPath="${gaffa.src}" destPath="${release.tmp}" />
         </svn>
         
+        <svn>
+            <export srcPath="${gaffa.src}" destPath="${release.tmp2}" />
+        </svn>
+        
         <!-- delete some files we don't want to be included in the documentation or the component -->
         <delete>
             <fileset dir="${release.tmp}">
@@ -100,9 +105,17 @@
             </fileset>
         </delete>
         
+        <delete>
+            <fileset dir="${release.tmp2}">
+              <include name="*.as"/>
+            </fileset>
+        </delete>
+        
+        <delete file="${release.tmp2}/com/google/analytics/components/FlexTracker.as" />
+        
     </target>
     
-    <target name="main" depends="clean,init,documentation,component,templates,commonfiles,package">
+    <target name="main" depends="clean,init,documentation,flex_component,flash_component,templates,commonfiles,package">
     </target>
     
     <target name="clean-documentation">
@@ -138,8 +151,8 @@
 		</copy>        
     </target>
     
-    <target name="component" description="build the SWC component">
-        <echo message="building component" level="verbose" />
+    <target name="flex_component" description="build the Flex SWC component">
+        <echo message="building flex component" level="verbose" />
         <!--
             iterate trough the src and generate the list of classes to insert in the component
             this way we are assured that all classes without exception will be included
@@ -158,7 +171,7 @@
         
         <!--  generate the SWC component -->
         <compc
-            output="${release.dir}/lib/${gaffa.swc}"
+            output="${release.dir}/lib/${gaffa.flexswc}"
             include-classes="${classes}"
             target-player="9.0.45"
         >
@@ -180,6 +193,50 @@
         </compc>
         
     </target>
+    
+    <target name="flash_component" description="build the Flash CS3 SWC component">
+        <echo message="building flash component" level="verbose" />
+        <!--
+            iterate trough the src and generate the list of classes to insert in the component
+            this way we are assured that all classes without exception will be included
+            in thebytecode and no need to edit by hand a "library" class.
+        -->
+        <fileset id="sources" dir="${release.tmp2}">
+            <include name="**/*.as"/>
+        </fileset>
+        <pathconvert property="classes2" pathsep=" " refid="sources">
+            <chainedmapper>
+                <globmapper from="${basedir}/build/tmp2/*" to="*"/>
+                <mapper type="package" from="*.as" to="*"/>
+            </chainedmapper>
+        </pathconvert>
+        <echo message="classes is set to = ${classes2}" level="verbose" />
+        
+        <!--  generate the SWC component -->
+        <compc
+            output="${release.dir}/lib/${gaffa.swc}"
+            include-classes="${classes2}"
+            target-player="9.0.45"
+        >
+            <namespace uri="${gaffa.namespace}" manifest="${gaffa.manifest}" />
+            <include-namespaces uri="${gaffa.namespace}" />
+            <strict>true</strict>
+            <optimize>true</optimize>
+            <warnings>true</warnings>
+            <verbose-stacktraces>true</verbose-stacktraces>
+            <compute-digest>false</compute-digest>
+            <source-path path-element="${release.tmp}" />
+            <metadata date="${TODAY}" title="${project.name}">
+                <publisher name="Adobe Systems Inc." />
+                <publisher name="Google Inc." />
+                <creator name="Google Inc." />
+                <contributor name="Zwetan Kjukov" />
+                <contributor name="Marc Alcaraz" />
+            </metadata>
+        </compc>
+        
+    </target>
+    
     
     <!--
         parse the templates for the release
