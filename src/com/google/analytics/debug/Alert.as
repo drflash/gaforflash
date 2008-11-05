@@ -152,7 +152,6 @@ package com.google.analytics.debug
          */
         public override function onLink( event:TextEvent ):void
         {
-            trace( "onLink( " + event.text + " )" );
             if( isValidAction( event.text ) )
             {
                 var action:AlertAction = getAction( event.text );

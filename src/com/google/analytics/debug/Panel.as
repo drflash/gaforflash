@@ -192,7 +192,6 @@ package com.google.analytics.debug
         
         public function onToggle( event:MouseEvent = null ):void
         {
-            trace( "onToggle()" );
             if( _colapsed )
             {
                 _data.visible = true;
