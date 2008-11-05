@@ -247,7 +247,7 @@ package com.google.analytics
             }
         }
         
-        include "common.as"
+        include "common.txt"
         
     }
 }
