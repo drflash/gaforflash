@@ -28,7 +28,7 @@ package com.google.analytics.debug
     public class DebugConfiguration
     {
         private var _active:Boolean = false;
-        private var _verbose:Boolean = true;
+        private var _verbose:Boolean = false;
         private var _visualInitialized:Boolean = false;
         
         private function _initializeVisual():void
