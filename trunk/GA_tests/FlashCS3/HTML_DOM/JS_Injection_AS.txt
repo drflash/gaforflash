@@ -1,3 +1,0 @@
-Test AS3 Script injection 
-
-Launch the deploy/index.html to test the script in the navigator.
