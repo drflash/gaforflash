@@ -31,11 +31,12 @@
             public function onComplete():void
             {
                 tracker.trackEvent( "application", "complete" );
+                tracker.trackPageview( "/hello/world" );
             }
             
             public function onButtonClick():void
             {
-                tracker.trackPageview( "/hello/world" );
+                tracker.trackEvent( "Button", "click", "hello world" );
             }
         ]]>
     </mx:Script>
@@ -46,7 +47,7 @@
         account="UA-4241494-2"
         mode="AS3"
         visualDebug="true"
-        addedToStage="onComplete()"
+        creationComplete="onComplete()"
      />
     
     <mx:Button id="mybutton" label="hello world" click="onButtonClick()" />
