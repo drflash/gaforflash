@@ -38,17 +38,23 @@ package com.google.analytics.components
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
     
+    import mx.events.FlexEvent;
+    
     import flash.display.DisplayObject;
     import flash.events.Event;
+    import flash.events.EventDispatcher;
+    import flash.utils.getDefinitionByName;
     
-    import mx.core.UIComponent;
+    //dispatched when our factory has built
+    [Event(name="creationComplete", type="mx.events.FlexEvent")]
     
     /**
     * The Flex visual component.
     */
     [IconFile("analytics.png")]
-    public class FlexTracker extends UIComponent implements AnalyticsTracker
+    public class FlexTracker extends EventDispatcher implements AnalyticsTracker
     {
+        private var _app:Object;
         private var _display:DisplayObject;
         private var _tracker:GoogleAnalyticsAPI;
         
@@ -71,20 +77,15 @@ package com.google.analytics.components
         public function FlexTracker()
         {
             super();
-            this.enabled = false;
-            this.visible = false;
-            this.width  = 0;
-            this.height = 0;
-            this.maxWidth  = 0;
-            this.maxHeight = 0;
             
             /* note:
-               here at the contrary of Flash we can
-               use the ADDED_TO_STAGE event
-               because in a Flex application the
-               app render on the 2nd frame of a SWF.
+               to avoid to create a hard reference to Application.application
+               we get the class by reflection
             */
-            addEventListener( Event.ADDED_TO_STAGE, _factory );
+            var appclass:Object = getDefinitionByName( "mx.core::Application" );
+            _app = appclass.application;
+            
+            _app.addEventListener( Event.ADDED_TO_STAGE, _factory );
         }
         
         public static var version:Version = API.version;
@@ -95,9 +96,9 @@ package com.google.analytics.components
         */
         private function _factory( event:Event ):void
         {
-            removeEventListener( Event.ADDED_TO_STAGE, _factory );
+            _app.removeEventListener( Event.ADDED_TO_STAGE, _factory );
             
-            _display = this;
+            _display = _app.stage;
             
             if( !debug )
             {
@@ -128,6 +129,7 @@ package com.google.analytics.components
                 _tracker = _trackerFactory();
             }
             
+            dispatchEvent( new FlexEvent(FlexEvent.CREATION_COMPLETE) );
         }
         
         /**
