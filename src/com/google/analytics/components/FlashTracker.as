@@ -103,9 +103,9 @@ package com.google.analytics.components
             g.endFill();
             
             //decalred in the FLA
-            preview.icon_mc = new Icon();
-            preview.icon_mc.name = "icon_mc";
-            preview.addChild(preview.icon_mc);
+//            preview.icon_mc = new Icon();
+//            preview.icon_mc.name = "icon_mc";
+//            preview.addChild(preview.icon_mc);
             
             addChild( preview );
         }
@@ -126,6 +126,11 @@ package com.google.analytics.components
         */
         private function _factory( event:Event ):void
         {
+            if( isLivePreview )
+            {
+                return;
+            }
+            
             removeEventListener( Event.ENTER_FRAME, _factory );
             
             _display = this;
