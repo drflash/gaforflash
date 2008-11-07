@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,22 +25,24 @@ package com.google.analytics.components
     import flash.display.MovieClip;
     
     /**
-    * The basic GA Tracker Library
-    * to be included in the SWC.
-    * 
-    * note:
-    * this class is not a component, it just a shim
-    * that allow to declare the SWC manifest and
-    * associate an icon file.
-    */
+     * The basic GA Tracker Library to be included in the SWC.
+     * <p><b>Note :</b> This class is not a component, it just a shim that allow to declare the SWC manifest and associate an icon file.</p>
+     */
     [IconFile("analytics.png")]
     public class GATrackerLibrary extends MovieClip
     {
+    	
+    	/**
+    	 * Creates a new GATrackerLibrary instance.
+    	 */
         public function GATrackerLibrary()
         {
             super();
         }
         
+        /**
+         * The Version object of the API.
+         */
         public static var version:Version = API.version;
         
     }

@@ -20,14 +20,15 @@
 
 package com.google.analytics.debug
 {
-    import flash.events.TextEvent;
-    
-    
+
     /**
-    * An Alert dedicated to the Gif Request.
-    */
+     * An Alert dedicated to the Gif Request.
+     */
     public class GIFRequestAlert extends Alert
     {
+    	/**
+    	 * Creates a new GIFRequestAlert instance.
+    	 */
         public function GIFRequestAlert( text:String, actions:Array )
         {
             super( text, actions );

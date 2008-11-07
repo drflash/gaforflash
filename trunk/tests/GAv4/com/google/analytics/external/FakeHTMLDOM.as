@@ -1,4 +1,4 @@
-package com.google.analytics.external
+﻿package com.google.analytics.external
 {
     public class FakeHTMLDOM extends HTMLDOM
     {

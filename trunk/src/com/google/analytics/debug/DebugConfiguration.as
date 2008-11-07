@@ -25,6 +25,9 @@ package com.google.analytics.debug
     import flash.net.URLRequest;
     import flash.utils.getTimer;
     
+    /**
+     * The DebugConfiguration class.
+     */
     public class DebugConfiguration
     {
         private var _active:Boolean = false;
@@ -84,6 +87,9 @@ package com.google.analytics.debug
          */
         public var showInfos:Boolean = true;
         
+        /**
+         * Indicates the info timeout value.
+         */
         public var infoTimeout:Number = 500;
         
         /**
@@ -91,6 +97,9 @@ package com.google.analytics.debug
          */
         public var showWarnings:Boolean = true;
         
+        /**
+         * Indicates the warning timeout value.
+         */
         public var warningTimeout:Number = 300;
         
         /**
@@ -98,12 +107,13 @@ package com.google.analytics.debug
         */
         public var minimizedOnStart:Boolean = false;
         
+        /**
+         * Creates a new DebugConfiguration instance. 
+         */
         public function DebugConfiguration(  )
         {
         }
-        
-
-        
+                
         /**
          * The protected custom trace method.
          */
@@ -146,9 +156,7 @@ package com.google.analytics.debug
         }
         
         /**
-         * set or unset the activation of the debug session,
-         * and if the layout is present, the initialization
-         * and destruction of the visual displays.
+         * Set or unset the activation of the debug session, and if the layout is present, the initialization and destruction of the visual displays.
          */
         public function get active():Boolean
         {
@@ -186,8 +194,8 @@ package com.google.analytics.debug
         }
         
         /**
-        * @private
-        */
+         * @private
+         */
         public function set verbose( value:Boolean ):void
         {
             _verbose = value;

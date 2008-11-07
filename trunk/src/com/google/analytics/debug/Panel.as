@@ -26,6 +26,9 @@ package com.google.analytics.debug
     import flash.display.Sprite;
     import flash.events.MouseEvent;
     
+    /**
+     * The Panel class.
+     */
     public class Panel extends UISprite
     {
         private var _name:String;
@@ -47,6 +50,9 @@ package com.google.analytics.debug
         
         private var _stickToEdge:Boolean;
         
+        /**
+         * Creates a new Panel instance.
+         */
         public function Panel( name:String, width:uint, height:uint, backgroundColor:uint = 0, borderColor:uint = 0,
                                baseAlpha:Number = 0.3, alignement:Align = null, stickToEdge:Boolean = false )
         {

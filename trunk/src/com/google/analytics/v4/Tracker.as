@@ -415,14 +415,14 @@ package com.google.analytics.v4
             return (g0 || g1 || g2) || (_config.cookiePath != "/") || g4;
         }
         
-  /**
-   * Returns predicate indicating whether we should track this page.  Only track
-   * page if it's not residing on local machine (file protocol), and the page is
-   * not sitting on the google domain.
-   *
-   * @return {Boolean} True if and only if the page is not sitting no local
-   *     machine, and it's not sitting on a google domain.
-   */
+        /**
+         * Returns predicate indicating whether we should track this page.  Only track
+         * page if it's not residing on local machine (file protocol), and the page is
+         * not sitting on the google domain.
+         *
+         * @return {Boolean} True if and only if the page is not sitting no local
+         *     machine, and it's not sitting on a google domain.
+         */
         private function _doTracking():Boolean
         {
             if( (_info.protocol != Protocols.file) &&
@@ -468,8 +468,8 @@ package com.google.analytics.v4
         }
         
         /**
-        * Formats document referrer.
-        */
+         * Formats document referrer.
+         */
         private function _formatReferrer():String
         {
             var referrer:String = _info.referrer;
@@ -809,7 +809,7 @@ package com.google.analytics.v4
                 campvars = _campaignInfo.toVariables();
             }
             
-            var browservars:Variables = _browserInfo.toVariables()
+            var browservars:Variables = _browserInfo.toVariables();
             
             variables.join( docInfo.toVariables(),
                             browservars,

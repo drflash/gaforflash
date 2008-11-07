@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,7 @@ package com.google.analytics.core
     
     public class EventInfo
     {
-        private var _isEventHit:Boolean
+        private var _isEventHit:Boolean;
         private var _x10:X10;
         private var _ext10:X10;
         
