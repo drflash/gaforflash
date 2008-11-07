@@ -38,7 +38,7 @@ package com.google.analytics.components
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
     
-    import mx.events.FlexEvent;
+    //import mx.events.FlexEvent;
     
     import flash.display.DisplayObject;
     import flash.events.Event;
@@ -46,7 +46,7 @@ package com.google.analytics.components
     import flash.utils.getDefinitionByName;
     
     //dispatched when our factory has built
-    [Event(name="creationComplete", type="mx.events.FlexEvent")]
+    [Event(name="addedToStage", type="flash.events.Event")]
     
     /**
     * The Flex visual component.
@@ -129,7 +129,7 @@ package com.google.analytics.components
                 _tracker = _trackerFactory();
             }
             
-            dispatchEvent( new FlexEvent(FlexEvent.CREATION_COMPLETE) );
+            dispatchEvent( new Event(Event.ADDED_TO_STAGE) );
         }
         
         /**
