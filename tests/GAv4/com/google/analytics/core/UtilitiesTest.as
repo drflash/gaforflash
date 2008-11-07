@@ -13,10 +13,8 @@ package com.google.analytics.core
 {
     import buRRRn.ASTUce.framework.*;
     
-    import com.google.analytics.core.Utils;
-    
-    import flash.net.URLVariables;
-    
+    import com.google.analytics.core.Utils;    
+
     public class UtilitiesTest extends TestCase
     {
         

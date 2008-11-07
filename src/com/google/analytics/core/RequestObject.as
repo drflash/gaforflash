@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,9 @@ package com.google.analytics.core
     import flash.net.URLRequest;
     import flash.utils.getTimer;
     
+    /**
+     * The RequestObject class.
+     */
     public class RequestObject
     {
         public var start:int;
@@ -30,6 +33,9 @@ package com.google.analytics.core
         
         public var request:URLRequest;
         
+        /**
+         * Creates a new RequestObject instance.
+         */   
         public function RequestObject( request:URLRequest )
         {
             start = getTimer();
@@ -37,6 +43,9 @@ package com.google.analytics.core
             this.request = request;
         }
         
+        /**
+         * Indicates the duration of the request.
+         */
         public function get duration():int
         {
             if( !hasCompleted() )
@@ -47,16 +56,26 @@ package com.google.analytics.core
             return end - start;
         }
         
+        /**
+         * Complete the request.
+         */
         public function complete():void
         {
             end = getTimer();
         }
         
+        /**
+         * Indicates if the request is complete.
+         */
         public function hasCompleted():Boolean
         {
             return end > 0;
         }
         
+        /**
+         * Returns the String representation of the object.
+         * @return the String representation of the object.
+         */
         public function toString():String
         {
             var data:Array = [];

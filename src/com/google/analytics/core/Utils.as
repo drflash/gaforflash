@@ -1,14 +1,11 @@
-package com.google.analytics.core
+﻿package com.google.analytics.core
 {
     /**
-    * Core utilities.
-    */
+     * Core utilities.
+     */
     public class Utils
     {
-        public function Utils()
-        {
-        }
-        
+  
         /**
          * Generates a 32bit random number.
          * @return 32bit random number.
@@ -95,8 +92,8 @@ package com.google.analytics.core
         }
         
         /**
-        * Checks if the paramater is a GA account ID.
-        */
+         * Checks if the paramater is a GA account ID.
+         */
         public static function validateAccount( account:String ):Boolean
         {
             var rel:RegExp = /^UA-[0-9]*-[0-9]*$/;

@@ -40,30 +40,18 @@ package com.google.analytics.core
             _sourcesCache  = [];
             _sourcesEngine = [];
         }
-        
-        public static function getKeywordValueFromPath( keyword:String, path:String ):String
-        {
-            var value:String;
-            
-            if( path.indexOf( keyword+"=" ) > -1 )
-            {
-                if( path.charAt(0) == "?" )
-                {
-                    path = path.substr(1);
-                }
                 
-                var vars:URLVariables = new URLVariables( path );
-                value = vars[keyword];
-            }
-            
-            return value;
-        }
-        
+        /**
+         * Indicates the count value. 
+         */
         public function get count():int
         {
             return _sources.length;
         }
         
+        /**
+         * Indicates the Array collection of all sources.
+         */
         public function get sources():Array
         {
             return _sources;
@@ -103,6 +91,54 @@ package com.google.analytics.core
             _sources      = [];
             _sourcesCache = [];
         }
+                
+        /**
+         * Returns the keyword value of the organic referrer.
+         * @return the keyword value of the organic referrer.
+         */
+        public function getKeywordValue( or:OrganicReferrer, path:String ):String
+        {
+            var keyword:String = or.keyword;
+            return getKeywordValueFromPath( keyword, path );
+        }
+        
+        /**
+         * Returns a keyword value from the specified path.
+         * @return  a keyword value from the specified path.
+         */
+        public static function getKeywordValueFromPath( keyword:String, path:String ):String
+        {
+            var value:String;
+            
+            if( path.indexOf( keyword+"=" ) > -1 )
+            {
+                if( path.charAt(0) == "?" )
+                {
+                    path = path.substr(1);
+                }
+                
+                var vars:URLVariables = new URLVariables( path );
+                value = vars[keyword];
+            }
+            
+            return value;
+        }        
+        
+        /**
+         * Returns the OrganicReferrer by name.
+         * @return the OrganicReferrer by name.
+         */
+        public function getReferrerByName( name:String ):OrganicReferrer
+        {
+            if( match( name ) )
+            {
+                //by default return the first referrer found
+                var index:int = _sourcesEngine[ name ][0];
+                return _sources[ index ];
+            }
+            
+            return null;
+        }
         
         /**
          * Match the specified value.
@@ -122,32 +158,6 @@ package com.google.analytics.core
             }
             
             return false;
-        }
-        
-        /**
-         * Returns the OrganicReferrer by name.
-         * @return the OrganicReferrer by name.
-         */
-        public function getReferrerByName( name:String ):OrganicReferrer
-        {
-            if( match( name ) )
-            {
-                //by default return the first referrer found
-                var index:int = _sourcesEngine[ name ][0];
-                return _sources[ index ];
-            }
-            
-            return null;
-        }
-        
-        /**
-         * Returns the keyword value of the organic referrer.
-         * @return the keyword value of the organic referrer.
-         */
-        public function getKeywordValue( or:OrganicReferrer, path:String ):String
-        {
-            var keyword:String = or.keyword;
-            return getKeywordValueFromPath( keyword, path );
         }
         
     }

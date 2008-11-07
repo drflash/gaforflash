@@ -1,4 +1,4 @@
-package
+﻿package
 {
     import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.components.FlashTracker;

@@ -76,73 +76,65 @@ package com.google.analytics.core
         }
         
         /**
-        * Account String. Appears on all requests.
-        * 
-        * ex:
-        * utmac=UA-2202604-2
-        */
+         * Account String. Appears on all requests.
+         * <p><b>Example :</b> utmac=UA-2202604-2</p>
+         */
         public function get utmac():String
         {
             return _utmac;
         }
         
         /**
-        * Tracking code version
-        * 
-        * ex:
-        * utmwv=1
-        */
+         * Tracking code version
+         * <p><b>Example :</b> utmwv=1</p>
+         */
         public function get utmwv():String
         {
             return _config.version;
         }
         
         /**
-        * Unique ID generated for each GIF request to prevent caching of the GIF image.
-        * 
-        * ex:
-        * utmn=1142651215
-        */
+         * Unique ID generated for each GIF request to prevent caching of the GIF image.
+         * <p><b>Example :</b> utmn=1142651215</p>
+         */
         public function get utmn():String
         {
             return Utils.generate32bitRandom() as String;
         }
         
         /**
-        * Host Name, which is a URL-encoded string.
-        * 
-        * ex:
-        * utmhn=x343.gmodules.com
-        */
+         * Host Name, which is a URL-encoded string.
+         * <p><b>Example :</b> utmhn=x343.gmodules.com</p>
+         */
         public function get utmhn():String
         {
             return _info.domainName;
         }
         
         /**
-        * Sample rate
-        */
+         * Sample rate
+         */
         public function get utmsp():String
         {
             return (_config.sampleRate * 100) as String;
         }
         
         /**
-        * Cookie values. This request parameter sends all the cookies requested from the page.
-        * 
-        * ex:
-        * utmcc=__utma%3D117243.1695285.22%3B%2B__utmz%3D117945243.1202416366.21.10.utmcsr%3Db%7Cutmccn%3D(referral)%7Cutmcmd%3Dreferral%7Cutmcct%3D%252Fissue%3B%2B
-        * 
-        * note:
-        * you first get each cookie
-        * __utma=117243.1695285.22;
-        * __utmz=117945243.1202416366.21.10.utmcsr=b|utmccn=(referral)|utmcmd=referral|utmcct=%2Fissue;
-        * the rhs can already be URLencoded , see for ex %2Fissue is for /issue
-        * you join all the cookie and separate them with +
-        * __utma=117243.1695285.22;+__utmz=117945243.1202416366.21.10.utmcsr=b|etc
-        * the you URLencode all
-        * __utma%3D117243.1695285.22%3B%2B__utmz%3D117945243.1202416366.21.10.utmcsr%3Db%7Cetc
-        */
+         * Cookie values. This request parameter sends all the cookies requested from the page.
+         * 
+         * ex:
+         * utmcc=__utma%3D117243.1695285.22%3B%2B__utmz%3D117945243.1202416366.21.10.utmcsr%3Db%7Cutmccn%3D(referral)%7Cutmcmd%3Dreferral%7Cutmcct%3D%252Fissue%3B%2B
+         * 
+         * note:
+         * you first get each cookie
+         * __utma=117243.1695285.22;
+         * __utmz=117945243.1202416366.21.10.utmcsr=b|utmccn=(referral)|utmcmd=referral|utmcct=%2Fissue;
+         * the rhs can already be URLencoded , see for ex %2Fissue is for /issue
+         * you join all the cookie and separate them with +
+         * __utma=117243.1695285.22;+__utmz=117945243.1202416366.21.10.utmcsr=b|etc
+         * the you URLencode all
+         * __utma%3D117243.1695285.22%3B%2B__utmz%3D117945243.1202416366.21.10.utmcsr%3Db%7Cetc
+         */
         public function get utmcc():String
         {
             var cookies:Array = [];
@@ -167,20 +159,20 @@ package com.google.analytics.core
         }
         
         /**
-        * Updates the token in the bucket.
-        * This method first calculates the token delta since
-        * the last time the bucket count is updated.
-        * 
-        * If there are no change (zero delta), then it does nothing.
-        * However, if there is a delta, then the delta is added to the bucket,
-        * and a new timestamp is updated for the bucket as well.
-        * 
-        * To prevent spiking in traffic after a large number of token
-        * has accumulated in the bucket (after a long period of time),
-        * we have added a maximum capacity to the bucket.
-        * In other words, we will not allow the bucket to accumulate
-        * token passed a certain threshold.
-        */
+         * Updates the token in the bucket.
+         * This method first calculates the token delta since
+         * the last time the bucket count is updated.
+         * 
+         * If there are no change (zero delta), then it does nothing.
+         * However, if there is a delta, then the delta is added to the bucket,
+         * and a new timestamp is updated for the bucket as well.
+         * 
+         * To prevent spiking in traffic after a large number of token
+         * has accumulated in the bucket (after a long period of time),
+         * we have added a maximum capacity to the bucket.
+         * In other words, we will not allow the bucket to accumulate
+         * token passed a certain threshold.
+         */
         public function updateToken():void
         {
             var timestamp:Number = new Date().getTime();

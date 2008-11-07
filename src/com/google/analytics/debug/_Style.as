@@ -64,6 +64,9 @@ package com.google.analytics.debug
             _parseSheet( _defaultSheet );
         }        
         
+        /**
+         * @private
+         */
         private function _parseSheet( data:String ):void
         {
             _sheet.parseCSS( data );
