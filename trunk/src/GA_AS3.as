@@ -34,6 +34,9 @@ package
     {
         private var tracker:AnalyticsTracker;
         
+        /**
+         * Creates a new GA_AS3 instance.
+         */
         public function GA_AS3()
         {
             this.stage.align = StageAlign.TOP_LEFT;

@@ -28,13 +28,16 @@
     
     <mx:Script>
         <![CDATA[
-            public function onComplete():void
+			
+			import flash.events.Event ;
+			
+            public function onComplete( e:Event ):void
             {
                 tracker.trackEvent( "application", "complete" );
                 tracker.trackPageview( "/hello/world" );
             }
             
-            public function onButtonClick():void
+            public function onButtonClick( e:Event ):void
             {
                 tracker.trackEvent( "Button", "click", "hello world" );
             }
@@ -47,9 +50,9 @@
         account="UA-4241494-2"
         mode="AS3"
         visualDebug="true"
-        creationComplete="onComplete()"
+        addedToStage="onComplete(event)"
      />
     
-    <mx:Button id="mybutton" label="hello world" click="onButtonClick()" />
+    <mx:Button id="mybutton" label="hello world" click="onButtonClick(event)" />
     
 </mx:Application>

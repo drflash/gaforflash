@@ -159,11 +159,10 @@ package com.google.analytics.components
         }
         
         /**
-        * @private
-        * Factory method for returning a Bridge object.
-        * 
-        * @return {GoogleAnalyticsAPI}
-        */
+         * Factory method for returning a Bridge object.
+         * @private
+         * @return {GoogleAnalyticsAPI}
+         */
         private function _bridgeFactory():GoogleAnalyticsAPI
         {
             debug.info( "GATracker (Bridge) v" + version +"\naccount: " + account );

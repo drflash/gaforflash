@@ -24,9 +24,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.Utils;
     import com.google.analytics.debug.DebugConfiguration;
-    import com.google.analytics.external.JavascriptProxy;
-    
-    // TODO include all js
+    import com.google.analytics.external.JavascriptProxy;    
     
     /**
      * This api use a Javascript bridge to fill the GATracker properties.
@@ -37,8 +35,98 @@ package com.google.analytics.v4
         private var _debug:DebugConfiguration;
         private var _proxy:JavascriptProxy;
         
-        private var _hasGATracker:Boolean = false;
-        private var _jsContainer:String = "_GATracker";
+        private var _hasGATracker:Boolean = false ;
+        private var _jsContainer:String   = "_GATracker" ;
+        
+        ///// javascript injection with E4X        
+        
+        private static var _checkGAJS_js:XML = 
+        <script>
+            <![CDATA[
+                function()
+                {
+                    if( _gat && _gat._getTracker )
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            ]]>
+        </script>; 
+        
+        private static var _checkValidTrackingObject_js:XML =
+        <script>
+            <![CDATA[
+                function(acct)
+                {
+                    if( _GATracker[acct] && (_GATracker[acct]._getAccount) )
+                    {
+                        return true ;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            ]]>
+        </script>;
+        
+        private static var _createTrackingObject_js:XML =
+        <script>
+            <![CDATA[
+                function( acct )
+                {
+                    _GATracker[acct] = _gat._getTracker(acct);
+                }
+            ]]>
+        </script>;
+                  
+        private static var _injectTrackingObject_js:XML =
+        <script>
+            <![CDATA[
+                function()
+                {
+                    try 
+                    {
+                        _GATracker
+                    }
+                    catch(e) 
+                    {
+                        _GATracker = {};
+                    }
+                }
+            ]]>
+        </script>;
+        
+        private static var _linkTrackingObject_js:XML =
+        <script>
+            <![CDATA[
+                function( container , target )
+                {
+                    var targets ;
+                    var name ;
+                    if( target.indexOf(".") > 0 )
+                    {
+                        targets = target.split(".");
+                        name    = targets.pop();
+                    }
+                    else
+                    {
+                        targets = [];
+                        name    = target;
+                    }
+                    var ref   = window;
+                    var depth = targets.length;
+                    for( var j = 0 ; j < depth ; j++ )
+                    {
+                        ref = ref[ targets[j] ] ;
+                    }
+                    window[container][target] = ref[name] ;
+                }
+            ]]>
+        </script>;
+                
+        /////        
         
         /**
          * Creates a new Bridge instance.
@@ -108,148 +196,42 @@ package com.google.analytics.v4
             args.unshift( "window."+ _jsContainer +"[\""+ _account +"\"]."+functionName );
             return _proxy.call.apply( _proxy, args );
         }
-        
+                
         /**
          * @private
          */
         private function _checkGAJS():Boolean
         {
-            var data:XML =
-                <script>
-                    <![CDATA[
-                        function()
-                        {
-                            if( _gat && _gat._getTracker )
-                            {
-                               return true;
-                            }
-                            return false;
-                        }
-                    ]]>
-                </script>;
-            
-            return _proxy.call( data );
+            return _proxy.call( _checkGAJS_js );
         }
-        
-        private function _injectTrackingObject():void
-        {
-            var data:XML =
-                <script>
-                    <![CDATA[
-                        function()
-                        {
-                            try 
-                            {
-                               _GATracker
-                            }
-                            catch(e) 
-                            {
-                                _GATracker = {};
-                            }
-                        }
-                    ]]>
-                </script>;
-            
-            _proxy.executeBlock( data );
-            _hasGATracker = true;
-        }
-        
-        /**
-         * @private
-         */
-        private function _linkTrackingObject( path:String ):void
-        {
-            var data:XML = 
-                <script>
-                    <![CDATA[
-                        function( container , target )
-                        {
-                            var targets;
-                            var name;
-                            if( target.indexOf(".") > 0 )
-                            {
-                                targets = target.split(".");
-                                name    = targets.pop();
-                            }
-                            else
-                            {
-                                targets = [];
-                                name    = target;
-                            }
-                            
-                            var ref   = window;
-                            var depth = targets.length;
-                            for( var j = 0 ; j < depth ; j++ )
-                            {
-                                ref = ref[ targets[j] ] ;
-                            }
-                            
-                            window[container][target] = ref[name] ;
-                        }
-                    ]]>
-                </script>;
-            
-            _proxy.call( data, _jsContainer, path );
-        }
-        
-        /**
-         * @private
-         */
-        private function _createTrackingObject( account:String ):void
-        {
-            var data:XML =
-                <script>
-                    <![CDATA[
-                        function(acct)
-                        {
-                            _GATracker[acct] = _gat._getTracker(acct);
-                        }
-                    ]]>
-                </script>;
-            
-            _proxy.call( data, account );
-        }
-        
-        /**
-         * @private
-         */
-        private function _checkValidTrackingObject( account:String ):Boolean
-        {
-            var data:XML =
-                <script>
-                    <![CDATA[
-                        function(acct)
-                        {
-                            if( _GATracker[acct] && (_GATracker[acct]._getAccount) )
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
-                    ]]>
-                </script>;
-            
-            return _proxy.call( data, account );
-        }
-        
+                                
         /**
          * @private
          */
         private function _checkTrackingObject( account:String ):Boolean
         {
-            var hasObj:Boolean = _proxy.hasProperty( account );
-            var isTracker:Boolean = _proxy.hasProperty( account + "._getAccount" );
-            
-            if( hasObj && isTracker )
-            {
-                return true;
-            }
-            
-            return false;
+            var hasObj:Boolean    = _proxy.hasProperty( account ) ;
+            var isTracker:Boolean = _proxy.hasProperty( account + "._getAccount" ) ;
+            return hasObj && isTracker ;
         }
+        
+        /**
+         * Checks to ses if the tracking object Name passed into the functions exists in the DOM and is a real Google Analytics tracking object
+         * @private
+         */
+        private function _checkValidTrackingObject( account:String ):Boolean
+        {
+            return _proxy.call( _checkValidTrackingObject_js , account ) ;
+        }        
+        
+        /**
+         * This function creates a JS tracking object in the DOM.
+         * @private
+         */
+        private function _createTrackingObject( account:String ):void
+        {
+            _proxy.call( _createTrackingObject_js, account );
+        }        
         
         /**
          * Indicates if the bridge has a reference whith the JS GA tracker.
@@ -275,22 +257,21 @@ package com.google.analytics.v4
         }
         
         /**
-         * This function creates a JS tracking object in the DOM. The main use case is if you want to 
-         * add ga.js tracking to the site and don't even want to touch JS/HTML
-         * This function will load ga.js if it doesn't exist. It also create a glocal variable to hold 
-         * any new tracking objects in this variable: window._GAtrack[id] : 
-         * Finally it create a new JS GA tracking object with the id supplied 
-         * note creating a 2nd object with the same ID will override the first
-         * 
-         * @return name of created JS object as a String
-         */
-
-        
+         * @private
+         */        
+        private function _injectTrackingObject():void
+        {
+            _proxy.executeBlock( _injectTrackingObject_js );
+            _hasGATracker = true;
+        }
+                
         /**
-         * Checks to ses if the tracking object Name passed into the functions exists in the DOM
-         * and is a real Google Analytics tracking object
+         * @private
          */
-        
+        private function _linkTrackingObject( path:String ):void
+        {
+            _proxy.call( _linkTrackingObject_js , _jsContainer, path );
+        }        
         
         // -----------------------------------------------------------------------------
         // START CONFIGURATION
@@ -306,7 +287,6 @@ package com.google.analytics.v4
         {
             return _call( "_getAccount" );
         }
-        
         
         /**
          * Returns the GATC version number.
@@ -465,7 +445,7 @@ package com.google.analytics.v4
          * 
          * @param newCampNOKey Campaign no-override key to set.
          */
-        public function setCampNOKey(newCampNOKey:String):void
+        public function setCampNOKey( newCampNOKey:String ):void
         {
             _call( "_setCampNOKey", newCampNOKey );
         }
@@ -589,21 +569,20 @@ package com.google.analytics.v4
          * 
          * @param enable If this parameter is set to true, then domain hashing is enabled. Else, domain hashing is disabled. True by default.
          */
-        public function setAllowHash(enable:Boolean):void
+        public function setAllowHash( enable:Boolean ):void
         {
-            _call( "_setAllowHash", enable );
+            _call( "_setAllowHash" , enable ) ;
         }
         
         /**
          * Sets the linker functionality flag as part of enabling cross-domain user tracking.
-         * By default, this method is set to false and linking is disabled.
-         * See also link(), linkByPost(), and setDomainName() methods to enable cross-domain tracking.
-         * 
-         * @param enable If this parameter is set to true, then linker is enabled. Else, linker is disabled.
+         * <p>By default, this method is set to false and linking is disabled.</p>
+         * <p>See also link(), linkByPost(), and setDomainName() methods to enable cross-domain tracking.</p>
+         * @param enable If this parameter is set to <code class="prettyprint">true</code>, then linker is enabled. Else, linker is disabled.
          */
-        public function setAllowLinker(enable:Boolean):void
+        public function setAllowLinker( enable:Boolean ):void
         {
-            _call( "_setAllowLinker", enable );
+            _call( "_setAllowLinker", enable ) ;
         }
         
         /**
@@ -997,6 +976,7 @@ package com.google.analytics.v4
         
         // END URCHIN SERVER
         // -----------------------------------------------------------------------------
+        
         
     }
 }

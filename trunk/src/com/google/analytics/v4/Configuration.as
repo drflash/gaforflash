@@ -33,6 +33,7 @@ package com.google.analytics.v4
      */
     public class Configuration
     {
+    	
         private var _debug:DebugConfiguration;
         
         private var _version:String = "4.3as";
@@ -392,7 +393,6 @@ package com.google.analytics.v4
                     _debug.warning( e.message );
                 }
             }
-            
         }
         
         /**

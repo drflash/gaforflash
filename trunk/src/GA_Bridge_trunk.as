@@ -19,17 +19,15 @@
  
 package
 {
+    import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.GATracker;
-    import com.google.analytics.core.as3_api;
-    import com.google.analytics.v4.GoogleAnalyticsAPI;
+    import com.google.analytics.core.TrackerMode;
     
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
     import flash.events.Event;    
 
-    // import com.google.analytics.core.js_bridge;
-    
     /* note:
        for testing code we use GATracker
        but ultimately users will use a component (SWC)
@@ -39,9 +37,9 @@ package
     [ExcludeClass]
     public class GA_Bridge_trunk extends Sprite
     {
-        private var _gat:GATracker;
-        public var pageTracker:GoogleAnalyticsAPI;
-        public var newTracker:GoogleAnalyticsAPI;
+
+        public var pageTracker:AnalyticsTracker;
+        public var newTracker:AnalyticsTracker;
         
         public function GA_Bridge_trunk()
         {
@@ -53,15 +51,8 @@ package
         
         public function onComplete( evt:Event ):void
         {
-            use namespace as3_api;
-            // use namespace js_bridge;
-            
-            _gat = new GATracker( this );
-          	
-          	pageTracker = _gat.getTracker("UA-1010-1");
-          	
+          	pageTracker = new GATracker( this , "UA-1010-1" , TrackerMode.BRIDGE ) as AnalyticsTracker;
           
-        //    pageTracker = _gat.getTracker( "pT" );
             pageTracker.trackPageview( "/test/hello/world" );
             pageTracker.trackEvent("video","play");
             pageTracker.trackEvent("video","play","zombies");

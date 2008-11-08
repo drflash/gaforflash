@@ -104,28 +104,34 @@ package com.google.analytics.utils
                 switch( parts.length )
                 {
                     //domain.com
-                    case 2:
-                    return hostName;
+                    case 2 :
+                    {
+                        return hostName ;
+                    }
                     
                     //domain.co.uk
                     //www.domain.com
-                    case 3:
-                    if( parts[1] == "co" )
+                    case 3 :
                     {
-                        return hostName;
+                        if( parts[1] == "co" )
+                        {
+                            return hostName ;
+                        }
+                        parts.shift();
+                        return parts.join( "." ) ;
                     }
-                    parts.shift();
-                    return parts.join( "." );
                     
                     //www.domain.co.uk
                     case 4:
-                    parts.shift();
-                    return parts.join( "." );
+                    {
+                        parts.shift();
+                        return parts.join( "." ) ;
+                    }
                 }
                 
             }
             
-            return "";
+            return "" ;
         }
         
         /**
