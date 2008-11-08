@@ -226,7 +226,7 @@
         [Inspectable]
         public function get account():String
         {
-            return _account
+            return _account ;
         }
         
         /**
@@ -263,17 +263,26 @@
             return _mode;
         }
         
+        /**
+         * @private
+         */
         public function set mode( value:String ):void
         {
             _mode = value;
         }
         
+        /**
+         * Indicates if the tracker use a visual debug.
+         */        
         [Inspectable(defaultValue="false", type="Boolean")]
         public function get visualDebug():Boolean
         {
             return _visualDebug;
         }
         
+        /**
+         * @private
+         */
         public function set visualDebug( value:Boolean ):void
         {
             _visualDebug = value;

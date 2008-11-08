@@ -29,12 +29,23 @@ package com.google.analytics.external
     public class HTMLDOM extends JavascriptProxy
     {
         
+        private var _host:String;
+        private var _language:String;
+        private var _characterSet:String;
+        private var _colorDepth:String;
+        private var _location:String;
+        private var _pathname:String;
+        private var _protocol:String;
+        private var _search:String;
+        private var _referrer:String;
+        private var _title:String;
+        
         /**
          * The cache properties Javascript injection.
          */
-        public static var cache_properties_js:XML = 
-            <script>
-                <![CDATA[
+        public static var cache_properties_js:XML =
+        <script>
+            <![CDATA[
                     function()
                     {
                         var obj = {};
@@ -52,19 +63,8 @@ package com.google.analytics.external
                         return obj;
                     }
                 ]]>
-            </script>;
-        
-        private var _host:String;
-        private var _language:String;
-        private var _characterSet:String;
-        private var _colorDepth:String;
-        private var _location:String;
-        private var _pathname:String;
-        private var _protocol:String;
-        private var _search:String;
-        private var _referrer:String;
-        private var _title:String;
-        
+         </script>;
+                
         /**
          * Creates a new HTMLDOM instance.
          */
@@ -332,6 +332,7 @@ package com.google.analytics.external
             
             return _title;
         }
-        
+             
+
     }
 }

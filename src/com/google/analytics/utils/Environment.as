@@ -29,7 +29,7 @@ package com.google.analytics.utils
     import flash.system.System;
     
     /**
-     * Environnement provide informations for the local environment.
+     * Environment provides informations for the local environment.
      */
     public class Environment
     {
@@ -514,6 +514,14 @@ package com.google.analytics.utils
         }
         
         /**
+         * Indicates if the application is running in AIR.
+         */
+        public function isAIR():Boolean
+        {
+            return (playerType == "Desktop") && (Security.sandboxType.toString() == "application");
+        }        
+        
+        /**
          * Indicates if the SWF is embeded in an HTML page.
          * @return <code class="prettyprint">true</code> if the SWF is embeded in an HTML page.
          */
@@ -521,14 +529,6 @@ package com.google.analytics.utils
         {
             return Capabilities.playerType == "PlugIn" ;
         }
-        
-        /**
-         * Indicates if the application is running in AIR.
-         */
-        public function isAIR():Boolean
-        {
-            return (playerType == "Desktop") && (Security.sandboxType.toString() == "application");
-        }
-        
+                
     }
 }

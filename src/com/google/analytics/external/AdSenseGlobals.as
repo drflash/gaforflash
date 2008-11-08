@@ -19,16 +19,25 @@
 
 package com.google.analytics.external
 {
-    import com.google.analytics.debug.DebugConfiguration;
-    
+    import com.google.analytics.debug.DebugConfiguration;    
+
     /**
     * Globals used by AdSense for revenue per page tracking.
     */
     public class AdSenseGlobals extends JavascriptProxy
     {
-        public static var gaGlobal_js:XML = 
-            <script>
-                <![CDATA[
+        
+        /**
+         * @private
+         */
+        private var _gaGlobalVerified:Boolean = false;
+        
+        /**
+         * The gaGlobal_js Javascript injection.
+         */
+        public static var gaGlobal_js:XML =
+        <script>
+            <![CDATA[
                 function()
                 {
                     try
@@ -37,13 +46,11 @@ package com.google.analytics.external
                     }
                     catch(e)
                     {
-                        gaGlobal = {};
+                        gaGlobal = {} ;
                     }
                 }
-                ]]>
-            </script>;
-        
-        private var _gaGlobalVerified:Boolean = false;
+            ]]>
+        </script>;
         
         /**
          * Creates a new AdSenseGlobals instance.
@@ -62,25 +69,27 @@ package com.google.analytics.external
             if( !_gaGlobalVerified )
             {
                 executeBlock( gaGlobal_js );
-                //jsExternal( gaGlobal_js );
-                _gaGlobalVerified = true;
+                _gaGlobalVerified = true ;
             }
         }
         
+        /**
+         * Returns the "gaGlobal" object.
+         * @return the "gaGlobal" object.
+         */
         public function get gaGlobal():Object
         {
             if( !isAvailable() )
             {
                 return null;
             }
-            
             _verify();
             return getProperty( "gaGlobal" );
         }
         
         /**
-        * Domain hash.
-        */
+         * Domain hash.
+         */
         public function get dh():String
         {
             if( !isAvailable() )
@@ -93,8 +102,8 @@ package com.google.analytics.external
         }
         
         /**
-        * Hit id.
-        */
+         * Determinates the Hit id.
+         */
         public function get hid():String
         {
             if( !isAvailable() )
@@ -106,6 +115,9 @@ package com.google.analytics.external
             return getProperty( "gaGlobal.hid" );
         }
         
+        /**
+         * @private
+         */
         public function set hid( value:String ):void
         {
             if( !isAvailable() )
@@ -118,8 +130,8 @@ package com.google.analytics.external
         }
         
         /**
-        * Session id.
-        */
+         * Determinates the session id.
+         */
         public function get sid():String
         {
             if( !isAvailable() )
@@ -131,6 +143,9 @@ package com.google.analytics.external
             return getProperty( "gaGlobal.sid" );
         }
         
+        /**
+         * @private
+         */
         public function set sid( value:String ):void
         {
             if( !isAvailable() )
@@ -143,11 +158,9 @@ package com.google.analytics.external
         }
         
         /**
-        * Visitor id.
-        * 
-        * note:
-        * vid format is <sessionid>.<firsttime>
-        */
+         * Determinates the visitor id.
+         * <p><b>Note:</b> vid format is <b>&lt;sessionid&gt;.&lt;firsttime&gt;</b></p>
+         */
         public function get vid():String
         {
             if( !isAvailable() )
@@ -159,6 +172,9 @@ package com.google.analytics.external
             return getProperty( "gaGlobal.vid" );
         }
         
+        /**
+         * @private
+         */
         public function set vid( value:String ):void
         {
             if( !isAvailable() )
