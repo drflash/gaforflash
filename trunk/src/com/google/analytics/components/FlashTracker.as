@@ -25,18 +25,21 @@
     import flash.display.MovieClip;
     import flash.display.Sprite;
     import flash.events.Event;
-    import flash.utils.getQualifiedClassName;    
+    import flash.utils.getQualifiedClassName;
+    import flash.utils.getDefinitionByName;
+    
+    /* force import for type in the includes */
     EventTracker;
     ServerOperationMode;
-
+    
     /**
     * The Flash visual component.
     */
     [IconFile("analytics.png")]
     public class FlashTracker extends Sprite implements AnalyticsTracker
     {
-    	
-    	private var _display:DisplayObject;
+        
+        private var _display:DisplayObject;
         private var _tracker:GoogleAnalyticsAPI;
         
         //factory
@@ -55,29 +58,25 @@
         private var _visualDebug:Boolean = false;
         
         //component
+        protected var preview:MovieClip;
+        protected var isLivePreview:Boolean;
+        protected var livePreviewWidth:Number;
+        protected var livePreviewHeight:Number;
         
-        private var _componentInspectorSetting:Boolean;
-        
-        private var isLivePreview:Boolean;
-        private var livePreviewWidth:Number;
-        private var livePreviewHeight:Number;
-        
-        private var preview:MovieClip;
-        
-        private var _width:Number = 0;
-        private var _height:Number = 0; 
+        protected var _width:Number = 100;
+        protected var _height:Number = 122; 
+        protected var _componentInspectorSetting:Boolean;
         
         public var boundingBox_mc:DisplayObject;
         
-        
-        public static var version:Version = API.version;        
+        public static var version:Version = API.version;
         
         [IconFile("analytics.png")]
         public function FlashTracker()
         {
             super();
             
-            isLivePreview = (parent != null && getQualifiedClassName(parent) == "fl.livepreview::LivePreviewParent");
+            isLivePreview = _checkLivePreview();
             _componentInspectorSetting = false;
             
             boundingBox_mc.visible = false;
@@ -97,25 +96,40 @@
             addEventListener( Event.ENTER_FRAME, _factory );
         }
         
-
+        
+        private function _checkLivePreview():Boolean
+        {
+            if( parent != null && (getQualifiedClassName(parent) == "fl.livepreview::LivePreviewParent"))
+            {
+                return true;
+            }
+            
+            return false;
+        }
         
         private function _createLivePreview():void
         {
             preview = new MovieClip();
             
             var g:Graphics = preview.graphics;
-            g.beginFill(0x000000);
-            g.moveTo(0, 0);
-            g.lineTo(0, 100);
-            g.lineTo(100, 100);
-            g.lineTo(100, 0);
-            g.lineTo(0, 0);
-            g.endFill();
+                g.beginFill(0xffffff);
+                g.moveTo(0, 0);
+                g.lineTo(0, _width);
+                g.lineTo(_width, _height);
+                g.lineTo(_height, 0);
+                g.lineTo(0, 0);
+                g.endFill();
             
-            //decalred in the FLA
-//            preview.icon_mc = new Icon();
-//            preview.icon_mc.name = "icon_mc";
-//            preview.addChild(preview.icon_mc);
+            /* note:
+               because the Icon class is declared in the FLA
+               and the FLA generate it automatically
+               we need to use reflection to instanciate it
+               so compc/asdoc does not generate errors
+            */
+            var iconClass:Class = getDefinitionByName( "com.google.analytics.components::Icon" ) as Class;
+            preview.icon_mc = new iconClass();
+            preview.icon_mc.name = "icon_mc";
+            preview.addChild( preview.icon_mc );
             
             addChild( preview );
         }
@@ -127,7 +141,11 @@
         
         public function setSize( w:Number, h:Number ):void
         {
-            
+            /* note:
+               we don't resize the live preview
+               we want to keep or default component size
+               defined in the FLA
+            */
         }
         
         /**
@@ -136,12 +154,16 @@
         */
         private function _factory( event:Event ):void
         {
+            removeEventListener( Event.ENTER_FRAME, _factory );
+            
             if( isLivePreview )
             {
+                /* note:
+                   we don't want to init the factory
+                   when we are in live preview
+                */
                 return;
             }
-            
-            removeEventListener( Event.ENTER_FRAME, _factory );
             
             _display = this;
             
@@ -221,8 +243,9 @@
         }
         
         /**
-         * Indicates the account value of the tracking.
-         */        
+         * The Urchin Account.
+         * You have to define this parameter to initialize the tracking.
+         */
         [Inspectable]
         public function get account():String
         {
@@ -237,26 +260,44 @@
             _account = value;
         }
         
+        /**
+        * The Tracker configuration.
+        */
         public function get config():Configuration
         {
             return _config;
         }
         
+        /**
+         * @private
+         */
         public function set config(value:Configuration):void
         {
             _config = value;
         }
         
+        /**
+        * The Tracker debug configuration.
+        */
         public function get debug():DebugConfiguration
         {
             return _debug;
         }
         
+        /**
+         * @private
+         */
         public function set debug(value:DebugConfiguration):void
         {
             _debug = value;
         }        
         
+        /**
+        * The Traker mode.
+        * You can select two modes:
+        * - AS3: use AS3 only, no dependency on HTML/JS
+        * - Bridge: use AS3 bridged to HTML/JS which define ga.js
+        */
         [Inspectable(defaultValue="AS3", enumeration="AS3,Bridge", type="String")]
         public function get mode():String
         {
@@ -273,7 +314,10 @@
         
         /**
          * Indicates if the tracker use a visual debug.
-         */        
+         * If set to true, at compile time you will
+         * see a visual debug window with different
+         * informations about the tracking requests and parameters.
+         */
         [Inspectable(defaultValue="false", type="Boolean")]
         public function get visualDebug():Boolean
         {
@@ -287,7 +331,7 @@
         {
             _visualDebug = value;
         }
-                
+        
         include "../common.txt"
         
     }
