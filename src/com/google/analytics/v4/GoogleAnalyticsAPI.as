@@ -15,6 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.v4
@@ -23,8 +24,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.ServerOperationMode;
     
     /**
-    * The GA v4 API
-    * as documented
+    * The GA v4 API as documented
     * http://code.google.com/apis/analytics/docs/gaJSApi.html
     * http://code.google.com/apis/analytics/docs/gaTrackingOverview.html
     * http://code.google.com/apis/analytics/docs/gaTrackingTroubleshooting.html
@@ -68,25 +68,24 @@ package com.google.analytics.v4
          * 
          * @param newRate New sample rate to set. Provide a numeric as a whole percentage, 0.1 being 10%, 1 being 100%.
          */
-        function setSampleRate(newRate:Number):void;
+        function setSampleRate( newRate:Number ):void;
         
         /**
-         * Sets the new session timeout in seconds.
-         * By default, session timeout is set to 30 minutes (1800 seconds).
+         * Sets the new session timeout in seconds. By default, session timeout is set to 30 minutes (1800 seconds).
          * 
-         * Session timeout is used to compute visits,
-         * since a visit ends after 30 minutes of browser inactivity or upon browser exit.
-         * If you want to change the definition of a "session" for your particular needs,
-         * you can pass in the number of seconds to define a new value.
+         * <p>Session timeout is used to compute visits,
+         * since a visit ends after 30 minutes of browser inactivity or upon browser exit.</p>
+         * <p>If you want to change the definition of a "session" for your particular needs, 
+         * you can pass in the number of seconds to define a new value.</p>
          * 
-         * This will impact the Visits reports in every section where the number of
-         * visits are calculated, and where visits are used in computing other values.
-         * For example, the number of visits will increase if you shorten the session timeout,
-         * and will decrease if you increase the session timeout.
+         * <p>This will impact the Visits reports in every section where the number of 
+         * visits are calculated, and where visits are used in computing other values.</p>
+         * <p>For example, the number of visits will increase if you shorten the session timeout, 
+         * and will decrease if you increase the session timeout.</p>
          * 
          * @param newTimeout New session timeout to set in seconds.
          */
-        function setSessionTimeout(newTimeout:int):void;
+        function setSessionTimeout( newTimeout:int ):void;
         
         /**
          * Sets a user-defined value.
@@ -385,41 +384,25 @@ package com.google.analytics.v4
         
         /**
          * Creates an event tracking object with the specified name.
-         * Call this method when you want to create a new web page object
-         * to track in the Event Tracking section of the reporting.
-         * See the Event Tracking Guide for more information.
-         * 
+         * <p>Call this method when you want to create a new web page object to track 
+         * in the Event Tracking section of the reporting.</p>
+         * <p>See the Event Tracking Guide for more information.</p>
          * @param objName The name of the tracked object.
-         * @return A new event tracker instance.
+         * @return A new EventTracker instance.
          */
         function createEventTracker( objName:String ):EventTracker;
         
         /**
          * Constructs and sends the event tracking call to GATC.
          * 
-         * @param eventType The type name for the event.
+         * @param category The general event category (e.g. "Videos").
+         * @param action The action for the event (e.g. "Play"). 
          * @param label An optional descriptor for the event.
          * @param value An optional value to be aggregated with the event.
          * 
-         * @return whether the event was successfully sent.
+         * @return Whether the event was successfully sent.
          */
         function trackEvent( category:String, action:String, label:String = null, value:Number = NaN ):Boolean;
-        
-        /**
-        * Constructs and sends the event tracking call to the Google Analytics Tracking Code. 
-        * Use this to track visitor behavior on your website that is not related to a web page visit, 
-        * such as interaction with a Flash video movie control or any user event that does not
-        * trigger a page request. 
-        * 
-        * @param category The general event category (e.g. "Videos"). 
-        * @param action The action for the event (e.g. "Play"). 
-        * @param opt_label An optional descriptor for the event. 
-        * @param opt_value An optional value to be aggregated with the event.
-        * 
-        * @return whether the event was sucessfully sent
-        */
-        //function trackEvent(category:String, action:String, opt_label:String = "", opt_value:int = 0):Boolean;
-        
         
         // ----------------------------------------
         // Search Engines and Referrers
@@ -427,12 +410,11 @@ package com.google.analytics.v4
         
         /**
          * Sets the string as ignored term(s) for Keywords reports.
-         * Use this to configure Google Analytics to treat certain search terms as direct traffic,
-         * such as when users enter your domain name as a search term.
-         * When you set keywords using this method,
-         * the search terms are still included in your overall page view counts,
-         * but not included as elements in the Keywords reports.
-         * 
+         * <p>Use this to configure Google Analytics to treat certain search terms as direct traffic,
+         * such as when users enter your domain name as a search term.</p>
+         * <p>When you set keywords using this method, 
+         * the search terms are still included in your overall page view counts, 
+         * but not included as elements in the Keywords reports.</p>
          * @param newIgnoredOrganicKeyword Keyword search terms to treat as direct traffic.
          */
         function addIgnoredOrganic(newIgnoredOrganicKeyword:String):void;

@@ -15,6 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.core
@@ -22,12 +23,18 @@ package com.google.analytics.core
     import com.google.analytics.data.X10;
     import com.google.analytics.utils.Variables;
     
+    /**
+     * The EventInfo class.
+     */
     public class EventInfo
     {
         private var _isEventHit:Boolean;
         private var _x10:X10;
         private var _ext10:X10;
         
+        /**
+         * Creates a new EventInfo instance.
+         */
         public function EventInfo( isEventHit:Boolean, xObject:X10, extObject:X10 = null )
         {
             _isEventHit = isEventHit;

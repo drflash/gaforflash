@@ -15,6 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics
@@ -23,21 +24,63 @@ package com.google.analytics
     import com.google.analytics.v4.Configuration;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     
+    /**
+     * This interface is implemented in all Google Analytics API class.
+     */
     public interface AnalyticsTracker extends GoogleAnalyticsAPI
     {
-        function get account():String;
-        function set account( value:String ):void;
+    	
+    	/**
+    	 * Indicates the account value of the tracking.
+    	 */
+        function get account():String ;
         
+        /**
+         * @private
+         */
+        function set account( value:String ):void ;
+        
+        /**
+         * Determinates the Configuration object of the tracker.
+         */
+        function get config():Configuration ;
+        
+        /**
+         * @private
+         */
+        function set config( value:Configuration ):void;        
+        
+        /**
+         * Determinates the DebugConfiguration of the tracker. 
+         */
+        function get debug():DebugConfiguration ;
+        
+        /**
+         * @private
+         */
+        function set debug( value:DebugConfiguration ):void;        
+        
+        /**
+         * Indicates the mode of the tracking "AS3" or "Bridge".
+         * @see com.google.analytics.core.TrackerMode
+         */
         function get mode():String;
-        function set mode( value:String ):void;
         
-        function get visualDebug():Boolean;
-        function set visualDebug( value:Boolean ):void;
+        /**
+         * @private
+         */
+        function set mode( value:String ):void ;
         
-        function get config():Configuration;
-        function set config( value:Configuration ):void;
+        /**
+         * Indicates if the tracker use a visual debug.
+         */
+        function get visualDebug():Boolean ;
         
-        function get debug():DebugConfiguration;
-        function set debug( value:DebugConfiguration ):void;
+        /**
+         * @private
+         */
+        function set visualDebug( value:Boolean ):void ;
+                
+
     }
 }

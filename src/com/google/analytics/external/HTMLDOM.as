@@ -74,8 +74,8 @@ package com.google.analytics.external
         }
         
         /**
-        * Cache in one function call all the HTMLDOM properties.
-        */
+         * Caches in one function call all the HTMLDOM properties.
+         */
         public function cacheProperties():void
         {
             if( !isAvailable() )
@@ -232,6 +232,7 @@ package com.google.analytics.external
         
         /**
          * Returns the path name value of the html dom.
+         * @return the path name value of the html dom.
          */
         public function get pathname():String
         {
@@ -292,6 +293,7 @@ package com.google.analytics.external
         
         /**
          * Returns the referrer value of the html dom.
+         * @return the referrer value of the html dom.
          */
         public function get referrer():String
         {
@@ -312,6 +314,7 @@ package com.google.analytics.external
         
         /**
          * Returns the title value of the html dom.
+         * @return the title value of the html dom.
          */
         public function get title():String
         {

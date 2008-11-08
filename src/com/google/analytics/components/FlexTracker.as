@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,8 +49,8 @@ package com.google.analytics.components
     [Event(name="addedToStage", type="flash.events.Event")]
     
     /**
-    * The Flex visual component.
-    */
+     * The Flex visual component.
+     */
     [IconFile("analytics.png")]
     public class FlexTracker extends EventDispatcher implements AnalyticsTracker
     {
@@ -133,11 +133,10 @@ package com.google.analytics.components
         }
         
         /**
-        * @private
-        * Factory method for returning a Tracker object.
-        * 
-        * @return {GoogleAnalyticsAPI}
-        */
+         * Factory method for returning a Tracker object.
+         * @return {GoogleAnalyticsAPI}
+         * @private
+         */
         private function _trackerFactory():GoogleAnalyticsAPI
         {
             debug.info( "GATracker (AS3) v" + version +"\naccount: " + account );
@@ -168,14 +167,16 @@ package com.google.analytics.components
         private function _bridgeFactory():GoogleAnalyticsAPI
         {
             debug.info( "GATracker (Bridge) v" + version +"\naccount: " + account );
-            
             return new Bridge( account, _debug, _jsproxy );
         }
         
+        /**
+         * Indicates the account value of the tracking.
+         */        
         [Inspectable]
         public function get account():String
         {
-            return _account
+            return _account;
         }
         
         public function set account(value:String):void
@@ -183,46 +184,70 @@ package com.google.analytics.components
             _account = value;
         }
         
+        /**
+         * Determinates the Configuration object of the tracker.
+         */        
+        public function get config():Configuration
+        {
+            return _config;
+        }
+        
+        /**
+         * @private
+         */
+        public function set config(value:Configuration):void
+        {
+            _config = value;
+        }        
+        
+        /**
+         * Determinates the DebugConfiguration of the tracker. 
+         */        
+        public function get debug():DebugConfiguration
+        {
+            return _debug;
+        }
+        
+        /**
+         * @private
+         */
+        public function set debug(value:DebugConfiguration):void
+        {
+            _debug = value;
+        }        
+        
+        /**
+         * Indicates the mode of the tracking "AS3" or "Bridge".
+         */        
         [Inspectable(defaultValue="AS3", enumeration="AS3,Bridge", type="String")]
         public function get mode():String
         {
             return _mode;
         }
         
+        /**
+         * @private
+         */
         public function set mode( value:String ):void
         {
             _mode = value;
         }
         
+        /**
+         * Indicates if the tracker use a visual debug.
+         */        
         [Inspectable(defaultValue="false", type="Boolean")]
         public function get visualDebug():Boolean
         {
             return _visualDebug;
         }
         
+        /**
+         * @private
+         */
         public function set visualDebug( value:Boolean ):void
         {
             _visualDebug = value;
-        }
-        
-        public function get config():Configuration
-        {
-            return _config;
-        }
-        
-        public function set config(value:Configuration):void
-        {
-            _config = value;
-        }
-        
-        public function get debug():DebugConfiguration
-        {
-            return _debug;
-        }
-        
-        public function set debug(value:DebugConfiguration):void
-        {
-            _debug = value;
         }
         
         include "../common.txt"

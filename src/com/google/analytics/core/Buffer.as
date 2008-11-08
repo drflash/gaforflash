@@ -118,17 +118,16 @@ package com.google.analytics.core
         
         /**
          * Creates a new Buffer instance.
-         * 
-         * volatile: if true no use of SO, only in-memory data
-         * data: can be used to inject data into OBJ or SO
-         * 
-         * note:
-         * data should be used to inject the data from the query string
-         * 
+         * @param config The Configuration reference use in the Buffer to set it.
+         * @param debug The DebugConfiguration reference of the Buffer.
+         * @param volatile If true no use of SharedObject, only in-memory data.
+         * @param data Can be used to inject data into OBJ or SO.
          */
-        public function Buffer( config:Configuration, debug:DebugConfiguration,
-                                volatile:Boolean = false, data:Object = null )
+        public function Buffer( config:Configuration, debug:DebugConfiguration, volatile:Boolean = false, data:Object = null )
         {
+        	
+        	// note : data should be used to inject the data from the query string
+        	
             _config = config;
             _debug  = debug;
             

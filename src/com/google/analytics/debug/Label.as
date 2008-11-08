@@ -25,8 +25,8 @@ package com.google.analytics.debug
     import flash.events.TextEvent;
     import flash.text.TextField;
     import flash.text.TextFieldAutoSize;
-    import flash.text.TextFieldType;
-    
+    import flash.text.TextFieldType;    
+
     /**
      * The label sprite.
      */
@@ -39,6 +39,9 @@ package com.google.analytics.debug
         private var _tag:String;
         private var _color:uint;
         
+        /**
+         * Indicates if the text is selectabled in the Label display.
+         */
         protected var selectable:Boolean;
         
         /**
@@ -92,6 +95,9 @@ package com.google.analytics.debug
             _textField.addEventListener( TextEvent.LINK, onLink );
         }
         
+        /**
+         * Initialize the layout of all elements in the Label object.
+         */
         protected override function layout():void
         {
             _textField.type       = TextFieldType.DYNAMIC;
@@ -106,12 +112,18 @@ package com.google.analytics.debug
             addChild( _textField );
         }
         
+        /**
+         * Dispose the current Label instance.
+         */
         protected override function dispose():void
         {
             _textField.removeEventListener( TextEvent.LINK, onLink );
             super.dispose();
         }
         
+        /**
+         * @private
+         */
         private function _draw():void
         {
             var g:Graphics = _background.graphics;
@@ -131,10 +143,7 @@ package com.google.analytics.debug
             g.endFill();
         }
         
-        public function onLink( event:TextEvent ):void
-        {
-            //trace( "onLink()" );
-        }
+
         
         /**
         * the CSS tag used for the label.
@@ -154,16 +163,16 @@ package com.google.analytics.debug
         }
         
         /**
-        * The text of the label.
-        */
+         * The text of the label.
+         */
         public function get text():String
         {
             return _textField.text;
         }
         
         /**
-        * @private
-        */
+         * @private
+         */
         public function set text( value:String ):void
         {
             if( value == "" )
@@ -178,9 +187,9 @@ package com.google.analytics.debug
         }
         
         /**
-        * Appends more text to the label,
-        * with the option to change the CSS tag.
-        */
+         * Appends more text to the label,
+         * with the option to change the CSS tag.
+         */
         public function appendText( value:String, newtag:String = "" ):void
         {
             if( value == "" )
@@ -198,6 +207,14 @@ package com.google.analytics.debug
             _draw();
             resize();
         }
+        
+        /**
+         * Invoked when a AS link in the text is clicked. 
+         */
+        public function onLink( event:TextEvent ):void
+        {
+            //trace( "onLink()" );
+        }        
         
     }
 }

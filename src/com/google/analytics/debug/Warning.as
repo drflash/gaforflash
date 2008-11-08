@@ -29,6 +29,10 @@ package com.google.analytics.debug
      */
     public class Warning extends Label
     {
+    	
+    	/**
+    	 * @private
+    	 */
         private var _timer:Timer;
         
         /**
@@ -36,9 +40,8 @@ package com.google.analytics.debug
          */
         public function Warning( text:String="", timeout:uint = 3000 )
         {
-            super(text, "uiWarning", Style.warningColor, Align.top, false );
-            margin.top = 32;
-            
+            super(text, "uiWarning", Style.warningColor, Align.top, false ) ;
+            margin.top = 32 ;
             if( timeout > 0 )
             {
                 _timer = new Timer( timeout, 1 );

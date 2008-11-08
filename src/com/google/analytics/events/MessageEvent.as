@@ -55,7 +55,6 @@ package com.google.analytics.events
         public function MessageEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false, message:String = "")
         {
             super(type, bubbles, cancelable);
-            
             this.message = message;
         }
         
