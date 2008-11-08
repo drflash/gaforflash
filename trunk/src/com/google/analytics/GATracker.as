@@ -38,6 +38,8 @@ package com.google.analytics
     import com.google.analytics.v4.Tracker;
     
     import flash.display.DisplayObject;    
+    
+    // forced import
     EventTracker;
     ServerOperationMode;
 

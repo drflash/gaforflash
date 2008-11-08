@@ -13,7 +13,6 @@
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.external.HTMLDOM;
     import com.google.analytics.external.JavascriptProxy;
-    import com.google.analytics.external.JavascriptProxy;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Version;
     import com.google.analytics.v4.Bridge;
@@ -36,7 +35,8 @@
     [IconFile("analytics.png")]
     public class FlashTracker extends Sprite implements AnalyticsTracker
     {
-        private var _display:DisplayObject;
+    	
+    	private var _display:DisplayObject;
         private var _tracker:GoogleAnalyticsAPI;
         
         //factory
@@ -55,16 +55,20 @@
         private var _visualDebug:Boolean = false;
         
         //component
-        private var preview:MovieClip;
+        
+        private var _componentInspectorSetting:Boolean;
+        
         private var isLivePreview:Boolean;
         private var livePreviewWidth:Number;
         private var livePreviewHeight:Number;
         
+        private var preview:MovieClip;
+        
         private var _width:Number = 0;
         private var _height:Number = 0; 
-        private var _componentInspectorSetting:Boolean;
         
         public var boundingBox_mc:DisplayObject;
+        
         
         public static var version:Version = API.version;        
         
@@ -216,16 +220,42 @@
             return new Bridge( account, _debug, _jsproxy );
         }
         
+        /**
+         * Indicates the account value of the tracking.
+         */        
         [Inspectable]
         public function get account():String
         {
             return _account
         }
         
+        /**
+         * @private
+         */
         public function set account(value:String):void
         {
             _account = value;
         }
+        
+        public function get config():Configuration
+        {
+            return _config;
+        }
+        
+        public function set config(value:Configuration):void
+        {
+            _config = value;
+        }
+        
+        public function get debug():DebugConfiguration
+        {
+            return _debug;
+        }
+        
+        public function set debug(value:DebugConfiguration):void
+        {
+            _debug = value;
+        }        
         
         [Inspectable(defaultValue="AS3", enumeration="AS3,Bridge", type="String")]
         public function get mode():String
@@ -248,27 +278,7 @@
         {
             _visualDebug = value;
         }
-        
-        public function get config():Configuration
-        {
-            return _config;
-        }
-        
-        public function set config(value:Configuration):void
-        {
-            _config = value;
-        }
-        
-        public function get debug():DebugConfiguration
-        {
-            return _debug;
-        }
-        
-        public function set debug(value:DebugConfiguration):void
-        {
-            _debug = value;
-        }
-        
+                
         include "../common.txt"
         
     }
