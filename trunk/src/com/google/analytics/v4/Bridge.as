@@ -107,6 +107,9 @@ package com.google.analytics.v4
             return _proxy.call.apply( _proxy, args );
         }
         
+        /**
+         * @private
+         */
         private function _checkGAJS():Boolean
         {
             var data:XML =
@@ -149,6 +152,9 @@ package com.google.analytics.v4
             _hasGATracker = true;
         }
         
+        /**
+         * @private
+         */
         private function _linkTrackingObject( path:String ):void
         {
             var data:XML = 
@@ -184,6 +190,9 @@ package com.google.analytics.v4
             _proxy.call( data, _jsContainer, path );
         }
         
+        /**
+         * @private
+         */
         private function _createTrackingObject( account:String ):void
         {
             var data:XML =
@@ -199,6 +208,9 @@ package com.google.analytics.v4
             _proxy.call( data, account );
         }
         
+        /**
+         * @private
+         */
         private function _checkValidTrackingObject( account:String ):Boolean
         {
             var data:XML =
@@ -221,6 +233,9 @@ package com.google.analytics.v4
             return _proxy.call( data, account );
         }
         
+        /**
+         * @private
+         */
         private function _checkTrackingObject( account:String ):Boolean
         {
             var hasObj:Boolean = _proxy.hasProperty( account );
@@ -234,11 +249,17 @@ package com.google.analytics.v4
             return false;
         }
         
+        /**
+         * Indicates if the bridge has a reference whith the JS GA tracker.
+         */
         public function hasGAJS():Boolean
         {
             return _checkGAJS();
         }
         
+        /**
+         * Indicates if the bridge has the passed-in tracking account.
+         */
         public function hasTrackingAccount( account:String ):Boolean
         {
             if( Utils.validateAccount( account ) )
@@ -252,21 +273,21 @@ package com.google.analytics.v4
         }
         
         /**
-        * This function creates a JS tracking object in the DOM. The main use case is if you want to 
-        * add ga.js tracking to the site and don't even want to touch JS/HTML
-        * This function will load ga.js if it doesn't exist. It also create a glocal variable to hold 
-        * any new tracking objects in this variable: window._GAtrack[id] : 
-        * Finally it create a new JS GA tracking object with the id supplied 
-        * note creating a 2nd object with the same ID will override the first
-        * 
-        * @return name of created JS object as a String
-        */
+         * This function creates a JS tracking object in the DOM. The main use case is if you want to 
+         * add ga.js tracking to the site and don't even want to touch JS/HTML
+         * This function will load ga.js if it doesn't exist. It also create a glocal variable to hold 
+         * any new tracking objects in this variable: window._GAtrack[id] : 
+         * Finally it create a new JS GA tracking object with the id supplied 
+         * note creating a 2nd object with the same ID will override the first
+         * 
+         * @return name of created JS object as a String
+         */
 
         
         /**
-        * Checks to ses if the tracking object Name passed into the functions exists in the DOM
-        * and is a real Google Analytics tracking object
-        */
+         * Checks to ses if the tracking object Name passed into the functions exists in the DOM
+         * and is a real Google Analytics tracking object
+         */
         
         
         // -----------------------------------------------------------------------------

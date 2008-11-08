@@ -102,6 +102,9 @@ package com.google.analytics.data
          */        
         private var _minimum:int;
         
+        /**
+         * @private
+         */
         private var _hasData:int;
         
         /**
@@ -171,12 +174,10 @@ package com.google.analytics.data
         }
         
         /**
-         * Internal implementation for clearing all X10 data of a type
-         * from a certain project.
-         *
-         * @private
+         * Internal implementation for clearing all X10 data of a type from a certain project.
          * @param projectId The project ID for which to set a value.
          * @param type The data type for which to set a value.
+         * @private
          */
         private function _clearInternal( projectId:Number, type:String ):void
         {
@@ -187,7 +188,8 @@ package com.google.analytics.data
                 
                 var isEmpty:Boolean = true;
                 var i:int;
-                for( i = 0; i < _set.length; i++)
+                var l:int = _set.length ;
+                for( i = 0; i < l ; i++)
                 {
                     if( _projectData[projectId][ _set[i] ] != undefined )
                     {
@@ -206,11 +208,9 @@ package com.google.analytics.data
         
         /**
          * Escape X10 string values to remove ambiguity for special characters.
-         * See the escapeCharMap private member for more detail.
-         *
+         * <p>See the <code class="prettyprint">escapeCharMap</code> private member for more detail.</p>
          * @private
          * @param value The string value to be escaped.
-         *
          * @return The escaped version of the passed-in value.
          */
         private function _escapeExtensibleValue( value:String ):String
@@ -240,10 +240,8 @@ package com.google.analytics.data
         
         /**
          * Given a data array for a certain type, render its string encoding.
-         *
          * @private
          * @param data An array of num/value pair data.
-         *
          * @return The string encoding for this array of data.
          */
         private function _renderDataType( data:Array ):String
@@ -278,10 +276,8 @@ package com.google.analytics.data
         
         /**
          * Given a project hashmap, render its string encoding.
-         *
          * @private
          * @param project A hashmap of project data keyed by data type.
-         *
          * @return The string encoding for this project.
          */
         private function _renderProject( project:Object ):String
@@ -294,11 +290,10 @@ package com.google.analytics.data
             var needTypeQualifier:Boolean = false;
             var i:int;
             var data:Array;
-            
-            for( i = 0; i < _set.length; i++ )
+            var l:int = _set.length ;
+            for( i = 0; i < l ; i++ )
             {
                 data = project[ _set[i] ];
-                
                 if( data )
                 {
                     if( needTypeQualifier )
@@ -313,16 +308,13 @@ package com.google.analytics.data
                     needTypeQualifier = true;
                 }
             }
-            
             return result;
         }
         
         
         /**
          * Checking whether a project exists in the current data state.
-         *
          * @param projectId The identifier for the project.
-         *
          * @return whether this X10 module contains the project at the designated project ID.
          */
         public function hasProject( projectId:Number ):Boolean
@@ -330,23 +322,19 @@ package com.google.analytics.data
             return _projectData[projectId];
         }
         
+        /**
+         * Indicates if the X10 object has data.
+         */
         public function hasData():Boolean
         {
-            if( _hasData > 0 )
-            {
-                return true;
-            }
-            
-            return false;
+            return ( _hasData > 0 ) ;
         }
         
         /**
          * Wrapper for setting an X10 string key.
-         *
          * @param projectId The project ID for which to set a value.
          * @param num The numeric index for which to set a value.
          * @param value The value to be set into the specified indices.
-         *
          * @return Whether the key was successfully set.
          */
         public function setKey( projectId:Number, num:Number, value:String ):Boolean
@@ -380,23 +368,18 @@ package com.google.analytics.data
         
         /**
          * Wrapper for setting an X10 integer value.
-         *
          * @param projectId The project ID for which to set a value.
          * @param num The numeric index for which to set a value.
          * @param value The value to be set into the specified indices.
-         * 
-         * note:
-         * in JS value was {String}, maybe we should considered using * instead of type Number
-         *
          * @return whether the value was successfully set.
          */
         public function setValue( projectId:Number, num:Number, value:Number ):Boolean
         {
+        	// note: in JS value was {String}, maybe we should considered using * instead of type Number
             if( Math.round(value) != value || isNaN(value) || value == Infinity )
             {
                 return false;
             }
-            
             _setInternal( projectId, _value, num, value.toString() );
             return true;
         }
@@ -409,12 +392,12 @@ package com.google.analytics.data
          */
         public function getValue( projectId:Number, num:Number ):*
         {
-        	/**
-        	 * TODO:
-             * - problem here, if we return a type Number we cannot return null
-             *   (null will be automatically casted to a Number and then zero)
-             * - need to check the details why getValue can or have to return null
-        	 */
+        	//
+        	// TODO:
+            // - problem here, if we return a type Number we cannot return null
+            //   (null will be automatically casted to a Number and then zero)
+            // - need to check the details why getValue can or have to return null
+        	//
             var value:* = _getInternal(projectId, _value, num);
             
             if( value == null )
@@ -441,11 +424,11 @@ package com.google.analytics.data
         public function renderUrlString():String
         {
             
-            /* TODO:
-             * - rename to toURLString, better naming
-             * - add a static parseURLString method (even if it's only to help debugging,testing)
-             * - check if we need to sort the data, see X10Test.testRenderUrlString7()
-             */
+            // TODO:
+            // - rename to toURLString, better naming
+            // - add a static parseURLString method (even if it's only to help debugging,testing)
+            // - check if we need to sort the data, see X10Test.testRenderUrlString7()
+            //
             
             var result:Array = [];
             var projectId:String;
@@ -461,6 +444,10 @@ package com.google.analytics.data
             return result.join("");
         }
         
+        /**
+         * Render the merged url String representation of the X10 passed-in object.
+         * @return The merged url String representation of the X10 passed-in object.
+         */
         public function renderMergedUrlString( extObject:X10 = null ):String
         {
             if( !extObject )

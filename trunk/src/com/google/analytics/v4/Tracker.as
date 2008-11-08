@@ -1187,10 +1187,10 @@ package com.google.analytics.v4
          * @param {Number} num The numeric index for which to set a value.
          * @param {String} value The value to be set into the specified indices.
          */
-        private function _setXKey( projectId:Number, num:Number, value:String ):void
-        {
-            _x10Module.setKey( projectId, num, value );
-        }
+//        private function _setXKey( projectId:Number, num:Number, value:String ):void
+//        {
+//            _x10Module.setKey( projectId, num, value );
+//        }
         
         /**
          * @private
@@ -1201,10 +1201,10 @@ package com.google.analytics.v4
          *
          * @return {String} The requested key, null if not found.
          */
-        private function _getXKey( projectId:Number, num:Number ):String
-        {
-            return _x10Module.getKey( projectId, num );
-        }
+//        private function _getXKey( projectId:Number, num:Number ):String
+//        {
+//            return _x10Module.getKey( projectId, num );
+//        }
         
         /**
         * @private
@@ -1212,10 +1212,10 @@ package com.google.analytics.v4
          *
          * @param {Number} projectId The project ID for which to clear all keys.
          */
-        private function _clearXKey( projectId:Number ):void
-        {
-            _x10Module.clearKey( projectId );
-        }
+//        private function _clearXKey( projectId:Number ):void
+//        {
+//            _x10Module.clearKey( projectId );
+//        }
         
         /**
         * @private
@@ -1225,10 +1225,10 @@ package com.google.analytics.v4
          * @param {Number} num The numeric index for which to set a value.
          * @param {Number} value The value to be set into the specified indices.
          */
-        private function _setXValue( projectId:Number, num:Number, value:Number ):void
-        {
-            _x10Module.setValue( projectId, num, value );
-        }
+//        private function _setXValue( projectId:Number, num:Number, value:Number ):void
+//        {
+//            _x10Module.setValue( projectId, num, value );
+//        }
         
         /**
          * @private
@@ -1239,10 +1239,10 @@ package com.google.analytics.v4
          *
          * @return {String} The requested value in string form, null if not found.
          */
-        private function _getXValue( projectId:Number, num:Number ):*
-        {
-            return _x10Module.getValue( projectId, num );
-        }
+//        private function _getXValue( projectId:Number, num:Number ):*
+//        {
+//            return _x10Module.getValue( projectId, num );
+//        }
         
         /**
          * @private
@@ -1250,25 +1250,23 @@ package com.google.analytics.v4
          *
          * @param {Number} projectId The project ID for which to clear all values.
          */
-        private function _clearXValue( projectId:Number ):void
-        {
-            _x10Module.clearValue( projectId );
-        }
+//        private function _clearXValue( projectId:Number ):void
+//        {
+//            _x10Module.clearValue( projectId );
+//        }
         
         /**
-         * @private
-         * Public interface for spawning new X10 objects. These are used to keep
-         * track of event-based data (as opposed to the persistent data kept on
+         * Public interface for spawning new X10 objects. These are used to keep 
+         * track of event-based data (as opposed to the persistent data kept on 
          * the self.X10Module_ object) that need to be stored separately.
-         *
-         * @return {_gat.GA_X10_} new X10 object.
+         * @private
+         * @return A new X10 object.
          */
-        private function _createXObj():X10
-        {
-            _initData()
-            
-            return new X10();
-        }
+//        private function _createXObj():X10
+//        {
+//            _initData();
+//            return new X10();
+//        }
         
         /**
          * @private

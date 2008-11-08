@@ -1,16 +1,18 @@
-package com.google.analytics.components
+﻿package com.google.analytics.components
 {
     import com.google.analytics.API;
     import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.core.Buffer;
-    import com.google.analytics.core.EventTracker; EventTracker;
+    import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
-    import com.google.analytics.core.ServerOperationMode; ServerOperationMode;
+    import com.google.analytics.core.ServerOperationMode;
+    import com.google.analytics.core.TrackerMode;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.Layout;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.external.HTMLDOM;
+    import com.google.analytics.external.JavascriptProxy;
     import com.google.analytics.external.JavascriptProxy;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Version;
@@ -20,12 +22,14 @@ package com.google.analytics.components
     import com.google.analytics.v4.Tracker;
     
     import flash.display.DisplayObject;
+    import flash.display.Graphics;
+    import flash.display.MovieClip;
     import flash.display.Sprite;
     import flash.events.Event;
-    import flash.display.MovieClip;
-    import flash.display.Graphics;
-    import flash.utils.getQualifiedClassName;
-    
+    import flash.utils.getQualifiedClassName;    
+    EventTracker;
+    ServerOperationMode;
+
     /**
     * The Flash visual component.
     */
@@ -62,6 +66,8 @@ package com.google.analytics.components
         
         public var boundingBox_mc:DisplayObject;
         
+        public static var version:Version = API.version;        
+        
         [IconFile("analytics.png")]
         public function FlashTracker()
         {
@@ -87,7 +93,7 @@ package com.google.analytics.components
             addEventListener( Event.ENTER_FRAME, _factory );
         }
         
-        public static var version:Version = API.version;
+
         
         private function _createLivePreview():void
         {
@@ -155,13 +161,17 @@ package com.google.analytics.components
             
             switch( mode )
             {
-                case "Bridge":
-                _tracker = _bridgeFactory();
-                break;
+                case TrackerMode.BRIDGE :
+                {
+                    _tracker = _bridgeFactory();
+                    break;
+                }
                 
-                case "AS3":
+                case TrackerMode.AS3 :
                 default:
-                _tracker = _trackerFactory();
+                {
+                    _tracker = _trackerFactory();
+                }
             }
             
         }

@@ -19,12 +19,12 @@
 
 package com.google.analytics
 {
-    
     import com.google.analytics.core.Buffer;
-    import com.google.analytics.core.EventTracker; EventTracker;
+    import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
+    import com.google.analytics.core.ServerOperationMode;
+    import com.google.analytics.core.TrackerMode;
     import com.google.analytics.core.ga_internal;
-    import com.google.analytics.core.ServerOperationMode; ServerOperationMode;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.Layout;
     import com.google.analytics.external.AdSenseGlobals;
@@ -37,12 +37,13 @@ package com.google.analytics
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
     
-    import flash.display.DisplayObject;
-    
+    import flash.display.DisplayObject;    
+    EventTracker;
+    ServerOperationMode;
+
     /**
-    * Google Analytic Tracker Code (GATC)'s code-only component.
-    * 
-    */
+     * Google Analytic Tracker Code (GATC)'s code-only component.
+     */
     public class GATracker implements AnalyticsTracker
     {
         private var _built:Boolean = false;
@@ -66,13 +67,10 @@ package com.google.analytics
         private var _visualDebug:Boolean;
         
         /**
-        * note:
-        * the GATracker need to be instancied and added to the Stage
-        * or at least being placed in a display list.
-        * 
-        * We mainly use it for internal test and it's basically a factory.
-        * 
-        */
+         * Creates a new GATracker instance.
+         * <p><b>Note:</b> the GATracker need to be instancied and added to the Stage or at least being placed in a display list.</p>
+         * <p>We mainly use it for internal test and it's basically a factory.</p>
+         */
         public function GATracker( display:DisplayObject, account:String,
                                    mode:String = "AS3", visualDebug:Boolean = false,
                                    config:Configuration = null, debug:DebugConfiguration = null )
@@ -99,17 +97,23 @@ package com.google.analytics
             }
         }
         
-        public static var version:Version = API.version;
-        
+        /**
+         * Indicates if the tracker is automatically build.
+         */
         public static var autobuild:Boolean = true;
         
         /**
-        * @private
-        * Factory to build the different trackers
-        */
+         * The version of the tracker.
+         */
+        public static var version:Version = API.version;
+        
+        /**
+         * @private
+         * Factory to build the different trackers
+         */
         private function _factory():void
         {
-            _built = true;
+            _built = true ;
             
             _jsproxy = new JavascriptProxy( debug );
             
@@ -121,13 +125,17 @@ package com.google.analytics
             
             switch( mode )
             {
-                case "Bridge":
-                _tracker = _bridgeFactory();
-                break;
+                case TrackerMode.BRIDGE :
+                {
+                    _tracker = _bridgeFactory();
+                    break;
+                }
                 
-                case "AS3":
-                default:
-                _tracker = _trackerFactory();
+                case TrackerMode.AS3 :
+                default              :
+                {
+                    _tracker = _trackerFactory();
+                }
             }
             
         }
@@ -188,57 +196,90 @@ package com.google.analytics
             
             return new Bridge( account, _debug, _jsproxy );
         }
-        
+
+        /**
+         * Indicates the account value of the tracking.
+         */
         public function get account():String
         {
             return _account;
         }
         
+        /**
+         * @private
+         */
         public function set account( value:String ):void
         {
             _account = value;
         }
         
-        public function get mode():String
-        {
-            return _mode;
-        }
-        
-        public function set mode( value:String ):void
-        {
-            _mode = value;
-        }
-        
-        public function get visualDebug():Boolean
-        {
-            return _visualDebug;
-        }
-        
-        public function set visualDebug( value:Boolean ):void
-        {
-            _visualDebug = value;
-        }
-        
+        /**
+         * Determinates the Configuration object of the tracker.
+         */        
         public function get config():Configuration
         {
             return _config;
         }
         
+        /**
+         * @private
+         */        
         public function set config( value:Configuration ):void
         {
             _config = value;
         }
-        
+
+        /**
+         * Determinates the DebugConfiguration of the tracker. 
+         */        
         public function get debug():DebugConfiguration
         {
             return _debug;
         }
         
+        /**
+         * @private
+         */        
         public function set debug( value:DebugConfiguration ):void
         {
             _debug = value;
+        }        
+        
+        /**
+         * Indicates the mode of the tracking "AS3" or "Bridge".
+         */        
+        public function get mode():String
+        {
+            return _mode;
         }
         
+        /**
+         * @private
+         */        
+        public function set mode( value:String ):void
+        {
+            _mode = value;
+        }
+        
+        /**
+         * Indicates if the tracker use a visual debug.
+         */        
+        public function get visualDebug():Boolean
+        {
+            return _visualDebug;
+        }
+        
+        /**
+         * @private
+         */        
+        public function set visualDebug( value:Boolean ):void
+        {
+            _visualDebug = value;
+        }
+        
+        /**
+         * Builds the tracker.
+         */
         public function build():void
         {
             if( !_built )

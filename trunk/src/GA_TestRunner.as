@@ -19,22 +19,22 @@
 
 package
 {
-    import flash.display.Sprite;
-    import flash.display.StageAlign;
-    import flash.display.StageScaleMode;
-    import flash.events.Event;
-    import flash.text.TextField;
-    import flash.text.TextFormat;
-    
-    import com.google.analytics.AllTests;
-    import com.google.diagnostics.TextFieldConsole;
-    
     import buRRRn.ASTUce.Runner;
     import buRRRn.ASTUce.config;
     
     import system.config;
     import system.console;
+    import system.ui.TextFieldConsole;
     
+    import com.google.analytics.AllTests;
+    
+    import flash.display.Sprite;
+    import flash.display.StageAlign;
+    import flash.display.StageScaleMode;
+    import flash.events.Event;
+    import flash.text.TextField;
+    import flash.text.TextFormat;    
+
     [SWF(width="800", height="600", backgroundColor='0x333333', frameRate='24', pageTitle='GA unit tests', scriptRecursionLimit='1000', scriptTimeLimit='60')]
     [ExcludeClass]
     public class GA_TestRunner extends Sprite

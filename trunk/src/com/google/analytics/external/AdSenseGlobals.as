@@ -47,12 +47,16 @@ package com.google.analytics.external
         
         /**
          * Creates a new AdSenseGlobals instance.
+         * @param debug The DebugConfiguration reference of this instance.
          */
         public function AdSenseGlobals( debug:DebugConfiguration )
         {
             super( debug );
         }
         
+        /**
+         * @private
+         */
         private function _verify():void
         {
             if( !_gaGlobalVerified )

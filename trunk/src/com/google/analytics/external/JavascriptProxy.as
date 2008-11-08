@@ -34,7 +34,8 @@ package com.google.analytics.external
         /**
          * The setProperty Javascript injection.
          */
-        public static var setProperty_js:XML = 
+        public static var setProperty_js:XML ;
+        setProperty_js = 
             <script>
                 <![CDATA[
                     function( path , value )
@@ -63,7 +64,8 @@ package com.google.analytics.external
                 ]]>
             </script>;
         
-        public static var setPropertyRef_js:XML = 
+        public static var setPropertyRef_js:XML ;
+        setPropertyRef_js = 
             <script>
                 <![CDATA[
                     function( path , target )
@@ -81,7 +83,6 @@ package com.google.analytics.external
                             prop  = path;
                         }
                         alert( "paths:"+paths.length+", prop:"+prop );
-                        
                         var targets;
                         var name;
                         if( target.indexOf(".") > 0 )
@@ -95,27 +96,25 @@ package com.google.analytics.external
                             name    = target;
                         }
                         alert( "targets:"+targets.length+", name:"+name );
-                        
                         var root = window;
                         var len  = paths.length;
                         for( var i = 0 ; i < len ; i++ )
                         {
                             root = root[ paths[i] ] ;
                         }
-                        
                         var ref   = window;
                         var depth = targets.length;
                         for( var j = 0 ; j < depth ; j++ )
                         {
                             ref = ref[ targets[j] ] ;
                         }
-                        
                         root[ prop ] = ref[name] ;
                     }
                 ]]>
             </script>;
         
-        public static var hasProperty_js:XML = 
+        public static var hasProperty_js:XML ;
+        hasProperty_js = 
             <script>
                 <![CDATA[
                     function( path )
@@ -153,6 +152,7 @@ package com.google.analytics.external
         
         /**
          * Creates a new JavascriptProxy instance.
+         * @param debug The DebugConfiguration reference of this object.
          */
         public function JavascriptProxy( debug:DebugConfiguration )
         {
@@ -160,9 +160,51 @@ package com.google.analytics.external
         }
         
         /**
-        * Execute a Javascript injection block (String or XML)
-        * without any parameters and without return values.
-        */
+         * Call a Javascript injection block (String or XML) with parameters and return the result.
+         */
+        public function call( functionName:String, ...args:Array ):*
+        {
+            if( isAvailable() )
+            {
+                try
+                {
+                    if( _debug.javascript && _debug.verbose )
+                    {
+                        var output:String = "";
+                            output  = "Flash->JS: "+ functionName;
+                            output += "( ";
+                        if (args.length > 0)
+                        {
+                            output += args.join(",");
+                        } 
+                        output += " )";
+                        _debug.info( output );
+                    }
+                    
+                    args.unshift( functionName );
+                    return ExternalInterface.call.apply( ExternalInterface, args );
+                }
+                catch( e:SecurityError )
+                {
+                    if( _debug.javascript )
+                    {
+                        _debug.warning( "ExternalInterface is not allowed.\nEnsure that allowScriptAccess is set to \"always\" in the Flash embed HTML." );
+                    }
+                }
+                catch( e:Error )
+                {
+                    if( _debug.javascript )
+                    {
+                        _debug.warning( "ExternalInterface failed to make the call\nreason: " + e.message );
+                    }
+                }
+            }
+            return null;
+        }
+        
+        /**
+         * Execute a Javascript injection block (String or XML) without any parameters and without return values.
+         */
         public function executeBlock( data:String ):void
         {
             if( isAvailable() )
@@ -186,7 +228,7 @@ package com.google.analytics.external
                     }
                 }
             }
-        }
+        }        
         
         /**
          * Returns the value property defines with the passed-in name value.
@@ -195,13 +237,13 @@ package com.google.analytics.external
         public function getProperty( name:String ):*
         {
             /* note:
-               we use a little trick here
+               we use a little trick here 
                we can not diretly get a property from JS
                we can only call a function
                so we use valueOf() to automatically get the property
                and yes it will work only with primitives
             */
-            return ExternalInterface.call( name + ".valueOf" );
+            return ExternalInterface.call( name + ".valueOf" ) ;
         }
         
         /**
@@ -214,69 +256,12 @@ package com.google.analytics.external
         }
         
         /**
-        * Create a JS property.
-        */
-        public function setProperty( path:String, value:* ):void
-        {
-            ExternalInterface.call( setProperty_js, path, value );
-        }
-        
-        public function setPropertyByReference( path:String, target:String ):void
-        {
-            ExternalInterface.call( setPropertyRef_js, path, target );
-        }
-        
+         * Indicates if the specified path object exist.
+         */
         public function hasProperty( path:String ):Boolean
         {
             return ExternalInterface.call( hasProperty_js, path );
-        }
-        
-        
-        /**
-        * Call a Javascript injection block (String or XML)
-        * with parameters and return the result.
-        */
-        public function call( functionName:String, ...args ):*
-        {
-            if( isAvailable() )
-            {
-                try
-                {
-                    if( _debug.javascript && _debug.verbose )
-                    {
-                        var output:String = "";
-                            output  = "Flash->JS: "+ functionName;
-                            output += "( ";
-                        if (args.length > 0)
-                        {
-                            output += args.join(",");
-                        } 
-                            output += " )";
-                        
-                        _debug.info( output );
-                    }
-                    
-                    args.unshift( functionName );
-                    return ExternalInterface.call.apply( ExternalInterface, args );
-                }
-                catch( e:SecurityError )
-                {
-                    if( _debug.javascript )
-                    {
-                        _debug.warning( "ExternalInterface is not allowed.\nEnsure that allowScriptAccess is set to \"always\" in the Flash embed HTML." );
-                    }
-                }
-                catch( e:Error )
-                {
-                    if( _debug.javascript )
-                    {
-                        _debug.warning( "ExternalInterface failed to make the call\nreason: " + e.message );
-                    }
-                }
-            }
-            
-            return null;
-        }
+        }        
         
         /**
          * Indicates if the javascript proxy is available.
@@ -306,5 +291,22 @@ package com.google.analytics.external
             
             return available;
         }
+        
+        /**
+         * Creates a JS property.
+         */
+        public function setProperty( path:String, value:* ):void
+        {
+            ExternalInterface.call( setProperty_js, path, value );
+        }
+        
+        /**
+         * Crates a JS property by reference.
+         */
+        public function setPropertyByReference( path:String, target:String ):void
+        {
+            ExternalInterface.call( setPropertyRef_js, path, target );
+        }        
+        
     }
 }
