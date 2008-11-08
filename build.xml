@@ -27,6 +27,15 @@
     <property file="build/user.properties"/>
     
     <!--
+       contributors have to define this properties
+       from the contributor.tmp file
+     -->
+    <available file="build/contributor.properties" property="is.contributor" />
+    
+    <!-- optional properties for contributors only -->
+    <property file="build/contributor.properties"/>
+    
+    <!--
        The build is intended to compile on Windows and Mac OS X
     -->
     <condition property="FLEX_HOME" value="${FLEX_HOME_MAC}">
@@ -80,7 +89,6 @@
     <target name="clean">
         <delete dir="${release.dir}" />
         <delete dir="${release.tmp}" />
-        <delete dir="${release.tmplib}" />
     </target>
     
     <target name="init">
@@ -94,30 +102,19 @@
             <export srcPath="${gaffa.src}" destPath="${release.tmp}" />
         </svn>
         
-        <svn>
-            <export srcPath="${gaffa.src}" destPath="${release.tmplib}" />
-        </svn>
-        
         <!-- delete some files we don't want to be included in the documentation or the component -->
         <delete>
             <fileset dir="${release.tmp}">
               <include name="*.as"/>
+              <include name="*.mxml"/>
             </fileset>
         </delete>
         
-        <delete>
-            <fileset dir="${release.tmplib}">
-              <include name="*.as"/>
-            </fileset>
-        </delete>
-        
-        <delete file="${release.tmp}/com/google/analytics/components/FlashTracker.as" />
-        <delete file="${release.tmplib}/com/google/analytics/components/FlashTracker.as" />
-        <delete file="${release.tmplib}/com/google/analytics/components/FlexTracker.as" />
+        <!-- <delete file="${release.tmp}/com/google/analytics/components/FlashTracker.as" /> -->
         
     </target>
     
-    <target name="main" depends="clean,init,documentation,flex_component,library_component,templates,commonfiles,package">
+    <target name="main" depends="clean,init,documentation,library_component,templates,commonfiles,package">
     </target>
     
     <target name="clean-documentation">
@@ -155,8 +152,8 @@
         
     </target>
     
-    <target name="flex_component" description="build the Flex SWC component">
-        <echo message="building flex component" level="verbose" />
+    <target name="library_component" description="build the Library SWC component">
+        <echo message="building library component" level="verbose" />
         <!--
             iterate trough the src and generate the list of classes to insert in the component
             this way we are assured that all classes without exception will be included
@@ -173,9 +170,14 @@
         </pathconvert>
         <echo message="classes is set to = ${classes}" level="verbose" />
         
-        <!--  generate the Flex SWC component -->
+        <!-- 
+            generate the Library SWC component
+            this SWC is compatible Flash and Flex
+            in Flash you'll have AnalyticsLibrary (non-visual component)
+            in Flex you'll be able to use FlexTracker (faceless component)
+         -->
         <compc
-            output="${release.dir}/lib/${gaffa.flexswc}"
+            output="${release.dir}/lib/${gaffa.swc}"
             include-classes="${classes}"
             target-player="9.0.45"
         >
@@ -184,9 +186,11 @@
             <strict>true</strict>
             <optimize>true</optimize>
             <warnings>true</warnings>
-            <verbose-stacktraces>true</verbose-stacktraces>
+            <verbose-stacktraces>false</verbose-stacktraces>
             <compute-digest>false</compute-digest>
             <source-path path-element="${release.tmp}" />
+            <external-library-path dir="${flex.libs}/player" includes="playerglobal.swc" />
+            <external-library-path dir="${flex.libs}" includes="flex.swc" />
             <metadata date="${TODAY}" title="${project.name}">
                 <publisher name="Adobe Systems Inc." />
                 <publisher name="Google Inc." />
@@ -197,50 +201,6 @@
         </compc>
         
     </target>
-    
-    <target name="library_component" description="build the Library SWC component">
-        <echo message="building library component" level="verbose" />
-        <!--
-            iterate trough the src and generate the list of classes to insert in the component
-            this way we are assured that all classes without exception will be included
-            in thebytecode and no need to edit by hand a "library" class.
-        -->
-        <fileset id="sources" dir="${release.tmplib}">
-            <include name="**/*.as"/>
-        </fileset>
-        <pathconvert property="classeslib" pathsep=" " refid="sources">
-            <chainedmapper>
-                <globmapper from="${basedir}/build/tmplib/*" to="*"/>
-                <mapper type="package" from="*.as" to="*"/>
-            </chainedmapper>
-        </pathconvert>
-        <echo message="classeslib is set to = ${classeslib}" level="verbose" />
-        
-        <!--  generate the SWC component -->
-        <compc
-            output="${release.dir}/lib/${gaffa.swc}"
-            include-classes="${classeslib}"
-            target-player="9.0.45"
-        >
-            <namespace uri="${gaffa.namespace}" manifest="${gaffa.manifest}" />
-            <include-namespaces uri="${gaffa.namespace}" />
-            <strict>true</strict>
-            <optimize>true</optimize>
-            <warnings>true</warnings>
-            <verbose-stacktraces>true</verbose-stacktraces>
-            <compute-digest>false</compute-digest>
-            <source-path path-element="${release.tmplib}" />
-            <metadata date="${TODAY}" title="${project.name}">
-                <publisher name="Adobe Systems Inc." />
-                <publisher name="Google Inc." />
-                <creator name="Google Inc." />
-                <contributor name="Zwetan Kjukov" />
-                <contributor name="Marc Alcaraz" />
-            </metadata>
-        </compc>
-        
-    </target>
-    
     
     <!--
         parse the templates for the release
