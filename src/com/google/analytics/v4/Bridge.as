@@ -26,6 +26,8 @@ package com.google.analytics.v4
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.external.JavascriptProxy;
     
+    // TODO include all js
+    
     /**
      * This api use a Javascript bridge to fill the GATracker properties.
      */
