@@ -14,19 +14,16 @@
  * limitations under the License.
  * 
  * Contributor(s):
+ *   Marc ALCARAZ <ekameleon@gmail.com>.
  *   Zwetan Kjukov <zwetan@gmail.com>.
  */
 
 package com.google.analytics.core
 {
-    import buRRRn.ASTUce.framework.*;
-    
+    import buRRRn.ASTUce.framework.*;    
+
     public class AllTests
     {
-        
-        public function AllTests()
-        {
-        }
         
         public static function suite():ITest
         {
@@ -36,6 +33,8 @@ package com.google.analytics.core
             suite.addTestSuite( OrganicTest );
             suite.addTestSuite( DocumentInfoTest );
             suite.addTestSuite( BrowserInfoTest );
+            suite.addTestSuite( TrackerCacheTest );
+            
             return suite;
         }
     }

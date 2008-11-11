@@ -1,4 +1,5 @@
-﻿/*
+﻿
+/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,39 +21,31 @@
 package com.google.analytics
 {
     import buRRRn.ASTUce.framework.*;
-    
+
     import com.google.analytics.campaign.AllTests;
     import com.google.analytics.core.AllTests;
     import com.google.analytics.data.AllTests;
     import com.google.analytics.utils.AllTests;
     import com.google.analytics.external.AllTests;
-    
+
     public class AllTests
-        {
-        
-        public function AllTests()
-            {
-            
-            }
-        
+    {
+
         public static function suite():ITest
-            {
+        {
             var suite:TestSuite = new TestSuite( "Google Analytics tests" );
             
             suite.addTestSuite( ConfigurationTest );
             suite.addTestSuite( BridgeTest );
             
             /* packages */
-            
-            suite.addTest( com.google.analytics.core.AllTests.suite() );
-            suite.addTest( com.google.analytics.data.AllTests.suite() );
-            suite.addTest( com.google.analytics.utils.AllTests.suite() );
-            suite.addTest( com.google.analytics.campaign.AllTests.suite() );
-            suite.addTest( com.google.analytics.external.AllTests.suite() );
+            suite.addTest( com.google.analytics.core.AllTests.suite( ) );
+            suite.addTest( com.google.analytics.data.AllTests.suite( ) );
+            suite.addTest( com.google.analytics.utils.AllTests.suite( ) );
+            suite.addTest( com.google.analytics.campaign.AllTests.suite( ) );
+            suite.addTest( com.google.analytics.external.AllTests.suite( ) );
             
             return suite;
-            }
-        
         }
-    
     }
+}

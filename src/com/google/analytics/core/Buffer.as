@@ -36,10 +36,6 @@ package com.google.analytics.core
     
     /**
      * Google Analytics Tracker Code (GATC)'s memory module.
-     * 
-     * note:
-     * 
-     * 
      */
     public dynamic class Buffer
     {
