@@ -49,7 +49,7 @@ package com.google.analytics
         
         public function testClearOrganicSources():void
         {
-            _conf.clearOrganicSources();
+            _conf.organic.clear();
             assertEquals(0, _conf.organic.count);
         }
         
