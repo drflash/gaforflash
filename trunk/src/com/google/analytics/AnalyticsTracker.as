@@ -24,15 +24,17 @@ package com.google.analytics
     import com.google.analytics.v4.Configuration;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     
+    import flash.events.IEventDispatcher;
+    
     /**
      * This interface is implemented in all Google Analytics API class.
      */
-    public interface AnalyticsTracker extends GoogleAnalyticsAPI
+    public interface AnalyticsTracker extends GoogleAnalyticsAPI, IEventDispatcher
     {
-    	
-    	/**
-    	 * Indicates the account value of the tracking.
-    	 */
+        
+        /**
+         * Indicates the account value of the tracking.
+         */
         function get account():String ;
         
         /**
@@ -48,7 +50,7 @@ package com.google.analytics
         /**
          * @private
          */
-        function set config( value:Configuration ):void;        
+        function set config( value:Configuration ):void;
         
         /**
          * Determinates the DebugConfiguration of the tracker. 
@@ -58,7 +60,7 @@ package com.google.analytics
         /**
          * @private
          */
-        function set debug( value:DebugConfiguration ):void;        
+        function set debug( value:DebugConfiguration ):void;
         
         /**
          * Indicates the mode of the tracking "AS3" or "Bridge".
@@ -80,7 +82,11 @@ package com.google.analytics
          * @private
          */
         function set visualDebug( value:Boolean ):void ;
-                
-
+        
+        /**
+        * Indicates if the tracker is ready.
+        */
+        function isReady():Boolean;
+        
     }
 }

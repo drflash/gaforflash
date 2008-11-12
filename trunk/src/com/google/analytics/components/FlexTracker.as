@@ -15,19 +15,21 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
- 
+
 package com.google.analytics.components
 {
     import com.google.analytics.API;
     import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.core.Buffer;
-    import com.google.analytics.core.EventTracker; EventTracker;
+    import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
-    import com.google.analytics.core.ServerOperationMode; ServerOperationMode;
+    import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.Layout;
+    import com.google.analytics.events.AnalyticsEvent;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.external.HTMLDOM;
     import com.google.analytics.external.JavascriptProxy;
@@ -38,22 +40,31 @@ package com.google.analytics.components
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
     
-    //import mx.events.FlexEvent;
-    
     import flash.display.DisplayObject;
     import flash.events.Event;
     import flash.events.EventDispatcher;
     import flash.utils.getDefinitionByName;
     
-    //dispatched when our factory has built
-    [Event(name="addedToStage", type="flash.events.Event")]
+    /* force import for type in the includes */
+    EventTracker;
+    ServerOperationMode;
+    
+    /**
+    * Dispatched after the factory has built the tracker object. 
+    */
+    [Event(name="ready", type="com.google.analytics.events.AnalyticsEvent")]
     
     /**
      * The Flex visual component.
+     * This component is not a true component, you could call it a faceless component,
+     * meaning it will not ba added in your display list.
+     * Alternatively if you need a code-only component use the GATracker class.
      */
     [IconFile("analytics.png")]
     public class FlexTracker extends EventDispatcher implements AnalyticsTracker
     {
+        private var _ready:Boolean = false;
+        
         private var _app:Object;
         private var _display:DisplayObject;
         private var _tracker:GoogleAnalyticsAPI;
@@ -129,7 +140,8 @@ package com.google.analytics.components
                 _tracker = _trackerFactory();
             }
             
-            dispatchEvent( new Event(Event.ADDED_TO_STAGE) );
+            dispatchEvent( new AnalyticsEvent( AnalyticsEvent.READY, this ) );
+            _ready = true;
         }
         
         /**
@@ -247,6 +259,11 @@ package com.google.analytics.components
         public function set visualDebug( value:Boolean ):void
         {
             _visualDebug = value;
+        }
+        
+        public function isReady():Boolean
+        {
+            return _ready;
         }
         
         include "../common.txt"

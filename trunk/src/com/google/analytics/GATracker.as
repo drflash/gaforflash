@@ -15,6 +15,7 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics
@@ -27,6 +28,7 @@ package com.google.analytics
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.Layout;
+    import com.google.analytics.events.AnalyticsEvent;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.external.HTMLDOM;
     import com.google.analytics.external.JavascriptProxy;
@@ -37,23 +39,28 @@ package com.google.analytics
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
     
-    import flash.display.DisplayObject;    
+    import flash.display.DisplayObject;
+    import flash.events.Event;
+    import flash.events.EventDispatcher;
     
-    ////// forced import
-    
+    /* force import for type in the includes */
     EventTracker;
     ServerOperationMode;
-
-    //////
-
+    
+    /**
+    * Dispatched after the factory has built the tracker object. 
+    */
+    [Event(name="ready", type="com.google.analytics.events.AnalyticsEvent")]
+    
     /**
      * Google Analytic Tracker Code (GATC)'s code-only component.
      */
     public class GATracker implements AnalyticsTracker
     {
-        private var _built:Boolean = false;
+        private var _ready:Boolean = false;
         
         private var _display:DisplayObject;
+        private var _eventDispatcher:EventDispatcher;
         private var _tracker:GoogleAnalyticsAPI;
         
         //factory
@@ -73,14 +80,15 @@ package com.google.analytics
         
         /**
          * Creates a new GATracker instance.
-         * <p><b>Note:</b> the GATracker need to be instancied and added to the Stage or at least being placed in a display list.</p>
-         * <p>We mainly use it for internal test and it's basically a factory.</p>
+         * <p><b>Note:</b> the GATracker need to be instancied and added to the Stage or at least
+         * being placed in a display list.</p>
          */
         public function GATracker( display:DisplayObject, account:String,
                                    mode:String = "AS3", visualDebug:Boolean = false,
                                    config:Configuration = null, debug:DebugConfiguration = null )
         {
             _display = display;
+            _eventDispatcher = new EventDispatcher();
             
             this.account     = account;
             this.mode        = mode;
@@ -118,8 +126,6 @@ package com.google.analytics
          */
         private function _factory():void
         {
-            _built = true ;
-            
             _jsproxy = new JavascriptProxy( debug );
             
             if( visualDebug )
@@ -143,6 +149,8 @@ package com.google.analytics
                 }
             }
             
+            dispatchEvent( new AnalyticsEvent( AnalyticsEvent.READY, this ) );
+            _ready = true;
         }
         
         /**
@@ -201,7 +209,33 @@ package com.google.analytics
             
             return new Bridge( account, _debug, _jsproxy );
         }
-
+        
+        public function addEventListener( type:String, listener:Function, useCapture:Boolean = false, priority:int = 0,
+                                          useWeakReference:Boolean = false):void
+        {
+            _eventDispatcher.addEventListener( type, listener, useCapture, priority, useWeakReference );
+        } 
+        
+        public function dispatchEvent( event:Event ):Boolean
+        {
+            return _eventDispatcher.dispatchEvent( event );
+        }
+        
+        public function hasEventListener( type:String ):Boolean
+        {
+            return _eventDispatcher.hasEventListener( type );
+        }
+        
+        public function removeEventListener( type:String, listener:Function, useCapture:Boolean = false ):void
+        {
+            _eventDispatcher.removeEventListener( type, listener, useCapture );
+        }
+        
+        public function willTrigger( type:String ):Boolean
+        {
+            return _eventDispatcher.willTrigger( type );
+        }
+        
         /**
          * Indicates the account value of the tracking.
          */
@@ -282,12 +316,17 @@ package com.google.analytics
             _visualDebug = value;
         }
         
+        public function isReady():Boolean
+        {
+            return _ready;
+        }
+        
         /**
          * Builds the tracker.
          */
         public function build():void
         {
-            if( !_built )
+            if( !isReady() )
             {
                 _factory();
             }
