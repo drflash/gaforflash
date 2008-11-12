@@ -313,7 +313,7 @@ package com.google.analytics.external
         }
         
         /**
-         * Crates a JS property by reference.
+         * Creates a JS property by reference.
          */
         public function setPropertyByReference( path:String, target:String ):void
         {
