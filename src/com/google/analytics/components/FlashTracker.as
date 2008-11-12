@@ -1,4 +1,24 @@
-﻿package com.google.analytics.components
+﻿/*
+ * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * Contributor(s):
+ *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
+ */
+
+package com.google.analytics.components
 {
     import com.google.analytics.API;
     import com.google.analytics.AnalyticsTracker;
@@ -10,6 +30,7 @@
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.Layout;
+    import com.google.analytics.events.AnalyticsEvent;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.external.HTMLDOM;
     import com.google.analytics.external.JavascriptProxy;
@@ -25,19 +46,28 @@
     import flash.display.MovieClip;
     import flash.display.Sprite;
     import flash.events.Event;
-    import flash.utils.getQualifiedClassName;
     import flash.utils.getDefinitionByName;
+    import flash.utils.getQualifiedClassName;
     
     /* force import for type in the includes */
     EventTracker;
     ServerOperationMode;
     
     /**
+    * Dispatched after the factory has built the tracker object. 
+    */
+    [Event(name="ready", type="com.google.analytics.events.AnalyticsEvent")]
+    
+    /**
     * The Flash visual component.
+    * You should not instantiate this class by code,
+    * it's possible but tricky, if you need a code-only component
+    * use the GATracker class.
     */
     [IconFile("analytics.png")]
     public class FlashTracker extends Sprite implements AnalyticsTracker
     {
+        private var _ready:Boolean = false;
         
         private var _display:DisplayObject;
         private var _tracker:GoogleAnalyticsAPI;
@@ -79,9 +109,12 @@
             isLivePreview = _checkLivePreview();
             _componentInspectorSetting = false;
             
-            boundingBox_mc.visible = false;
-            removeChild( boundingBox_mc );
-            boundingBox_mc = null;
+            if( boundingBox_mc )
+            {
+                boundingBox_mc.visible = false;
+                removeChild( boundingBox_mc );
+                boundingBox_mc = null;
+            }
             
             if( isLivePreview )
             {
@@ -200,6 +233,8 @@
                 }
             }
             
+            dispatchEvent( new AnalyticsEvent( AnalyticsEvent.READY, this ) );
+            _ready = true;
         }
         
         /**
@@ -330,6 +365,11 @@
         public function set visualDebug( value:Boolean ):void
         {
             _visualDebug = value;
+        }
+        
+        public function isReady():Boolean
+        {
+            return _ready;
         }
         
         include "../common.txt"
