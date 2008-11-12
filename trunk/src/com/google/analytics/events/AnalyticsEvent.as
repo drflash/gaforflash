@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,13 +24,30 @@ package com.google.analytics.events
     
     import flash.events.Event;
     
+    /**
+     * The AnalyticsEvent is notify by all the objects who implements the AnalyticsTracker interface.
+     */
     public class AnalyticsEvent extends Event
     {
         
+        /**
+         * The name of the event when the tracker is ready.
+         * @eventType ready
+         */
         public static const READY:String = "ready";
         
+        /**
+         * The AnalyticsTracker reference.
+         */
         public var tracker:AnalyticsTracker;
         
+        /**
+         * Creates a new AnalyticsEvent instance.
+         * @param type the string type of the instance. 
+         * @param tracker the AnalyticsTracker target reference of the event.
+         * @param bubbles indicates if the event is a bubbling event.
+         * @param cancelable indicates if the event is a cancelable event.
+          */
         public function AnalyticsEvent( type:String, tracker:AnalyticsTracker,
                                         bubbles:Boolean=false, cancelable:Boolean=false )
         {
@@ -38,6 +55,10 @@ package com.google.analytics.events
             this.tracker = tracker;
         }
         
+        /**
+         * Returns the shallow copy of this object.
+         * @return the shallow copy of this object.
+         */
         public override function clone():Event
         {
             return new AnalyticsEvent( type, tracker, bubbles, cancelable );

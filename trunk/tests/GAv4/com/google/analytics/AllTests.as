@@ -21,12 +21,12 @@
 package com.google.analytics
 {
     import buRRRn.ASTUce.framework.*;
-
+    
     import com.google.analytics.campaign.AllTests;
     import com.google.analytics.core.AllTests;
     import com.google.analytics.data.AllTests;
-    import com.google.analytics.utils.AllTests;
     import com.google.analytics.external.AllTests;
+    import com.google.analytics.utils.AllTests;    
 
     public class AllTests
     {
