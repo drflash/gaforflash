@@ -64,6 +64,14 @@ package com.google.analytics.core
     	   _ar = [] ;	
     	}
     	
+        /**
+         * Retrieves, but does not remove, the head of this queue.
+         */
+        public function element():*
+        {
+            return _ar[0] ; 	
+        }
+    	
     	/**
          * Enqueue a new tracker command in the tracker cache.
          * @param name The name of the method to invoke.
@@ -142,7 +150,7 @@ package com.google.analytics.core
         
         public function addItem(item:String, sku:String, name:String, category:String, price:Number, quantity:int):void
         {
-        	enqueue("addIgnoredOrganic", item, sku, name, category, price, quantity) ;
+        	enqueue("addItem", item, sku, name, category, price, quantity) ;
         }
         
         public function addOrganic(newOrganicEngine:String, newOrganicKeyword:String):void
