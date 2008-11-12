@@ -267,30 +267,103 @@ package com.google.analytics.core
             
         }
                 
-//        public function testClearIgnoredOrganic():void
-//        {
-//            //   
-//        }
-//        
-//        public function testClearIgnoredRef():void
-//        {
-//            //
-//        }
-//        
-//        public function testClearOrganic():void
-//        {
-//            //
-//        }
-//        
-//        public function testCreateEventTracker():void
-//        {
-//            //
-//        }        
-//        
-//        public function testCookiePathCopy():void
-//        {
-//            
-//        }       
+        public function testClearIgnoredOrganic():void
+        {
+            cache.clearIgnoredOrganic() ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache clearIgnoredOrganic method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache clearIgnoredOrganic method failed." ) ;
+            
+            assertEquals( e.name , "clearIgnoredOrganic"  , "03 - TrackerCache clearIgnoredOrganic method failed." ) ;
+            assertTrue( e["args"] is Array   , "04 - TrackerCache clearIgnoredOrganic method failed." ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testClearIgnoredRef():void
+        {
+            cache.clearIgnoredRef() ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache clearIgnoredRef method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache clearIgnoredRef method failed." ) ;
+            
+            assertEquals( e.name , "clearIgnoredRef"  , "03 - TrackerCache clearIgnoredRef method failed." ) ;
+            assertTrue( e["args"] is Array  , "04 - TrackerCache clearIgnoredRef method failed." ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testClearOrganic():void
+        {
+            cache.clearOrganic() ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache clearOrganic method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache clearOrganic method failed." ) ;
+            
+            assertEquals( e.name , "clearOrganic"  , "03 - TrackerCache clearOrganic method failed." ) ;
+            assertTrue( e["args"] is Array   , "04 - TrackerCache clearOrganic method failed." ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testCreateEventTracker():void
+        {
+            TrackerCache.CACHE_THROW_ERROR = true ;
+            
+            try
+            {
+                cache.createEventTracker("name") ;
+                fail( "01-01 - TrackerCache createEventTracker method failed, must throw an error." ) ;
+            }
+            catch( e:Error )
+            {
+                assertTrue( e is IllegalOperationError , "01-02 - TrackerCache createEventTracker method failed, must throw an IllegalOperationError.") ;
+                assertEquals
+                ( 
+                   e.message,
+                   "The tracker is not ready and you can use the 'createEventTracker' method for the moment." , 
+                   "01-03 - TrackerCache createEventTracker method failed, must throw an IllegalOperationError.") ;
+            }
+            
+            TrackerCache.CACHE_THROW_ERROR = false ;
+            
+            assertNull
+            (
+               cache.createEventTracker("name")  ,
+                "02 - TrackerCache createEventTracker method failed, must return a null value if the CACHE_THROW_ERROR is true."
+            );            
+            
+        }        
+        
+        public function testCookiePathCopy():void
+        {
+            cache.cookiePathCopy( "path" ) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache cookiePathCopy method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache cookiePathCopy method failed." ) ;
+            
+            assertEquals( e.name , "cookiePathCopy"  , "03 - TrackerCache cookiePathCopy method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["path"], 
+                "04 - TrackerCache cookiePathCopy method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }       
 //        
 //        public function testGetAccount():void
 //        {
@@ -327,150 +400,617 @@ package com.google.analytics.core
 //            
 //        }         
 //        
-//        public function testInitData():void
-//        {
-//            
-//        }
-//        
-//        public function testLink():void
-//        {
-//            
-//        }
-//        
-//        public function testLinkByPost():void
-//        {
-//            
-//        }        
-//        
-//        public function testSetAllowAnchor():void
-//        {
-//            
-//        }
-//        
-//        public function testSetAllowHash():void
-//        {
-//            
-//        }
-//        
-//        public function testSetAllowLinker():void
-//        {
-//            
-//        }
-//             
-//        public function testSetCampContentKey():void
-//        {
-//            
-//        }
-//        
-//        public function testSetCampMediumKey():void
-//        {
-//            
-//        }
-//        
-//        public function testSetCampNameKey():void
-//        {
-//            
-//        }
-//        
-//        public function testSetCampNOKey():void
-//        {
-//            
-//        }
-//        
-//        public function testSetCampSourceKey():void
-//        {
-//            
-//        }
-//        
-//        public function testSetCampTermKey():void
-//        {
-//            
-//        }
-//        
-//        public function testSetCampaignTrack():void
-//        {
-//            
-//        }
-//        
-//        public function testSetClientInfo():void
-//        {
-//            
-//        }        
-//        
-//        public function testSetCookieTimeout():void
-//        {
-//            
-//        }
-//        
-//        public function testSetCookiePath():void
-//        {
-//            
-//        }
-//        
-//        public function testSetDetectFlash():void
-//        {
-//            
-//        }
-//        
-//        public function testSetDetectTitle():void
-//        {
-//            
-//        }        
-//        
-//        public function testSetDomainName():void
-//        {
-//            
-//        }
-//        
-//        public function testSetLocalGifPath():void
-//        {
-//            
-//        }
-//        
-//        public function testSetLocalRemoteServerMode():void
-//        {
-//            
-//        }
-//        
-//        public function testSetLocalServerMode():void
-//        {
-//            
-//        }
-//        
-//        public function testSetRemoteServerMode():void
-//        {
-//            
-//        }
-//        
-//        public function testSetSampleRate():void
-//        {
-//            
-//        }
-//        
-//        public function testSetSessionTimeout():void
-//        {
-//            
-//        }
-//        
-//        public function testSetVar():void
-//        {
-//            
-//        }
-//         
-//        public function testTrackEvent():void
-//        {
-//            
-//        }           
-//        
-//        public function testTrackPageview():void
-//        {
-//            
-//        }         
-//        
-//        public function testTrackTrans():void
-//        {
-//            
-//        }         
+        public function testInitData():void
+        {
+            cache.initData() ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache initData method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache initData method failed." ) ;
+            
+            assertEquals( e.name , "initData"  , "03 - TrackerCache initData method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [], 
+                "04 - TrackerCache initData method failed." 
+            ) ;
+            cache.clear() ;
+        }
+        
+        public function testLink():void
+        {
+            cache.link("targetUrl", false) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache link method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache link method failed." ) ;
+            
+            assertEquals( e.name , "link"  , "03 - TrackerCache link method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["targetUrl", false], 
+                "04 - TrackerCache link method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testLinkByPost():void
+        {
+            cache.linkByPost( "formObject" , false ) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache linkByPost method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache linkByPost method failed." ) ;
+            
+            assertEquals( e.name , "linkByPost"  , "03 - TrackerCache linkByPost method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["formObject" , false], 
+                "04 - TrackerCache linkByPost method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }        
+        
+        public function testSetAllowAnchor():void
+        {
+            cache.setAllowAnchor(false) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setAllowAnchor method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setAllowAnchor method failed." ) ;
+            
+            assertEquals( e.name , "setAllowAnchor"  , "03 - TrackerCache setAllowAnchor method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [false], 
+                "04 - TrackerCache setAllowAnchor method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetAllowHash():void
+        {
+            cache.setAllowHash(false) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setAllowHash method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setAllowHash method failed." ) ;
+            
+            assertEquals( e.name , "setAllowHash"  , "03 - TrackerCache setAllowHash method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [false], 
+                "04 - TrackerCache setAllowHash method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetAllowLinker():void
+        {
+            cache.setAllowLinker(false) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setAllowLinker method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setAllowLinker method failed." ) ;
+            
+            assertEquals( e.name , "setAllowLinker"  , "03 - TrackerCache setAllowLinker method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [false], 
+                "04 - TrackerCache setAllowLinker method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+             
+        public function testSetCampContentKey():void
+        {
+            cache.setCampContentKey("key") ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setCampContentKey method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setCampContentKey method failed." ) ;
+            
+            assertEquals( e.name , "setCampContentKey"  , "03 - TrackerCache setCampContentKey method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["key"], 
+                "04 - TrackerCache setCampContentKey method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetCampMediumKey():void
+        {
+            cache.setCampMediumKey("key") ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setCampMediumKey method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setCampMediumKey method failed." ) ;
+            
+            assertEquals( e.name , "setCampMediumKey"  , "03 - TrackerCache setCampMediumKey method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["key"], 
+                "04 - TrackerCache setCampMediumKey method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetCampNameKey():void
+        {
+            cache.setCampNameKey("name") ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setCampNameKey method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setCampNameKey method failed." ) ;
+            
+            assertEquals( e.name , "setCampNameKey"  , "03 - TrackerCache setCampNameKey method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["name"], 
+                "04 - TrackerCache setCampNameKey method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetCampNOKey():void
+        {
+            cache.setCampNOKey("nokey") ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setCampNOKey method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setCampNOKey method failed." ) ;
+            
+            assertEquals( e.name , "setCampNOKey"  , "03 - TrackerCache setCampNOKey method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["nokey"], 
+                "04 - TrackerCache setCampNOKey method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetCampSourceKey():void
+        {
+            cache.setCampSourceKey("key") ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setCampSourceKey method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setCampSourceKey method failed." ) ;
+            
+            assertEquals( e.name , "setCampSourceKey"  , "03 - TrackerCache setCampSourceKey method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["key"], 
+                "04 - TrackerCache setCampSourceKey method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetCampTermKey():void
+        {
+            cache.setCampTermKey("key") ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setCampTermKey method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setCampTermKey method failed." ) ;
+            
+            assertEquals( e.name , "setCampTermKey"  , "03 - TrackerCache setCampTermKey method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["key"], 
+                "04 - TrackerCache setCampTermKey method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetCampaignTrack():void
+        {
+            cache.setCampaignTrack(true) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setCampaignTrack method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setCampaignTrack method failed." ) ;
+            
+            assertEquals( e.name , "setCampaignTrack"  , "03 - TrackerCache setCampaignTrack method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [true], 
+                "04 - TrackerCache setCampaignTrack method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetClientInfo():void
+        {
+            cache.setClientInfo(true) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setClientInfo method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setClientInfo method failed." ) ;
+            
+            assertEquals( e.name , "setClientInfo"  , "03 - TrackerCache setClientInfo method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [true], 
+                "04 - TrackerCache setClientInfo method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }        
+        
+        public function testSetCookieTimeout():void
+        {
+            cache.setCookieTimeout(2) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setCookieTimeout method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setCookieTimeout method failed." ) ;
+            
+            assertEquals( e.name , "setCookieTimeout"  , "03 - TrackerCache setCookieTimeout method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [2], 
+                "04 - TrackerCache setCookieTimeout method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetCookiePath():void
+        {
+            cache.setCookiePath("path") ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setCookiePath method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setCookiePath method failed." ) ;
+            
+            assertEquals( e.name , "setCookiePath"  , "03 - TrackerCache setCookiePath method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["path"], 
+                "04 - TrackerCache setCookiePath method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetDetectFlash():void
+        {
+            cache.setDetectFlash(true) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setDetectFlash method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setDetectFlash method failed." ) ;
+            
+            assertEquals( e.name , "setDetectFlash"  , "03 - TrackerCache setDetectFlash method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [true], 
+                "04 - TrackerCache setDetectFlash method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetDetectTitle():void
+        {
+            cache.setDetectTitle(true) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setDetectTitle method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setDetectTitle method failed." ) ;
+            
+            assertEquals( e.name , "setDetectTitle"  , "03 - TrackerCache setDetectTitle method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [true], 
+                "04 - TrackerCache setDetectTitle method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }        
+        
+        public function testSetDomainName():void
+        {
+            cache.setDomainName("name") ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setDomainName method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setDomainName method failed." ) ;
+            
+            assertEquals( e.name , "setDomainName"  , "03 - TrackerCache setDomainName method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["name"], 
+                "04 - TrackerCache setDomainName method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetLocalGifPath():void
+        {
+            cache.setLocalGifPath("path") ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setLocalGifPath method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setLocalGifPath method failed." ) ;
+            
+            assertEquals( e.name , "setLocalGifPath"  , "03 - TrackerCache setLocalGifPath method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["path"], 
+                "04 - TrackerCache setLocalGifPath method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetLocalRemoteServerMode():void
+        {
+            cache.setLocalRemoteServerMode() ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setLocalRemoteServerMode method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setLocalRemoteServerMode method failed." ) ;
+            
+            assertEquals( e.name , "setLocalRemoteServerMode"  , "03 - TrackerCache setLocalRemoteServerMode method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [], 
+                "04 - TrackerCache setLocalRemoteServerMode method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetLocalServerMode():void
+        {
+            cache.setLocalServerMode() ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setLocalServerMode method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setLocalServerMode method failed." ) ;
+            
+            assertEquals( e.name , "setLocalServerMode"  , "03 - TrackerCache setLocalServerMode method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [], 
+                "04 - TrackerCache setLocalServerMode method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetRemoteServerMode():void
+        {
+            cache.setRemoteServerMode() ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setRemoteServerMode method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setRemoteServerMode method failed." ) ;
+            
+            assertEquals( e.name , "setRemoteServerMode"  , "03 - TrackerCache setRemoteServerMode method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [], 
+                "04 - TrackerCache setRemoteServerMode method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetSampleRate():void
+        {
+            cache.setSampleRate(1000) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setSampleRate method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setSampleRate method failed." ) ;
+            
+            assertEquals( e.name , "setSampleRate"  , "03 - TrackerCache setSampleRate method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [1000], 
+                "04 - TrackerCache setSampleRate method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetSessionTimeout():void
+        {
+            cache.setSessionTimeout(1000) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setSessionTimeout method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setSessionTimeout method failed." ) ;
+            
+            assertEquals( e.name , "setSessionTimeout"  , "03 - TrackerCache setSessionTimeout method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [1000], 
+                "04 - TrackerCache setSessionTimeout method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testSetVar():void
+        {
+            cache.setVar("value") ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache setVar method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache setVar method failed." ) ;
+            
+            assertEquals( e.name , "setVar"  , "03 - TrackerCache setVar method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["value"], 
+                "04 - TrackerCache setVar method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+         
+        public function testTrackEvent():void
+        {
+            assertTrue
+            ( 
+                cache.trackEvent("category", "action", "label", 1) , 
+                "00 - TrackerCache trackEvent method failed."
+            ) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache trackEvent method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache trackEvent method failed." ) ;
+            
+            assertEquals( e.name , "trackEvent"  , "03 - TrackerCache trackEvent method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["category", "action", "label", 1], 
+                "04 - TrackerCache setVar method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }           
+        
+        public function testTrackPageview():void
+        {
+            cache.trackPageview("pageUrl") ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache trackPageview method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache trackPageview method failed." ) ;
+            
+            assertEquals( e.name , "trackPageview"  , "03 - TrackerCache trackPageview method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["pageUrl"], 
+                "04 - TrackerCache trackPageview method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }         
+        
+        public function testTrackTrans():void
+        {
+            cache.trackTrans() ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache trackTrans method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache trackTrans method failed." ) ;
+            
+            assertEquals( e.name , "trackTrans"  , "03 - TrackerCache trackTrans method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                [], 
+                "04 - TrackerCache trackPageview method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }         
         
     }
 }
