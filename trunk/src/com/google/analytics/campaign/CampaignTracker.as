@@ -126,15 +126,10 @@ package com.google.analytics.campaign
         public var term:String;
         
         /**
-         * The content dimension describes the version of an advertisement
-         * on which a visitor clicked.
-         * It is used in content-targeted advertising and Content (A/B) Testing
-         * to determine which version of an advertisement is most effective at attracting profitable leads.
-         * 
-         * alternative:
-         * Used for A/B testing and content-targeted ads to differentiate ads or links that point to the same URL.
-         * 
-         * variable: utmcct
+         * The content dimension describes the version of an advertisement on which a visitor clicked.
+         * <p>It is used in content-targeted advertising and Content (A/B) Testing to determine which version of an advertisement is most effective at attracting profitable leads.</p>
+         * <p>Alternative: Used for A/B testing and content-targeted ads to differentiate ads or links that point to the same URL.</p>
+         * <p>variable: utmcct</p>
          */
         public var content:String;
         
@@ -170,8 +165,7 @@ package com.google.analytics.campaign
         }
                 
         /**
-         * 
-         *     format for tracker have the following fields (seperated by "|"):
+         * Format for tracker have the following fields (seperated by "|"):
          *         <table>
          *           <tr><td>utmcsr - campaign source</td></tr>
          *           <tr><td>utmccn - campaign name</td></tr>

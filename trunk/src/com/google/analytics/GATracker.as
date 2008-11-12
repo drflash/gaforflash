@@ -260,6 +260,14 @@ package com.google.analytics
         {
             _debug = value;
         }        
+
+        /**
+         * Indicates if the tracker is ready to use.
+         */
+        public function isReady():Boolean
+        {
+            return _ready;
+        }
         
         /**
          * Indicates the mode of the tracking "AS3" or "Bridge".
@@ -293,11 +301,7 @@ package com.google.analytics
             _visualDebug = value;
         }
         
-        public function isReady():Boolean
-        {
-            return _ready;
-        }
-        
+
         /**
          * Builds the tracker.
          */

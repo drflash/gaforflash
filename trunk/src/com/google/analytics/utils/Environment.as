@@ -269,6 +269,23 @@ package com.google.analytics.utils
         }
         
         /**
+         * Indicates if the application is running in AIR.
+         */
+        public function isAIR():Boolean
+        {
+            return (playerType == "Desktop") && (Security.sandboxType.toString() == "application");
+        }        
+        
+        /**
+         * Indicates if the SWF is embeded in an HTML page.
+         * @return <code class="prettyprint">true</code> if the SWF is embeded in an HTML page.
+         */
+        public function isInHTML():Boolean
+        {
+            return Capabilities.playerType == "PlugIn" ;
+        }        
+        
+        /**
          * Indicates the locationPath value.
          */        
         public function get locationPath():String
@@ -511,23 +528,6 @@ package com.google.analytics.utils
         public function set userAgent( custom:UserAgent ):void
         {
             _userAgent = custom;
-        }
-        
-        /**
-         * Indicates if the application is running in AIR.
-         */
-        public function isAIR():Boolean
-        {
-            return (playerType == "Desktop") && (Security.sandboxType.toString() == "application");
-        }        
-        
-        /**
-         * Indicates if the SWF is embeded in an HTML page.
-         * @return <code class="prettyprint">true</code> if the SWF is embeded in an HTML page.
-         */
-        public function isInHTML():Boolean
-        {
-            return Capabilities.playerType == "PlugIn" ;
         }
                 
     }

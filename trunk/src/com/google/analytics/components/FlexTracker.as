@@ -229,6 +229,14 @@ package com.google.analytics.components
         }        
         
         /**
+         * Indicates if the tracker is ready to use.
+         */
+        public function isReady():Boolean
+        {
+            return _ready;
+        }        
+        
+        /**
          * Indicates the mode of the tracking "AS3" or "Bridge".
          */        
         [Inspectable(defaultValue="AS3", enumeration="AS3,Bridge", type="String")]
@@ -261,12 +269,8 @@ package com.google.analytics.components
         {
             _visualDebug = value;
         }
-        
-        public function isReady():Boolean
-        {
-            return _ready;
-        }
-        
+                
         include "../common.txt"
+        
     }
 }
