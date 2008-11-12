@@ -20,9 +20,12 @@
  
 package com.google.analytics.core 
 {
+    import buRRRn.ASTUce.framework.ArrayAssert;
     import buRRRn.ASTUce.framework.TestCase;
     
-    import com.google.analytics.v4.GoogleAnalyticsAPI;    
+    import com.google.analytics.v4.GoogleAnalyticsAPI;
+    
+    import flash.errors.IllegalOperationError;    
 
     public class TrackerCacheTest extends TestCase 
     {
@@ -93,6 +96,19 @@ package com.google.analytics.core
             assertEquals( cache.size()  , 0  , "03 - TrackerCache clear method failed." ) ;
         }
         
+        public function testElement():void 
+        {
+            
+            cache.enqueue("myMethod", 1, 2, 3 ) ;
+            
+            var element:Object = cache.element() ;
+            
+            assertEquals( element.name , "myMethod"  , "01 - TrackerCache element method failed." ) ;
+            ArrayAssert.assertEquals( element.args as Array, [1,2,3]  , "02 - TrackerCache element method failed." ) ;
+            
+            cache.clear() ;
+        }        
+        
         public function testEnqueue():void 
         {
         	
@@ -146,33 +162,111 @@ package com.google.analytics.core
         
         //////////////////////////// GoogleAnalyticsAPI implementation
         
-        // TODO test all methods
+        public function testAddIgnoredOrganic():void
+        {
+            
+            cache.addIgnoredOrganic( "keyword" ) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache addIgnoredOrganic method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache addIgnoredOrganic method failed." ) ;
+            
+            assertEquals( e.name , "addIgnoredOrganic"  , "03 - TrackerCache addIgnoredOrganic method failed." ) ;
+            ArrayAssert.assertEquals( e.args as Array, ["keyword"]  , "04 - TrackerCache addIgnoredOrganic method failed." ) ;
+            
+            cache.clear() ;
+        }
+
+        public function testAddIgnoredRef():void
+        {
+            cache.addIgnoredRef( "referrer" ) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache addIgnoredRef method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache addIgnoredRef method failed." ) ;
+            
+            assertEquals( e.name , "addIgnoredRef"  , "03 - TrackerCache addIgnoredRef method failed." ) ;
+            ArrayAssert.assertEquals( e.args as Array, ["referrer"]  , "04 - TrackerCache addIgnoredRef method failed." ) ;
+            
+            cache.clear() ;
+        }
         
-//        public function testAddIgnoredOrganic():void
-//        {
-//            //
-//        }        
-//
-//        public function testAddIgnoredRef():void
-//        {
-//            //
-//        }
-//        
-//        public function testAddItem():void
-//        {
-//            //
-//        }
-//        
-//        public function testAddOrganic():void
-//        {
-//            //
-//        }        
-//        
-//        public function testAddTrans():void
-//        {
-//            //   
-//        }
-//                
+        public function testAddItem():void
+        {
+            cache.addItem( "item", "sku", "name", "category" , 999, 1 ) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache addItem method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache addItem method failed." ) ;
+            
+            assertEquals( e.name , "addItem"  , "03 - TrackerCache addItem method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["item", "sku", "name", "category" , 999, 1], 
+                "04 - TrackerCache addItem method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }
+        
+        public function testAddOrganic():void
+        {
+            cache.addOrganic( "engine", "keyword" ) ;
+            
+            assertEquals( cache.size() , 1  , "01 - TrackerCache addOrganic method failed." ) ;
+            
+            var e:Object = cache.element() ;
+            
+            assertNotNull( e , "02 - TrackerCache addOrganic method failed." ) ;
+            
+            assertEquals( e.name , "addOrganic"  , "03 - TrackerCache addOrganic method failed." ) ;
+            ArrayAssert.assertEquals
+            ( 
+                e.args as Array , 
+                ["engine", "keyword"], 
+                "04 - TrackerCache addOrganic method failed." 
+            ) ;
+            
+            cache.clear() ;
+        }        
+        
+        public function testAddTrans():void
+        {
+        	       	
+        	TrackerCache.CACHE_THROW_ERROR = true ;
+        	
+            try
+            {
+            	cache.addTrans("orderId" , "affiliation", 2, 1000, 3, "marseille", "bdr", "france") ;
+            	fail( "02-01 - TrackerCache addTrans method failed, must throw an error." ) ;
+            }
+            catch( e:Error )
+            {
+            	assertTrue( e is IllegalOperationError , "02-02 - TrackerCache addTrans method failed, must throw an IllegalOperationError.") ;
+            	assertEquals
+            	( 
+            	   e.message,
+            	   "The tracker is not ready and you can use the 'addTrans' method for the moment." , 
+            	   "02-03 - TrackerCache addTrans method failed, must throw an IllegalOperationError.") ;
+            }
+            
+            TrackerCache.CACHE_THROW_ERROR = false ;
+            
+            assertNull
+            (
+               cache.addTrans("orderId" , "affiliation", 2, 1000, 3, "marseille", "bdr", "france") ,
+                "01 - TrackerCache addTrans method failed, must return a null value if the CACHE_THROW_ERROR is true."
+            );            
+            
+        }
+                
 //        public function testClearIgnoredOrganic():void
 //        {
 //            //   
