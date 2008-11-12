@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,15 +19,11 @@
 
 package com.google.analytics.campaign
 {
-    import buRRRn.ASTUce.framework.*;
-    
+    import buRRRn.ASTUce.framework.*;    
+
     public class AllTests
     {
-        
-        public function AllTests()
-        {
-        }
-        
+                
         public static function suite():ITest
         {
             var suite:TestSuite = new TestSuite( "Google Analytics campaign tests" );
