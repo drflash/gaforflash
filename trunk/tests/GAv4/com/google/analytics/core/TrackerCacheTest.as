@@ -364,42 +364,203 @@ package com.google.analytics.core
             
             cache.clear() ;
         }       
-//        
-//        public function testGetAccount():void
-//        {
-//            
-//        }
-//        
-//        public function testGetClientInfo():void
-//        {
-//            
-//        }
-//        
-//        public function testGetDetectFlash():void
-//        {
-//            
-//        }
-//        
-//        public function testGetDetectTitle():void
-//        {
-//            
-//        }
-//                
-//        public function testGetLocalGifPath():void
-//        {
-//            
-//        }
-//        
-//        public function testGetServiceMode():void
-//        {
-//            
-//        }
-//        
-//        public function testGetVersion():void
-//        {
-//            
-//        }         
-//        
+        
+        public function testGetAccount():void
+        {
+            TrackerCache.CACHE_THROW_ERROR = true ;
+            
+            try
+            {
+                cache.getAccount() ;
+                fail( "01-01 - TrackerCache getAccount method failed, must throw an error." ) ;
+            }
+            catch( e:Error )
+            {
+                assertTrue( e is IllegalOperationError , "01-02 - TrackerCache getAccount method failed, must throw an IllegalOperationError.") ;
+                assertEquals
+                ( 
+                   e.message,
+                   "The tracker is not ready and you can use the 'getAccount' method for the moment." , 
+                   "01-03 - TrackerCache getAccount method failed, must throw an IllegalOperationError.") ;
+            }
+            
+            TrackerCache.CACHE_THROW_ERROR = false ;
+            
+            assertEquals
+            (
+               cache.getAccount()  , "" ,
+                "02 - TrackerCache getAccount method failed, must return a null value if the CACHE_THROW_ERROR is true."
+            );    
+        }
+        
+        public function testGetClientInfo():void
+        {
+            TrackerCache.CACHE_THROW_ERROR = true ;
+            
+            try
+            {
+                cache.getClientInfo() ;
+                fail( "01-01 - TrackerCache getClientInfo method failed, must throw an error." ) ;
+            }
+            catch( e:Error )
+            {
+                assertTrue( e is IllegalOperationError , "01-02 - TrackerCache getClientInfo method failed, must throw an IllegalOperationError.") ;
+                assertEquals
+                ( 
+                   e.message,
+                   "The tracker is not ready and you can use the 'getClientInfo' method for the moment." , 
+                   "01-03 - TrackerCache getClientInfo method failed, must throw an IllegalOperationError.") ;
+            }
+            
+            TrackerCache.CACHE_THROW_ERROR = false ;
+            
+            assertFalse
+            (
+               cache.getClientInfo()  ,
+                "02 - TrackerCache getClientInfo method failed, must return a null value if the CACHE_THROW_ERROR is true."
+            );   
+        }
+        
+        public function testGetDetectFlash():void
+        {
+            TrackerCache.CACHE_THROW_ERROR = true ;
+            
+            try
+            {
+                cache.getDetectFlash() ;
+                fail( "01-01 - TrackerCache getDetectFlash method failed, must throw an error." ) ;
+            }
+            catch( e:Error )
+            {
+                assertTrue( e is IllegalOperationError , "01-02 - TrackerCache getDetectFlash method failed, must throw an IllegalOperationError.") ;
+                assertEquals
+                ( 
+                   e.message,
+                   "The tracker is not ready and you can use the 'getDetectFlash' method for the moment." , 
+                   "01-03 - TrackerCache getDetectFlash method failed, must throw an IllegalOperationError.") ;
+            }
+            
+            TrackerCache.CACHE_THROW_ERROR = false ;
+            
+            assertFalse
+            (
+               cache.getDetectFlash()  ,
+                "02 - TrackerCache getDetectFlash method failed, must return a null value if the CACHE_THROW_ERROR is true."
+            );   
+        }
+        
+        public function testGetDetectTitle():void
+        {
+            TrackerCache.CACHE_THROW_ERROR = true ;
+            
+            try
+            {
+                cache.getDetectTitle() ;
+                fail( "01-01 - TrackerCache getDetectTitle method failed, must throw an error." ) ;
+            }
+            catch( e:Error )
+            {
+                assertTrue( e is IllegalOperationError , "01-02 - TrackerCache getDetectTitle method failed, must throw an IllegalOperationError.") ;
+                assertEquals
+                ( 
+                   e.message,
+                   "The tracker is not ready and you can use the 'getDetectTitle' method for the moment." , 
+                   "01-03 - TrackerCache getDetectTitle method failed, must throw an IllegalOperationError.") ;
+            }
+            
+            TrackerCache.CACHE_THROW_ERROR = false ;
+            
+            assertFalse
+            (
+               cache.getDetectTitle()  ,
+                "02 - TrackerCache getDetectTitle method failed, must return a null value if the CACHE_THROW_ERROR is true."
+            );  
+        }
+                
+        public function testGetLocalGifPath():void
+        {
+            TrackerCache.CACHE_THROW_ERROR = true ;
+            
+            try
+            {
+                cache.getLocalGifPath() ;
+                fail( "01-01 - TrackerCache getLocalGifPath method failed, must throw an error." ) ;
+            }
+            catch( e:Error )
+            {
+                assertTrue( e is IllegalOperationError , "01-02 - TrackerCache getLocalGifPath method failed, must throw an IllegalOperationError.") ;
+                assertEquals
+                ( 
+                   e.message,
+                   "The tracker is not ready and you can use the 'getLocalGifPath' method for the moment." , 
+                   "01-03 - TrackerCache getLocalGifPath method failed, must throw an IllegalOperationError.") ;
+            }
+            
+            TrackerCache.CACHE_THROW_ERROR = false ;
+            
+            assertEquals
+            (
+               cache.getLocalGifPath()  , "" , 
+                "02 - TrackerCache getLocalGifPath method failed, must return a null value if the CACHE_THROW_ERROR is true."
+            );  
+        }
+        
+        public function testGetServiceMode():void
+        {
+            TrackerCache.CACHE_THROW_ERROR = true ;
+            
+            try
+            {
+                cache.getServiceMode() ;
+                fail( "01-01 - TrackerCache getServiceMode method failed, must throw an error." ) ;
+            }
+            catch( e:Error )
+            {
+                assertTrue( e is IllegalOperationError , "01-02 - TrackerCache getServiceMode method failed, must throw an IllegalOperationError.") ;
+                assertEquals
+                ( 
+                   e.message,
+                   "The tracker is not ready and you can use the 'getServiceMode' method for the moment." , 
+                   "01-03 - TrackerCache getServiceMode method failed, must throw an IllegalOperationError.") ;
+            }
+            
+            TrackerCache.CACHE_THROW_ERROR = false ;
+            
+            assertNull
+            (
+               cache.getServiceMode() , 
+                "02 - TrackerCache getServiceMode method failed, must return a null value if the CACHE_THROW_ERROR is true."
+            );  
+        }
+        
+        public function testGetVersion():void
+        {
+            TrackerCache.CACHE_THROW_ERROR = true ;
+            
+            try
+            {
+                cache.getVersion() ;
+                fail( "01-01 - TrackerCache getVersion method failed, must throw an error." ) ;
+            }
+            catch( e:Error )
+            {
+                assertTrue( e is IllegalOperationError , "01-02 - TrackerCache getVersion method failed, must throw an IllegalOperationError.") ;
+                assertEquals
+                ( 
+                   e.message,
+                   "The tracker is not ready and you can use the 'getVersion' method for the moment." , 
+                   "01-03 - TrackerCache getVersion method failed, must throw an IllegalOperationError.") ;
+            }
+            
+            TrackerCache.CACHE_THROW_ERROR = false ;
+            
+            assertEquals
+            (
+               cache.getVersion()  , "" , 
+                "02 - TrackerCache getVersion method failed, must return a null value if the CACHE_THROW_ERROR is true."
+            );
+        }         
+        
         public function testInitData():void
         {
             cache.initData() ;
