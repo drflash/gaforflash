@@ -1,4 +1,5 @@
-﻿/*
+﻿
+/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,13 +22,13 @@ package
 {
     import buRRRn.ASTUce.Runner;
     import buRRRn.ASTUce.config;
-    
+
     import system.config;
     import system.console;
     import system.ui.TextFieldConsole;
-    
+
     import com.google.analytics.AllTests;
-    
+
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
@@ -36,60 +37,57 @@ package
     import flash.text.TextFormat;    
 
     [SWF(width="800", height="600", backgroundColor='0x333333', frameRate='24', pageTitle='GA unit tests', scriptRecursionLimit='1000', scriptTimeLimit='60')]
+
     [ExcludeClass]
+
     public class GA_TestRunner extends Sprite
-        {
-        
+    {
+
         /**
          * Creates a new GA_TestRunner instance. 
          */
         public function GA_TestRunner()
-            {
+        {
             
             // init
-            
-            stage.align     = StageAlign.TOP_LEFT;
+            stage.align = StageAlign.TOP_LEFT;
             stage.scaleMode = StageScaleMode.NO_SCALE;
             
-            textfield                   = new TextField();
-            textfield.defaultTextFormat = new TextFormat( "Courier New" , 14 , 0xFFFFFF );
-            textfield.multiline         = true;
-            textfield.selectable        = true;
-            textfield.wordWrap          = true;
+            textfield = new TextField( );
+            textfield.defaultTextFormat = new TextFormat( "Courier New", 14, 0xFFFFFF );
+            textfield.multiline = true;
+            textfield.selectable = true;
+            textfield.wordWrap = true;
                 
             addChild( textfield ) ;
                 
-            stage.addEventListener( Event.RESIZE , resize );
-            resize();
+            stage.addEventListener( Event.RESIZE, resize );
+            resize( );
             
             console = new TextFieldConsole( textfield );
             
-            system.config.serializer.prettyPrinting  = true;
+            system.config.serializer.prettyPrinting = true;
             
             buRRRn.ASTUce.config.showConstructorList = false;
             
             // testing
-            
-            Runner.main( com.google.analytics.AllTests.suite() );
-            
-            
-            }
-            
+            Runner.main( com.google.analytics.AllTests.suite( ) );
+        }
+
         /**
          * The debug textfield of this application.
          */
         public var textfield:TextField ;
-        
+
         /**
          * Invoked to resize the application content.
          */
         public function resize( e:Event = null ):void
-            {
-            textfield.width  = stage.stageWidth ;
+        {
+            textfield.width = stage.stageWidth ;
             textfield.height = stage.stageHeight ;
-            }
-            
         }
     }
+}
 
 
