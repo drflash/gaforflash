@@ -50,8 +50,9 @@ package com.google.analytics.components
     ServerOperationMode;
     
     /**
-    * Dispatched after the factory has built the tracker object. 
-    */
+     * Dispatched after the factory has built the tracker object.
+     * @eventType com.google.analytics.events.AnalyticsEvent.READY
+     */
     [Event(name="ready", type="com.google.analytics.events.AnalyticsEvent")]
     
     /**

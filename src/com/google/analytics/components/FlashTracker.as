@@ -54,8 +54,9 @@ package com.google.analytics.components
     ServerOperationMode;
     
     /**
-    * Dispatched after the factory has built the tracker object. 
-    */
+     * Dispatched after the factory has built the tracker object.
+     * @eventType com.google.analytics.events.AnalyticsEvent.READY
+     */
     [Event(name="ready", type="com.google.analytics.events.AnalyticsEvent")]
     
     /**
@@ -233,16 +234,16 @@ package com.google.analytics.components
                 }
             }
             
-            dispatchEvent( new AnalyticsEvent( AnalyticsEvent.READY, this ) );
-            _ready = true;
+            _ready = true ;
+            
+            dispatchEvent( new AnalyticsEvent( AnalyticsEvent.READY, this ) ) ;
+            
         }
         
         /**
-        * @private
-        * Factory method for returning a Tracker object.
-        * 
-        * @return {GoogleAnalyticsAPI}
-        */
+         * Factory method for returning a Tracker object.
+         * @private
+         */
         private function _trackerFactory():GoogleAnalyticsAPI
         {
             debug.info( "GATracker (AS3) v" + version +"\naccount: " + account );

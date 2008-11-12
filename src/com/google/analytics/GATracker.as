@@ -48,8 +48,9 @@ package com.google.analytics
     ServerOperationMode;
     
     /**
-    * Dispatched after the factory has built the tracker object. 
-    */
+     * Dispatched after the factory has built the tracker object.
+     * @eventType com.google.analytics.events.AnalyticsEvent.READY
+     */
     [Event(name="ready", type="com.google.analytics.events.AnalyticsEvent")]
     
     /**
@@ -77,6 +78,16 @@ package com.google.analytics
         private var _account:String;
         private var _mode:String;
         private var _visualDebug:Boolean;
+
+        /**
+         * Indicates if the tracker is automatically build.
+         */
+        public static var autobuild:Boolean = true;
+        
+        /**
+         * The version of the tracker.
+         */
+        public static var version:Version = API.version;
         
         /**
          * Creates a new GATracker instance.
@@ -88,7 +99,7 @@ package com.google.analytics
                                    config:Configuration = null, debug:DebugConfiguration = null )
         {
             _display = display;
-            _eventDispatcher = new EventDispatcher();
+            _eventDispatcher = new EventDispatcher( this ) ;
             
             this.account     = account;
             this.mode        = mode;
@@ -110,15 +121,7 @@ package com.google.analytics
             }
         }
         
-        /**
-         * Indicates if the tracker is automatically build.
-         */
-        public static var autobuild:Boolean = true;
-        
-        /**
-         * The version of the tracker.
-         */
-        public static var version:Version = API.version;
+
         
         /**
          * @private
@@ -206,35 +209,9 @@ package com.google.analytics
         private function _bridgeFactory():GoogleAnalyticsAPI
         {
             debug.info( "GATracker (Bridge) v" + version +"\naccount: " + account );
-            
             return new Bridge( account, _debug, _jsproxy );
         }
         
-        public function addEventListener( type:String, listener:Function, useCapture:Boolean = false, priority:int = 0,
-                                          useWeakReference:Boolean = false):void
-        {
-            _eventDispatcher.addEventListener( type, listener, useCapture, priority, useWeakReference );
-        } 
-        
-        public function dispatchEvent( event:Event ):Boolean
-        {
-            return _eventDispatcher.dispatchEvent( event );
-        }
-        
-        public function hasEventListener( type:String ):Boolean
-        {
-            return _eventDispatcher.hasEventListener( type );
-        }
-        
-        public function removeEventListener( type:String, listener:Function, useCapture:Boolean = false ):void
-        {
-            _eventDispatcher.removeEventListener( type, listener, useCapture );
-        }
-        
-        public function willTrigger( type:String ):Boolean
-        {
-            return _eventDispatcher.willTrigger( type );
-        }
         
         /**
          * Indicates the account value of the tracking.
@@ -331,6 +308,63 @@ package com.google.analytics
                 _factory();
             }
         }
+        
+        // IEventDispatcher implementation
+        
+        /**
+         * Allows the registration of event listeners on the event target.
+         * @param type A string representing the event type to listen for. If eventName value is "ALL" addEventListener use addGlobalListener
+         * @param listener The Function that receives a notification when an event of the specified type occurs.
+         * @param useCapture Determinates if the event flow use capture or not.
+         * @param priority Determines the priority level of the event listener.
+         * @param useWeakReference Indicates if the listener is a weak reference.
+         */        
+        public function addEventListener( type:String, listener:Function, useCapture:Boolean = false, priority:int = 0,
+                                          useWeakReference:Boolean = false):void
+        {
+            _eventDispatcher.addEventListener( type, listener, useCapture, priority, useWeakReference );
+        } 
+        
+        /**
+         * Dispatches an event into the event flow.
+         * @param event The Event object that is dispatched into the event flow.
+         * @return <code class="prettyprint">true</code> if the Event is dispatched.
+         */        
+        public function dispatchEvent( event:Event ):Boolean
+        {
+            return _eventDispatcher.dispatchEvent( event );
+        }
+        
+        /**
+         * Checks whether the EventDispatcher object has any listeners registered for a specific type of event.
+         * This allows you to determine where altered handling of an event type has been introduced in the event flow heirarchy by an EventDispatcher object.
+         */         
+        public function hasEventListener( type:String ):Boolean
+        {
+            return _eventDispatcher.hasEventListener( type );
+        }
+        
+        /** 
+         * Removes a listener from the EventDispatcher object.
+         * If there is no matching listener registered with the <code class="prettyprint">EventDispatcher</code> object, then calling this method has no effect.
+         * @param type Specifies the type of event.
+         * @param listener The Function that receives a notification when an event of the specified type occurs.
+         * @param useCapture Determinates if the event flow use capture or not.
+         */        
+        public function removeEventListener( type:String, listener:Function, useCapture:Boolean = false ):void
+        {
+            _eventDispatcher.removeEventListener( type, listener, useCapture );
+        }
+        
+        /**
+         * Checks whether an event listener is registered with this EventDispatcher object or any of its ancestors for the specified event type.
+         * This method returns <code class="prettyprint">true</code> if an event listener is triggered during any phase of the event flow when an event of the specified type is dispatched to this EventDispatcher object or any of its descendants.
+         * @return A value of <code class="prettyprint">true</code> if a listener of the specified type will be triggered; <code class="prettyprint">false</code> otherwise.
+         */        
+        public function willTrigger( type:String ):Boolean
+        {
+            return _eventDispatcher.willTrigger( type );
+        }        
         
         include "common.txt"
         

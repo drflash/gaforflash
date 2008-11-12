@@ -20,7 +20,7 @@
 
 package com.google.analytics.core
 {
-    import buRRRn.ASTUce.framework.*;    
+    import buRRRn.ASTUce.framework.*;        
 
     public class AllTests
     {
@@ -34,6 +34,7 @@ package com.google.analytics.core
             suite.addTestSuite( DocumentInfoTest );
             suite.addTestSuite( BrowserInfoTest );
             suite.addTestSuite( TrackerCacheTest );
+            suite.addTestSuite( TrackerModeTest );
             
             return suite;
         }
