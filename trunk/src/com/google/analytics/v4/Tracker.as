@@ -1407,10 +1407,10 @@ package com.google.analytics.v4
          * but not included as elements in the Keywords reports.
          * 
          * @param newIgnoredOrganicKeyword Keyword search terms to treat as direct traffic.
-         */        
+         */
         public function addIgnoredOrganic(newIgnoredOrganicKeyword:String):void
         {
-            //
+            _config.organic.addIgnoredKeyword( newIgnoredOrganicKeyword );
         }
         
         /**
@@ -1423,10 +1423,10 @@ package com.google.analytics.v4
          * Requests from excluded referrals are still counted in your overall page view count.
          * 
          * @param newIgnoredReferrer Referring site to exclude.
-         */        
+         */
         public function addIgnoredRef(newIgnoredReferrer:String):void
         {
-            //
+            _config.organic.addIgnoredReferral( newIgnoredReferrer );
         }
         
         /**
@@ -1439,15 +1439,15 @@ package com.google.analytics.v4
          */
         public function addOrganic(newOrganicEngine:String, newOrganicKeyword:String):void
         {
-            _config.addOrganicSource(newOrganicEngine, newOrganicKeyword);
+            _config.organic.addSource(newOrganicEngine, newOrganicKeyword);
         }
         
         /**
          * Clears all strings previously set for exclusion from the Keyword reports.
-         */        
+         */
         public function clearIgnoredOrganic():void
         {
-            //
+            _config.organic.clearIgnoredKeywords();
         }
         
         /**
@@ -1455,16 +1455,16 @@ package com.google.analytics.v4
          */
         public function clearIgnoredRef():void
         {
-            //
+            _config.organic.clearIgnoredReferrals();
         }
         
         /**
          * Clears all search engines as organic sources.
          * Use this method when you want to define a customized search engine ordering precedence.
-         */        
+         */
         public function clearOrganic():void
         {
-            _config.clearOrganicSources();
+            _config.organic.clearEngines();
         }
         
         /**
@@ -1472,7 +1472,7 @@ package com.google.analytics.v4
          * See setClientInfo() for more information.
          * 
          * @return 1 if enabled, 0 if disabled.
-         */        
+         */
         public function getClientInfo():Boolean
         {
             return _config.detectClientInfo;
@@ -1483,7 +1483,7 @@ package com.google.analytics.v4
          * See setDetectFlash() for more information.
          * 
          * @return 1 if enabled, 0 if disabled.
-         */        
+         */
         public function getDetectFlash():Boolean
         {
             return _config.detectFlash;
@@ -1493,7 +1493,7 @@ package com.google.analytics.v4
          * Gets the title detection flag.
          * 
          * @return 1 if enabled, 0 if disabled.
-         */        
+         */
         public function getDetectTitle():Boolean
         {
             return _config.detectTitle;
@@ -1508,7 +1508,7 @@ package com.google.analytics.v4
          * at a later date, so use this feature carefully.
          * 
          * @param enable Defaults to true, and browser tracking is enabled. If set to false, browser tracking is disabled.
-         */        
+         */
         public function setClientInfo(enable:Boolean):void
         {
             _config.detectClientInfo = enable;
@@ -1524,11 +1524,11 @@ package com.google.analytics.v4
          * at a later date, so use this feature carefully.
          * 
          * @param enable Default is true and Flash detection is enabled. False disables Flash detection.
-         */        
+         */
         public function setDetectFlash(enable:Boolean):void
         {
             _config.detectFlash = enable;
-            _debug.info( "set detect flash = " + _config.detectFlash );
+            _debug.info( "setDetectFlash( " + _config.detectFlash + " )" );
         }
         
         /**
@@ -1544,11 +1544,11 @@ package com.google.analytics.v4
          * This information cannot be recovered at a later date once it is disabled.
          * 
          * @param enable Defaults to true, and title detection is enabled. If set to false, title detection is disabled.
-         */        
+         */
         public function setDetectTitle(enable:Boolean):void
         {
             _config.detectTitle = enable;
-            _debug.info( "set detect title = " + _config.detectTitle );
+            _debug.info( "setDetectTitle( " + _config.detectTitle + " )" );
         }
         
         // ----------------------------------------
@@ -1561,7 +1561,7 @@ package com.google.analytics.v4
          * See setLocalGifPath() for more information.
          * 
          * @return Path to GIF file on the local server.
-         */        
+         */
         public function getLocalGifPath():String
         {
             return _config.localGIFpath;
@@ -1573,7 +1573,7 @@ package com.google.analytics.v4
          * 1 for remote mode (send data to Google Analytics backend server), or 2 for both local and remote mode.
          * 
          * @return  Server operation mode.
-         */        
+         */
         public function getServiceMode():ServerOperationMode
         {
             return _config.serverMode;
@@ -1586,11 +1586,11 @@ package com.google.analytics.v4
          * methods to determine the path to the local server itself.
          * 
          * @param newLocalGifPath Path to GIF file on the local server.
-         */        
+         */
         public function setLocalGifPath(newLocalGifPath:String):void
         {
             _config.localGIFpath = newLocalGifPath;
-            _debug.info( "set local Gif path = " + _config.localGIFpath );
+            _debug.info( "setLocalGifPath( " + _config.localGIFpath + " )" );
         }
         
         /**
@@ -1599,11 +1599,11 @@ package com.google.analytics.v4
          * You would use this method if you are running the Urchin tracking software
          * on your local servers and want to track data locally as well as via Google Analytics servers.
          * In this scenario, the path to the local server is set by setLocalGifPath().
-         */        
+         */
         public function setLocalRemoteServerMode():void
         {
             _config.serverMode = ServerOperationMode.both;
-            _debug.info( "setLocalRemoteServerMode = ServerOperationMode." + _config.serverMode.toString() );
+            _debug.info( "setLocalRemoteServerMode()" );
         }
         
         /**
@@ -1611,22 +1611,22 @@ package com.google.analytics.v4
          * You would use this method if you are running the Urchin tracking software on your local servers
          * and want all tracking data to be sent to your servers.
          * In this scenario, the path to the local server is set by setLocalGifPath().
-         */        
+         */
         public function setLocalServerMode():void
         {
             _config.serverMode = ServerOperationMode.local;
-            _debug.info( "setLocalServerMode = ServerOperationMode." + _config.serverMode.toString() );
+            _debug.info( "setLocalServerMode()" );
         }
         
         /**
          * Default installations of Google Analytics send tracking data to the Google Analytics server.
          * You would use this method if you have installed the Urchin software for your website
          * and want to send particular tracking data only to the Google Analytics server.
-         */        
+         */
         public function setRemoteServerMode():void
         {
             _config.serverMode = ServerOperationMode.remote;
-            _debug.info( "setRemoteServerMode = ServerOperationMode." + _config.serverMode.toString() );
+            _debug.info( "setRemoteServerMode()" );
         }
         
     }

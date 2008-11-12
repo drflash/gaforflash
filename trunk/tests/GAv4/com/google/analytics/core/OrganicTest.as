@@ -48,6 +48,9 @@ package com.google.analytics.core
         
         public function testAddSameSource():void
         {
+            var original:Boolean = Organic.throwErrors;
+            Organic.throwErrors = true;
+            
             _org0.addSource( "google", "q" );
             
             try
@@ -56,6 +59,7 @@ package com.google.analytics.core
             }
             catch( e:Error )
             {
+                Organic.throwErrors = original;
                 return;
             }
             
@@ -108,6 +112,50 @@ package com.google.analytics.core
             assertEquals( "bonjour le monde", Organic.getKeywordValueFromPath( "q", path2 ) );
         }
         
+        public function testAddIgnoredReferral():void
+        {
+            _org0.addIgnoredReferral( "www.domain.com" );
+            _org0.addIgnoredReferral( "sister.site.com" );
+            
+            assertEquals( 2, _org0.ignoredReferralsCount );
+            assertTrue( _org0.isIgnoredReferral( "www.domain.com" ) );
+            assertTrue( _org0.isIgnoredReferral( "sister.site.com" ) );
+            assertFalse( _org0.isIgnoredReferral( "www.test.com" ) );
+        }
+        
+        public function testClearIgnoredReferrals():void
+        {
+            _org0.addIgnoredReferral( "www.domain.com" );
+            _org0.addIgnoredReferral( "sister.site.com" );
+            _org0.clearIgnoredReferrals();
+            
+            assertEquals( 0, _org0.ignoredReferralsCount );
+            assertFalse( _org0.isIgnoredReferral( "www.domain.com" ) );
+            assertFalse( _org0.isIgnoredReferral( "sister.site.com" ) );
+        }
+        
+        public function testAddIgnoredKeyword():void
+        {
+            _org0.addIgnoredKeyword( "foobar" );
+            _org0.addIgnoredKeyword( "hello" );
+            
+            assertEquals( 2, _org0.ignoredKeywordsCount );
+            assertTrue( _org0.isIgnoredKeyword( "foobar" ) );
+            assertFalse( _org0.isIgnoredKeyword( "FooBar" ) );
+            assertTrue( _org0.isIgnoredKeyword( "hello" ) );
+            assertFalse( _org0.isIgnoredKeyword( "none" ) );
+        }
+        
+        public function testClearIgnoredKeywords():void
+        {
+            _org0.addIgnoredKeyword( "foobar" );
+            _org0.addIgnoredKeyword( "hello" );
+            _org0.clearIgnoredKeywords();
+            
+            assertEquals( 0, _org0.ignoredKeywordsCount );
+            assertFalse( _org0.isIgnoredKeyword( "foobar" ) );
+            assertFalse( _org0.isIgnoredKeyword( "hello" ) );
+        }
         
     }
 }

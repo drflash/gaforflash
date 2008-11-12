@@ -52,7 +52,7 @@ package com.google.analytics.v4
         
         //private var _organicCache:Object  = {};
         
-        private var _organicSources:Array = [];
+        //private var _organicSources:Array = [];
         
         /**
          * Automatic / Organic keyword to ignore.
@@ -322,21 +322,21 @@ package com.google.analytics.v4
             return _organic;
         }
         
-        /**
-         * Indicates the collection (Array) of all organic sources.
-         */
-        public function get organicSources():Array
-        {
-            return _organicSources;
-        }
-        
-        /**
-         * @private
-         */
-        public function set organicSources(sources:Array):void
-        {
-            _organicSources = sources;
-        }
+//        /**
+//         * Indicates the collection (Array) of all organic sources.
+//         */
+//        public function get organicSources():Array
+//        {
+//            return _organicSources;
+//        }
+//        
+//        /**
+//         * @private
+//         */
+//        public function set organicSources(sources:Array):void
+//        {
+//            _organicSources = sources;
+//        }
         
         /**
          * Indicates the sample rate value of the application.
@@ -394,15 +394,6 @@ package com.google.analytics.v4
                 }
             }
         }
-        
-        /**
-         * Removes all organic sources.
-         */
-        public function clearOrganicSources():void
-        {
-            _organic.clear();
-        }
-        
         
     }
 }

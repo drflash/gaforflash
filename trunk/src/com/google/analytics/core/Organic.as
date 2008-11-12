@@ -20,27 +20,46 @@
 
 package com.google.analytics.core
 {
-    import flash.net.URLVariables;                
-
+    import flash.net.URLVariables;
+    
     /**
      * The Organic class.
      */
     public class Organic
     {
+        public static var throwErrors:Boolean = false;
+        
+        /* note:
+           about the different objects cache
+           it's a little crude but it allow us
+           to search engines/referrals/keywords
+           in O(1) instead of O(n)
+        */
+        
         private var _sources:Array;
         private var _sourcesCache:Array;
         private var _sourcesEngine:Array;
+        
+        private var _ignoredReferrals:Array;
+        private var _ignoredReferralsCache:Object;
+        
+        private var _ignoredKeywords:Array;
+        private var _ignoredKeywordsCache:Object;
         
         /**
          * Creates a new Organic instance.
          */
         public function Organic()
         {
-            _sources       = [];
-            _sourcesCache  = [];
-            _sourcesEngine = [];
+            _sources               = [];
+            _sourcesCache          = [];
+            _sourcesEngine         = [];
+            _ignoredReferrals      = [];
+            _ignoredReferralsCache = {};
+            _ignoredKeywords       = [];
+            _ignoredKeywordsCache  = {};
         }
-                
+        
         /**
          * Indicates the count value. 
          */
@@ -55,6 +74,16 @@ package com.google.analytics.core
         public function get sources():Array
         {
             return _sources;
+        }
+        
+        public function get ignoredReferralsCount():int
+        {
+            return _ignoredReferrals.length;
+        }
+        
+        public function get ignoredKeywordsCount():int
+        {
+            return _ignoredKeywords.length;
         }
         
         /**
@@ -77,21 +106,76 @@ package com.google.analytics.core
                     _sourcesEngine[ orgref.engine ].push( _sources.length-1 );
                 }
             }
-            else
+            else if( throwErrors )
             {
-                throw new Error( orgref.toString()+" already exists, we don't add it." );
+                throw new Error( orgref.toString() + " already exists, we don't add it." );
+            }
+        }
+        
+        public function addIgnoredReferral( referrer:String ):void
+        {
+            if( _ignoredReferralsCache[ referrer ] == undefined )
+            {
+                _ignoredReferrals.push( referrer );
+                _ignoredReferralsCache[ referrer ] = _ignoredReferrals.length-1;
+            }
+            else if( throwErrors )
+            {
+                throw new Error( "\"" + referrer + "\" already exists, we don't add it." );
+            }
+        }
+        
+        public function addIgnoredKeyword( keyword:String ):void
+        {
+            if( _ignoredKeywordsCache[ keyword ] == undefined )
+            {
+                _ignoredKeywords.push( keyword );
+                _ignoredKeywordsCache[ keyword ] = _ignoredKeywords.length-1;
+            }
+            else if( throwErrors )
+            {
+                throw new Error( "\"" + keyword + "\" already exists, we don't add it." );
             }
         }
         
         /**
-         * Clear the organic object.
+         * Clear all the engines / ignored referrals / ignored keywords.
          */
         public function clear():void
         {
-            _sources      = [];
-            _sourcesCache = [];
+            clearEngines();
+            clearIgnoredReferrals();
+            clearIgnoredKeywords();
         }
-                
+        
+        /**
+        * Clear the orgnaic engines.
+        */
+        public function clearEngines():void
+        {
+            _sources       = [];
+            _sourcesCache  = [];
+            _sourcesEngine = [];
+        }
+        
+        /**
+        * Clear the ignored referrals.
+        */
+        public function clearIgnoredReferrals():void
+        {
+            _ignoredReferrals = [];
+            _ignoredReferralsCache = {};
+        }
+        
+        /**
+        * Clear the ignored keywords.
+        */
+        public function clearIgnoredKeywords():void
+        {
+            _ignoredKeywords = [];
+            _ignoredKeywordsCache = {};
+        }
+        
         /**
          * Returns the keyword value of the organic referrer.
          * @return the keyword value of the organic referrer.
@@ -139,6 +223,35 @@ package com.google.analytics.core
             
             return null;
         }
+        
+        /**
+        * Indicates if the passed referrer is in the list
+        * of ignored referrals.
+        */
+        public function isIgnoredReferral( referrer:String ):Boolean
+        {
+            if( _ignoredReferralsCache.hasOwnProperty( referrer ) )
+            {
+                return true;
+            }
+            
+            return false;
+        }
+        
+        /**
+        * Indicates if the passed keyword is in the list
+        * of ignored keywords.
+        */
+        public function isIgnoredKeyword( keyword:String ):Boolean
+        {
+            if( _ignoredKeywordsCache.hasOwnProperty( keyword ) )
+            {
+                return true;
+            }
+            
+            return false;
+        }
+        
         
         /**
          * Match the specified value.
