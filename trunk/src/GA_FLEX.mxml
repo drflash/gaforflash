@@ -17,6 +17,7 @@
    
    Contributor(s):
      Zwetan Kjukov <zwetan@gmail.com>.
+     Marc Alcaraz <ekameleon@gmail.com>.
 
  -->
 <mx:Application
@@ -28,16 +29,17 @@
     
     <mx:Script>
         <![CDATA[
-			
-			import flash.events.Event ;
-			
-            public function onComplete( e:Event ):void
+            import com.google.analytics.AnalyticsTracker;
+            import com.google.analytics.events.AnalyticsEvent;
+            
+            public function onAnalyticsReady( event:AnalyticsEvent ):void
             {
-                tracker.trackEvent( "application", "complete" );
-                tracker.trackPageview( "/hello/world" );
+                var t:AnalyticsTracker = event.tracker;
+                t.trackEvent( "tracker", "ready" );
+                t.trackPageview( "/hello/world" );
             }
             
-            public function onButtonClick( e:Event ):void
+            public function onButtonClick( event:Event ):void
             {
                 tracker.trackEvent( "Button", "click", "hello world" );
             }
@@ -50,7 +52,7 @@
         account="UA-4241494-2"
         mode="AS3"
         visualDebug="true"
-        addedToStage="onComplete(event)"
+        ready="onAnalyticsReady(event)"
      />
     
     <mx:Button id="mybutton" label="hello world" click="onButtonClick(event)" />
