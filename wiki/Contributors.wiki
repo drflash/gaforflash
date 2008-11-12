@@ -42,12 +42,12 @@ GA_FLEX  - Flex project
 
 in each project properties in ActionScript build path
 
-add this source path
+add this in source path
 {{{
 tests/GAv4
 }}}
 
-add this library path
+add these in library path
 {{{
 libs/maashaack.swc
 libs/ASTUce.swc
