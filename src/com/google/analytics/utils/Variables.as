@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,19 +15,58 @@
  * 
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
+ *   Marc Alcaraz <ekameleon@gmail.com>.
  */
 
 package com.google.analytics.utils
 {
     import flash.net.URLVariables;
     
+    /**
+     * The Variables class.
+     */
     public dynamic class Variables
     {
-        public var URIencode:Boolean = false;
-        public var sort:Boolean      = true;
+
+        private function _join( vars:Variables ):void
+        {
+            if( !vars )
+            {
+                return;
+            }
+            
+            for( var prop:String in vars )
+            {
+                this[prop] = vars[prop];
+            }
+        }        
+        
+        /**
+         * The URIencode flag.
+         */ 
+        public var URIencode:Boolean ;
+        
+        /**
+         * The Array representation of all "pre" values.
+         */
         public var pre:Array  = [];
+        
+        /**
+         * The Array representation of all "post" values.
+         */        
         public var post:Array = [];
         
+        /**
+         * The sort flag.
+         */
+        public var sort:Boolean  = true;        
+        
+        /**
+         * Creates a new Variables instance.
+         * @param source The source name value.
+         * @param pre The Array representation of all "pre" values.
+         * @param post The Array representation of all "post" values.
+         */
         public function Variables( source:String = null, pre:Array = null, post:Array = null )
         {
             if( source )
@@ -46,6 +85,9 @@ package com.google.analytics.utils
             }
         }
         
+        /**
+         * Decodes the variable with the specified String source.
+         */
         public function decode( source:String ):void
         {
             if( source == "" )
@@ -83,44 +125,28 @@ package com.google.analytics.utils
             
         }
         
-        private function _join( vars:Variables ):void
-        {
-            if( !vars )
-            {
-                return;
-            }
-            
-            for( var prop:String in vars )
-            {
-                this[prop] = vars[prop];
-            }
-        }
-        
+
+        /**
+         * Joins all passed-in Variables objects.
+         * @param ...variables The collection of all variables arguments to join.
+         */
         public function join( ...variables ):void
         {
-            for( var i:int = 0; i<variables.length; i++ )
+        	var l:int = variables.length ;
+            for( var i:int = 0; i< l; i++ )
             {
                 if( !(variables[i] is Variables) )
                 {
                     continue;
                 }
-                
                 _join( variables[i] );
             }
         }
-        
-        public function toURLVariables():URLVariables
-        {
-            var urlvars:URLVariables = new URLVariables();
-            
-            for( var p:String in this )
-            {
-                urlvars[p] = this[p];
-            }
-            
-            return urlvars;
-        }
-        
+                
+        /**
+         * Returns the String representation of the object.
+         * @return the String representation of the object.
+         */
         public function toString():String
         {
             var data:Array = [];
@@ -189,6 +215,22 @@ package com.google.analytics.utils
             
             return data.join( "&" );
         }
+        
+        /**
+         * Returns the URLVariables representation of the object.
+         * @return the URLVariables representation of the object.
+         */
+        public function toURLVariables():URLVariables
+        {
+            var urlvars:URLVariables = new URLVariables();
+            
+            for( var p:String in this )
+            {
+                urlvars[p] = this[p];
+            }
+            
+            return urlvars;
+        }        
         
     }
 }

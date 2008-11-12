@@ -297,8 +297,8 @@ package com.google.analytics.components
         }
         
         /**
-        * The Tracker configuration.
-        */
+         * The Tracker configuration.
+         */
         public function get config():Configuration
         {
             return _config;
@@ -313,8 +313,8 @@ package com.google.analytics.components
         }
         
         /**
-        * The Tracker debug configuration.
-        */
+         * The Tracker debug configuration.
+         */
         public function get debug():DebugConfiguration
         {
             return _debug;
@@ -329,11 +329,19 @@ package com.google.analytics.components
         }        
         
         /**
-        * The Traker mode.
-        * You can select two modes:
-        * - AS3: use AS3 only, no dependency on HTML/JS
-        * - Bridge: use AS3 bridged to HTML/JS which define ga.js
-        */
+         * Indicates if the tracker is ready to use.
+         */
+        public function isReady():Boolean
+        {
+            return _ready;
+        }        
+        
+        /**
+         * The Traker mode.
+         * You can select two modes:
+         * - AS3: use AS3 only, no dependency on HTML/JS
+         * - Bridge: use AS3 bridged to HTML/JS which define ga.js
+         */
         [Inspectable(defaultValue="AS3", enumeration="AS3,Bridge", type="String")]
         public function get mode():String
         {
@@ -367,12 +375,7 @@ package com.google.analytics.components
         {
             _visualDebug = value;
         }
-        
-        public function isReady():Boolean
-        {
-            return _ready;
-        }
-        
+                
         include "../common.txt"
         
     }
