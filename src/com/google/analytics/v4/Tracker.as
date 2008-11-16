@@ -157,9 +157,10 @@ package com.google.analytics.v4
                     // cache campaign info
                     if( _config.campaignTracking )
                     {
-                        _campaign = new CampaignManager( _config, _debug, _buffer, _domainHash, _formatedReferrer, _timeStamp );
-                        
-                        _campaignInfo = _campaign.getCampaignInformation( _noSessionInformation );
+                        _campaign = new CampaignManager( _config, _debug, _buffer,
+                                                         _domainHash, _formatedReferrer, _timeStamp );
+                        trace( "_info.locationSearch: " + _info.locationSearch );
+                        _campaignInfo = _campaign.getCampaignInformation( _info.locationSearch, _noSessionInformation );
                         _debug.info( "campaignInfo: " + _campaignInfo.toURLString() );
                     }
                 }

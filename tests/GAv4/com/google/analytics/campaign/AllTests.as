@@ -29,6 +29,7 @@ package com.google.analytics.campaign
             var suite:TestSuite = new TestSuite( "Google Analytics campaign tests" );
             
             suite.addTestSuite( CampaignManagerTest );
+            suite.addTestSuite( CampaignTrackerTest );
             
             return suite;
         }

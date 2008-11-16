@@ -20,6 +20,8 @@
 
 package com.google.analytics.campaign
 {
+    import com.google.analytics.utils.Variables;
+    
     /**
      * Campaign tracker object.
      * Contains all the data associated with a campaign.
@@ -163,7 +165,58 @@ package com.google.analytics.campaign
             
             return false;
         }
-                
+        
+        /**
+         * Builds the tracker object from a tracker string.
+         *
+         * @private
+         * @param {String} trackerString Tracker string to parse tracker object from.
+         */
+        public function fromTrackerString( tracker:String ):void
+        {
+            /* note:
+               we are basically deserializing the utmz.campaignTracking property
+            */
+            var data:String = tracker.split( CampaignManager.trackingDelimiter ).join( "&" );
+            var vars:Variables = new Variables( data );
+            
+            if( vars.hasOwnProperty( "utmcid" ) )
+            {
+                this.id = vars["utmcid"];
+            }
+            
+            if( vars.hasOwnProperty( "utmcsr" ) )
+            {
+                this.source = vars["utmcsr"];
+            }
+            
+            if( vars.hasOwnProperty( "utmccn" ) )
+            {
+                this.name = vars["utmccn"];
+            }
+            
+            if( vars.hasOwnProperty( "utmcmd" ) )
+            {
+                this.medium = vars["utmcmd"];
+            }
+            
+            if( vars.hasOwnProperty( "utmctr" ) )
+            {
+                this.term = vars["utmctr"];
+            }
+            
+            if( vars.hasOwnProperty( "utmcct" ) )
+            {
+                this.content = vars["utmcct"];
+            }
+            
+            if( vars.hasOwnProperty( "utmgclid" ) )
+            {
+                this.clickId = vars["utmgclid"];
+            }
+            
+        }
+        
         /**
          * Format for tracker have the following fields (seperated by "|"):
          *         <table>

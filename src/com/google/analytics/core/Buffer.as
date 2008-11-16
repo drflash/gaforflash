@@ -20,7 +20,6 @@
 
 package com.google.analytics.core
 {
-    import com.google.analytics.core.Utils;
     import com.google.analytics.data.UTMA;
     import com.google.analytics.data.UTMB;
     import com.google.analytics.data.UTMC;
@@ -361,7 +360,7 @@ package com.google.analytics.core
         
         /**
          * Indicates if the buffer contains an UTMK value.
-         */         
+         */
         public function hasUTMK():Boolean
         {
             if( _utmk )
@@ -397,31 +396,6 @@ package com.google.analytics.core
             
             return false;
         }
-        
-//        /**
-//         * Indicates if the specified value is stored in the buffer.
-//         */
-//        public function hasStoredValue( name:String ):Boolean
-//        {
-//            if( isVolatile() )
-//            {
-//                if( _OBJ[name] )
-//                {
-//                    return true;
-//                }
-//                
-//                return false;
-//            }
-//            else
-//            {
-//                if( _SO.data[name] )
-//                {
-//                    return true;
-//                }
-//                
-//                return false;
-//            }
-//        }
         
         /**
          * Updates a property in the buffer.
@@ -472,6 +446,16 @@ package com.google.analytics.core
         public function isVolatile():Boolean
         {
             return _volatile;
+        }
+        
+        public function isGenuine():Boolean
+        {
+            if( !hasUTMK() )
+            {
+                return true;
+            }
+            
+            return (utmk.hash == generateCookiesHash() );
         }
         
         /**

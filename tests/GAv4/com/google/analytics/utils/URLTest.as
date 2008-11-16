@@ -84,11 +84,11 @@ package com.google.analytics.utils
         
         public function testPath():void
         {
-            assertEquals( "", _empty.path );
-            assertEquals( "some/path/in/the/system", _url2.path );
-            assertEquals( "", _url3.path );
-            assertEquals( "hello/world/", _url4.path );
-            assertEquals( "", _url0.path );
+            assertEquals( "/", _empty.path );
+            assertEquals( "/some/path/in/the/system", _url2.path );
+            assertEquals( "/", _url3.path );
+            assertEquals( "/hello/world/", _url4.path );
+            assertEquals( "/", _url0.path );
         }
         
         public function testSearch():void
