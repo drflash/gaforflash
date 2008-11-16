@@ -20,19 +20,20 @@
 
 package com.google.analytics.campaign
 {
-	/**
-	 * The CampaignKey class.
-	 */
+    /**
+     * The CampaignKey class.
+     */
     public class CampaignKey
     {
-    	
-    	/**
-    	 * Creates a new CampaignKey instance.
-    	 */
+        
+        /**
+         * Creates a new CampaignKey instance.
+         */
         public function CampaignKey()
         {
-        }    	
-    	
+            
+        }
+        
         public var UCCN:String   = "utm_campaign";
         
         public var UCCT:String   = "utm_content";

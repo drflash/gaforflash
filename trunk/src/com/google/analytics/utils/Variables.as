@@ -27,7 +27,7 @@ package com.google.analytics.utils
      */
     public dynamic class Variables
     {
-
+        
         private function _join( vars:Variables ):void
         {
             if( !vars )
@@ -44,7 +44,7 @@ package com.google.analytics.utils
         /**
          * The URIencode flag.
          */ 
-        public var URIencode:Boolean ;
+        public var URIencode:Boolean;
         
         /**
          * The Array representation of all "pre" values.
@@ -59,7 +59,7 @@ package com.google.analytics.utils
         /**
          * The sort flag.
          */
-        public var sort:Boolean  = true;        
+        public var sort:Boolean  = true;
         
         /**
          * Creates a new Variables instance.
@@ -125,14 +125,13 @@ package com.google.analytics.utils
             
         }
         
-
         /**
          * Joins all passed-in Variables objects.
          * @param ...variables The collection of all variables arguments to join.
          */
         public function join( ...variables ):void
         {
-        	var l:int = variables.length ;
+            var l:int = variables.length ;
             for( var i:int = 0; i< l; i++ )
             {
                 if( !(variables[i] is Variables) )
@@ -142,7 +141,7 @@ package com.google.analytics.utils
                 _join( variables[i] );
             }
         }
-                
+        
         /**
          * Returns the String representation of the object.
          * @return the String representation of the object.
@@ -230,7 +229,7 @@ package com.google.analytics.utils
             }
             
             return urlvars;
-        }        
+        }
         
     }
 }

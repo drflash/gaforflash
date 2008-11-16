@@ -145,18 +145,26 @@ package com.google.analytics.data
                 field = fields[i];
                 value = this[ field ];
                 
-                if( value == 0 )
+                if( value is String )
                 {
                     data[ field ] = value;
-                }
-                else if( isNaN(value) )
-                {
-                    continue;
                 }
                 else
                 {
-                    data[ field ] = value;
+                    if( value == 0 )
+                    {
+                        data[ field ] = value;
+                    }
+                    else if( isNaN(value) )
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        data[ field ] = value;
+                    }
                 }
+                
             }
             return data;
         }

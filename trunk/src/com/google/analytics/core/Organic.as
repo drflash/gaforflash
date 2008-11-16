@@ -20,6 +20,8 @@
 
 package com.google.analytics.core
 {
+    import com.google.analytics.utils.Variables;
+    
     import flash.net.URLVariables;
     
     /**
@@ -201,12 +203,14 @@ package com.google.analytics.core
                     path = path.substr(1);
                 }
                 
-                var vars:URLVariables = new URLVariables( path );
+                path = path.split( "+" ).join( "%20" );
+                
+                var vars:Variables = new Variables( path );
                 value = vars[keyword];
             }
             
             return value;
-        }        
+        }
         
         /**
          * Returns the OrganicReferrer by name.

@@ -21,6 +21,8 @@ package com.google.analytics.campaign
 {
     import buRRRn.ASTUce.framework.TestCase;
     
+    import com.google.analytics.core.Buffer;
+    import com.google.analytics.core.Utils;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.v4.Configuration;
     
@@ -28,6 +30,17 @@ package com.google.analytics.campaign
     {
         private var _debug:DebugConfiguration;
         private var _config:Configuration;
+        private var _buffer:Buffer;
+        private var _domainHash:Number;
+        private var _referrer0:String;
+        private var _referrer1:String;
+        private var _referrer2:String;
+        private var _timestamp:Number;
+        
+        private var _cm_noref:CampaignManager;
+        private var _cm0:CampaignManager;
+        private var _cm1:CampaignManager;
+        private var _cm2:CampaignManager;
         
         public function CampaignManagerTest(name:String="")
         {
@@ -38,6 +51,17 @@ package com.google.analytics.campaign
         {
             _debug = new DebugConfiguration();
             _config = new Configuration( _debug );
+            _buffer = new Buffer( _config, _debug, true );
+            _domainHash = Utils.generateHash( "www.domain.com" );
+            _referrer0  = "http://www.otherdomain.com";
+            _referrer1  = "http://www.google.com?q=search+me";
+            _referrer2  = "http://www.otherdomain.com/hello/world";
+            _timestamp  = Math.round((new Date()).getTime() / 1000);
+            
+            _cm_noref = new CampaignManager( _config, _debug, _buffer, _domainHash, "", _timestamp );
+            _cm0 = new CampaignManager( _config, _debug, _buffer, _domainHash, _referrer0, _timestamp );
+            _cm1 = new CampaignManager( _config, _debug, _buffer, _domainHash, _referrer1, _timestamp );
+            _cm2 = new CampaignManager( _config, _debug, _buffer, _domainHash, _referrer2, _timestamp );
         }
         
         public function testIsInvalidReferrer():void
@@ -54,6 +78,137 @@ package com.google.analytics.campaign
             assertTrue( CampaignManager.isFromGoogleCSE( "http://www.google.com/cse?q=keyword", _config ) );
             assertTrue( CampaignManager.isFromGoogleCSE( "https://www.google.org/cse?q=keyword", _config ) );
             assertTrue( CampaignManager.isFromGoogleCSE( "http://google.com/cse?q=keyword", _config ) );
+        }
+        
+        public function testHasNoOverride():void
+        {
+            var search0:String = "";
+            var search1:String = "?a=1&b=2";
+            var search2:String = "?a=1&b=2&utm_nooverride=1";
+            var search3:String = "?a=1&b=2&utm_nooverride=0";
+            var search4:String = "?a=1&b=2&utm_nooverride";
+            
+            assertFalse( _cm0.hasNoOverride( search0 ) );
+            assertFalse( _cm0.hasNoOverride( search1 ) );
+            assertTrue( _cm0.hasNoOverride( search2 ) );
+            assertFalse( _cm0.hasNoOverride( search3 ) );
+            //assertFalse( _cm0.hasNoOverride( search4 ) );
+        }
+        
+        public function testGetTrackerFromSearchString():void
+        {
+            var search0:String = "";
+            var ct0:CampaignTracker = _cm0.getTrackerFromSearchString( search0 );
+            
+            assertFalse( ct0.isValid() );
+            
+            var search1:String = "utm_id=123&&utm_source=www.domain.com&gclid=0123456789&utm_campaign=test&utm_medium=email&utm_term=webmail&utm_content=hello%20world";
+            var ct1:CampaignTracker = _cm0.getTrackerFromSearchString( search1 );
+            
+            assertEquals( "123", ct1.id );
+            assertEquals( "www.domain.com", ct1.source );
+            assertEquals( "0123456789", ct1.clickId );
+            assertEquals( "test", ct1.name );
+            assertEquals( "email", ct1.medium );
+            assertEquals( "webmail", ct1.term );
+            assertEquals( "hello world", ct1.content );
+            
+            var search2:String = "utm_id=123&&utm_source=www.domain.com&gclid=0123456789";
+            var ct2:CampaignTracker = _cm0.getTrackerFromSearchString( search2 );
+            
+            assertEquals( "123", ct2.id );
+            assertEquals( "www.domain.com", ct2.source );
+            assertEquals( "0123456789", ct2.clickId );
+            assertEquals( "(not set)", ct2.name );
+            assertEquals( "(not set)", ct2.medium );
+            assertEquals( "", ct2.term );
+            assertEquals( "", ct2.content );
+            
+            var search3:String = "utm_id=123&&utm_source=www.domain.com&gclid=0123456789";
+            var ct3:CampaignTracker = _cm1.getTrackerFromSearchString( search3 );
+            
+            assertEquals( "123", ct3.id );
+            assertEquals( "www.domain.com", ct3.source );
+            assertEquals( "0123456789", ct3.clickId );
+            assertEquals( "(not set)", ct3.name );
+            assertEquals( "(not set)", ct3.medium );
+            assertEquals( "search me", ct3.term ); //from referrer
+            assertEquals( "", ct3.content );
+            
+        }
+        
+        public function testGetOrganicCampaign():void
+        {
+            var ct0:CampaignTracker = _cm_noref.getOrganicCampaign();
+            
+            assertNull( ct0 ); //no referrer
+            
+            var ct1:CampaignTracker = _cm1.getOrganicCampaign();
+            
+            assertNotNull( ct1 );
+            assertEquals( "google", ct1.source );
+            assertEquals( "(organic)", ct1.name );
+            assertEquals( "organic", ct1.medium );
+            assertEquals( "search me", ct1.term );
+            
+        }
+        
+        public function testGetReferrerCampaign():void
+        {
+            var ct0:CampaignTracker = _cm_noref.getReferrerCampaign();
+            
+            assertNull( ct0 ); //no referrer
+            
+            var ct1:CampaignTracker = _cm0.getReferrerCampaign();
+            
+            assertEquals( "otherdomain.com", ct1.source );
+            assertEquals( "(referral)", ct1.name );
+            assertEquals( "referral", ct1.medium );
+            assertEquals( "/", ct1.content );
+            
+            var ct2:CampaignTracker = _cm2.getReferrerCampaign();
+            
+            assertEquals( "otherdomain.com", ct2.source );
+            assertEquals( "(referral)", ct2.name );
+            assertEquals( "referral", ct2.medium );
+            assertEquals( "/hello/world", ct2.content );
+            
+        }
+        
+        public function testGetDirectCampaign():void
+        {
+            var ct0:CampaignTracker = _cm_noref.getDirectCampaign();
+            
+            assertEquals( "(direct)", ct0.source );
+            assertEquals( "(direct)", ct0.name );
+            assertEquals( "(none)", ct0.medium );
+            
+            var ct1:CampaignTracker = _cm0.getDirectCampaign();
+            
+            assertEquals( "(direct)", ct1.source );
+            assertEquals( "(direct)", ct1.name );
+            assertEquals( "(none)", ct1.medium );
+            
+            var ct2:CampaignTracker = _cm1.getDirectCampaign();
+            
+            assertEquals( "(direct)", ct2.source );
+            assertEquals( "(direct)", ct2.name );
+            assertEquals( "(none)", ct2.medium );
+            
+        }
+        
+        public function testGetCampaignInformation():void
+        {
+            var ci0:CampaignInfo = _cm_noref.getCampaignInformation( "", true );
+            
+            assertEquals( "utmcn=1", ci0.toURLString() );
+            assertEquals( "utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)", _buffer.utmz.campaignTracking );
+            
+            var ci1:CampaignInfo = _cm1.getCampaignInformation( "", true ); //from referrer
+            
+            assertEquals( "utmcn=1", ci1.toURLString() );
+            assertEquals( "utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=search%20me", _buffer.utmz.campaignTracking );
+            
         }
         
     }

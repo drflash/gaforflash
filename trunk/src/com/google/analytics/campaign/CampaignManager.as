@@ -25,6 +25,7 @@ package com.google.analytics.campaign
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.URL;
+    import com.google.analytics.utils.Variables;
     import com.google.analytics.v4.Configuration;
     
     /**
@@ -108,7 +109,7 @@ package com.google.analytics.campaign
                 if( url.search.indexOf( config.googleSearchParam+"=" ) > -1 )
                 {
                     // check if this is google custom search engine.
-                    if( url.path == config.googleCsePath )
+                    if( url.path == "/"+config.googleCsePath )
                     {
                         return true;
                     }
@@ -142,30 +143,129 @@ package com.google.analytics.campaign
          * @return {String} Gif hit key-value pair indicating wether this is a repeated
          *     click, or a brand new campaign for the visitor.
          */
-        public function getCampaignInformation( noSessionInformation:Boolean ):CampaignInfo
+        public function getCampaignInformation( search:String, noSessionInformation:Boolean ):CampaignInfo
         {
             var campInfo:CampaignInfo = new CampaignInfo();
             var campaignTracker:CampaignTracker;
+            var duplicateCampaign:Boolean = false;
+            var campNoOverride:Boolean = false;
+            var responseCount:int = 0;
             
-            //TODO
-            /* note:
-               for now we use a default direct campaign
+            /* Allow linker functionality, and cookie is parsed from URL, and the cookie
+              hash matches.
             */
-            campaignTracker = getDirectCampaign();
-            _debug.info( "campaign tracking: " + campaignTracker.toTrackerString() );
-            
-            _buffer.utmz.domainHash       = _domainHash;
-            _buffer.utmz.campaignCreation = _timeStamp;
-            _buffer.utmz.campaignSessions = 1;
-            _buffer.utmz.responseCount    = 1;
-            _buffer.utmz.campaignTracking = campaignTracker.toTrackerString();
-            
-            if( _debug.verbose )
+            if( _config.allowLinker && _buffer.isGenuine() )
             {
-                _debug.info( _buffer.utmz.toString() );
+                if( !_buffer.hasUTMZ() )
+                {
+                    return campInfo;
+                }
             }
             
-            //campInfo = new CampaignInfo( false, true );
+            // retrieves tracker from search string
+            campaignTracker = getTrackerFromSearchString( search );
+            
+            if( isValid( campaignTracker ) )
+            {
+                // check for no override flag in search string
+                campNoOverride = hasNoOverride( search );
+                
+                // if no override is true, and there is a utmz value, then do nothing now
+                if( campNoOverride && !_buffer.hasUTMZ() )
+                {
+                    return campInfo;
+                }
+            }
+            
+            // Get organic campaign if there is no campaign tracker from search string.
+            if( !isValid( campaignTracker ) )
+            {
+                campaignTracker = getOrganicCampaign();
+                
+                //If there is utmz cookie value, and organic keyword is being ignored, do nothing.
+                if( !_buffer.hasUTMZ() && isIgnoredKeyword( campaignTracker ) )
+                {
+                    return campInfo;
+                }
+            }
+            
+            /* Get referral campaign if there is no campaign tracker from search string
+               and organic campaign, and either utmb or utmc is missing (no session).
+            */
+            if( !isValid( campaignTracker ) && noSessionInformation )
+            {
+                campaignTracker = getReferrerCampaign();
+                
+                //If there is utmz cookie value, and referral domain is being ignored, do nothing
+                if( !_buffer.hasUTMZ() && isIgnoredReferral( campaignTracker ) )
+                {
+                    return campInfo;
+                }
+            }
+            
+            /* Get direct campaign if there is no campaign tracker from search string,
+              organic campaign, or referral campaign.
+            */
+            if( !isValid( campaignTracker ) )
+            {
+                /* Only get direct campaign when there is no utmz cookie value, and there is
+                   no session. (utmb or utmc is missing value)
+                */
+                if( !_buffer.hasUTMZ() && noSessionInformation )
+                {
+                    campaignTracker = getDirectCampaign();
+                }
+                
+            }
+            
+            //Give up (do nothing) if still cannot get campaign tracker.
+            if( !isValid( campaignTracker ) )
+            {
+                return campInfo;
+            }
+            
+            //utmz cookie have value, check whether campaign is duplicated.
+            if( _buffer.hasUTMZ() && !_buffer.utmz.isEmpty() )
+            {
+                var oldTracker:CampaignTracker = new CampaignTracker();
+                    oldTracker.fromTrackerString( _buffer.utmz.campaignTracking );
+                
+                duplicateCampaign = ( oldTracker.toTrackerString() == campaignTracker.toTrackerString() );
+                
+                responseCount = _buffer.utmz.responseCount;
+            }
+            
+            /* Record as new campaign if and only if campaign is not duplicated, or there
+              is no session information.
+            */
+            if( !duplicateCampaign || noSessionInformation )
+            {
+                var sessionCount:int = _buffer.utma.sessionCount;
+                responseCount++;
+                
+                // if there is no session number, increment
+                if( sessionCount == 0 )
+                {
+                    sessionCount = 1;
+                }
+                
+                // construct utmz cookie
+                _buffer.utmz.domainHash       = _domainHash;
+                _buffer.utmz.campaignCreation = _timeStamp;
+                _buffer.utmz.campaignSessions = sessionCount;
+                _buffer.utmz.responseCount    = responseCount;
+                _buffer.utmz.campaignTracking = campaignTracker.toTrackerString();
+                
+                _debug.info( _buffer.utmz.toString() );
+                
+                // indicate new campaign
+                campInfo = new CampaignInfo( false, true );
+            }
+            else
+            {
+                // indicate repeated campaign
+                campInfo = new CampaignInfo( false, false );
+            }
             
             return campInfo;
         }
@@ -181,13 +281,12 @@ package com.google.analytics.campaign
             
             // if there is no referrer, or referrer is not a valid URL, or the referrer
             // is google custom search engine, return an empty tracker
-            if( isInvalidReferrer( _referrer ) && isFromGoogleCSE( _referrer, _config ) )
+            if( isInvalidReferrer( _referrer ) || isFromGoogleCSE( _referrer, _config ) )
             {
                 return camp;
             }
             
             var ref:URL = new URL( _referrer );
-            
             var name:String = "";
             
             if( ref.hostName != "" )
@@ -217,7 +316,7 @@ package com.google.analytics.campaign
                 var currentOrganicSource:OrganicReferrer = _config.organic.getReferrerByName( name );
                 
                 // extract keyword value from query string
-                var keyword:String = _config.organic.getKeywordValue( currentOrganicSource, _referrer );
+                var keyword:String = _config.organic.getKeywordValue( currentOrganicSource, ref.search );
                 
                 camp = new CampaignTracker();
                 camp.source = currentOrganicSource.engine;
@@ -238,17 +337,32 @@ package com.google.analytics.campaign
          */
         public function getReferrerCampaign():CampaignTracker
         {
-            var hostname:String = "";
-            var content:String  = "";
-            var camp:CampaignTracker = new CampaignTracker();
+            var camp:CampaignTracker;
             
+            // if there is no referrer, or referrer is not a valid URL, or the referrer
+            // is google custom search engine, return an empty tracker
+            if( isInvalidReferrer( _referrer ) || isFromGoogleCSE( _referrer, _config ) )
+            {
+                return camp;
+            }
+            
+            // get host name from referrer
+            var ref:URL = new URL( _referrer );
+            var hostname:String = ref.hostName;
+            var content:String  = ref.path;
+            
+            if( hostname.indexOf( "www." ) == 0 )
+            {
+                hostname = hostname.substr( 4 );
+            }
+            
+            camp = new CampaignTracker()
             camp.source  = hostname;
             camp.name    = "(referral)";
             camp.medium  = "referral";
             camp.content = content;
             
             return camp;
-            
         }
         
         /**
@@ -262,6 +376,172 @@ package com.google.analytics.campaign
                 camp.source = "(direct)";
                 camp.name   = "(direct)";
                 camp.medium = "(none)";
+            
+            return camp;
+        }
+        
+        public function hasNoOverride( search:String ):Boolean
+        {
+            var key:CampaignKey = _config.campaignKey;
+            
+            if( search == "" )
+            {
+                return false;
+            }
+            
+            var variables:Variables = new Variables( search );
+            var value:String           = "";
+            
+            if( variables.hasOwnProperty( key.UCNO ) )
+            {
+                value = variables[ key.UCNO ];
+                
+                switch( value )
+                {
+                    case "1":
+                    return true;
+                    
+                    case "":
+                    case "0":
+                    default:
+                    return false;
+                }
+            }
+            
+            return false;
+        }
+        
+        /**
+         * This method returns true if and only if campaignTracker is a valid organic
+         * campaign tracker (utmcmd=organic), and the keyword (utmctr) is contained in
+         * the ignore watch list (ORGANIC_IGNORE).
+         *
+         * @private
+         * @param {_gat.GA_Campaign_.Tracker_} campaignTracker Campaign tracker
+         *     reference.
+         *
+         * @return {Boolean} Return true if and only if the campaign tracker is a valid
+         *     organic campaign tracker, and the keyword is contained in the ignored
+         *     watch list.
+         */
+        public function isIgnoredKeyword( tracker:CampaignTracker ):Boolean
+        {
+            // organic campaign, try to match ignored keywords
+            if( tracker && (tracker.medium == "organic") )
+            {
+                return _config.organic.isIgnoredKeyword( tracker.term );
+            }
+            
+            return false;
+        }
+        
+        /**
+         * This method returns true if and only if campaignTracker is a valid
+         * referreal campaign tracker (utmcmd=referral), and the domain (utmcsr) is
+         * contained in the ignore watch list (REFERRAL_IGNORE).
+         *
+         * @private
+         * @param {String} campaignTracker String representation of the campaign
+         *     tracker.
+         *
+         * @return {Boolean} Return true if and only if the campaign tracker is a
+         *     valid referral campaign tracker, and the domain is contained in the
+         *     ignored watch list.
+         */
+        public function isIgnoredReferral( tracker:CampaignTracker ):Boolean
+        {
+            // referral campaign, try to match ignored domains
+            if( tracker && (tracker.medium == "referral") )
+            {
+                return _config.organic.isIgnoredReferral( tracker.source );
+            }
+            
+            return false;
+        }
+        
+        public function isValid( tracker:CampaignTracker ):Boolean
+        {
+            if( tracker && tracker.isValid() )
+            {
+                return true;
+            }
+            
+            return false;
+        }
+        
+        
+        /**
+        * Retrieves campaign tracker from search string.
+        * 
+        * @param {String} searchString Search string to retrieve campaign tracker from.
+        * @return {String} Return campaign tracker retrieved from search string.
+        */
+        public function getTrackerFromSearchString( search:String ):CampaignTracker
+        {
+            var organicCampaign:CampaignTracker = getOrganicCampaign();
+            var camp:CampaignTracker            = new CampaignTracker();
+            var key:CampaignKey                 = _config.campaignKey;
+            
+            if( search == "" )
+            {
+                return camp;
+            }
+            
+            var variables:Variables = new Variables( search );
+            
+            //id
+            if( variables.hasOwnProperty( key.UCID ) )
+            {
+                camp.id = variables[ key.UCID ];
+            }
+            
+            //source
+            if( variables.hasOwnProperty( key.UCSR ) )
+            {
+                camp.source = variables[ key.UCSR ];
+            }
+            
+            //click id
+            if( variables.hasOwnProperty( key.UGCLID ) )
+            {
+                camp.clickId = variables[ key.UGCLID ];
+            }
+            
+            //name
+            if( variables.hasOwnProperty( key.UCCN ) )
+            {
+                camp.name = variables[ key.UCCN ];
+            }
+            else
+            {
+                camp.name = "(not set)";
+            }
+            
+            //medium
+            if( variables.hasOwnProperty( key.UCMD ) )
+            {
+                camp.medium = variables[ key.UCMD ];
+            }
+            else
+            {
+                camp.medium = "(not set)";
+            }
+            
+            //term
+            if( variables.hasOwnProperty( key.UCTR ) )
+            {
+                camp.term = variables[ key.UCTR ];
+            }
+            else if( organicCampaign && organicCampaign.term != "" )
+            {
+                camp.term = organicCampaign.term;
+            }
+            
+            //content
+            if( variables.hasOwnProperty( key.UCCT ) )
+            {
+                camp.content = variables[ key.UCCT ];
+            }
             
             return camp;
         }

@@ -169,9 +169,13 @@ package com.google.analytics.utils
                 _path = _path.split( "?" )[0];
             }
             
-            if( _path.charAt(0) == "/" )
+            /* note:
+               we want our path to always start with /
+               (even if the path is empty)
+            */
+            if( _path.charAt(0) != "/" )
             {
-                _path = _path.substr( 1 );
+                _path = "/"+_path;
             }
             
             return _path;
