@@ -23,6 +23,31 @@ package com.google.analytics.data
     public interface Cookie
     {
         /**
+        * The cookie creation date
+        */
+        function get creation():Date;
+        
+        /**
+        * @private
+        */
+        function set creation( value:Date ):void;
+        
+        /**
+        * The cookie expiration date.
+        */
+        function get expiration():Date;
+        
+        /**
+        * @private
+        */
+        function set expiration( value:Date ):void;
+        
+        /**
+        * Indicates if the cookie has expired.
+        */
+        function isExpired():Boolean;
+        
+        /**
          * Format data to render in the URL.
          */
         function toURLString():String;

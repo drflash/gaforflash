@@ -26,6 +26,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.Organic;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.debug.DebugConfiguration;
+    import com.google.analytics.utils.Timespan;
     
     /**
      * Google Analytic Tracker Code (GATC)'s configuration / state component.
@@ -49,22 +50,6 @@ package com.google.analytics.v4
         private var _domain:Domain = new Domain( DomainNameMode.auto );
         
         private var _organic:Organic = new Organic();
-        
-        //private var _organicCache:Object  = {};
-        
-        //private var _organicSources:Array = [];
-        
-        /**
-         * Automatic / Organic keyword to ignore.
-         * @private
-         */
-        //private var _organicIgnore:Array = [];
-        
-        /**
-         * Referral domains to ignore.
-         * @private
-         */
-        //private var _referralIgnore:Array = [];
         
         /**
          * Substring of host names to ignore when auto decorating href anchor elements for outbound link tracking.
@@ -126,12 +111,12 @@ package com.google.analytics.v4
         /**
          * Default cookie expiration time in seconds. (6 months).
          */
-        public var conversionTimeout:Number = 15768000;
+        public var conversionTimeout:Number = Timespan.sixmonths;
         
         /**
          * Default inactive session timeout in seconds (30 minutes).
          */
-        public var sessionTimeout:Number = 1800;
+        public var sessionTimeout:Number = Timespan.thirtyminutes;
         
         /**
          * Upper limit for number of href anchor tags to examine.  

@@ -20,6 +20,8 @@
 
 package com.google.analytics.data
 {
+    import com.google.analytics.utils.Timespan;
+    
     /**
      * Urchin Tracking Module Cookie A.
      * The visitor tracking cookie.
@@ -53,7 +55,10 @@ package com.google.analytics.data
         public function UTMA( domainHash:Number = NaN, sessionId:Number = NaN, firstTime:Number = NaN,
                               lastTime:Number = NaN, currentTime:Number = NaN, sessionCount:Number = NaN )
         {
-            super( "utma", "__utma", ["domainHash","sessionId","firstTime","lastTime","currentTime","sessionCount"] );
+            super( "utma",
+                   "__utma",
+                   ["domainHash","sessionId","firstTime","lastTime","currentTime","sessionCount"],
+                   Timespan.twoyears * 1000 );
             
             this.domainHash   = domainHash;
             this.sessionId    = sessionId;

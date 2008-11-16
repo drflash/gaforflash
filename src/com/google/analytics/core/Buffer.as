@@ -120,16 +120,33 @@ package com.google.analytics.core
          */
         public function Buffer( config:Configuration, debug:DebugConfiguration, volatile:Boolean = false, data:Object = null )
         {
-        	
-        	// note : data should be used to inject the data from the query string
-        	
+            
+            // note : data should be used to inject the data from the query string
+            
             _config = config;
             _debug  = debug;
+            
+            /* note:
+               we update the timespan from config only once
+               (when the factory is created)
+               if we wanted to interactively change the timespan
+               we would have to dispatch events and use
+               a changeTimespan() method on UTMCookie objects
+               
+               UTMA/UTMV/UTMX timespan are not user configurable
+            */
+            UTMB.defaultTimespan = _config.sessionTimeout;
+            UTMZ.defaultTimespan = _config.conversionTimeout;
             
             if( !volatile )
             {
                 _SO = SharedObject.getLocal( _config.cookieName, _config.cookiePath );
-                //_SO.clear();
+                
+                /* note:
+                   if some data of the SO are deleted
+                   we want to force a save()
+                */
+                var saveSO:Boolean = false;
                 
                 trace( "---------------------------" );
                 trace( "SO size: " + _SO.size );
@@ -146,8 +163,22 @@ package com.google.analytics.core
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( "UTMA = " + _utma.toString() + " found !!" );
+                        _debug.info( "found: " + _utma.toString(true) );
                     }
+                    
+                    if( _utma.isExpired() )
+                    {
+                        if( _debug.verbose )
+                            {
+                                _debug.warning( "UTMA has expired" );
+                            }
+                        
+                        _SO.data.utma = null;
+                        _utma = null;
+                        delete _SO.data.utma;
+                        saveSO = true;
+                    }
+                    
                 }
                 
                 if( _SO.data.utmb )
@@ -161,8 +192,22 @@ package com.google.analytics.core
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( "UTMB = " + _utmb.toString() + " found !!" );
+                        _debug.info( "found: " + _utmb.toString(true) );
                     }
+                    
+                    if( _utmb.isExpired() )
+                    {
+                        if( _debug.verbose )
+                            {
+                                _debug.warning( "UTMB has expired" );
+                            }
+                        
+                        _SO.data.utmz = null;
+                        _utmb = null;
+                        delete _SO.data.utmb;
+                        saveSO = true;
+                    }
+                    
                 }
                 
                 /* note:
@@ -173,6 +218,7 @@ package com.google.analytics.core
                 if( _SO.data.utmc )
                 {
                     delete _SO.data.utmc;
+                    saveSO = true;
                 }
                 
                 if( _SO.data.utmk )
@@ -186,7 +232,7 @@ package com.google.analytics.core
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( "UTMK = " + _utmk.toString() + " found !!" );
+                        _debug.info( "found: " + _utmk.toString() );
                     }
                 }
                 
@@ -201,8 +247,22 @@ package com.google.analytics.core
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( "UTMV = " + _utmv.toString() + " found !!" );
+                        _debug.info( "found: " + _utmv.toString(true) );
                     }
+                    
+                    if( _utmv.isExpired() )
+                    {
+                        if( _debug.verbose )
+                            {
+                                _debug.warning( "UTMV has expired" );
+                            }
+                        
+                        _SO.data.utmv = null;
+                        _utmv = null;
+                        delete _SO.data.utmv;
+                        saveSO = true;
+                    }
+                    
                 }
                 
                 if( _SO.data.utmz )
@@ -216,8 +276,27 @@ package com.google.analytics.core
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( "UTMZ = " + _utmz.toString() + " found !!" );
+                        _debug.info( "found: " + _utmz.toString(true) );
                     }
+                    
+                    if( _utmz.isExpired() )
+                    {
+                        if( _debug.verbose )
+                            {
+                                _debug.warning( "UTMZ has expired" );
+                            }
+                        
+                        _SO.data.utmz = null;
+                        _utmz = null;
+                        delete _SO.data.utmz;
+                        saveSO = true;
+                    }
+                    
+                }
+                
+                if( saveSO )
+                {
+                    save();
                 }
                 
             }

@@ -20,6 +20,8 @@
 
 package com.google.analytics.data
 {
+    import com.google.analytics.utils.Timespan;
+    
     /**
      * Urchin Tracking Module Cookie Z.
      * The campaign tracking cookie.
@@ -44,13 +46,18 @@ package com.google.analytics.data
         private var _responseCount:Number;       //3
         private var _campaignTracking:String;    //4
         
+        public static var defaultTimespan:Number = Timespan.sixmonths;
+        
         /**
          * Creates a new UTMZ instance.
          */
         public function UTMZ( domainHash:Number = NaN, campaignCreation:Number = NaN, campaignSessions:Number = NaN,
                               responseCount:Number = NaN, campaignTracking:String = "" )
         {
-            super( "utmz", "__utmz", ["domainHash","campaignCreation","campaignSessions","responseCount","campaignTracking"] );
+            super( "utmz",
+                   "__utmz",
+                   ["domainHash","campaignCreation","campaignSessions","responseCount","campaignTracking"],
+                   defaultTimespan * 1000 );
             
             this.domainHash       = domainHash;
             this.campaignCreation = campaignCreation;

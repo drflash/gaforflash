@@ -20,6 +20,8 @@
 
 package com.google.analytics.data
 {
+    import com.google.analytics.utils.Timespan;
+    
     /**
      * Urchin Tracking Module Cookie V.
      * The user defined cookie.
@@ -47,7 +49,11 @@ package com.google.analytics.data
          */
         public function UTMV( domainHash:Number = NaN, value:String = "" )
         {
-            super( "utmv", "__utmv", ["domainHash","value"] );
+            super( "utmv",
+                   "__utmv",
+                   ["domainHash","value"],
+                   Timespan.twoyears * 1000 );
+            
             this.domainHash = domainHash;
             this.value      = value;
         }

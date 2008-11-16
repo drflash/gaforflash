@@ -121,8 +121,6 @@ package com.google.analytics
             }
         }
         
-
-        
         /**
          * @private
          * Factory to build the different trackers

@@ -20,6 +20,8 @@
 
 package com.google.analytics.data
 {
+    import com.google.analytics.utils.Timespan;
+    
     /**
      * Urchin Tracking Module Cookie B.
      * The session timeout cookie.
@@ -47,12 +49,17 @@ package com.google.analytics.data
         private var _token:Number;      //2
         private var _lastTime:Number;   //3
         
+        public static var defaultTimespan:Number = Timespan.thirtyminutes; //seconds
+        
         /**
          * Creates a new UTMB instance.
-         */        
+         */
         public function UTMB( domainHash:Number = NaN, trackCount:Number = NaN, token:Number = NaN, lastTime:Number = NaN )
         {
-            super( "utmb", "__utmb", ["domainHash","trackCount","token","lastTime"] );
+            super( "utmb",
+                   "__utmb",
+                   ["domainHash","trackCount","token","lastTime"],
+                   defaultTimespan * 1000 ); //milliseconds
             
             this.domainHash = domainHash;
             this.trackCount = trackCount;

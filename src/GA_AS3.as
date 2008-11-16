@@ -57,6 +57,8 @@ package
             tracker.mode = "AS3";
             tracker.visualDebug = true;
             tracker.debug.verbose = true;
+            //tracker.config.sessionTimeout = 60;
+            //tracker.config.conversionTimeout = 180;
             GATracker(tracker).build();
             
             //tracker.setSampleRate( -0.5 );
