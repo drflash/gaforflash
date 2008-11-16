@@ -20,6 +20,8 @@
 
 package com.google.analytics.data
 {
+    import com.google.analytics.utils.Timespan;
+    
     /**
      * Urchin Tracking Module Cookie X.
      * The Website Optimizer cookie.
@@ -45,7 +47,10 @@ package com.google.analytics.data
         public function UTMX()
         {
             //not implemented yet
-            super( "utmx", "__utmx", ["dn","hash","timeout","tcp"] );
+            super( "utmx",
+                   "__utmx",
+                   ["dn","hash","timeout","tcp"],
+                   Timespan.twoyears * 1000 );
         }
         
     }

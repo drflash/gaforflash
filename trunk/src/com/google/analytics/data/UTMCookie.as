@@ -20,8 +20,8 @@
 
 package com.google.analytics.data
 {
-    import com.google.analytics.core.Buffer;    
-
+    import com.google.analytics.core.Buffer;
+    
     /**
     * The Urchin Tracking Module base cookie.
     * 
@@ -38,17 +38,94 @@ package com.google.analytics.data
     */
     public class UTMCookie implements Cookie
     {
+        private var _creation:Date;
+        private var _expiration:Date;
+        private var _timespan:Number;
         
         protected var name:String;
         protected var inURL:String;
         protected var fields:Array;
         public var proxy:Buffer;
         
-        public function UTMCookie( name:String, inURL:String, fields:Array )
+        public function UTMCookie( name:String, inURL:String, fields:Array, timespan:Number = 0 )
         {
+            
             this.name   = name;
             this.inURL  = inURL;
             this.fields = fields;
+            
+            _timestamp( timespan );
+        }
+        
+        private function _timestamp( timespan:Number ):void
+        {
+            creation = new Date();
+            _timespan = timespan;
+            
+            /* note:
+               we only set the expiration date
+               if the timespan has been defined
+            */
+            if( timespan > 0 )
+            {
+                expiration = new Date( creation.valueOf() + timespan );
+            }
+        }
+        
+        /**
+         * Update the cookie.
+         */
+        protected function update():void
+        {
+            resetTimestamp();
+            
+            if( proxy )
+            {
+                proxy.update( name, toSharedObject() );
+            }
+        }
+        
+        /**
+        * The cookie creation date
+        */
+        public function get creation():Date
+        {
+            return _creation;
+        }
+        
+        /**
+        * @private
+        */
+        public function set creation( value:Date ):void
+        {
+            _creation = value;
+        }
+        
+        /**
+        * The cookie expiration date.
+        */
+        public function get expiration():Date
+        {
+            if( _expiration )
+            {
+                return _expiration;
+            }
+            
+            /* note:
+               if _expiration has not been set
+               either by the ctor or setter
+               we always return something a
+               little bigger than the current date
+            */
+            return new Date( new Date() + 1000 );
+        }
+        
+        /**
+        * @private
+        */
+        public function set expiration( value:Date ):void
+        {
+            _expiration = value;
         }
         
         /**
@@ -67,6 +144,17 @@ package com.google.analytics.data
                     this[ field ] = data[ field ];
                 }
             }
+            
+            if( data.creation )
+            {
+                this.creation = data.creation;
+            }
+            
+            if( data.expiration )
+            {
+                this.expiration = data.expiration;
+            }
+            
         }
                 
         /**
@@ -100,6 +188,27 @@ package com.google.analytics.data
         } 
         
         /**
+        * Indicates if the cookie has expired.
+        */
+        public function isExpired():Boolean
+        {
+            /* note:
+               if timespan was not defined in the ctor
+               we will always return false, eg the cookie
+               will never expire
+            */
+            var current:Date = new Date();
+            var diff:Number = expiration.valueOf() - current.valueOf();
+            
+            if( diff <= 0 )
+            {
+                return true;
+            }
+            
+            return false;
+        }
+        
+        /**
          * Reset the cookie.
          */
         public function reset():void
@@ -120,8 +229,22 @@ package com.google.analytics.data
                 }
             }
             
+            resetTimestamp();
+            
             update();
-        }        
+        }
+        
+        public function resetTimestamp( timespan:Number = NaN ):void
+        {
+            if( !isNaN( timespan ) )
+            {
+                _timespan = timespan;
+            }
+            
+            _creation = null;
+            _expiration = null;
+            _timestamp( _timespan );
+        }
         
         /**
          * Format data to render in the URL.
@@ -166,6 +289,10 @@ package com.google.analytics.data
                 }
                 
             }
+            
+            data.creation   = creation;
+            data.expiration = expiration;
+            
             return data;
         }
                 
@@ -173,7 +300,7 @@ package com.google.analytics.data
          * Returns the String representation of the object.
          * @return the String representation of the object.
          */
-        public function toString():String
+        public function toString( showTimestamp:Boolean = false ):String
         {
             var data:Array = [];
             var field:String;
@@ -206,19 +333,15 @@ package com.google.analytics.data
                 }
             }
             
-            return  name.toUpperCase() + " {" + data.join( ", " ) + "}";
-        }
-        
-        /**
-         * Update the cookie.
-         */
-        protected function update():void
-        {
-            if( proxy )
+            var str:String =name.toUpperCase() + " {" + data.join( ", " ) + "}";
+            
+            if( showTimestamp )
             {
-                proxy.update( name, toSharedObject() );
+                str += " creation:"+creation+", expiration:"+expiration;
             }
-        }        
+            
+            return str;
+        }
         
         /**
          * Returns the primitive value of the object.

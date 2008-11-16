@@ -26,6 +26,9 @@ package com.google.analytics.data
      * 
      * Contains a hash (digest) of all the __utm* values
      * 
+     * expiration:
+     * Not set.
+     * 
      * format:
      * __utmk=<hash>
      */
