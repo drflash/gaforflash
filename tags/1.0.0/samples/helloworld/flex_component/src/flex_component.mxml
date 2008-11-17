@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application
+    xmlns:mx="http://www.adobe.com/2006/mxml"
+    layout="absolute"
+    width="800"
+    height="600"
+    >
+    
+    <mx:Script>
+        <![CDATA[
+            import com.google.analytics.AnalyticsTracker;
+            import com.google.analytics.events.AnalyticsEvent;
+            
+            public function onAnalyticsReady( event:AnalyticsEvent ):void
+            {
+                var tracker:AnalyticsTracker = event.tracker;
+                tracker.trackPageview( "/hello/world" );
+            }
+            
+            public function onButtonClick():void
+            {
+                tracker.trackEvent( "Button", "click", "hello world", 123 );
+            }
+        ]]>
+    </mx:Script>
+    
+    <analytics:FlexTracker
+        xmlns:analytics="com.google.analytics.components.*"
+        xmlns:v4="com.google.analytics.v4.*"
+        xmlns:debug="com.google.analytics.debug.*"
+        id="tracker"
+        account="UA-111-222"
+        mode="AS3"
+        visualDebug="true"
+        ready="onAnalyticsReady(event)"
+     >
+        <analytics:config>
+            <v4:Configuration localGIFpath="http://www.myserver.com/__utm.gif" />
+        </analytics:config>
+        <analytics:debug>
+            <debug:DebugConfiguration GIFRequests="true" />
+        </analytics:debug>
+     </analytics:FlexTracker>
+    
+    <mx:Button id="mybutton" label="hello world" click="onButtonClick()" />
+    
+</mx:Application>
