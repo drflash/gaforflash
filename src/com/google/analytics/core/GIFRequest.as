@@ -428,8 +428,8 @@ package com.google.analytics.core
                      /* If service mode is send to local (or both),
                         then we'll sent metrics via a local GIF request.
                      */
-                     if( (_config.serverMode = ServerOperationMode.local) ||
-                         (_config.serverMode = ServerOperationMode.both) )
+                     if( (_config.serverMode == ServerOperationMode.local) ||
+                         (_config.serverMode == ServerOperationMode.both) )
                          {
                              var localPath:String = _info.locationSWFPath;
                              
@@ -457,8 +457,8 @@ package com.google.analytics.core
                      /* If service mode is set to remote (or both),
                         then we'll sent metrics via a remote GIF request.
                      */
-                     if( (_config.serverMode = ServerOperationMode.remote) ||
-                         (_config.serverMode = ServerOperationMode.both) )
+                     if( (_config.serverMode == ServerOperationMode.remote) ||
+                         (_config.serverMode == ServerOperationMode.both) )
                          {
                              var remoteImage:URLRequest = new URLRequest();
                              

@@ -60,6 +60,8 @@ package
             tracker.config.sessionTimeout = 60;
             tracker.config.conversionTimeout = 180;
             tracker.trackPageview( "/test" ); //test cache
+            trace( "serverMode: " + tracker.config.serverMode );
+            
             GATracker(tracker).build();
             
             //tracker.setSampleRate( -0.5 );
