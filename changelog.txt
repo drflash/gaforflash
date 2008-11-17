@@ -1,3 +1,13 @@
+* 1.0.0.231
+- v1.0 release
+- fixed default debug options
+  visualDebug=true|false will show the debug
+  to activate more option you need to set to true
+  various options in tracker.debug.*
+- now visual debug have 3 modes: basic|advanced|geek
+  VisualDebugMode.geek + debug.verbose trace everything
+- fixed various small bugs
+
 * 0.7.0.177
 - directory structure reorganization
   instead of having different project roots
