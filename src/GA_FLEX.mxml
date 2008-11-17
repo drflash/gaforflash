@@ -32,6 +32,7 @@
         <![CDATA[
             import com.google.analytics.AnalyticsTracker;
             import com.google.analytics.events.AnalyticsEvent;
+            import com.google.analytics.debug.VisualDebugMode;
             
             public function onInitialize():void
             {
@@ -49,6 +50,7 @@
             {
                 tracker.trackEvent( "Button", "click", "hello world", 123 );
             }
+            
         ]]>
     </mx:Script>
     
@@ -62,7 +64,7 @@
         ready="onAnalyticsReady(event)"
      >
          <analytics:debug>
-             <debug:DebugConfiguration verbose="true" />
+             <debug:DebugConfiguration mode="advanced" verbose="true" traceOutput="true" GIFRequests="true" />
          </analytics:debug>
      </analytics:FlexTracker>
     
