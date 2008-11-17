@@ -27,6 +27,7 @@ package com.google.analytics.core
     import com.google.analytics.data.UTMV;
     import com.google.analytics.data.UTMZ;
     import com.google.analytics.debug.DebugConfiguration;
+    import com.google.analytics.debug.VisualDebugMode;
     import com.google.analytics.v4.Configuration;
     
     import flash.events.NetStatusEvent;
@@ -202,10 +203,6 @@ package com.google.analytics.core
                 */
                 var saveSO:Boolean = false;
                 
-                trace( "---------------------------" );
-                trace( "SO size: " + _SO.size );
-                trace( "---------------------------" );
-                
                 if( _SO.data.utma )
                 {
                     if( !hasUTMA() )
@@ -217,14 +214,14 @@ package com.google.analytics.core
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( "found: " + _utma.toString(true) );
+                        _debug.info( "found: " + _utma.toString(true), VisualDebugMode.geek );
                     }
                     
                     if( _utma.isExpired() )
                     {
                         if( _debug.verbose )
                             {
-                                _debug.warning( "UTMA has expired" );
+                                _debug.warning( "UTMA has expired", VisualDebugMode.advanced );
                             }
                         
                         _clearUTMA();
@@ -244,14 +241,14 @@ package com.google.analytics.core
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( "found: " + _utmb.toString(true) );
+                        _debug.info( "found: " + _utmb.toString(true), VisualDebugMode.geek );
                     }
                     
                     if( _utmb.isExpired() )
                     {
                         if( _debug.verbose )
                             {
-                                _debug.warning( "UTMB has expired" );
+                                _debug.warning( "UTMB has expired", VisualDebugMode.advanced );
                             }
                         
                         _clearUTMB();
@@ -282,7 +279,7 @@ package com.google.analytics.core
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( "found: " + _utmk.toString() );
+                        _debug.info( "found: " + _utmk.toString(), VisualDebugMode.geek );
                     }
                 }
                 
@@ -297,14 +294,14 @@ package com.google.analytics.core
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( "found: " + _utmv.toString(true) );
+                        _debug.info( "found: " + _utmv.toString(true), VisualDebugMode.geek );
                     }
                     
                     if( _utmv.isExpired() )
                     {
                         if( _debug.verbose )
                             {
-                                _debug.warning( "UTMV has expired" );
+                                _debug.warning( "UTMV has expired", VisualDebugMode.advanced );
                             }
                         
                         _clearUTMV();
@@ -324,14 +321,14 @@ package com.google.analytics.core
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( "found: " + _utmz.toString(true) );
+                        _debug.info( "found: " + _utmz.toString(true), VisualDebugMode.geek );
                     }
                     
                     if( _utmz.isExpired() )
                     {
                         if( _debug.verbose )
                             {
-                                _debug.warning( "UTMZ has expired" );
+                                _debug.warning( "UTMZ has expired", VisualDebugMode.advanced );
                             }
                         
                         _clearUTMZ();
@@ -590,7 +587,7 @@ package com.google.analytics.core
         {
             if( _debug.verbose )
             {
-                _debug.info( "updateUTMA( "+timestamp+" )" );
+                _debug.info( "updateUTMA( "+timestamp+" )", VisualDebugMode.advanced );
             }
             
             // if __utma value is not empty, update
@@ -646,7 +643,6 @@ package com.google.analytics.core
                        This error might occur if the user has permanently disallowed local
                        information storage for objects from this domain. 
                     */
-                    //trace("Error...Could not write SharedObject to disk");
                     _debug.warning( "Error...Could not write SharedObject to disk" );
                 }
                 
@@ -654,7 +650,6 @@ package com.google.analytics.core
                 {
                     case SharedObjectFlushStatus.PENDING:
                     {
-                        //trace("Requesting permission to save object...");
                         _debug.info( "Requesting permission to save object..." );
                         _SO.addEventListener( NetStatusEvent.NET_STATUS, _onFlushStatus );
                         break;
@@ -662,7 +657,6 @@ package com.google.analytics.core
                     
                     case SharedObjectFlushStatus.FLUSHED:
                     {
-                        //trace("Value flushed to disk.");
                         _debug.info( "Value flushed to disk." );
                         break;
                     }

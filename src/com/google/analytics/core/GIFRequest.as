@@ -20,8 +20,8 @@
 
 package com.google.analytics.core
 {
-    import com.google.analytics.core.Utils;
     import com.google.analytics.debug.DebugConfiguration;
+    import com.google.analytics.debug.VisualDebugMode;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.Variables;
@@ -183,7 +183,7 @@ package com.google.analytics.core
             
             if( _debug.verbose )
             {
-                _debug.info( "tokenDelta: " + tokenDelta );
+                _debug.info( "tokenDelta: " + tokenDelta, VisualDebugMode.geek );
             }
             
             // only update token when there is a change
@@ -195,7 +195,7 @@ package com.google.analytics.core
                 
                 if( _debug.verbose )
                 {
-                    _debug.info( _buffer.utmb.toString() );
+                    _debug.info( _buffer.utmb.toString(), VisualDebugMode.geek );
                 }
                 
             }
@@ -203,7 +203,32 @@ package com.google.analytics.core
         
         private function _debugSend( request:URLRequest ):void
         {
-            var data:String = "url = " + request.url;
+            var data:String = "";
+            
+            switch( _debug.mode )
+            {
+                case VisualDebugMode.geek:
+                data = "Gif Request:\n" + request.url;
+                break;
+                
+                case VisualDebugMode.advanced:
+                var url:String = request.url;
+                if( url.indexOf( "?" ) > -1 )
+                    {
+                        url = url.split( "?" )[0];
+                    }
+                    url = _shortenURL( url );
+                
+                
+                data = "Send Gif Request:\n" + url + " ?";
+                break;
+                
+                case VisualDebugMode.basic:
+                default:
+                data = "Send " + _config.serverMode.toString() + " Gif Request ?";
+                
+            }
+            
             _debug.alertGifRequest( data, request, this );
         }
         
@@ -238,6 +263,8 @@ package com.google.analytics.core
 //            trace( _requests[ id ].toString() );
 //            trace( "\n"+url + "\n" + _requests[ id ].request.url );
             
+            var msg:String = "Gif Request failed";
+            
             if( _debug.GIFRequests )
             {
                 if( !_debug.verbose )
@@ -249,11 +276,16 @@ package com.google.analytics.core
                     url = _shortenURL( url );
                 }
                 
-                _debug.failure( "\"" + url + "\" does not exists or is unreachable" );
+                if( int(_debug.mode) > int(VisualDebugMode.basic) )
+                {
+                    msg += " \"" + url + "\" does not exists or is unreachable";
+                }
+                
+                _debug.failure( msg );
             }
             else
             {
-                _debug.warning( "gif request failed" );
+                _debug.warning( msg );
             }
             
             _removeListeners( event.target );
@@ -263,6 +295,8 @@ package com.google.analytics.core
         {
             var id:String = event.target.loader.name;
             _requests[ id ].complete();
+            
+            var msg:String = "Gif Request sent";
             
             var url:String = _requests[ id ].request.url;
             
@@ -277,11 +311,16 @@ package com.google.analytics.core
                     url = _shortenURL( url );
                 }
                 
-                _debug.success( "Gif Request sent to \"" + url + "\"" );
+                if( int(_debug.mode) > int(VisualDebugMode.basic) )
+                {
+                    msg += " to \"" + url + "\"";
+                }
+                
+                _debug.success( msg );
             }
             else
             {
-                _debug.info( "gif request sent" );
+                _debug.info( msg );
             }
             
             _removeListeners( event.target );
@@ -295,7 +334,6 @@ package com.google.analytics.core
         
         public function sendWithValidation( request:URLRequest ):void
         {
-            trace( "sendWithValidation()" );
             
             /* note:
                when the gif request is send too fast
@@ -311,7 +349,7 @@ package com.google.analytics.core
             */
             var loader:Loader = new Loader();
                 loader.name   = String(_count++);
-                trace( "set request name: " + loader.name );
+                
             var context:LoaderContext = new LoaderContext( false );
             
             loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
@@ -323,7 +361,6 @@ package com.google.analytics.core
             try
             {
                 loader.load( request, context );
-                //debug.layout.addToStage( loader );
             }
             catch( e:Error )
             {
@@ -333,7 +370,6 @@ package com.google.analytics.core
         
         public function _send( request:URLRequest ):void
         {
-            trace( "sendWithoutValidation()" );
             try
             {
                 sendToURL( request );
@@ -357,8 +393,7 @@ package com.google.analytics.core
         }
         
         /**
-        * 
-        * 
+        * Send the Gif Request to the server(s).
         */
         public function send( account:String, variables:Variables = null,
                               force:Boolean = false, rateLimit:Boolean = false ):void
@@ -371,7 +406,6 @@ package com.google.analytics.core
              }
              
              variables.URIencode = false;
-//             variables.pre  = [ "utmwv", "utmn", "utmhn" ];
              variables.pre  = [ "utmwv", "utmn", "utmhn", "utmt", "utme",
                                 "utmcs", "utmsr", "utmsc", "utmul", "utmje",
                                 "utmfl", "utmdt", "utmhid", "utmr", "utmp" ];
@@ -379,7 +413,7 @@ package com.google.analytics.core
              
              if( _debug.verbose )
              {
-                 _debug.info( "tracking: " + _buffer.utmb.trackCount+"/"+_config.trackingLimitPerSession );
+                 _debug.info( "tracking: " + _buffer.utmb.trackCount+"/"+_config.trackingLimitPerSession, VisualDebugMode.geek );
              }
              
              /* Only send request if
@@ -408,7 +442,7 @@ package com.google.analytics.core
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( _buffer.utmb.toString() );
+                        _debug.info( _buffer.utmb.toString(), VisualDebugMode.geek );
                     }
                     
                     
@@ -484,7 +518,6 @@ package com.google.analytics.core
                              }
                              else
                              {
-                                 trace( "## we are in a local file:// !! ##" );
                                  remoteImage.url = _config.remoteGIFpath;
                              }
                              

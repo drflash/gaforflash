@@ -21,6 +21,7 @@
 package com.google.analytics.core
 {
     import com.google.analytics.debug.DebugConfiguration;
+    import com.google.analytics.debug.VisualDebugMode;
     import com.google.analytics.v4.Configuration;
     
     import flash.display.DisplayObject;
@@ -82,7 +83,7 @@ package com.google.analytics.core
             _session.addEventListener( TimerEvent.TIMER_COMPLETE, endSession );
             _stage.addEventListener( MouseEvent.MOUSE_MOVE, onMouseMove );
             
-            _debug.info( "delay: " + delay + "sec , inactivity: " + inactivity + "sec, sessionTimeout: " + sessionTimeout );
+            _debug.info( "delay: " + delay + "sec , inactivity: " + inactivity + "sec, sessionTimeout: " + sessionTimeout, VisualDebugMode.geek );
             
             _loop.start();
         }
@@ -93,7 +94,7 @@ package com.google.analytics.core
             
             if( _session.running )
             {
-                _debug.info( "session timer reset" );
+                _debug.info( "session timer reset", VisualDebugMode.geek );
                 _session.reset();
             }
         }
@@ -106,7 +107,7 @@ package com.google.analytics.core
             {
                 if( !_session.running )
                 {
-                    _debug.info( "session timer start" );
+                    _debug.info( "session timer start", VisualDebugMode.geek );
                     _session.start();
                 }
             }
@@ -116,11 +117,11 @@ package com.google.analytics.core
         public function endSession( event:TimerEvent ):void
         {
             _session.removeEventListener( TimerEvent.TIMER_COMPLETE, endSession );
-            _debug.info( "session timer end session" );
+            _debug.info( "session timer end session", VisualDebugMode.geek );
             _session.reset();
             _buffer.resetCurrentSession();
-            _debug.info( _buffer.utmb.toString() );
-            _debug.info( _buffer.utmc.toString() );
+            _debug.info( _buffer.utmb.toString(), VisualDebugMode.geek );
+            _debug.info( _buffer.utmc.toString(), VisualDebugMode.geek );
             
             _session.addEventListener( TimerEvent.TIMER_COMPLETE, endSession );
         }

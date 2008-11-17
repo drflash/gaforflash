@@ -111,7 +111,7 @@ package com.google.analytics.debug
                 break;
                 
                 case Keyboard.BACKSPACE:
-                trace( "## destroying the layout ##" );
+                //trace( "## destroying the layout ##" );
                 destroy();
                 break;
             }

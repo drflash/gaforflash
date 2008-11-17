@@ -90,7 +90,7 @@ package com.google.analytics.debug
         /**
          * Indicates the info timeout value.
          */
-        public var infoTimeout:Number = 500;
+        public var infoTimeout:Number = 1000;
         
         /**
          * Indicates if show warnings in the debug mode.
@@ -100,12 +100,14 @@ package com.google.analytics.debug
         /**
          * Indicates the warning timeout value.
          */
-        public var warningTimeout:Number = 300;
+        public var warningTimeout:Number = 1500;
         
         /**
         * Show the visuals minimized on start.
         */
         public var minimizedOnStart:Boolean = false;
+        
+        public var mode:VisualDebugMode = VisualDebugMode.basic;
         
         /**
          * Creates a new DebugConfiguration instance. 
@@ -113,15 +115,22 @@ package com.google.analytics.debug
         public function DebugConfiguration(  )
         {
         }
-                
+         
         /**
          * The protected custom trace method.
          */
         protected function trace( message:String ):void
         {
             var messages:Array = [];
-            var pre0:String = getTimer() + " - ";
-            var pre1:String = new Array(pre0.length).join(" ") + " ";
+            
+            var pre0:String = "";
+            var pre1:String = "";
+            
+            if( this.mode == VisualDebugMode.geek )
+            {
+                pre0 = getTimer() + " - ";
+                pre1 = new Array(pre0.length).join(" ") + " ";
+            }
             
             if( message.indexOf("\n") > -1 )
             {
@@ -185,12 +194,7 @@ package com.google.analytics.debug
          */
         public function get verbose():Boolean
         {
-//            if( active )
-//            {
-                return _verbose;
-//            }
-//            
-//            return false;
+            return _verbose;
         }
         
         /**
@@ -201,9 +205,9 @@ package com.google.analytics.debug
             _verbose = value;
         }
         
-        /**
-         * Writes a message.
-         */
+//        /**
+//         * Writes a message.
+//         */
 //        public function write( message:String ):void
 //        {
 //            if( layout )
@@ -217,11 +221,21 @@ package com.google.analytics.debug
 //            }
 //        }
         
+        private function _filter( mode:VisualDebugMode = null ):Boolean
+        {
+            return mode && (int(mode) >= int(this.mode));
+        }
+        
         /**
          * Notify an "info" message.
          */
-        public function info( message:String ):void
+        public function info( message:String, mode:VisualDebugMode = null ):void
         {
+            if( _filter( mode ) )
+            {
+                return;
+            }
+            
             if( layout && showInfos )
             {
                 layout.createInfo( message );
@@ -236,8 +250,13 @@ package com.google.analytics.debug
         /**
          * Notify a "warning" message.
          */
-        public function warning( message:String ):void
+        public function warning( message:String, mode:VisualDebugMode = null ):void
         {
+            if( _filter( mode ) )
+            {
+                return;
+            }
+            
             if( layout && showWarnings )
             {
                 layout.createWarning( message );

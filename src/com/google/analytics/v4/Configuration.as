@@ -34,7 +34,7 @@ package com.google.analytics.v4
      */
     public class Configuration
     {
-    	
+        
         private var _debug:DebugConfiguration;
         
         private var _version:String = "4.3as";
@@ -47,7 +47,7 @@ package com.google.analytics.v4
         
         private var _trackingLimitPerSession:int = 500;
         
-        private var _domain:Domain = new Domain( DomainNameMode.auto );
+        private var _domain:Domain;
         
         private var _organic:Organic = new Organic();
         
@@ -145,7 +145,7 @@ package com.google.analytics.v4
          * Capacity of the token bucket.
          */
         public var bucketCapacity:Number = 10;
-                
+        
         /**
          * Detect client browser information flag.
          */
@@ -221,6 +221,10 @@ package com.google.analytics.v4
         public function Configuration( debug:DebugConfiguration = null )
         {
             _debug = debug;
+            
+            _domain = new Domain( DomainNameMode.auto, "", _debug );
+            serverMode = ServerOperationMode.remote;
+            
             _initOrganicSources();
         }
         

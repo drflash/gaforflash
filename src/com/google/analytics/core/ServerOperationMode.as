@@ -26,17 +26,11 @@ package com.google.analytics.core
      */
     public class ServerOperationMode
     {
-
-        /**
-         * @private
-         */        
+        
         private var _name:String;
         
-        /**
-         * @private
-         */
         private var _value:int;
-                
+        
         /**
          * Creates a new ServerOperationMode instance.
          * @param value The 
@@ -63,7 +57,7 @@ package com.google.analytics.core
         public function valueOf():int
         {
             return _value;
-        }        
+        }
         
         /**
          * Send data to the Urchin tracking software on your local servers.
@@ -79,7 +73,6 @@ package com.google.analytics.core
          * Send your tracking data both to a local server and to the Google Analytics backend servers.
          */
         public static const both:ServerOperationMode   = new ServerOperationMode( 2, "both" );
-        
         
     }
 }
