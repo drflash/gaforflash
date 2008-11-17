@@ -54,6 +54,7 @@ package
                by adding it to the display list
             */
             tracker = new FlashTracker();
+            tracker.trackPageview( "/test" );
             tracker.addEventListener( AnalyticsEvent.READY, onAnalyticsReady );
             
             tracker.account = "UA-4241494-2";
