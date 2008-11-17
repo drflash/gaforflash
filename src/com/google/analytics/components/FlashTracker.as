@@ -25,6 +25,7 @@ package com.google.analytics.components
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
+    import com.google.analytics.core.IdleTimer;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.TrackerMode;
     import com.google.analytics.core.ga_internal;
@@ -82,6 +83,7 @@ package com.google.analytics.components
         private var _jsproxy:JavascriptProxy;
         private var _dom:HTMLDOM;
         private var _adSense:AdSenseGlobals;
+        private var _idleTimer:IdleTimer;
         
         //component properties
         private var _account:String      = "";
@@ -182,6 +184,19 @@ package com.google.analytics.components
             */
         }
         
+        private function _createDebugAndConfig():void
+        {
+            if( !_debug )
+            {
+                this.debug = new DebugConfiguration();
+            }
+            
+            if( !_config )
+            {
+                this.config = new Configuration( debug );
+            }
+        }
+        
         /**
         * @private
         * Factory to build the different trackers
@@ -201,15 +216,7 @@ package com.google.analytics.components
             
             _display = this;
             
-            if( !debug )
-            {
-                this.debug = new DebugConfiguration();
-            }
-            
-            if( !config )
-            {
-                this.config = new Configuration( debug );
-            }
+            _createDebugAndConfig();
             
             if( visualDebug )
             {
@@ -259,6 +266,8 @@ package com.google.analytics.components
             
             _gifRequest = new GIFRequest( config, debug, _buffer, _env );
             
+            _idleTimer  = new IdleTimer( config, debug, _display, _buffer );
+            
             use namespace ga_internal;
             _env.url = _display.stage.loaderInfo.url;
             
@@ -301,6 +310,11 @@ package com.google.analytics.components
          */
         public function get config():Configuration
         {
+            if( !_config )
+            {
+                _createDebugAndConfig();
+            }
+            
             return _config;
         }
         
@@ -317,6 +331,11 @@ package com.google.analytics.components
          */
         public function get debug():DebugConfiguration
         {
+            if( !_debug )
+            {
+                _createDebugAndConfig();
+            }
+            
             return _debug;
         }
         
