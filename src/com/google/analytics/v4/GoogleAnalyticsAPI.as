@@ -52,9 +52,9 @@ package com.google.analytics.v4
         function getVersion():String;
         
         /**
-         * Initializes or re-initializes the GATC (Google Analytics Tracker Code) object.
+         * Reset the current session clearing the utmb and utmc cookies.
          */
-        function initData():void;
+        function resetSession():void;
         
         /**
          * Sets the new sample rate.

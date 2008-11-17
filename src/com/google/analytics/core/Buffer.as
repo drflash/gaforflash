@@ -75,6 +75,60 @@ package com.google.analytics.core
             _SO.removeEventListener( NetStatusEvent.NET_STATUS, _onFlushStatus );
         }
         
+        private function _clearUTMA():void
+        {
+            _utma = null;
+            
+            if( !isVolatile() )
+            {
+                _SO.data.utma = null;
+                delete _SO.data.utma;
+            }
+            
+        }
+        
+        private function _clearUTMB():void
+        {
+            _utmb = null;
+            
+            if( !isVolatile() )
+            {
+                _SO.data.utmb = null;
+                delete _SO.data.utmb;
+            }
+            
+        }
+        
+        private function _clearUTMC():void
+        {
+            _utmc = null;
+            //utmc is not saved in SO
+        }
+        
+        private function _clearUTMV():void
+        {
+            _utmv = null;
+            
+            if( !isVolatile() )
+            {
+                _SO.data.utmv = null;
+                delete _SO.data.utmv;
+            }
+            
+        }
+        
+        private function _clearUTMZ():void
+        {
+            _utmz = null;
+            
+            if( !isVolatile() )
+            {
+                _SO.data.utmz = null;
+                delete _SO.data.utmz;
+            }
+            
+        }
+        
         private function _createUMTA():void
         {
             _utma = new UTMA();
@@ -173,9 +227,7 @@ package com.google.analytics.core
                                 _debug.warning( "UTMA has expired" );
                             }
                         
-                        _SO.data.utma = null;
-                        _utma = null;
-                        delete _SO.data.utma;
+                        _clearUTMA();
                         saveSO = true;
                     }
                     
@@ -202,9 +254,7 @@ package com.google.analytics.core
                                 _debug.warning( "UTMB has expired" );
                             }
                         
-                        _SO.data.utmz = null;
-                        _utmb = null;
-                        delete _SO.data.utmb;
+                        _clearUTMB();
                         saveSO = true;
                     }
                     
@@ -257,9 +307,7 @@ package com.google.analytics.core
                                 _debug.warning( "UTMV has expired" );
                             }
                         
-                        _SO.data.utmv = null;
-                        _utmv = null;
-                        delete _SO.data.utmv;
+                        _clearUTMV();
                         saveSO = true;
                     }
                     
@@ -286,9 +334,7 @@ package com.google.analytics.core
                                 _debug.warning( "UTMZ has expired" );
                             }
                         
-                        _SO.data.utmz = null;
-                        _utmz = null;
-                        delete _SO.data.utmz;
+                        _clearUTMZ();
                         saveSO = true;
                     }
                     
@@ -567,6 +613,17 @@ package com.google.analytics.core
                 // current session time is now
                 utma.currentTime = timestamp;
             }
+        }
+        
+        /**
+        * Clear the current utmb and utmc cookies
+        * both in the SO and in memory
+        */
+        public function resetCurrentSession():void
+        {
+            _clearUTMB();
+            _clearUTMC();
+            save();
         }
         
         /**

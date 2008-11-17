@@ -35,56 +35,56 @@ package com.google.analytics.core
          * @private
          */
         private var _ar:Array ;
-    	
-    	/**
-    	 * Creates a new TrackerCache instance
-    	 * @param The GoogleAnalyticsAPI tracker object caching in memory.
-    	 */
-    	public function TrackerCache( tracker:GoogleAnalyticsAPI = null )
-    	{
-    		this.tracker = tracker ;
-    		_ar = [] ;
-    	}
-    	
-    	/**
-    	 * Indicates if the object throws errors.
-    	 */
-    	public static var CACHE_THROW_ERROR:Boolean ;
+        
+        /**
+         * Creates a new TrackerCache instance
+         * @param The GoogleAnalyticsAPI tracker object caching in memory.
+         */
+        public function TrackerCache( tracker:GoogleAnalyticsAPI = null )
+        {
+            this.tracker = tracker ;
+            _ar = [] ;
+        }
+        
+        /**
+         * Indicates if the object throws errors.
+         */
+        public static var CACHE_THROW_ERROR:Boolean;
         
         /**
          * The GoogleAnalyticsAPI target of this tracker cache object.
          */
-        public var tracker:GoogleAnalyticsAPI ;
+        public var tracker:GoogleAnalyticsAPI;
         
-    	/**
-    	 * Removes all commands in memory.
-    	 */
-    	public function clear():void
-    	{
-    	   _ar = [] ;	
-    	}
-    	
+        /**
+         * Removes all commands in memory.
+         */
+        public function clear():void
+        {
+           _ar = [];
+        }
+        
         /**
          * Retrieves, but does not remove, the head of this queue.
          */
         public function element():*
         {
-            return _ar[0] ; 	
+            return _ar[0];
         }
-    	
-    	/**
+        
+        /**
          * Enqueue a new tracker command in the tracker cache.
          * @param name The name of the method to invoke.
          * @param ...args The optional arguments passed-in the method. 
          */
         public function enqueue( name:String , ...args:Array ):Boolean 
         {
-            if (name == null) 
+            if (name == null)
             {
-            	return false ;
+                return false;
             }
-            _ar.push( { name:name , args:args } ) ;
-            return true ;
+            _ar.push( { name:name , args:args } );
+            return true;
         }
         
         /**
@@ -92,16 +92,17 @@ package com.google.analytics.core
          */
         public function flush():void
         {
-        	if ( tracker == null )
-        	{
-        		return ;
-        	}
+            if ( tracker == null )
+            {
+                return;
+            }
             if ( size() > 0 )
             {
-            	var o:Object ;
-            	var name:String ;
-            	var args:Array  ;
-                var l:int = _ar.length ;
+                var o:Object;
+                var name:String;
+                var args:Array;
+                var l:int = _ar.length;
+                
                 for( var i:int ; i < l ; i++ )
                 {
                     o = _ar.shift() ;
@@ -109,14 +110,14 @@ package com.google.analytics.core
                     args = o.args as Array  ;
                     if ( name != null && name in tracker )
                     {
-                    	(tracker[name] as Function).apply(tracker, args) ;               	
+                        (tracker[name] as Function).apply(tracker, args) ;
                     }
                 }
             }
             else
             {
-            	// 
-        	}
+                // 
+            }
         }
         
         /**
@@ -124,8 +125,8 @@ package com.google.analytics.core
          */
         public function isEmpty():Boolean
         {
-           return _ar.length == 0 ;  
-        }        
+           return _ar.length == 0 ;
+        }
         
         /**
          * Returns the number of commands in the tracker cache.
@@ -140,9 +141,9 @@ package com.google.analytics.core
         
         public function addIgnoredOrganic( newIgnoredOrganicKeyword:String ):void
         {
-        	enqueue("addIgnoredOrganic", newIgnoredOrganicKeyword) ;
-        }        
-
+            enqueue("addIgnoredOrganic", newIgnoredOrganicKeyword) ;
+        }
+        
         public function addIgnoredRef(newIgnoredReferrer:String):void
         {
             enqueue("addIgnoredRef", newIgnoredReferrer ) ;
@@ -150,36 +151,36 @@ package com.google.analytics.core
         
         public function addItem(item:String, sku:String, name:String, category:String, price:Number, quantity:int):void
         {
-        	enqueue("addItem", item, sku, name, category, price, quantity) ;
+            enqueue("addItem", item, sku, name, category, price, quantity) ;
         }
         
         public function addOrganic(newOrganicEngine:String, newOrganicKeyword:String):void
         {
         	enqueue("addOrganic", newOrganicEngine, newOrganicKeyword) ;
-        }        
+        }
         
         public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):Object
         {
             if ( CACHE_THROW_ERROR )
             {
                 throw new IllegalOperationError("The tracker is not ready and you can use the 'addTrans' method for the moment.") ;             
-            }        	
-        	return null ;
+            }
+            return null;
         }
-                
+        
         public function clearIgnoredOrganic():void
         {
-        	enqueue("clearIgnoredOrganic") ;
+            enqueue("clearIgnoredOrganic");
         }
         
         public function clearIgnoredRef():void
         {
-        	enqueue("clearIgnoredRef") ;
+            enqueue("clearIgnoredRef");
         }
         
         public function clearOrganic():void
         {
-        	enqueue("clearOrganic") ;
+            enqueue("clearOrganic") ;
         }
         
         public function createEventTracker(objName:String):EventTracker
@@ -189,20 +190,20 @@ package com.google.analytics.core
                 throw new IllegalOperationError("The tracker is not ready and you can use the 'createEventTracker' method for the moment.") ;               
             }
             return null ;
-        }        
+        }
         
         public function cookiePathCopy(newPath:String):void
         {
-        	enqueue("cookiePathCopy", newPath) ;
-        }       
+            enqueue("cookiePathCopy", newPath);
+        }
         
         public function getAccount():String
         {
             if ( CACHE_THROW_ERROR )
             {
                 throw new IllegalOperationError("The tracker is not ready and you can use the 'getAccount' method for the moment.") ;             
-            }        	
-            return "" ;
+            }
+            return "";
         }
         
         public function getClientInfo():Boolean
@@ -210,8 +211,8 @@ package com.google.analytics.core
             if ( CACHE_THROW_ERROR )
             {
                 throw new IllegalOperationError("The tracker is not ready and you can use the 'getClientInfo' method for the moment.") ;             
-            }         	
-        	return false ;
+            }
+            return false;
         }
         
         public function getDetectFlash():Boolean
@@ -219,8 +220,8 @@ package com.google.analytics.core
             if ( CACHE_THROW_ERROR )
             {
                 throw new IllegalOperationError("The tracker is not ready and you can use the 'getDetectFlash' method for the moment.") ;             
-            }          	
-        	return false ;
+            }
+            return false;
         }
         
         public function getDetectTitle():Boolean
@@ -228,17 +229,17 @@ package com.google.analytics.core
             if ( CACHE_THROW_ERROR )
             {
                 throw new IllegalOperationError("The tracker is not ready and you can use the 'getDetectTitle' method for the moment.") ;             
-            }             	
-        	return false ;
+            }
+            return false;
         }
-                
+        
         public function getLocalGifPath():String
         {
             if ( CACHE_THROW_ERROR )
             {
                 throw new IllegalOperationError("The tracker is not ready and you can use the 'getLocalGifPath' method for the moment.") ;             
-            }                	
-        	return "" ;
+            }
+            return "";
         }
         
         public function getServiceMode():ServerOperationMode
@@ -246,8 +247,8 @@ package com.google.analytics.core
             if ( CACHE_THROW_ERROR )
             {
                 throw new IllegalOperationError("The tracker is not ready and you can use the 'getServiceMode' method for the moment.") ;             
-            }        	
-        	return null ;
+            }
+            return null;
         }
         
         public function getVersion():String
@@ -255,13 +256,13 @@ package com.google.analytics.core
             if ( CACHE_THROW_ERROR )
             {
                 throw new IllegalOperationError("The tracker is not ready and you can use the 'getVersion' method for the moment.") ;             
-            }        	
-        	return "" ;
-        }         
+            }
+            return "";
+        }
         
-        public function initData():void
+        public function resetSession():void
         {
-            enqueue("initData") ;
+            enqueue("resetSession");
         }
         
         public function link(targetUrl:String, useHash:Boolean = false):void
@@ -271,8 +272,8 @@ package com.google.analytics.core
         
         public function linkByPost(formObject:Object, useHash:Boolean = false):void
         {
-        	enqueue("linkByPost", formObject, useHash) ;
-        }        
+            enqueue("linkByPost", formObject, useHash) ;
+        }
         
         public function setAllowAnchor(enable:Boolean):void
         {
@@ -288,7 +289,7 @@ package com.google.analytics.core
         {
         	enqueue("setAllowLinker", enable) ;
         }
-             
+        
         public function setCampContentKey(newCampContentKey:String):void
         {
             enqueue("setCampContentKey", newCampContentKey) ;
@@ -327,7 +328,7 @@ package com.google.analytics.core
         public function setClientInfo(enable:Boolean):void
         {
             enqueue("setClientInfo", enable) ;
-        }        
+        }
         
         public function setCookieTimeout(newDefaultTimeout:int):void
         {

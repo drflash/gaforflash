@@ -30,11 +30,11 @@
         }
         
         /**
-         * Initializes or re-initializes the GATC (Google Analytics Tracker Code) object.
-         */        
-        public function initData():void
+         * Reset the current session clearing the utmb and utmc cookies.
+         */
+        public function resetSession():void
         {
-            _tracker.initData();
+            _tracker.resetSession();
         }
         
         /**
