@@ -25,7 +25,7 @@
     layout="absolute"
     width="800"
     height="600"
-    >
+    xmlns:v4="com.google.analytics.v4.*">
     
     <mx:Script>
         <![CDATA[
@@ -53,7 +53,11 @@
         mode="AS3"
         visualDebug="true"
         ready="onAnalyticsReady(event)"
-     />
+     >
+         <analytics:config>
+             <v4:Configuration idleLoop="10" idleTimeout="10" sessionTimeout="10" />
+         </analytics:config>
+     </analytics:FlexTracker>
     
     <mx:Button id="mybutton" label="hello world" click="onButtonClick(event)" />
     

@@ -82,6 +82,8 @@ package com.google.analytics.core
             _session.addEventListener( TimerEvent.TIMER_COMPLETE, endSession );
             _stage.addEventListener( MouseEvent.MOUSE_MOVE, onMouseMove );
             
+            _debug.info( "delay: " + delay + "sec , inactivity: " + inactivity + "sec, sessionTimeout: " + sessionTimeout );
+            
             _loop.start();
         }
         

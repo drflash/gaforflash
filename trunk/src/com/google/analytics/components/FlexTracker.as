@@ -25,6 +25,7 @@ package com.google.analytics.components
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
+    import com.google.analytics.core.IdleTimer;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.debug.DebugConfiguration;
@@ -79,6 +80,7 @@ package com.google.analytics.components
         private var _jsproxy:JavascriptProxy;
         private var _dom:HTMLDOM;
         private var _adSense:AdSenseGlobals;
+        private var _idleTimer:IdleTimer;
         
         //component properties
         private var _account:String      = "";
@@ -164,6 +166,8 @@ package com.google.analytics.components
             _buffer     = new Buffer( config, debug, false );
             
             _gifRequest = new GIFRequest( config, debug, _buffer, _env );
+            
+            _idleTimer  = new IdleTimer( config, debug, _display, _buffer );
             
             use namespace ga_internal;
             _env.url = _display.stage.loaderInfo.url;
