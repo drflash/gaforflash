@@ -23,9 +23,6 @@ package com.google.analytics
     
     public class API
     {
-        public function API()
-        {
-        }
         
         /**
         * version of Google Analytics AS3 API
