@@ -24,6 +24,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.Utils;
     import com.google.analytics.debug.DebugConfiguration;
+    import com.google.analytics.debug.VisualDebugMode;
     import com.google.analytics.external.JavascriptProxy;    
     
     /**
@@ -160,7 +161,7 @@ package com.google.analytics.v4
                     var msg1:String = ""; 
                         msg1 += "The Google Analytics tracking code was not found on the container page\n";
                         msg1 += "we create it";
-                    _debug.info( msg1 );
+                    _debug.info( msg1, VisualDebugMode.advanced );
                 }
                 _injectTrackingObject();
             }
@@ -285,6 +286,7 @@ package com.google.analytics.v4
          */
         public function getAccount():String
         {
+            _debug.info( "getAccount()" );
             return _call( "_getAccount" );
         }
         
@@ -294,6 +296,7 @@ package com.google.analytics.v4
          */
         public function getVersion():String
         {
+            _debug.info( "getVersion()" );
             return _call( "_getVersion" );
         }
         
@@ -307,6 +310,7 @@ package com.google.analytics.v4
                we could inject some JS to force the reset
                of the utmb and utmc cookies on the JS side
             */
+            _debug.warning( "resetSession() not implemented" );
         }
         
         /**
@@ -322,6 +326,7 @@ package com.google.analytics.v4
          */
         public function setSampleRate(newRate:Number):void
         {
+            _debug.info( "setSampleRate( " + newRate + " )" );
             _call( "_setSampleRate", newRate );
         }
         
@@ -343,6 +348,7 @@ package com.google.analytics.v4
          */
         public function setSessionTimeout(newTimeout:int):void
         {
+            _debug.info( "setSessionTimeout( " + newTimeout + " )" );
             _call( "_setSessionTimeout", newTimeout );
         }
         
@@ -359,6 +365,7 @@ package com.google.analytics.v4
          */
         public function setVar(newVal:String):void
         {
+            _debug.info( "setVar( " + newVal + " )" );
             _call( "_setVar", newVal );
         }
         
@@ -373,6 +380,7 @@ package com.google.analytics.v4
          */
         public function trackPageview(pageURL:String=""):void
         {
+            _debug.info( "trackPageview( " + pageURL + " )" );
             _call( "_trackPageview", pageURL );
         }
         
@@ -394,6 +402,7 @@ package com.google.analytics.v4
         */
         public function setAllowAnchor(enable:Boolean):void
         {
+            _debug.info( "setAllowAnchor( " + enable + " )" );
             _call( "_setAllowAnchor", enable );
         }
         
@@ -407,6 +416,7 @@ package com.google.analytics.v4
          */
         public function setCampContentKey(newCampContentKey:String):void
         {
+            _debug.info( "setCampContentKey( " + newCampContentKey + " )" );
             _call( "_setCampContentKey", newCampContentKey );
         }
         
@@ -419,6 +429,7 @@ package com.google.analytics.v4
          */
         public function setCampMediumKey(newCampMedKey:String):void
         {
+            _debug.info( "setCampMediumKey( " + newCampMedKey + " )" );
             _call( "_setCampMediumKey", newCampMedKey );
         }
         
@@ -431,6 +442,7 @@ package com.google.analytics.v4
          */
         public function setCampNameKey(newCampNameKey:String):void
         {
+            _debug.info( "setCampNameKey( " + newCampNameKey + " )" );
             _call( "_setCampNameKey", newCampNameKey );
         }
         
@@ -451,6 +463,7 @@ package com.google.analytics.v4
          */
         public function setCampNOKey( newCampNOKey:String ):void
         {
+            _debug.info( "setCampNOKey( " + newCampNOKey + " )" );
             _call( "_setCampNOKey", newCampNOKey );
         }
         
@@ -463,6 +476,7 @@ package com.google.analytics.v4
          */
         public function setCampSourceKey(newCampSrcKey:String):void
         {
+            _debug.info( "setCampSourceKey( " + newCampSrcKey + " )" );
             _call( "_setCampSourceKey", newCampSrcKey );
         }
         
@@ -474,6 +488,7 @@ package com.google.analytics.v4
          */
         public function setCampTermKey(newCampTermKey:String):void
         {
+            _debug.info( "setCampTermKey( " + newCampTermKey + " )" );
             _call( "_setCampTermKey", newCampTermKey );
         }
         
@@ -487,6 +502,7 @@ package com.google.analytics.v4
          */
         public function setCampaignTrack(enable:Boolean):void
         {
+            _debug.info( "setCampaignTrack( " + enable + " )" );
             _call( "_setCampaignTrack", enable );
         }
         
@@ -502,6 +518,7 @@ package com.google.analytics.v4
          */
         public function setCookieTimeout(newDefaultTimeout:int):void
         {
+            _debug.info( "setCookieTimeout( " + newDefaultTimeout + " )" );
             _call( "_setCookieTimeout", newDefaultTimeout );
         }
         
@@ -522,6 +539,7 @@ package com.google.analytics.v4
          */
         public function cookiePathCopy(newPath:String):void
         {
+            _debug.info( "cookiePathCopy( " + newPath + " )" );
             _call( "_cookiePathCopy", newPath );
         }
         
@@ -536,6 +554,7 @@ package com.google.analytics.v4
          */
         public function link(targetUrl:String, useHash:Boolean=false):void
         {
+            _debug.info( "link( " + targetUrl +", " + useHash + " )" );
             _call( "_link", targetUrl, useHash );
         }
         
@@ -553,6 +572,7 @@ package com.google.analytics.v4
          */
         public function linkByPost(formObject:Object, useHash:Boolean=false):void
         {
+            _debug.warning( "linkByPost( " + formObject +", " + useHash + " ) not implemented" );
             /* TODO:
                this might not make any sense to provide..
                ie what form object would we provide?
@@ -575,6 +595,7 @@ package com.google.analytics.v4
          */
         public function setAllowHash( enable:Boolean ):void
         {
+            _debug.info( "setAllowHash( " + enable + " )" );
             _call( "_setAllowHash" , enable ) ;
         }
         
@@ -586,6 +607,7 @@ package com.google.analytics.v4
          */
         public function setAllowLinker( enable:Boolean ):void
         {
+            _debug.info( "setAllowLinker( " + enable + " )" );
             _call( "_setAllowLinker", enable ) ;
         }
         
@@ -605,6 +627,7 @@ package com.google.analytics.v4
          */
         public function setCookiePath(newCookiePath:String):void
         {
+            _debug.info( "setCookiePath( " + newCookiePath + " )" );
             _call( "_setCookiePath", newCookiePath );
         }
         
@@ -618,6 +641,7 @@ package com.google.analytics.v4
          */
         public function setDomainName(newDomainName:String):void
         {
+            _debug.info( "setDomainName( " + newDomainName + " )" );
             _call( "_setDomainName", newDomainName );
         }
         
@@ -645,6 +669,7 @@ package com.google.analytics.v4
          */
         public function addItem(item:String, sku:String, name:String, category:String, price:Number, quantity:int):void
         {
+            _debug.info( "addItem( " + [item,sku,name,category,price,quantity].join( ", " ) + " )" );
             _call( "_addItem", item, sku, name, category, price, quantity );
         }
         
@@ -666,10 +691,10 @@ package com.google.analytics.v4
          */
         public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):Object
         {
+            _debug.info( "addTrans( " + [orderId,affiliation,total,tax,shipping,city,state,country].join( ", " ) + " )" );
             /* TODO:
                decide if we want to return an actual transaction object from this ?
             */
-            
             _call( "_addTrans", orderId, affiliation, total, tax, shipping, city, state, country );
             
             return null;
@@ -683,6 +708,7 @@ package com.google.analytics.v4
          */
         public function trackTrans():void
         {
+            _debug.info( "trackTrans()" );
             _call( "_trackTrans" );
         }
         
@@ -692,6 +718,7 @@ package com.google.analytics.v4
         
         public function createEventTracker( objName:String ):EventTracker
         {
+            _debug.info( "createEventTracker( " + objName + " )" );
             /* note:
                we don't need to forward to a JS call
                as ultimately the EventTracker.trackEvent()
@@ -734,13 +761,16 @@ package com.google.analytics.v4
             switch( param )
             {
                 case 4:
+                _debug.info( "trackEvent( " + [category,action,label,value].join( ", " ) + " )" );
                 return _call( "_trackEvent", category, action, label, value );
                 
                 case 3:
+                _debug.info( "trackEvent( " + [category,action,label].join( ", " ) + " )" );
                 return _call( "_trackEvent", category, action, label );
                 
                 case 2:
                 default:
+                _debug.info( "trackEvent( " + [category,action].join( ", " ) + " )" );
                 return _call( "_trackEvent", category, action );
             }
             
@@ -763,6 +793,7 @@ package com.google.analytics.v4
          */
         public function addIgnoredOrganic(newIgnoredOrganicKeyword:String):void
         {
+            _debug.info( "addIgnoredOrganic( " + newIgnoredOrganicKeyword + " )" );
             _call( "_addIgnoredOrganic", newIgnoredOrganicKeyword );
         }
         
@@ -779,6 +810,7 @@ package com.google.analytics.v4
          */
         public function addIgnoredRef(newIgnoredReferrer:String):void
         {
+            _debug.info( "addIgnoredRef( " + newIgnoredReferrer + " )" );
             _call( "_addIgnoredRef", newIgnoredReferrer );
         }
         
@@ -792,6 +824,7 @@ package com.google.analytics.v4
          */
         public function addOrganic(newOrganicEngine:String, newOrganicKeyword:String):void
         {
+            _debug.info( "addOrganic( " + [newOrganicEngine,newOrganicKeyword].join( ", " ) + " )" );
             _call( "_addOrganic", newOrganicEngine );
         }
         
@@ -800,6 +833,7 @@ package com.google.analytics.v4
          */
         public function clearIgnoredOrganic():void
         {
+            _debug.info( "clearIgnoredOrganic()" );
             _call( "_clearIgnoreOrganic" );
         }
         
@@ -808,6 +842,7 @@ package com.google.analytics.v4
          */
         public function clearIgnoredRef():void
         {
+            _debug.info( "clearIgnoredRef()" );
             _call( "_clearIgnoreRef" );
         }
         
@@ -817,6 +852,7 @@ package com.google.analytics.v4
          */
         public function clearOrganic():void
         {
+            _debug.info( "clearOrganic()" );
             _call( "_clearOrganic" );
         }
         
@@ -828,6 +864,7 @@ package com.google.analytics.v4
          */
         public function getClientInfo():Boolean
         {
+            _debug.info( "getClientInfo()" );
             return _call( "_getClientInfo" );
         }
         
@@ -839,6 +876,7 @@ package com.google.analytics.v4
          */
         public function getDetectFlash():Boolean
         {
+            _debug.info( "getDetectFlash()" );
             return _call( "_getDetectFlash" );
         }
         
@@ -849,6 +887,7 @@ package com.google.analytics.v4
          */
         public function getDetectTitle():Boolean
         {
+            _debug.info( "getDetectTitle()" );
             return _call( "_getDetectTitle" );
         }
         
@@ -864,6 +903,7 @@ package com.google.analytics.v4
          */
         public function setClientInfo(enable:Boolean):void
         {
+            _debug.info( "setClientInfo( " + enable + " )" );
             _call( "_setClientInfo", enable );
         }
         
@@ -879,6 +919,7 @@ package com.google.analytics.v4
          */
         public function setDetectFlash(enable:Boolean):void
         {
+            _debug.info( "setDetectFlash( " + enable + " )" );
             _call( "_setDetectFlash", enable );
         }
         
@@ -898,6 +939,7 @@ package com.google.analytics.v4
          */
         public function setDetectTitle(enable:Boolean):void
         {
+            _debug.info( "setDetectTitle( " + enable + " )" );
             _call( "_setDetectTitle", enable );
         }
         
@@ -915,6 +957,7 @@ package com.google.analytics.v4
          */
         public function getLocalGifPath():String
         {
+            _debug.info( "getLocalGifPath()" );
             return _call( "_getLocalGifPath" );
         }
         
@@ -927,6 +970,7 @@ package com.google.analytics.v4
          */
         public function getServiceMode():ServerOperationMode
         {
+            _debug.info( "getServiceMode()" );
             return _call( "_getServiceMode" );
         }
         
@@ -940,6 +984,7 @@ package com.google.analytics.v4
          */
         public function setLocalGifPath(newLocalGifPath:String):void
         {
+            _debug.info( "setLocalGifPath( " + newLocalGifPath + " )" );
             _call( "_setLocalGifPath", newLocalGifPath );
         }
         
@@ -952,6 +997,7 @@ package com.google.analytics.v4
          */
         public function setLocalRemoteServerMode():void
         {
+            _debug.info( "setLocalRemoteServerMode()" );
             _call( "_setLocalRemoteServerMode" );
         }
         
@@ -964,6 +1010,7 @@ package com.google.analytics.v4
          */
         public function setLocalServerMode():void
         {
+            _debug.info( "setLocalServerMode()" );
             _call( "_setLocalServerMode" );
         }
         
@@ -974,6 +1021,7 @@ package com.google.analytics.v4
          */
         public function setRemoteServerMode():void
         {
+            _debug.info( "setRemoteServerMode()" );
             _call( "_setRemoteServerMode" );
         }
         

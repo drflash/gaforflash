@@ -37,9 +37,6 @@ package
     {
         private var tracker:AnalyticsTracker;
         
-        /**
-         * Creates a new GA_AS3 instance.
-         */
         public function GA_AS3()
         {
             this.stage.align = StageAlign.TOP_LEFT;
@@ -52,10 +49,9 @@ package
         {
             removeEventListener( Event.ADDED_TO_STAGE, onComplete );
             
-            //UA-4241494-2 for gaas3.zwetan.com
             //please your own UA to test
             GATracker.autobuild = false;
-            tracker = new GATracker( this, "UA-4241494-2" );
+            tracker = new GATracker( this, "UA-111-222" );
             tracker.mode = "AS3";
             tracker.visualDebug = true;
             //tracker.debug.verbose = true;
@@ -67,10 +63,11 @@ package
             
             //tracker.config.localGIFpath = tracker.config.remoteGIFpath;
             //tracker.config.serverMode = ServerOperationMode.local;
-            trace( "debug mode: " + tracker.debug.mode );
-            trace( "debug verbose: " + tracker.debug.verbose );
-            trace( "local: " + tracker.config.localGIFpath );
-            trace( "serverMode: " + tracker.config.serverMode );
+            
+            //trace( "debug mode: " + tracker.debug.mode );
+            //trace( "debug verbose: " + tracker.debug.verbose );
+            //trace( "local: " + tracker.config.localGIFpath );
+            //trace( "serverMode: " + tracker.config.serverMode );
             
             GATracker(tracker).build();
             
@@ -79,10 +76,10 @@ package
             //tracker.setDomainName( ".zwetan.com" );
             
             //ideally you would want to change the setVar for each different tests
-            tracker.setVar( "Rocktober 023 online" );
-            tracker.trackPageview( "/test/hello/world/from/AS3/API/023" );
-            tracker.trackEvent( "AS3_videos023", "play" );
-            tracker.trackEvent( "AS3_say023", "hello world", "test", 1 );
+            tracker.setVar( "hello world" );
+            tracker.trackPageview( "/test/hello/world/from/AS3/API" );
+            tracker.trackEvent( "videos", "play" );
+            tracker.trackEvent( "say", "hello world", "test", 1 );
             //tracker.setLocalRemoteServerMode();
             //tracker.setLocalServerMode();
             //tracker.setRemoteServerMode();
