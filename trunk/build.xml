@@ -210,6 +210,7 @@
         <filter token="project_name" value="${project.name}"/>
         <filter token="project_fullname" value="${project.fullname}"/>
         <filter token="project_url" value="${project.url}"/>
+        <filter token="project_wiki" value="${project.wiki}"/>
         <filter token="project_group" value="${project.group}"/>
         <filter token="project_maintenance" value="${project.maintenance}"/>
         <filter token="release_version" value="${release.version}"/>
