@@ -22,15 +22,14 @@ package
 {
     import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.components.FlashTracker;
-    import com.google.analytics.debug.VisualDebugMode;
     import com.google.analytics.events.AnalyticsEvent;
     
     import flash.display.DisplayObject;
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
-    import flash.events.Event;
-    
+    import flash.events.Event;    
+
     /* Stub to test the AS3 API in pure ActionScript
        but compiled with mxmlc
     */

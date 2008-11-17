@@ -358,7 +358,7 @@ package com.google.analytics.campaign
                 hostname = hostname.substr( 4 );
             }
             
-            camp = new CampaignTracker()
+            camp = new CampaignTracker();
             camp.source  = hostname;
             camp.name    = "(referral)";
             camp.medium  = "referral";
@@ -382,6 +382,9 @@ package com.google.analytics.campaign
             return camp;
         }
         
+        /**
+         * Indicates if the manager has no override with the search value.
+         */
         public function hasNoOverride( search:String ):Boolean
         {
             var key:CampaignKey = _config.campaignKey;

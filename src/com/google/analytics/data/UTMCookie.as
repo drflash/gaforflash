@@ -23,19 +23,19 @@ package com.google.analytics.data
     import com.google.analytics.core.Buffer;
     
     /**
-    * The Urchin Tracking Module base cookie.
-    * 
-    * note:
-    * all utm* cookies should be able to
-    * - serialize/deserialize to SharedObject
-    * - keep the field sort order in serrialization
-    *   ex:
-    *   if utma cookie serialize to
-    *   __utma=<domainHash>.<sessionId>.<firstTime>.<lastTime>.<currentTime>.<sessionCount>
-    *   then domainHash should have field index 0, sessionId field index 1, etc.
-    * - each cookie should be able to notify a parent proxy
-    *   when one of their field is updated
-    */
+     * The Urchin Tracking Module base cookie.
+     * 
+     * note:
+     * all utm* cookies should be able to
+     * - serialize/deserialize to SharedObject
+     * - keep the field sort order in serrialization
+     *   ex:
+     *   if utma cookie serialize to
+     *   __utma=<domainHash>.<sessionId>.<firstTime>.<lastTime>.<currentTime>.<sessionCount>
+     *   then domainHash should have field index 0, sessionId field index 1, etc.
+     * - each cookie should be able to notify a parent proxy
+     *   when one of their field is updated
+     */
     public class UTMCookie implements Cookie
     {
         private var _creation:Date;
@@ -47,6 +47,13 @@ package com.google.analytics.data
         protected var fields:Array;
         public var proxy:Buffer;
         
+        /**
+         * Creates a new UTMCookie instance.
+         * @param name The name of the cookie.
+         * @param inURL The name of cookie when is serialized in the url.
+         * @param fields The fiels in the order of the cookie.
+         * @param timespan The timespan value of the cookie.
+         */
         public function UTMCookie( name:String, inURL:String, fields:Array, timespan:Number = 0 )
         {
             
@@ -57,6 +64,9 @@ package com.google.analytics.data
             _timestamp( timespan );
         }
         
+        /**
+         * @private
+         */
         private function _timestamp( timespan:Number ):void
         {
             creation = new Date();
@@ -86,24 +96,24 @@ package com.google.analytics.data
         }
         
         /**
-        * The cookie creation date
-        */
+         * The cookie creation date
+         */
         public function get creation():Date
         {
             return _creation;
         }
         
         /**
-        * @private
-        */
+         * @private
+         */
         public function set creation( value:Date ):void
         {
             _creation = value;
         }
         
         /**
-        * The cookie expiration date.
-        */
+         * The cookie expiration date.
+         */
         public function get expiration():Date
         {
             if( _expiration )
@@ -117,7 +127,7 @@ package com.google.analytics.data
                we always return something a
                little bigger than the current date
             */
-            return new Date( new Date() + 1000 );
+            return new Date( (new Date()).valueOf() + 1000 );
         }
         
         /**
@@ -234,6 +244,9 @@ package com.google.analytics.data
             update();
         }
         
+        /**
+         * Reset the timestamp of the cookie.
+         */
         public function resetTimestamp( timespan:Number = NaN ):void
         {
             if( !isNaN( timespan ) )

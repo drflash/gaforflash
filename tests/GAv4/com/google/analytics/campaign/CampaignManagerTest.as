@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -86,7 +86,7 @@ package com.google.analytics.campaign
             var search1:String = "?a=1&b=2";
             var search2:String = "?a=1&b=2&utm_nooverride=1";
             var search3:String = "?a=1&b=2&utm_nooverride=0";
-            var search4:String = "?a=1&b=2&utm_nooverride";
+            // var search4:String = "?a=1&b=2&utm_nooverride";
             
             assertFalse( _cm0.hasNoOverride( search0 ) );
             assertFalse( _cm0.hasNoOverride( search1 ) );

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,7 +58,7 @@ package com.google.analytics.campaign
                 ct0.source  = "www.domain.com";
                 ct0.content = "hello world";
                 ct0.name    = "foobar";
-                ct0.medium  = "organic"
+                ct0.medium  = "organic";
                 ct0.term    = "test";
                 
                 z.campaignTracking = ct0.toTrackerString();

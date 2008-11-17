@@ -32,9 +32,8 @@ package com.google.analytics.core
     import flash.events.IOErrorEvent;
     import flash.events.SecurityErrorEvent;
     import flash.net.URLRequest;
-    import flash.net.sendToURL;
-    import flash.system.LoaderContext;
-    
+    import flash.system.LoaderContext;    
+
     /**
      * Google Analytics Tracker Code (GATC)'s GIF request module.
      * This file encapsulates all the necessary components that are required to
