@@ -60,6 +60,8 @@ package
             tracker.account = "UA-111-222";
             tracker.mode    = "AS3";
             tracker.visualDebug = true;
+            tracker.debug.verbose = true;
+            tracker.debug.GIFRequests = true;
             addChild( tracker as DisplayObject );
             
         }
@@ -69,7 +71,6 @@ package
             //trace( "onAnalyticsReady()" );
             var tracker:AnalyticsTracker = event.tracker;
             
-            tracker.debug.verbose = true;
             tracker.trackPageview( "/hello/world" );
             
         }
