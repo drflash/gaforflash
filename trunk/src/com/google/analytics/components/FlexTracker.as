@@ -27,6 +27,7 @@ package com.google.analytics.components
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.IdleTimer;
     import com.google.analytics.core.ServerOperationMode;
+    import com.google.analytics.core.TrackerCache;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.Layout;
@@ -92,6 +93,8 @@ package com.google.analytics.components
         {
             super();
             
+            _tracker = new TrackerCache();
+            
             /* note:
                to avoid to create a hard reference to Application.application
                we get the class by reflection
@@ -132,19 +135,30 @@ package com.google.analytics.components
                 debug.active = visualDebug;
             }
             
+            var activeTracker:GoogleAnalyticsAPI;
+            var cache:TrackerCache = _tracker as TrackerCache;
+            
             switch( mode )
             {
                 case "Bridge":
-                _tracker = _bridgeFactory();
+                activeTracker = _bridgeFactory();
                 break;
                 
                 case "AS3":
                 default:
-                _tracker = _trackerFactory();
+                activeTracker = _trackerFactory();
             }
             
-            dispatchEvent( new AnalyticsEvent( AnalyticsEvent.READY, this ) );
+            if( !cache.isEmpty() )
+            {
+                cache.tracker = activeTracker;
+                cache.flush();
+            }
+            
+            _tracker = activeTracker;
+            
             _ready = true;
+            dispatchEvent( new AnalyticsEvent( AnalyticsEvent.READY, this ) );
         }
         
         /**

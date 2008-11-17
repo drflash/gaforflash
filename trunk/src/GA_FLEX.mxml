@@ -25,12 +25,18 @@
     layout="absolute"
     width="800"
     height="600"
-    xmlns:v4="com.google.analytics.v4.*">
+    initialize="onInitialize()"
+    >
     
     <mx:Script>
         <![CDATA[
             import com.google.analytics.AnalyticsTracker;
             import com.google.analytics.events.AnalyticsEvent;
+            
+            public function onInitialize():void
+            {
+                tracker.trackPageview( "/test" );
+            }
             
             public function onAnalyticsReady( event:AnalyticsEvent ):void
             {
@@ -48,6 +54,7 @@
     
     <analytics:FlexTracker
         xmlns:analytics="com.google.analytics.components.*"
+        xmlns:v4="com.google.analytics.v4.*"
         id="tracker"
         account="UA-4241494-2"
         mode="AS3"
