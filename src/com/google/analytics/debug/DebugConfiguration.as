@@ -59,12 +59,12 @@ package com.google.analytics.debug
         /**
          * To trace infos and warning to the output.
          */
-        public var traceOutput:Boolean = true;
+        public var traceOutput:Boolean = false;
         
         /**
         * Allow to debug ExternalInterface calls.
         */
-        public var javascript:Boolean = true;
+        public var javascript:Boolean = false;
         
         /**
          * Allow to debug the GIF Request if true, will show a debug panel
