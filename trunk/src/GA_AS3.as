@@ -55,6 +55,11 @@ package
             tracker.mode = "AS3";
             tracker.visualDebug = true;
             //tracker.debug.verbose = true;
+            //tracker.debug.traceOutput = true;
+            //tracker.debug.javascript = true;
+            //tracker.debug.GIFRequests = true;
+            
+            
             //tracker.debug.mode = VisualDebugMode.geek;
             //tracker.config.sessionTimeout = 60;
             //tracker.config.conversionTimeout = 180;
