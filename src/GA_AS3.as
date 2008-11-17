@@ -77,7 +77,7 @@ package
             tracker.setVar( "Rocktober 023 online" );
             tracker.trackPageview( "/test/hello/world/from/AS3/API/023" );
             tracker.trackEvent( "AS3_videos023", "play" );
-            tracker.trackEvent( "AS3_say023", "hello world" );
+            tracker.trackEvent( "AS3_say023", "hello world", "test", 1 );
             //tracker.setLocalRemoteServerMode();
             //tracker.setLocalServerMode();
             //tracker.setRemoteServerMode();
