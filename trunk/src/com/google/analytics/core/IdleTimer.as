@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,12 +29,11 @@ package com.google.analytics.core
     import flash.events.MouseEvent;
     import flash.events.TimerEvent;
     import flash.utils.Timer;
-    import flash.utils.getTimer;
-    
+    import flash.utils.getTimer;    
+
     /**
-    * The Idle Timer class.
-    * 
-    */
+     * The Idle Timer class.
+     */
     public class IdleTimer
     {
         private var _loop:Timer;
@@ -67,7 +66,7 @@ package com.google.analytics.core
                                    display:DisplayObject, buffer:Buffer )
         {
             var delay:Number          = config.idleLoop;
-            var inactivity:Number     = config.idleTimeout
+            var inactivity:Number     = config.idleTimeout;
             var sessionTimeout:Number = config.sessionTimeout;
             
             _loop       = new Timer( delay * 1000 ); //milliseconds

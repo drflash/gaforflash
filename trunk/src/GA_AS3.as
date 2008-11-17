@@ -22,14 +22,12 @@ package
 {
     import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.GATracker;
-    import com.google.analytics.core.ServerOperationMode;
-    import com.google.analytics.debug.VisualDebugMode;
     
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
-    import flash.events.Event;
-    
+    import flash.events.Event;    
+
     /* Stub to test the AS3 API in pure ActionScript
     */
     [SWF(width="800", height="600", backgroundColor='0xffffff', frameRate='24', pageTitle='test', scriptRecursionLimit='1000', scriptTimeLimit='60')]
@@ -53,13 +51,14 @@ package
             GATracker.autobuild = false;
             tracker = new GATracker( this, "UA-111-222" );
             tracker.mode = "AS3";
-            tracker.visualDebug = true;
+            // tracker.visualDebug = true;
             //tracker.debug.verbose = true;
             //tracker.debug.traceOutput = true;
             //tracker.debug.javascript = true;
             //tracker.debug.GIFRequests = true;
             
-            
+            //tracker.config.idleLoop       = 10 ; 
+            //tracker.config.idleTimeout    = 10 ;            
             //tracker.debug.mode = VisualDebugMode.geek;
             //tracker.config.sessionTimeout = 60;
             //tracker.config.conversionTimeout = 180;
