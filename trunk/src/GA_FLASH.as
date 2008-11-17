@@ -54,10 +54,10 @@ package
                by adding it to the display list
             */
             tracker = new FlashTracker();
-            tracker.trackPageview( "/test" );
+            tracker.trackPageview( "/test" ); //test cache
             tracker.addEventListener( AnalyticsEvent.READY, onAnalyticsReady );
             
-            tracker.account = "UA-4241494-2";
+            tracker.account = "UA-111-222";
             tracker.mode    = "AS3";
             tracker.visualDebug = true;
             addChild( tracker as DisplayObject );
