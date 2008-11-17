@@ -37,7 +37,7 @@ package com.google.analytics.v4
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.URL;
     import com.google.analytics.utils.Variables;
-
+    
     /**
      * The Tracker class.
      */
@@ -61,7 +61,7 @@ package com.google.analytics.v4
         private var _buffer:Buffer;
         private var _gifRequest:GIFRequest;
         private var _adSense:AdSenseGlobals;
-    
+        
         //gif requests
         private var _browserInfo:BrowserInfo;
         private var _campaignInfo:CampaignInfo;
@@ -71,7 +71,7 @@ package com.google.analytics.v4
         private const EVENT_TRACKER_OBJECT_NAME_KEY_NUM:int = 1;
         private const EVENT_TRACKER_TYPE_KEY_NUM:int        = 2;
         private const EVENT_TRACKER_LABEL_KEY_NUM:int       = 3;
-        private const EVENT_TRACKER_VALUE_VALUE_NUM:int     = 1;
+        private const EVENT_TRACKER_VALUE_VALUE_NUM:int     = 4;
         private var _campaign:CampaignManager;
         private var _eventTracker:X10;
         private var _x10Module:X10;
@@ -1371,7 +1371,7 @@ package com.google.analytics.v4
                     {
                         success = _eventTracker.setKey( EVENT_TRACKER_PROJECT_ID,
                                                         EVENT_TRACKER_VALUE_VALUE_NUM,
-                                                        label );
+                                                        String(value) );
                     }
                     
                 }
