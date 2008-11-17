@@ -96,8 +96,8 @@ package com.google.analytics.components
         protected var livePreviewWidth:Number;
         protected var livePreviewHeight:Number;
         
-        protected var _width:Number = 100;
-        protected var _height:Number = 122; 
+        protected var _width:Number = 18;
+        protected var _height:Number = 18; 
         protected var _componentInspectorSetting:Boolean;
         
         public var boundingBox_mc:DisplayObject;
