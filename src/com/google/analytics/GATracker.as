@@ -25,6 +25,7 @@ package com.google.analytics
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.IdleTimer;
     import com.google.analytics.core.ServerOperationMode;
+    import com.google.analytics.core.TrackerCache;
     import com.google.analytics.core.TrackerMode;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.debug.DebugConfiguration;
@@ -102,6 +103,7 @@ package com.google.analytics
         {
             _display = display;
             _eventDispatcher = new EventDispatcher( this ) ;
+            _tracker = new TrackerCache();
             
             this.account     = account;
             this.mode        = mode;
@@ -137,23 +139,34 @@ package com.google.analytics
                 debug.active = visualDebug;
             }
             
+            var activeTracker:GoogleAnalyticsAPI;
+            var cache:TrackerCache = _tracker as TrackerCache;
+            
             switch( mode )
             {
                 case TrackerMode.BRIDGE :
                 {
-                    _tracker = _bridgeFactory();
+                    activeTracker = _bridgeFactory();
                     break;
                 }
                 
                 case TrackerMode.AS3 :
-                default              :
+                default:
                 {
-                    _tracker = _trackerFactory();
+                    activeTracker = _trackerFactory();
                 }
             }
             
-            dispatchEvent( new AnalyticsEvent( AnalyticsEvent.READY, this ) );
+            if( !cache.isEmpty() )
+            {
+                cache.tracker = activeTracker;
+                cache.flush();
+            }
+            
+            _tracker = activeTracker;
+            
             _ready = true;
+            dispatchEvent( new AnalyticsEvent( AnalyticsEvent.READY, this ) );
         }
         
         /**
