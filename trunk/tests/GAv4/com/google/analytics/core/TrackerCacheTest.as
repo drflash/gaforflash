@@ -561,22 +561,22 @@ package com.google.analytics.core
             );
         }         
         
-        public function testInitData():void
+        public function testResetSession():void
         {
-            cache.initData() ;
+            cache.resetSession() ;
             
-            assertEquals( cache.size() , 1  , "01 - TrackerCache initData method failed." ) ;
+            assertEquals( cache.size() , 1  , "01 - TrackerCache resetSession method failed." ) ;
             
             var e:Object = cache.element() ;
             
-            assertNotNull( e , "02 - TrackerCache initData method failed." ) ;
+            assertNotNull( e , "02 - TrackerCache resetSession method failed." ) ;
             
-            assertEquals( e.name , "initData"  , "03 - TrackerCache initData method failed." ) ;
+            assertEquals( e.name , "resetSession"  , "03 - TrackerCache resetSession method failed." ) ;
             ArrayAssert.assertEquals
             ( 
                 e.args as Array , 
                 [], 
-                "04 - TrackerCache initData method failed." 
+                "04 - TrackerCache resetSession method failed." 
             ) ;
             cache.clear() ;
         }

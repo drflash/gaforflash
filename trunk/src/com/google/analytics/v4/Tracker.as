@@ -668,11 +668,11 @@ package com.google.analytics.v4
         }
         
         /**
-         * Initializes or re-initializes the GATC (Google Analytics Tracker Code) object.
+         * Reset the current session clearing the utmb and utmc cookies.
          */
-        public function initData():void
+        public function resetSession():void
         {
-            _initData();
+            _buffer.resetCurrentSession();
         }
         
         /**
