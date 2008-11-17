@@ -332,7 +332,7 @@ package com.google.analytics.core
             target.removeEventListener( Event.COMPLETE, onComplete );
         }
         
-        public function sendWithValidation( request:URLRequest ):void
+        public function sendRequest( request:URLRequest ):void
         {
             
             /* note:
@@ -368,29 +368,29 @@ package com.google.analytics.core
             }
         }
         
-        public function _send( request:URLRequest ):void
-        {
-            try
-            {
-                sendToURL( request );
-            }
-            catch( e:Error )
-            {
-                _debug.failure( "\"sendToURL()\" could not instanciate Gif Request" );
-            }
-        }
+//        public function _send( request:URLRequest ):void
+//        {
+//            try
+//            {
+//                sendToURL( request );
+//            }
+//            catch( e:Error )
+//            {
+//                _debug.failure( "\"sendToURL()\" could not instanciate Gif Request" );
+//            }
+//        }
         
-        public function sendRequest( request:URLRequest ):void
-        {
-            if( _debug.validateGIFRequest )
-            {
-                sendWithValidation( request );
-            }
-            else
-            {
-                _send( request );
-            }
-        }
+//        public function sendRequest( request:URLRequest ):void
+//        {
+//            if( _debug.validateGIFRequest )
+//            {
+//                sendWithValidation( request );
+//            }
+//            else
+//            {
+//                _send( request );
+//            }
+//        }
         
         /**
         * Send the Gif Request to the server(s).
