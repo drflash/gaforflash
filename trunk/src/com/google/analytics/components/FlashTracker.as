@@ -27,6 +27,7 @@ package com.google.analytics.components
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.IdleTimer;
     import com.google.analytics.core.ServerOperationMode;
+    import com.google.analytics.core.TrackerCache;
     import com.google.analytics.core.TrackerMode;
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.debug.DebugConfiguration;
@@ -87,7 +88,7 @@ package com.google.analytics.components
         
         //component properties
         private var _account:String      = "";
-        private var _mode:String         = "AS3";
+        private var _mode:String         = TrackerMode.AS3;
         private var _visualDebug:Boolean = false;
         
         //component
@@ -108,6 +109,8 @@ package com.google.analytics.components
         public function FlashTracker()
         {
             super();
+            
+            _tracker = new TrackerCache();
             
             isLivePreview = _checkLivePreview();
             _componentInspectorSetting = false;
@@ -226,23 +229,34 @@ package com.google.analytics.components
             
             _jsproxy = new JavascriptProxy( debug );
             
+            var activeTracker:GoogleAnalyticsAPI;
+            var cache:TrackerCache = _tracker as TrackerCache;
+            trace( ">> cache: " + cache );
+            
             switch( mode )
             {
                 case TrackerMode.BRIDGE :
                 {
-                    _tracker = _bridgeFactory();
+                    activeTracker = _bridgeFactory();
                     break;
                 }
                 
                 case TrackerMode.AS3 :
                 default:
                 {
-                    _tracker = _trackerFactory();
+                    activeTracker = _trackerFactory();
                 }
             }
             
-            _ready = true ;
+            if( !cache.isEmpty() )
+            {
+                cache.tracker = activeTracker;
+                cache.flush();
+            }
             
+            _tracker = activeTracker;
+            
+            _ready = true ;
             dispatchEvent( new AnalyticsEvent( AnalyticsEvent.READY, this ) ) ;
             
         }
