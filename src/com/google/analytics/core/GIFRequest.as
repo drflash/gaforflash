@@ -439,7 +439,16 @@ package com.google.analytics.core
                              }
                              
                              var localImage:URLRequest = new URLRequest();
+                             
+                             if( _config.localGIFpath.indexOf( "http" ) == 0 )
+                             {
+                                 localImage.url  = _config.localGIFpath;
+                             }
+                             else
+                             {
                                  localImage.url  = localPath + _config.localGIFpath;
+                             }
+                                 
                                  
                                  //localImage.data = variables;
                                  localImage.url +=  "?"+variables.toString();
