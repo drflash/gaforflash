@@ -107,7 +107,8 @@ package com.google.analytics.debug
         */
         public var minimizedOnStart:Boolean = false;
         
-        public var mode:VisualDebugMode = VisualDebugMode.basic;
+        //public var mode:VisualDebugMode = VisualDebugMode.basic;
+        private var _mode:VisualDebugMode = VisualDebugMode.basic;
         
         /**
          * Creates a new DebugConfiguration instance. 
@@ -115,7 +116,36 @@ package com.google.analytics.debug
         public function DebugConfiguration(  )
         {
         }
-         
+        
+        [Inspectable(defaultValue="basic", enumeration="basic,advanced,geek", type="String")]
+        public function get mode():*
+        {
+            return _mode;
+        }
+        
+        public function set mode( value:* ):void
+        {
+            if( value is String )
+            {
+                switch( value )
+                {
+                    case "geek":
+                    value = VisualDebugMode.geek;
+                    break;
+                    
+                    case "advanced":
+                    value = VisualDebugMode.advanced;
+                    break;
+                    
+                    default:
+                    case "basic":
+                    value = VisualDebugMode.basic;
+                }
+            }
+            
+            _mode = value;
+        }
+        
         /**
          * The protected custom trace method.
          */

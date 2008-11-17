@@ -26,16 +26,16 @@ package com.google.analytics.core
      */
     public class TrackerMode 
     {
-    	
+        
         /**
          * Determinates the "AS3" mode in a GA tracker.
-         */    	
-    	public static const AS3:String = "AS3" ;
-    	
-    	/**
-    	 * Determinates the "Bridge" mode in a GA tracker.
-    	 */
-    	public static const BRIDGE:String = "Bridge" ;
-    	
+         */
+        public static const AS3:String = "AS3" ;
+        
+        /**
+         * Determinates the "Bridge" mode in a GA tracker.
+         */
+        public static const BRIDGE:String = "Bridge" ;
+        
     }
 }
