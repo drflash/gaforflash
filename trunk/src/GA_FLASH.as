@@ -22,6 +22,7 @@ package
 {
     import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.components.FlashTracker;
+    import com.google.analytics.debug.VisualDebugMode;
     import com.google.analytics.events.AnalyticsEvent;
     
     import flash.display.DisplayObject;
@@ -60,8 +61,9 @@ package
             tracker.account = "UA-111-222";
             tracker.mode    = "AS3";
             tracker.visualDebug = true;
-            tracker.debug.verbose = true;
-            tracker.debug.GIFRequests = true;
+            //tracker.debug.mode = VisualDebugMode.geek;
+            //tracker.debug.verbose = true;
+            //tracker.debug.GIFRequests = true;
             addChild( tracker as DisplayObject );
             
         }
