@@ -22,6 +22,7 @@ package
 {
     import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.GATracker;
+    import com.google.analytics.core.ServerOperationMode;
     
     import flash.display.Sprite;
     import flash.display.StageAlign;
@@ -60,6 +61,10 @@ package
             tracker.config.sessionTimeout = 60;
             tracker.config.conversionTimeout = 180;
             tracker.trackPageview( "/test" ); //test cache
+            
+            //tracker.config.localGIFpath = tracker.config.remoteGIFpath;
+            //tracker.config.serverMode = ServerOperationMode.local;
+            trace( "local: " + tracker.config.localGIFpath );
             trace( "serverMode: " + tracker.config.serverMode );
             
             GATracker(tracker).build();
