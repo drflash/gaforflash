@@ -8,6 +8,7 @@
     >
     <mx:Script>
         <![CDATA[
+            import com.google.analytics.debug.VisualDebugMode;
             import com.google.analytics.GATracker;
             import com.google.analytics.AnalyticsTracker;
             
@@ -15,14 +16,16 @@
             
             public function onButtonClick():void
             {
-                tracker.trackEvent( "Button", "click", "hello world" );
+                tracker.trackEvent( "Button", "click", "hello world", 123 );
             }
             
             private function onComplete():void
             {
                 tracker = new GATracker( this, "UA-111-222", "AS3", true );
-                tracker.debug.traceOutput = false;
                 tracker.debug.verbose = true;
+                tracker.debug.mode = VisualDebugMode.advanced;
+                tracker.debug.traceOutput = true;
+                tracker.debug.GIFRequests = true;
                 
                 tracker.trackPageview( "/hello/world" );
             }
