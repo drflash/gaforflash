@@ -231,7 +231,6 @@ package com.google.analytics.components
             
             var activeTracker:GoogleAnalyticsAPI;
             var cache:TrackerCache = _tracker as TrackerCache;
-            trace( ">> cache: " + cache );
             
             switch( mode )
             {

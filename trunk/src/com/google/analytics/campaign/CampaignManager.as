@@ -23,6 +23,7 @@ package com.google.analytics.campaign
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.OrganicReferrer;
     import com.google.analytics.debug.DebugConfiguration;
+    import com.google.analytics.debug.VisualDebugMode;
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.URL;
     import com.google.analytics.utils.Variables;
@@ -256,7 +257,7 @@ package com.google.analytics.campaign
                 _buffer.utmz.responseCount    = responseCount;
                 _buffer.utmz.campaignTracking = campaignTracker.toTrackerString();
                 
-                _debug.info( _buffer.utmz.toString() );
+                _debug.info( _buffer.utmz.toString(), VisualDebugMode.geek );
                 
                 // indicate new campaign
                 campInfo = new CampaignInfo( false, true );
@@ -273,7 +274,8 @@ package com.google.analytics.campaign
         /**
          * This method returns the organic campaign information.
          * @private
-         * @return {_gat.GA_Campaign_.Tracker_} Returns undefined if referrer is not a matching organic campaign source. Otherwise, returns the campaign tracker object.
+         * @return {_gat.GA_Campaign_.Tracker_} Returns undefined if referrer is not
+         * a matching organic campaign source. Otherwise, returns the campaign tracker object.
          */
         public function getOrganicCampaign():CampaignTracker
         {

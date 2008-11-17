@@ -32,6 +32,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.Utils;
     import com.google.analytics.data.X10;
     import com.google.analytics.debug.DebugConfiguration;
+    import com.google.analytics.debug.VisualDebugMode;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
@@ -129,7 +130,7 @@ package com.google.analytics.v4
                         data0 += "\ndomain name: " + _config.domainName;
                         data0 += "\ndomain hash: " + _domainHash;
                         data0 += "\ntimestamp:   " + _timeStamp + " ("+new Date(_timeStamp*1000)+")";
-                    _debug.info( data0 );
+                    _debug.info( data0, VisualDebugMode.geek );
                 }
             }
             
@@ -152,16 +153,16 @@ package com.google.analytics.v4
                     
                     // cache browser info
                     _browserInfo = new BrowserInfo( _config, _info );
-                    _debug.info( "browserInfo: " + _browserInfo.toURLString() );
+                    _debug.info( "browserInfo: " + _browserInfo.toURLString(), VisualDebugMode.advanced );
                     
                     // cache campaign info
                     if( _config.campaignTracking )
                     {
                         _campaign = new CampaignManager( _config, _debug, _buffer,
                                                          _domainHash, _formatedReferrer, _timeStamp );
-                        trace( "_info.locationSearch: " + _info.locationSearch );
+                        
                         _campaignInfo = _campaign.getCampaignInformation( _info.locationSearch, _noSessionInformation );
-                        _debug.info( "campaignInfo: " + _campaignInfo.toURLString() );
+                        _debug.info( "campaignInfo: " + _campaignInfo.toURLString(), VisualDebugMode.advanced );
                     }
                 }
                 
@@ -191,7 +192,7 @@ package com.google.analytics.v4
                     data += "\nlanguage: " + _info.language;
                     data += "\ndomain hash: " + _getDomainHash();
                     data += "\nuser-agent: " + _info.userAgent;
-                _debug.info( data );
+                _debug.info( data, VisualDebugMode.geek );
             }
         }
         
@@ -247,7 +248,6 @@ package com.google.analytics.v4
                 //We already have __utma value stored in document cookie.
                 if( _buffer.hasUTMA() && !_buffer.utma.isEmpty() )
                 {
-                    trace( ">>>> We already have __utma value stored in document cookie." );
                     /* Either __utmb, __utmc, or both are missing from document cookie.  We
                        take the existing __utma value, and update with new session
                        information.  And then we indicate that there is no session information
@@ -261,7 +261,7 @@ package com.google.analytics.v4
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( "from cookie " + _buffer.utma.toString() );
+                        _debug.info( "from cookie " + _buffer.utma.toString(), VisualDebugMode.geek );
                     }
                     
                 }
@@ -271,7 +271,7 @@ package com.google.analytics.v4
                 */
                 else
                 {
-                    trace( ">>>> create a NEW utma" );
+                    _debug.info( "create a new utma", VisualDebugMode.advanced );
                     _buffer.utma.domainHash   = _domainHash;
                     _buffer.utma.sessionId    = _getUniqueSessionId();
                     _buffer.utma.firstTime    = _timeStamp;
@@ -281,7 +281,7 @@ package com.google.analytics.v4
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( _buffer.utma.toString() );
+                        _debug.info( _buffer.utma.toString(), VisualDebugMode.geek );
                     }
                     
                     _noSessionInformation = true;
@@ -313,7 +313,7 @@ package com.google.analytics.v4
                                 data0 += "AdSense sid found\n";
                                 data0 += "Override currentTime("+_buffer.utma.currentTime+") from AdSense sid("+Number(_adSense.sid)+")";
                             
-                            _debug.info( data0 );
+                            _debug.info( data0, VisualDebugMode.geek );
                         }
                 }
                 
@@ -333,7 +333,7 @@ package com.google.analytics.v4
                                 data1 += "AdSense sid found (new visitor)\n";
                                 data1 += "Override lastTime("+_buffer.utma.lastTime+") from AdSense sid("+Number(_adSense.sid)+")";
                             
-                            _debug.info( data1 );
+                            _debug.info( data1, VisualDebugMode.geek );
                         }
                     }
                     
@@ -353,13 +353,13 @@ package com.google.analytics.v4
                                 data2 += "Override sessionId("+_buffer.utma.sessionId+") from AdSense vid("+Number( vid[0] )+")\n";
                                 data2 += "Override firstTime("+_buffer.utma.firstTime+") from AdSense vid("+Number( vid[1] )+")";
                             
-                            _debug.info( data2 );
+                            _debug.info( data2, VisualDebugMode.geek );
                         }
                     }
                     
                     if( _debug.verbose )
                     {
-                        _debug.info( "AdSense modified : " + _buffer.utma.toString() );
+                        _debug.info( "AdSense modified : " + _buffer.utma.toString(), VisualDebugMode.geek );
                     }
                 }
                 
@@ -389,8 +389,8 @@ package com.google.analytics.v4
             
             if( _debug.verbose )
             {
-                _debug.info( _buffer.utmb.toString() );
-                _debug.info( _buffer.utmc.toString() );
+                _debug.info( _buffer.utmb.toString(), VisualDebugMode.advanced );
+                _debug.info( _buffer.utmc.toString(), VisualDebugMode.advanced );
             }
             
         }
@@ -465,7 +465,7 @@ package com.google.analytics.v4
             }
             
             _config.domainName = _config.domain.name.toLowerCase();
-            _debug.info( "domain name: " + _config.domainName );
+            _debug.info( "domain name: " + _config.domainName, VisualDebugMode.advanced );
         }
         
         /**
@@ -511,7 +511,7 @@ package com.google.analytics.v4
                 }
             }
             
-            _debug.info( "formated referrer: " + referrer );
+            _debug.info( "formated referrer: " + referrer, VisualDebugMode.advanced );
             return referrer;
         }
         
@@ -546,7 +546,7 @@ package com.google.analytics.v4
         private function _getUniqueSessionId():Number
         {
             var sessionID:Number = (Utils.generate32bitRandom() ^ _generateUserDataHash()) * 0x7fffffff;
-            _debug.info( "Session ID: " + sessionID );
+            _debug.info( "Session ID: " + sessionID, VisualDebugMode.geek );
             return sessionID;
         }
         
@@ -593,7 +593,7 @@ package com.google.analytics.v4
         {
             if( _debug.verbose )
             {
-                _debug.info( "visitCode: " + _buffer.utma.sessionId );
+                _debug.info( "visitCode: " + _buffer.utma.sessionId, VisualDebugMode.geek );
             }
             return _buffer.utma.sessionId;
         }
@@ -635,7 +635,7 @@ package com.google.analytics.v4
             */
             if( _debug.verbose )
             {
-                _debug.info( "takeSample: (" +(_visitCode() % 10000)+ ") < (" +(_config.sampleRate * 10000)+ ")" );
+                _debug.info( "takeSample: (" +(_visitCode() % 10000)+ ") < (" +(_config.sampleRate * 10000)+ ")", VisualDebugMode.geek );
             }
             return (_visitCode() % 10000) < (_config.sampleRate * 10000);
         }
@@ -695,7 +695,7 @@ package com.google.analytics.v4
                 _config.sampleRate = newRate;
             }
             
-            _debug.info( "sample rate = " + _config.sampleRate );
+            _debug.info( "setSampleRate( " + _config.sampleRate + " )", VisualDebugMode.basic );
         }
         
         /**
@@ -717,7 +717,7 @@ package com.google.analytics.v4
         public function setSessionTimeout(newTimeout:int):void
         {
             _config.sessionTimeout = newTimeout;
-            _debug.info( "session timeout = " + _config.sessionTimeout );
+            _debug.info( "setSessionTimeout( " + _config.sessionTimeout + " )", VisualDebugMode.basic );
         }
         
         /**
@@ -742,10 +742,10 @@ package com.google.analytics.v4
                 
                 if( _debug.verbose )
                 {
-                    _debug.info( _buffer.utmv.toString() );
+                    _debug.info( _buffer.utmv.toString(), VisualDebugMode.geek );
                 }
                 
-                _debug.info( "setVar = " + newVal );
+                _debug.info( "setVar( " + newVal + " )", VisualDebugMode.basic );
                 
                 if( _takeSample() )
                 {
@@ -801,7 +801,7 @@ package com.google.analytics.v4
                 variables.URIencode = true;
                 
             var docInfo:DocumentInfo = new DocumentInfo( _config, _info, _formatedReferrer, pageURL, _adSense );
-            _debug.info( "docInfo: " + docInfo.toURLString() );
+            _debug.info( "docInfo: " + docInfo.toURLString(), VisualDebugMode.geek );
             
             var campvars:Variables;
             
@@ -868,7 +868,7 @@ package com.google.analytics.v4
         public function setAllowAnchor(enable:Boolean):void
         {
             _config.allowAnchor = enable;
-            _debug.info( "allow anchor = " + _config.allowAnchor );
+            _debug.info( "setAllowAnchor( " + _config.allowAnchor + " )", VisualDebugMode.basic );
         }
         
         /**
@@ -882,7 +882,17 @@ package com.google.analytics.v4
         public function setCampContentKey(newCampContentKey:String):void
         {
             _config.campaignKey.UCCT = newCampContentKey;
-            _debug.info( "campaign content key (UCCT) = " + _config.campaignKey.UCCT );
+            
+            var msg:String = "setCampContentKey( " + _config.campaignKey.UCCT + " )";
+            
+            if( _debug.mode == VisualDebugMode.geek )
+            {
+                _debug.info( msg + " [UCCT]" );
+            }
+            else
+            {
+                _debug.info( msg );
+            }
         }
         
         /**
@@ -1053,7 +1063,7 @@ package com.google.analytics.v4
         public function setAllowHash(enable:Boolean):void
         {
             _config.allowDomainHash = enable;
-            _debug.info( "allow domain hash = " + _config.allowDomainHash );
+            _debug.info( "setAllowHash( " + _config.allowDomainHash + " )", VisualDebugMode.basic );
         }
         
         /**
@@ -1379,7 +1389,7 @@ package com.google.analytics.v4
                 // event tracker is set successfully
                 if( success )
                 {
-                    _debug.info( "valid event tracking call\ncategory: "+category+"\naction: "+action );
+                    _debug.info( "valid event tracking call\ncategory: "+category+"\naction: "+action, VisualDebugMode.geek );
                     _sendXEvent( _eventTracker );
                 }
                 
@@ -1387,7 +1397,7 @@ package com.google.analytics.v4
             else
             {
                 // event tracking call is not valid, failed!
-                _debug.warning( "event tracking call is not valid, failed!\ncategory: "+category+"\naction: "+action );
+                _debug.warning( "event tracking call is not valid, failed!\ncategory: "+category+"\naction: "+action, VisualDebugMode.geek );
                 success = false;
             }
             

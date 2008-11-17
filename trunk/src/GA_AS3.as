@@ -23,6 +23,7 @@ package
     import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.GATracker;
     import com.google.analytics.core.ServerOperationMode;
+    import com.google.analytics.debug.VisualDebugMode;
     
     import flash.display.Sprite;
     import flash.display.StageAlign;
@@ -57,13 +58,17 @@ package
             tracker = new GATracker( this, "UA-4241494-2" );
             tracker.mode = "AS3";
             tracker.visualDebug = true;
-            tracker.debug.verbose = true;
-            tracker.config.sessionTimeout = 60;
-            tracker.config.conversionTimeout = 180;
+            //tracker.debug.verbose = true;
+            //tracker.debug.mode = VisualDebugMode.geek;
+            //tracker.config.sessionTimeout = 60;
+            //tracker.config.conversionTimeout = 180;
+            //tracker.config.serverMode = ServerOperationMode.remote;
             tracker.trackPageview( "/test" ); //test cache
             
             //tracker.config.localGIFpath = tracker.config.remoteGIFpath;
             //tracker.config.serverMode = ServerOperationMode.local;
+            trace( "debug mode: " + tracker.debug.mode );
+            trace( "debug verbose: " + tracker.debug.verbose );
             trace( "local: " + tracker.config.localGIFpath );
             trace( "serverMode: " + tracker.config.serverMode );
             
