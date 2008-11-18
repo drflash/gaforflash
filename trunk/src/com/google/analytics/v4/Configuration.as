@@ -162,6 +162,12 @@ package com.google.analytics.v4
         public var detectTitle:Boolean = true;
         
         /**
+         * The campaign key value of the application.
+         * @see com.google.analytics.campaign.CampaignKey
+         */
+        public var campaignKey:CampaignKey = new CampaignKey();        
+        
+        /**
          * Track campaign information flag.
          */
         public var campaignTracking:Boolean = true;
@@ -197,9 +203,7 @@ package com.google.analytics.v4
          * Default cookie path to set in document header.
          */
         public var cookiePath:String = "/" ; //SharedObjectPath
-        
-        public var campaignKey:CampaignKey = new CampaignKey();
-        
+                
         /**
          * Delimiter for e-commerce transaction fields.
          */
