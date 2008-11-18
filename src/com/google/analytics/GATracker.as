@@ -297,7 +297,7 @@ package com.google.analytics
          */        
         public function set mode( value:String ):void
         {
-            _mode = value;
+            _mode = value ;
         }
         
         /**

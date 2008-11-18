@@ -22,6 +22,7 @@ package
 {
     import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.GATracker;
+    import com.google.analytics.debug.VisualDebugMode;
     
     import flash.display.Sprite;
     import flash.display.StageAlign;
@@ -59,7 +60,7 @@ package
             
             //tracker.config.idleLoop       = 10 ; 
             //tracker.config.idleTimeout    = 10 ;            
-            //tracker.debug.mode = VisualDebugMode.geek;
+            tracker.debug.mode = VisualDebugMode.geek;
             //tracker.config.sessionTimeout = 60;
             //tracker.config.conversionTimeout = 180;
             //tracker.config.serverMode = ServerOperationMode.remote;
