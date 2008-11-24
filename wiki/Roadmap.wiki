@@ -1,5 +1,5 @@
 #summary past and futur releases plan.
-#labels Phase-Implementation
+#labels Phase-Implementation,Featured
 
 == v1.2 ==
 
