@@ -52,15 +52,15 @@ package
             GATracker.autobuild = false;
             tracker = new GATracker( this, "UA-111-222" );
             tracker.mode = "AS3";
-            // tracker.visualDebug = true;
+            tracker.visualDebug = true;
             //tracker.debug.verbose = true;
             //tracker.debug.traceOutput = true;
             //tracker.debug.javascript = true;
-            //tracker.debug.GIFRequests = true;
+            tracker.debug.GIFRequests = true;
             
-            //tracker.config.idleLoop       = 10 ; 
-            //tracker.config.idleTimeout    = 10 ;            
             tracker.debug.mode = VisualDebugMode.geek;
+            //tracker.config.idleLoop       = 10 ; 
+            //tracker.config.idleTimeout    = 10 ;
             //tracker.config.sessionTimeout = 60;
             //tracker.config.conversionTimeout = 180;
             //tracker.config.serverMode = ServerOperationMode.remote;
@@ -81,10 +81,10 @@ package
             //tracker.setDomainName( ".zwetan.com" );
             
             //ideally you would want to change the setVar for each different tests
-            tracker.setVar( "hello world" );
-            tracker.trackPageview( "/test/hello/world/from/AS3/API" );
-            tracker.trackEvent( "videos", "play" );
-            tracker.trackEvent( "say", "hello world", "test", 1 );
+            //tracker.setVar( "hello world" );
+            //tracker.trackPageview( "/test/hello/world/from/AS3/API" );
+            //tracker.trackEvent( "videos", "play" );
+            tracker.trackEvent( "say", "hello world", "test", 123 );
             //tracker.setLocalRemoteServerMode();
             //tracker.setLocalServerMode();
             //tracker.setRemoteServerMode();
