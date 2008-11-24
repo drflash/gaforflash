@@ -1,4 +1,4 @@
-#summary past and futur releases plan.
+#summary Past and future release plan.
 #labels Phase-Implementation,Featured
 
 == v1.2 ==
