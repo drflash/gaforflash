@@ -72,7 +72,7 @@ package com.google.analytics.v4
         private const EVENT_TRACKER_OBJECT_NAME_KEY_NUM:int = 1;
         private const EVENT_TRACKER_TYPE_KEY_NUM:int        = 2;
         private const EVENT_TRACKER_LABEL_KEY_NUM:int       = 3;
-        private const EVENT_TRACKER_VALUE_VALUE_NUM:int     = 4;
+        private const EVENT_TRACKER_VALUE_VALUE_NUM:int     = 1;
         private var _campaign:CampaignManager;
         private var _eventTracker:X10;
         private var _x10Module:X10;
@@ -1440,9 +1440,9 @@ package com.google.analytics.v4
                     // aggregate value
                     if( !isNaN(value) )
                     {
-                        success = _eventTracker.setKey( EVENT_TRACKER_PROJECT_ID,
-                                                        EVENT_TRACKER_VALUE_VALUE_NUM,
-                                                        String(value) );
+                        success = _eventTracker.setValue( EVENT_TRACKER_PROJECT_ID,
+                                                          EVENT_TRACKER_VALUE_VALUE_NUM,
+                                                          value );
                         params = 4;
                     }
                     
