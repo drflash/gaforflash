@@ -1,0 +1,35 @@
+#summary past and futur releases plan.
+#labels Phase-Implementation
+
+== v1.2 ==
+
+ * integrate with AIR
+ * test AIR and standalone (flash projector)
+ * test AIR 1.0 / 1.1 / 1.5
+ * additional tests for Flash Player 10
+
+tags: n/a
+
+== v1.1 ==
+
+ * API 100% complete
+ * e-commerce
+ * linker
+
+tags: n/a
+
+= v1.0.1 =
+
+ * fix minor bugs
+ * documentation
+ * wiki
+ * samples
+
+tags: n/a
+
+== v1.0 ==
+
+ * first release
+ * essential functionality working
+
+tags: [http://gaforflash.googlecode.com/svn/tags/1.0.0 1.0.0]
