@@ -14,7 +14,7 @@ For more information visit: http://code.google.com/apis/analytics/docs/eventTrac
 Currently the Event Tracking feature is a closed beta; however, exclusive for Flash developers, you can request activation through: http://tinyurl.com/gaforflash
 
 or via this form
-<wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/EventTrackingBetaRequest-form.xml" width="480" height="400" border="0" />
+<wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/EventTrackingBetaRequest-form.xml" width="600" height="600" border="0" />
 
 
 We will enable up to 500 requests. To expedite the activation, only submit profiles that require the feature.
