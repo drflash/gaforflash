@@ -1,6 +1,6 @@
 #summary How To Get Event Tracking reporting enabled in your account
 
-= Event Tracking Overview =
+== Event Tracking Overview ==
 
 Event tracking is an evolutionary way to send data to Google Analytics as to not inflate pageview counts.
 It provides a user defined 3-dimensional data collection system which can be used to track: User interaction, Server latency, Custom Data, and more.
@@ -9,7 +9,7 @@ For more information visit: http://code.google.com/apis/analytics/docs/eventTrac
 
 
 
-= Enabling The Feature =
+== Enabling The Feature ==
 
 Currently the Event Tracking feature is a closed beta; however, exclusive for Flash developers, you can request activation through: http://tinyurl.com/gaforflash
 
