@@ -11,14 +11,15 @@ For more information visit: http://code.google.com/apis/analytics/docs/eventTrac
 
 == Enabling The Feature ==
 
-Currently the Event Tracking feature is a closed beta; however, exclusive for Flash developers, you can request activation through: http://tinyurl.com/gaforflash
-
-or via this form
-<wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/EventTrackingBetaRequest-form.xml" width="600" height="700" border="0" />
-
+Currently the Event Tracking feature is a closed beta; however, exclusive for Flash developers, you can request activation through the form below.
 
 We will enable up to 500 requests. To expedite the activation, only submit profiles that require the feature.
 
 After you submit the form, it will take up to a week to see the new reports in your account under the Content -> Event section. For each new profile, please submit another request as new profiles will not have Event Tracking enabled by default.
 
 Please note that you can start sending event data to GA now, and you will be able to see the historical data once the the UI has been enabled. You can verify that your events are being properly sent by following the Troubleshooting and Validation doc here: http://code.google.com/apis/analytics/docs/gaTrackingTroubleshooting.html 
+
+
+
+<wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/EventTrackingBetaRequest-form.xml" width="600" height="700" border="0" />
+
