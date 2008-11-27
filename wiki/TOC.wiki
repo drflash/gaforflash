@@ -23,6 +23,6 @@
     * [Examples_helloworld hello world]
     * [Examples_FLVPlayback_EventTracking FLVPlayback Event Tracking]
   * [Support Support]
-    * [PreRequisite prerequisite]
+    * [PreRequisites prerequisites]
     * [FAQ FAQ]
     * [KnownIssues Known issues]
