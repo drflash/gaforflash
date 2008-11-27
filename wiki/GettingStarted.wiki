@@ -10,7 +10,7 @@ In the zip you will find the HTML documentation for the code and two SWC
 
  * *analytics_flash.swc*
    this is the visual component for Flash.<br>
-   (`Analytics` in the Flash component panel)
+   (`Analytics` in the Flash component panel)<br>
    http://gaforflash.googlecode.com/svn/gfx/FlashComponents.png
  * *analytics.swc*
    this is the code library for Flash and Flex<br>
