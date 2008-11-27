@@ -10,5 +10,5 @@ All you need to know to configure the tracking.
 [VisualDebug HOWTO Debug]<br>
 All you need to know to configure the debugging.
 
-[Testing HOWTO Test]
+[Testing HOWTO Test]<br>
 All you need to know to test your tracking.
