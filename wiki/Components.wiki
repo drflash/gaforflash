@@ -1,2 +1,2 @@
-#summary Components Organization.
+#summary Components organization.
 #sidebar TOC
