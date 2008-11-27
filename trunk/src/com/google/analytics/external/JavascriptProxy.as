@@ -255,7 +255,7 @@ package com.google.analytics.external
                so we use valueOf() to automatically get the property
                and yes it will work only with primitives
             */
-            return ExternalInterface.call( name + ".valueOf" ) ;
+            return call( name + ".valueOf" ); //ExternalInterface.call( name + ".valueOf" ) ;
         }
         
         /**
@@ -264,7 +264,7 @@ package com.google.analytics.external
          */
         public function getPropertyString( name:String ):String
         {
-            return ExternalInterface.call( name + ".toString" );
+            return call( name + ".toString" ); 
         }
         
         /**
@@ -272,7 +272,7 @@ package com.google.analytics.external
          */
         public function hasProperty( path:String ):Boolean
         {
-            return ExternalInterface.call( hasProperty_js, path );
+            return call( hasProperty_js, path ); 
         }        
         
         /**
@@ -309,7 +309,7 @@ package com.google.analytics.external
          */
         public function setProperty( path:String, value:* ):void
         {
-            ExternalInterface.call( setProperty_js, path, value );
+            call( setProperty_js, path, value ); 
         }
         
         /**
@@ -317,7 +317,7 @@ package com.google.analytics.external
          */
         public function setPropertyByReference( path:String, target:String ):void
         {
-            ExternalInterface.call( setPropertyRef_js, path, target );
+            call( setPropertyRef_js, path, target );
         }
         
     }
