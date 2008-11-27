@@ -1,0 +1,14 @@
+#summary Working with gaforflash.
+#sidebar TOC
+
+[GettingStarted Getting Started]<br>
+What do you need to start using Google Analytics Tracking For Adobe Flash.
+
+[Configuration HOWTO Configure]<br>
+All you need to know to configure the tracking.
+
+[VisualDebug HOWTO Debug]<br>
+All you need to know to configure the debugging.
+
+[Testing HOWTO Test]
+All you need to know to test your tracking.
