@@ -1,24 +1,23 @@
 #summary What do you need to start using Google Analytics Tracking For Adobe Flash.
 #sidebar TOC
 
-= Obtain the components =
+== Obtain the components ==
 
 Just go to the [http://code.google.com/p/gaforflash/downloads/list download section]
 and get the last version.
 
 In the zip you will find the HTML documentation for the code and two SWC
 
-http://gaforflash.googlecode.com/svn/gfx/FlashComponents.png
-
  * *analytics_flash.swc*
    this is the visual component for Flash.<br>
    (`Analytics` in the Flash component panel)
+   http://gaforflash.googlecode.com/svn/gfx/FlashComponents.png
  * *analytics.swc*
    this is the code library for Flash and Flex<br>
    it will also work as a component for Flex.<br>
    (`AnalyticsLibrary` in the Flash component panel)
 
-= Start using it =
+== Start using it ==
 
 [http://code.google.com/apis/analytics/docs/flashTrackingIntro.html You can follow the introduction from the Google Code Analytics API page.]
 
