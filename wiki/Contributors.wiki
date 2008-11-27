@@ -1,4 +1,5 @@
 #summary HOWTO contribute.
+#sidebar TOC
 
 = Introduction =
 
