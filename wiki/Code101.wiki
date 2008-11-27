@@ -1,2 +1,14 @@
 #summary Get the code.
 #sidebar TOC
+
+To start working on the code itself you will need to check it out from Subversion.
+
+if you have commit access, you cna first checkout the trunk
+{{{
+$svn co https://gaforflash.googlecode.com/svn/trunk gaforflash-trunk
+}}}
+
+wihtout commit access, you can still work from the trunk
+{{{
+$svn co http://gaforflash.googlecode.com/svn/trunk gaforflash-trunk-read-only
+}}}
