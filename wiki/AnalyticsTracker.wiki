@@ -1,2 +1,2 @@
-#summary Analytics Tracker.
+#summary Analytics Trackers.
 #sidebar TOC
