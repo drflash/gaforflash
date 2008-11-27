@@ -8,10 +8,10 @@ and get the last version.
 
 In the zip you will find the HTML documentation for the code and two SWC
 
- * *analytics_flash.swc*<br>
+ * *analytics_flash.swc*
    this is the visual component for Flash.<br>
    (`Analytics` in the Flash component panel)
- * *analytics.swc*<br>
+ * *analytics.swc*
    this is the code library for Flash and Flex<br>
    it will also work as a component for Flex.<br>
    (`AnalyticsLibrary` in the Flash component panel)
