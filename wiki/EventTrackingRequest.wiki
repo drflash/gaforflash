@@ -1,4 +1,5 @@
 #summary How To Get Event Tracking reporting enabled in your account
+#labels Featured
 
 == Event Tracking Overview ==
 
