@@ -23,4 +23,4 @@ In the zip you will find the HTML documentation for the code and two SWC
 
 You can look at those wiki pages: [Components],[Configuration],[VisualDebug],[Testing].
 
-You can alos look at the different [Examples].
+You can also look at the different [Examples].
