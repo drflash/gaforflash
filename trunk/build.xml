@@ -197,8 +197,8 @@
             <verbose-stacktraces>false</verbose-stacktraces>
             <compute-digest>false</compute-digest>
             <source-path path-element="${release.tmp}" />
-            <external-library-path dir="${flex.libs}/player" includes="playerglobal.swc" />
-            <external-library-path dir="${flex.libs}" includes="flex.swc" />
+            <!-- <external-library-path dir="${flex.libs}/player" includes="playerglobal.swc" /> -->
+            <!-- <external-library-path dir="${flex.libs}" includes="flex.swc" /> -->
             <metadata date="${TODAY}" title="${project.name}">
                 <publisher name="Adobe Systems Inc." />
                 <publisher name="Google Inc." />
