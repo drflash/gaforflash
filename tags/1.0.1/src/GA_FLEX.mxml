@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+   Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
+   
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+   
+     http://www.apache.org/licenses/LICENSE-2.0
+   
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+   
+   Contributor(s):
+     Zwetan Kjukov <zwetan@gmail.com>.
+     Marc Alcaraz <ekameleon@gmail.com>.
+
+ -->
+<mx:Application
+    xmlns:mx="http://www.adobe.com/2006/mxml"
+    layout="absolute"
+    width="800"
+    height="600"
+    initialize="onInitialize()"
+    >
+    
+    <mx:Script>
+        <![CDATA[
+            import com.google.analytics.AnalyticsTracker;
+            import com.google.analytics.events.AnalyticsEvent;
+            import com.google.analytics.debug.VisualDebugMode;
+            
+            public function onInitialize():void
+            {
+                tracker.trackPageview( "/test" ); //test cache
+            }
+            
+            public function onAnalyticsReady( event:AnalyticsEvent ):void
+            {
+                var t:AnalyticsTracker = event.tracker;
+                t.trackEvent( "tracker", "ready" );
+                t.trackPageview( "/hello/world" );
+            }
+            
+            public function onButtonClick( event:Event ):void
+            {
+                tracker.trackEvent( "Button", "click", "hello world", 123 );
+            }
+            
+        ]]>
+    </mx:Script>
+    
+    <analytics:FlexTracker
+        xmlns:analytics="com.google.analytics.components.*"
+        xmlns:debug="com.google.analytics.debug.*"
+        id="tracker"
+        account="UA-111-222"
+        mode="AS3"
+        visualDebug="true"
+        ready="onAnalyticsReady(event)"
+     >
+         <analytics:debug>
+             <debug:DebugConfiguration mode="advanced" verbose="true" traceOutput="true" GIFRequests="true" />
+         </analytics:debug>
+     </analytics:FlexTracker>
+    
+    <mx:Button id="mybutton" label="hello world" click="onButtonClick(event)" />
+    
+</mx:Application>
