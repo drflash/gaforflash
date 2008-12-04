@@ -41,8 +41,7 @@ will have a revision number of `rev n-1`.<br>
 
  * Do all your commits, updates, etc.
  * run the unit tests
- * edit the `version.properties`<br>
-update accordingly and commit
+ * edit the `version.properties`<br>update accordingly and commit
  * open the file `/fla/Analytics.fla`
    select the `Analytics` component
    right-click `Component Definition...`
