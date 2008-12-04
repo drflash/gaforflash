@@ -23,6 +23,7 @@ package com.google.analytics.debug
     import com.google.analytics.core.GIFRequest;
     
     import flash.net.URLRequest;
+    import flash.ui.Keyboard;
     import flash.utils.getTimer;
     
     /**
@@ -30,26 +31,10 @@ package com.google.analytics.debug
      */
     public class DebugConfiguration
     {
-        private var _active:Boolean = false;
-        private var _verbose:Boolean = false;
+        private var _active:Boolean            = false;
+        private var _verbose:Boolean           = false;
         private var _visualInitialized:Boolean = false;
-        
-        private function _initializeVisual():void
-        {
-            if( layout )
-            {
-                layout.init();
-                _visualInitialized = true;
-            }
-        }
-        
-        private function _destroyVisual():void
-        {
-            if( layout && _visualInitialized )
-            {
-                layout.destroy();
-            }
-        }        
+        private var _mode:VisualDebugMode      = VisualDebugMode.basic;
         
         /**
          * Indicates the Layout reference.
@@ -71,16 +56,6 @@ package com.google.analytics.debug
          * and a confirmation message to send or not the request.
          */
         public var GIFRequests:Boolean = false;
-        
-//        /**
-//         * Send a Gif Request with validation or not without validation (use sendToURL()) it's fire and forget
-//         * ok: send the request but does not returns any success or failure 
-//         * cancel: does not send the request with validation (use URLLoader.load())
-//         * ok: returns success when received by the the server
-//         * returns failure if not received by the server, or gif not found, or error etc.
-//         * cancel: does not send the request
-//         */
-//        public var validateGIFRequest:Boolean = false;
         
         /**
          * Indicates if show infos in the debug mode.
@@ -107,15 +82,41 @@ package com.google.analytics.debug
         */
         public var minimizedOnStart:Boolean = false;
         
-        //public var mode:VisualDebugMode = VisualDebugMode.basic;
-        private var _mode:VisualDebugMode = VisualDebugMode.basic;
+        /**
+        * The key code to show/hide the visual debug.
+        */
+        public var showHideKey:Number = Keyboard.SPACE;
+        
+        /**
+        * The key code to destroy the visual debug.
+        */
+        public var destroyKey:Number  = Keyboard.BACKSPACE;
         
         /**
          * Creates a new DebugConfiguration instance. 
          */
-        public function DebugConfiguration(  )
+        public function DebugConfiguration()
         {
+            
         }
+        
+        private function _initializeVisual():void
+        {
+            if( layout )
+            {
+                layout.init();
+                _visualInitialized = true;
+            }
+        }
+        
+        private function _destroyVisual():void
+        {
+            if( layout && _visualInitialized )
+            {
+                layout.destroy();
+            }
+        }
+        
         
         [Inspectable(defaultValue="basic", enumeration="basic,advanced,geek", type="String")]
         public function get mode():*

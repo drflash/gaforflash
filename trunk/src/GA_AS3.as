@@ -22,12 +22,17 @@ package
 {
     import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.GATracker;
+    import com.google.analytics.core.ServerOperationMode;
+    import com.google.analytics.core.Utils;
     import com.google.analytics.debug.VisualDebugMode;
     
+    import flash.display.Shape;
+    import flash.display.SimpleButton;
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
-    import flash.events.Event;    
+    import flash.events.Event;
+    import flash.events.MouseEvent;    
 
     /* Stub to test the AS3 API in pure ActionScript
     */
@@ -44,9 +49,47 @@ package
             addEventListener( Event.ADDED_TO_STAGE, onComplete );
         }
         
+        private function onButtonClick( event:MouseEvent = null ):void
+        {
+            trace( "button click" );
+        }
+        
         public function onComplete( evt:Event ):void
         {
             removeEventListener( Event.ADDED_TO_STAGE, onComplete );
+            
+            /* note:
+               to test clicktrough for visual debug
+            */
+            var b_up:Shape = new Shape();
+                b_up.graphics.beginFill( 0x000000 );
+                b_up.graphics.drawRect( 0, 0, 200, 40 );
+                b_up.graphics.endFill();
+            
+            var b_over:Shape = new Shape();
+                b_over.graphics.beginFill( 0xffffff );
+                b_over.graphics.drawRect( 0, 0, 200, 40 );
+                b_over.graphics.endFill();
+            
+            var b_down:Shape = new Shape();
+                b_down.graphics.beginFill( 0xff0000 );
+                b_down.graphics.drawRect( 0, 0, 200, 40 );
+                b_down.graphics.endFill();
+            
+            var b_hit:Shape = new Shape();
+                b_hit.graphics.beginFill( 0x000000 );
+                b_hit.graphics.drawRect( 0, 0, 200, 40 );
+                b_hit.graphics.endFill();
+            
+            
+            var b:SimpleButton = new SimpleButton( b_up, b_over, b_down, b_hit );
+                b.addEventListener( MouseEvent.CLICK, onButtonClick );
+                b.x = 100;
+                b.y = 100;
+            
+            addChild( b );
+            
+            trace( Utils.generateHash( "UA-111-222" ) );
             
             //please your own UA to test
             GATracker.autobuild = false;
@@ -58,12 +101,13 @@ package
             //tracker.debug.javascript = true;
             tracker.debug.GIFRequests = true;
             
-            tracker.debug.mode = VisualDebugMode.geek;
+            tracker.debug.mode = VisualDebugMode.basic;
             //tracker.config.idleLoop       = 10 ; 
             //tracker.config.idleTimeout    = 10 ;
             //tracker.config.sessionTimeout = 60;
             //tracker.config.conversionTimeout = 180;
             //tracker.config.serverMode = ServerOperationMode.remote;
+            tracker.config.serverMode = ServerOperationMode.both;
             tracker.trackPageview( "/test" ); //test cache
             
             //tracker.config.localGIFpath = tracker.config.remoteGIFpath;
