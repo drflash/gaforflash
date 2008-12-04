@@ -1,3 +1,13 @@
+* 1.0.1.319
+- v1.0.1 build fix
+- fixed Event Tracking request
+- fixed a security error when allowscriptaccess=never
+- fixed a small bug in cookie expiration
+- fixed the build for Windows
+- updated the gif request debug to show an id
+- updated the visual debug to allow to click-trough the background
+- cleaned up and organized the examples
+
 * 1.0.0.234
 - v1.0 release
 - fixed default debug options
