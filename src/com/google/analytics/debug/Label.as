@@ -104,6 +104,7 @@ package com.google.analytics.debug
             _textField.autoSize   = TextFieldAutoSize.LEFT;
             _textField.background = false;
             _textField.selectable = selectable;
+            _textField.multiline  = true;
             
             _textField.styleSheet = Style.sheet;
             this.text = _text;

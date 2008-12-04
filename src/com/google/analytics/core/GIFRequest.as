@@ -50,6 +50,7 @@ package com.google.analytics.core
         private var _lastRequest:URLRequest;
         
         private var _count:int;
+        private var _alertcount:int;
         
         /**
         * @private
@@ -70,8 +71,9 @@ package com.google.analytics.core
             _buffer = buffer;
             _info   = info;
             
-            _count    = 0;
-            _requests = [];
+            _count      = 0;
+            _alertcount = 0;
+            _requests   = [];
         }
         
         /**
@@ -207,7 +209,7 @@ package com.google.analytics.core
             switch( _debug.mode )
             {
                 case VisualDebugMode.geek:
-                data = "Gif Request:\n" + request.url;
+                data = "Gif Request #" + _alertcount + ":\n" + request.url;
                 break;
                 
                 case VisualDebugMode.advanced:
@@ -219,16 +221,17 @@ package com.google.analytics.core
                     url = _shortenURL( url );
                 
                 
-                data = "Send Gif Request:\n" + url + " ?";
+                data = "Send Gif Request #" + _alertcount + ":\n" + url + " ?";
                 break;
                 
                 case VisualDebugMode.basic:
                 default:
-                data = "Send " + _config.serverMode.toString() + " Gif Request ?";
+                data = "Send " + _config.serverMode.toString() + " Gif Request #" + _alertcount + " ?";
                 
             }
             
             _debug.alertGifRequest( data, request, this );
+            _alertcount++;
         }
         
         private function _shortenURL( url:String ):String
@@ -257,12 +260,12 @@ package com.google.analytics.core
         public function onIOError( event:IOErrorEvent ):void
         {
             var url:String = _lastRequest.url;
-//            var id:String = String(_requests.length-1);
+            var id:String = String(_requests.length-1);
 //            
 //            trace( _requests[ id ].toString() );
 //            trace( "\n"+url + "\n" + _requests[ id ].request.url );
             
-            var msg:String = "Gif Request failed";
+            var msg:String = "Gif Request #" + id + " failed";
             
             if( _debug.GIFRequests )
             {
@@ -295,7 +298,7 @@ package com.google.analytics.core
             var id:String = event.target.loader.name;
             _requests[ id ].complete();
             
-            var msg:String = "Gif Request sent";
+            var msg:String = "Gif Request #" + id + " sent";
             
             var url:String = _requests[ id ].request.url;
             
@@ -366,30 +369,6 @@ package com.google.analytics.core
                 _debug.failure( "\"Loader.load()\" could not instanciate Gif Request" );
             }
         }
-        
-//        public function _send( request:URLRequest ):void
-//        {
-//            try
-//            {
-//                sendToURL( request );
-//            }
-//            catch( e:Error )
-//            {
-//                _debug.failure( "\"sendToURL()\" could not instanciate Gif Request" );
-//            }
-//        }
-        
-//        public function sendRequest( request:URLRequest ):void
-//        {
-//            if( _debug.validateGIFRequest )
-//            {
-//                sendWithValidation( request );
-//            }
-//            else
-//            {
-//                _send( request );
-//            }
-//        }
         
         /**
         * Send the Gif Request to the server(s).

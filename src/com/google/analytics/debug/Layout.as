@@ -26,6 +26,7 @@ package com.google.analytics.debug
     import flash.display.DisplayObject;
     import flash.events.Event;
     import flash.events.KeyboardEvent;
+    import flash.events.MouseEvent;
     import flash.net.URLRequest;
     import flash.ui.Keyboard;
     
@@ -106,12 +107,11 @@ package com.google.analytics.debug
         {
             switch( event.keyCode )
             {
-                case Keyboard.SPACE:
+                case _debug.showHideKey:
                 _mainPanel.visible = !_mainPanel.visible;
                 break;
                 
-                case Keyboard.BACKSPACE:
-                //trace( "## destroying the layout ##" );
+                case _debug.destroyKey:
                 destroy();
                 break;
             }

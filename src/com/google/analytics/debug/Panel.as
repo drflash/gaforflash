@@ -59,7 +59,8 @@ package com.google.analytics.debug
             super();
             
             _name = name;
-            this.name = name;
+            this.name         = name;
+            this.mouseEnabled = false;
             
             _colapsed = false;
             
@@ -68,11 +69,13 @@ package com.google.analytics.debug
             this.baseAlpha = baseAlpha;
             
             _background  = new Shape();
+            
             _data        = new UISprite();
             _data.forcedWidth  = width;
             _data.forcedHeight = height;
-            //_data.scaleX = 0.98;
-            //_data.scaleY = 0.98;
+            _data.mouseEnabled = false;
+            //_data.scaleX = 0.70;
+            //_data.scaleY = 0.70;
             
             _title       = new Label( name, "uiLabel", 0xffffff, Align.topLeft, stickToEdge );
             _title.buttonMode = true;
@@ -85,6 +88,8 @@ package com.google.analytics.debug
             _mask        = new Sprite();
             _mask.useHandCursor = false;
             _mask.mouseEnabled  = false;
+            _mask.mouseChildren = false;
+            
             
             if( alignement == null )
             {

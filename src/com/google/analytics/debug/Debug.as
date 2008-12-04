@@ -30,6 +30,7 @@ package com.google.analytics.debug
     {
         private var _lines:Array;
         private var _linediff:int = 0;
+        private var _preferredForcedWidth:uint = 540;
         
         /**
          * The maximum number of lines in the debug label display.
@@ -57,10 +58,30 @@ package com.google.analytics.debug
             
             _lines = [];
             
-            forcedWidth = 540;
+            //forcedWidth = 540;
+            //forcedWidth = this.parent.width;
             selectable  = true;
             
             addEventListener( KeyboardEvent.KEY_DOWN, onKey );
+        }
+        
+        public override function get forcedWidth():uint
+        {
+            if( this.parent )
+            {
+                if( UISprite(this.parent).forcedWidth > _preferredForcedWidth )
+                {
+                    return _preferredForcedWidth;
+                }
+                else
+                {
+                    return UISprite(this.parent).forcedWidth;
+                }
+            }
+            else
+            {
+                return super.forcedWidth;
+            }
         }
         
         protected override function dispose():void
