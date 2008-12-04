@@ -52,7 +52,7 @@ will have a revision number of `rev n-1`.<br>
  * now generate the build
  * upload the build to the GC project
  * generate a tag for the build
- * generate branch if needed
+ * generate a branch if needed
 
 == Announce ==
 
