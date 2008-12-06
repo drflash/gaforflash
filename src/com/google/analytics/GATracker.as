@@ -75,7 +75,6 @@ package com.google.analytics
         private var _jsproxy:JavascriptProxy;
         private var _dom:HTMLDOM;
         private var _adSense:AdSenseGlobals;
-        private var _idleTimer:IdleTimer;
         
         //object properties
         private var _account:String;
@@ -195,12 +194,10 @@ package com.google.analytics
             
             _env        = new Environment( "", "", "", debug, _dom );
             
-            _buffer     = new Buffer( config, debug, false );
+            _buffer     = null;         
+            _gifRequest = null; 
             
-            _gifRequest = new GIFRequest( config, debug, _buffer, _env );
-            
-            _idleTimer  = new IdleTimer( config, debug, _display, _buffer );
-            
+                        
             /* note:
                To be able to obtain the URL of the main SWF containing the GA API
                we need to be able to access the stage property of a DisplayObject,
@@ -212,7 +209,7 @@ package com.google.analytics
             use namespace ga_internal;
             _env.url = _display.stage.loaderInfo.url;
             
-            return new Tracker( account, config, debug, _env, _buffer, _gifRequest, _adSense );
+            return new Tracker( account, config, debug, _env, _buffer, _gifRequest, _adSense, _display );
         }
         
         /**
