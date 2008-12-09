@@ -9,7 +9,7 @@
  * test AIR 1.0 / 1.1 / 1.5
  * additional tests for Flash Player 10
 
-release: (TBC)
+release: (TBD)
 
 tags: n/a
 
@@ -20,7 +20,7 @@ tags: n/a
  * e-commerce
  * linker
 
-release: (mid-december)
+release: (TBD)
 
 tags: n/a
 
@@ -32,9 +32,9 @@ tags: n/a
  * wiki
  * samples
 
-release: (before 1st december)
+release: 4/12/2008
 
-tags: n/a
+tags: [http://gaforflash.googlecode.com/svn/tags/1.0.1 1.0.1]
 
 
 == v1.0 ==
