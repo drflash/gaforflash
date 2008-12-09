@@ -208,17 +208,24 @@ package com.google.analytics.campaign
             
             assertEquals( "utmcn=1", ci1.toURLString() );
             assertEquals( "utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=search%20me", _buffer.utmz.campaignTracking );
+        
+        	var ci2:CampaignInfo = _cm_noref.getCampaignInformation( "?gclid=xxx&utm_medium=yyy&utm_source=zzz&utm_campaign=qqq", true );
+        	
+        	assertEquals( "utmcn=1", ci2.toURLString() );
+            assertEquals( "utmcsr=zzz|utmgclid=xxx|utmccn=qqq|utmcmd=yyy", _buffer.utmz.campaignTracking );
+  
+        
         }
         
         //test gclid and manual tagging works properly
         public function testGetCampaignInformation2():void
         {               
-            var search1:String = "?gclid=0123456789";
+            var search1:String = "gclid=0123456789";
             var ci1:CampaignInfo = _cm_noref.getCampaignInformation( search1, true );
             
             assertEquals( "utmgclid=0123456789|utmccn=(not%20set)|utmcmd=(not%20set)", _buffer.utmz.campaignTracking );
             
-            var search2:String = "?gclid=xxx&utm_medium=yyy";
+            var search2:String = "gclid=xxx&utm_medium=yyy";
             var ci2:CampaignInfo = _cm_noref.getCampaignInformation( search2, true );
             
             assertEquals( "utmgclid=xxx|utmccn=(not%20set)|utmcmd=yyy", _buffer.utmz.campaignTracking );
