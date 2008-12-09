@@ -102,7 +102,7 @@ package com.google.analytics.campaign
             
             assertFalse( ct0.isValid() );
             
-            var search1:String = "utm_id=123&&utm_source=www.domain.com&gclid=0123456789&utm_campaign=test&utm_medium=email&utm_term=webmail&utm_content=hello%20world";
+            var search1:String = "?utm_id=123&&utm_source=www.domain.com&gclid=0123456789&utm_campaign=test&utm_medium=email&utm_term=webmail&utm_content=hello%20world";
             var ct1:CampaignTracker = _cm0.getTrackerFromSearchString( search1 );
             
             assertEquals( "123", ct1.id );
@@ -113,7 +113,7 @@ package com.google.analytics.campaign
             assertEquals( "webmail", ct1.term );
             assertEquals( "hello world", ct1.content );
             
-            var search2:String = "utm_id=123&&utm_source=www.domain.com&gclid=0123456789";
+            var search2:String = "?utm_id=123&&utm_source=www.domain.com&gclid=0123456789";
             var ct2:CampaignTracker = _cm0.getTrackerFromSearchString( search2 );
             
             assertEquals( "123", ct2.id );
@@ -124,7 +124,7 @@ package com.google.analytics.campaign
             assertEquals( "", ct2.term );
             assertEquals( "", ct2.content );
             
-            var search3:String = "utm_id=123&&utm_source=www.domain.com&gclid=0123456789";
+            var search3:String = "?utm_id=123&&utm_source=www.domain.com&gclid=0123456789";
             var ct3:CampaignTracker = _cm1.getTrackerFromSearchString( search3 );
             
             assertEquals( "123", ct3.id );
@@ -208,7 +208,30 @@ package com.google.analytics.campaign
             
             assertEquals( "utmcn=1", ci1.toURLString() );
             assertEquals( "utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=search%20me", _buffer.utmz.campaignTracking );
+        }
+        
+        //test gclid and manual tagging works properly
+        public function testGetCampaignInformation2():void
+        {               
+            var search1:String = "?gclid=0123456789";
+            var ci1:CampaignInfo = _cm_noref.getCampaignInformation( search1, true );
             
+            assertEquals( "utmgclid=0123456789|utmccn=(not%20set)|utmcmd=(not%20set)", _buffer.utmz.campaignTracking );
+            
+            var search2:String = "?gclid=xxx&utm_medium=yyy";
+            var ci2:CampaignInfo = _cm_noref.getCampaignInformation( search2, true );
+            
+            assertEquals( "utmgclid=xxx|utmccn=(not%20set)|utmcmd=yyy", _buffer.utmz.campaignTracking );
+            
+            var search3:String = "gclid=xxx&utm_medium=yyy&utm_source=zzz";
+            var ci3:CampaignInfo = _cm_noref.getCampaignInformation( search3, true );
+            
+            assertEquals( "utmcsr=zzz|utmgclid=xxx|utmccn=(not%20set)|utmcmd=yyy", _buffer.utmz.campaignTracking );
+            
+            var search4:String = "gclid=xxx&utm_medium=yyy&utm_source=zzz&utm_campaign=qqq";
+            var ci4:CampaignInfo = _cm_noref.getCampaignInformation( search4, true );
+            
+            assertEquals( "utmcsr=zzz|utmgclid=xxx|utmccn=qqq|utmcmd=yyy", _buffer.utmz.campaignTracking );
         }
         
     }

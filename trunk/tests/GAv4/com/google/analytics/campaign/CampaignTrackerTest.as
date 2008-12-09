@@ -63,7 +63,8 @@ package com.google.analytics.campaign
                 
                 z.campaignTracking = ct0.toTrackerString();
             
-            assertEquals( "utmcsr=www.domain.com|utmccn=foobar|utmcmd=organic|utmctr=test|utmcct=hello%20world|utmcid=123|utmgclid=0123456789", z.campaignTracking );
+            assertEquals( "utmcid=123|utmcsr=www.domain.com|utmgclid=0123456789|utmccn=foobar|utmcmd=organic|utmctr=test|utmcct=hello%20world", z.campaignTracking );
+            
             
             var ct1:CampaignTracker = new CampaignTracker();
             ct1.fromTrackerString( z.campaignTracking );

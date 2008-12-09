@@ -97,6 +97,11 @@ package com.google.analytics.utils
             
             var data:Array;
             
+            if( source.charAt(0) == "?")
+            {
+            	source = source.substr(1,source.length);  	
+            }
+            
             if( source.indexOf( "&" ) > -1 )
             {
                 data = source.split( "&" );
