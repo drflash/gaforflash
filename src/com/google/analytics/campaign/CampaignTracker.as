@@ -220,14 +220,18 @@ package com.google.analytics.campaign
         /**
          * Format for tracker have the following fields (seperated by "|"):
          *         <table>
-         *           <tr><td>utmcsr - campaign source</td></tr>
+         *           <tr><td>utmcid - lookup table id</td></tr>
+         * 			 <tr><td>utmcsr - campaign source</td></tr>
+         * 			 <tr><td>utmgclid - google ad click id</td></tr>
          *           <tr><td>utmccn - campaign name</td></tr>
          *           <tr><td>utmcmd - campaign medium</td></tr>
          *           <tr><td>utmctr - keywords</td></tr>
          *           <tr><td>utmcct - ad content description</td></tr>
-         *           <tr><td>utmcid - lookup table id</td></tr>
-         *           <tr><td>utmgclid - google ad click id</td></tr>
+         *           
+         *           
          *         </table>
+         * should be in this order : utmcid=one|utmcsr=two|utmgclid=three|utmccn=four|utmcmd=five|utmctr=six|utmcct=seven
+         * 
          */
         public function toTrackerString():String
         {
@@ -236,13 +240,13 @@ package com.google.analytics.campaign
                 /* for each value, append key=value if and only if
                    the value is not empty.
                 */
+                _addIfNotEmpty( data, "utmcid=",   id );                
                 _addIfNotEmpty( data, "utmcsr=",   source );
+                _addIfNotEmpty( data, "utmgclid=", clickId );
                 _addIfNotEmpty( data, "utmccn=",   name );
                 _addIfNotEmpty( data, "utmcmd=",   medium );
                 _addIfNotEmpty( data, "utmctr=",   term );
                 _addIfNotEmpty( data, "utmcct=",   content );
-                _addIfNotEmpty( data, "utmcid=",   id );
-                _addIfNotEmpty( data, "utmgclid=", clickId );
                 
             return data.join( CampaignManager.trackingDelimiter );
         }
