@@ -195,19 +195,19 @@ package com.google.analytics.core
             
             if( !volatile )
             {
-                
-                try 
-                {
-                	_SO = SharedObject.getLocal( _config.cookieName, _config.cookiePath );
-                }
+            	
+            	try
+            	{
+            		_SO = SharedObject.getLocal( _config.cookieName, _config.cookiePath );
+             	}
                 catch(e:Error)
                 {
-                    if( _debug.javascript )
+                	if( _debug.active)
                     {
-                        _debug.warning( "Shared Object "+ _config.cookieName +" failed to be set\nreason: " + e.message );
+                		_debug.warning( "Shared Object "+ _config.cookieName +" failed to be set\nreason: " + e.message );
                     }
-                	
                 }
+                
                 
                 /* note:
                    if some data of the SO are deleted
