@@ -26,10 +26,8 @@ package com.google.analytics.debug
     import flash.display.DisplayObject;
     import flash.events.Event;
     import flash.events.KeyboardEvent;
-    import flash.events.MouseEvent;
-    import flash.net.URLRequest;
-    import flash.ui.Keyboard;
-    
+    import flash.net.URLRequest;    
+
     /**
      * The Layout class is a helper who manages
      * as a factory all visual display in the application.

@@ -21,8 +21,8 @@
 package com.google.analytics.debug
 {
     import flash.events.KeyboardEvent;
-    import flash.ui.Keyboard;
-    
+    import flash.ui.Keyboard;    
+
     /**
      * The Debug class.
      */
@@ -37,7 +37,10 @@ package com.google.analytics.debug
          */
         public var maxLines:uint = 16;
         
-        public static var count:uint = 0;
+        /**
+         * The count value of the debug.
+         */
+        public static var count:uint ;
         
         /**
          * Creates a new Debug instance.
@@ -84,12 +87,19 @@ package com.google.analytics.debug
             }
         }
         
+        /**
+         * Dispose the debug display.
+         */
         protected override function dispose():void
         {
             removeEventListener( KeyboardEvent.KEY_DOWN, onKey );
             super.dispose();
         }
         
+        /**
+         * Invoked when a key is down.
+         * @private
+         */
         private function onKey( event:KeyboardEvent = null ):void
         {
             var lines:Array;
@@ -117,6 +127,9 @@ package com.google.analytics.debug
             
         }
         
+        /**
+         * @private
+         */
         private function _getLinesToDisplay( direction:int = 0 ):Array
         {
             var lines:Array;
@@ -146,8 +159,17 @@ package com.google.analytics.debug
         }
         
         /**
+         * Close the debug.
+         */
+        public function close():void
+        {
+            dispose();
+        }        
+        
+        /**
          * Writes a new message in the debug label.
          * @param message The message value to show in the debug label in the application.
+         * @param bold this flag indicates if the message format use a bold to display the text.
          */
         public function write( message:String, bold:Boolean = false ):void
         {
@@ -182,15 +204,16 @@ package com.google.analytics.debug
             text = lines.join("\n");
         }
         
+        /**
+         * Writes a new bold message in the debug label.
+         * @param message The message value to show in the debug label in the application.
+         */
         public function writeBold( message:String ):void
         {
             write( message, true );
         }
         
-        public function close():void
-        {
-            dispose();
-        }
+
         
     }
 }
