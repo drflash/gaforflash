@@ -27,6 +27,7 @@ package com.google.analytics
     import com.google.analytics.core.TrackerCache;
     import com.google.analytics.core.TrackerMode;
     import com.google.analytics.core.ga_internal;
+    import com.google.analytics.core.IdleTimer; 
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.Layout;
     import com.google.analytics.events.AnalyticsEvent;
@@ -74,6 +75,7 @@ package com.google.analytics
         private var _jsproxy:JavascriptProxy;
         private var _dom:HTMLDOM;
         private var _adSense:AdSenseGlobals;
+        private var _idleTimer:IdleTimer;
         
         //object properties
         private var _account:String;
@@ -193,9 +195,9 @@ package com.google.analytics
             
             _env        = new Environment( "", "", "", debug, _dom );
             
-            _buffer     = null;         
-            _gifRequest = null; 
-            
+            _buffer     = new Buffer( config, debug, false );
+            _gifRequest = new GIFRequest( config, debug, _buffer, _env );
+            _idleTimer  = new IdleTimer( config, debug, _display, _buffer );
                         
             /* note:
                To be able to obtain the URL of the main SWF containing the GA API
@@ -208,7 +210,7 @@ package com.google.analytics
             use namespace ga_internal;
             _env.url = _display.stage.loaderInfo.url;
             
-            return new Tracker( account, config, debug, _env, _buffer, _gifRequest, _adSense, _display );
+            return new Tracker( account, config, debug, _env, _buffer, _gifRequest, _adSense );
         }
         
         /**

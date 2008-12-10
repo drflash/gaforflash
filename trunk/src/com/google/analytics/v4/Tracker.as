@@ -28,7 +28,6 @@ package com.google.analytics.v4
     import com.google.analytics.core.EventInfo;
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
-    import com.google.analytics.core.IdleTimer;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.Utils;
     import com.google.analytics.data.X10;
@@ -39,10 +38,7 @@ package com.google.analytics.v4
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.URL;
     import com.google.analytics.utils.Variables;
-    
-    import flash.display.DisplayObject;
-    
-    
+        
     
     /**
      * The Tracker class.
@@ -67,7 +63,6 @@ package com.google.analytics.v4
         private var _buffer:Buffer;
         private var _gifRequest:GIFRequest;
         private var _adSense:AdSenseGlobals;
-        private var _display:DisplayObject;
         
         //gif requests
         private var _browserInfo:BrowserInfo;
@@ -82,7 +77,6 @@ package com.google.analytics.v4
         private var _campaign:CampaignManager;
         private var _eventTracker:X10;
         private var _x10Module:X10;
-        private var _idleTimer:IdleTimer;
         
         /** 
          * Creates a new Tracker instance.
@@ -95,7 +89,7 @@ package com.google.analytics.v4
          */
         public function Tracker( account:String,
                                  config:Configuration, debug:DebugConfiguration,
-                                 info:Environment, buffer:Buffer, gifRequest:GIFRequest, adSense:AdSenseGlobals, display:DisplayObject )
+                                 info:Environment, buffer:Buffer, gifRequest:GIFRequest, adSense:AdSenseGlobals )
         {
             _account    = account;
             
@@ -105,7 +99,6 @@ package com.google.analytics.v4
             _buffer     = buffer;
             _gifRequest = gifRequest;
             _adSense    = adSense;
-            _display    = display;
             
             if( !Utils.validateAccount( account ) )
             {
@@ -114,7 +107,7 @@ package com.google.analytics.v4
                 throw new Error( msg );
             }
             
-            //_initData();
+            _initData();
         }
         
         private function _initData():void
@@ -122,19 +115,7 @@ package com.google.analytics.v4
             // initialize initial data
             if( !_hasInitData )
             {
-            	if (_buffer == null) 
-            	{
-            		_buffer = new Buffer( _config, _debug, false );
-             	}
-                
-                if (_gifRequest == null)
-                {
-                	_gifRequest = new GIFRequest( _config, _debug, _buffer, _info );           
-                }	
-                
-                _idleTimer  = new IdleTimer( _config, _debug, _display, _buffer );
-                
-            	   
+                	   
                 //find domain name
                 _updateDomainName();
                 
@@ -181,9 +162,14 @@ package com.google.analytics.v4
                     {
                         _campaign = new CampaignManager( _config, _debug, _buffer,
                                                          _domainHash, _formatedReferrer, _timeStamp );
-                        
+                       
                         _campaignInfo = _campaign.getCampaignInformation( _info.locationSearch, _noSessionInformation );
+
+                        
                         _debug.info( "campaignInfo: " + _campaignInfo.toURLString(), VisualDebugMode.advanced );
+						_debug.info("Search: "+ _info.locationSearch);
+						_debug.info("CampaignTrackig: "+ _buffer.utmz.campaignTracking);                    
+                    
                     }
                 }
                 
@@ -696,7 +682,6 @@ package com.google.analytics.v4
          */
         public function resetSession():void
         {
-        	_initData();
             _debug.info( "resetSession()" );
             _buffer.resetCurrentSession();
         }
