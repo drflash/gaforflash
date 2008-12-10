@@ -23,7 +23,6 @@ package com.google.analytics
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
-    import com.google.analytics.core.IdleTimer;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.TrackerCache;
     import com.google.analytics.core.TrackerMode;
@@ -43,7 +42,30 @@ package com.google.analytics
     
     import flash.display.DisplayObject;
     import flash.events.Event;
-    import flash.events.EventDispatcher;
+    import flash.events.EventDispatcher;    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     /* force import for type in the includes */
     EventTracker;
