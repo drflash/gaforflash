@@ -107,7 +107,7 @@ package com.google.analytics.v4
                 throw new Error( msg );
             }
             
-            _initData();
+  //          _initData();
         }
         
         private function _initData():void
@@ -224,6 +224,8 @@ package com.google.analytics.v4
                 */
             }
             
+            //create Shared Object for persistance storage
+            _buffer.createSO();
             
 //            //Has linked cookie value.
 //            if( _buffer.hasUTMA() && !_buffer.utma.isEmpty() )
@@ -1356,9 +1358,7 @@ package com.google.analytics.v4
          *     instance.
          */
         private function _sendXEvent( opt_xObj:X10 = null ):void
-        {
-            _initData();
-            
+        {            
             if( _takeSample() )
             {
                 var searchVariables:Variables = new Variables();
@@ -1417,6 +1417,8 @@ package com.google.analytics.v4
          */
         public function trackEvent( category:String, action:String, label:String = null, value:Number = NaN ):Boolean
         {
+        	_initData();
+        	
             var success:Boolean = true;
             var params:int = 2;
             
