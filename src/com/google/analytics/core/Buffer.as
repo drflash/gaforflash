@@ -44,6 +44,8 @@ package com.google.analytics.core
         
         private var _SO:SharedObject;
         private var _OBJ:Object;
+        private var _data:Object;
+
         
         /* indicates if the buffer has a volatile memory
            volatile means we'll lose the memory as soon as the application is closed
@@ -180,6 +182,7 @@ package com.google.analytics.core
             
             _config = config;
             _debug  = debug;
+            _data = data;
             
             /* note:
                we update the timespan from config only once
@@ -190,10 +193,37 @@ package com.google.analytics.core
                
                UTMA/UTMV/UTMX timespan are not user configurable
             */
-            UTMB.defaultTimespan = _config.sessionTimeout;
-            UTMZ.defaultTimespan = _config.conversionTimeout;
-            
-            if( !volatile )
+                        
+            _volatile = volatile;
+            /*
+            If not using SO, can just store data here.
+            */
+            if (_volatile) 
+            {
+            	_OBJ = new Object();
+                
+                if( _data )
+                {
+                    //inject data
+                    for( var prop:String in _data )
+                    {
+                        _OBJ[prop] = _data[prop];
+                    }
+                }
+            }
+                    
+        }
+        
+        /**
+        * Public function to create Shared Object
+        * 
+        */
+        public function createSO():void 
+        {
+        	UTMZ.defaultTimespan = _config.conversionTimeout;
+        	UTMB.defaultTimespan = _config.sessionTimeout;        	
+        	
+        	if( !_volatile )
             {
             	
             	try
@@ -357,21 +387,9 @@ package com.google.analytics.core
             }
             else
             {
-                _OBJ = new Object();
-                
-                if( data )
-                {
-                    //inject data
-                    for( var prop:String in data )
-                    {
-                        _OBJ[prop] = data[prop];
-                    }
-                }
+           
                 
             }
-            
-            _volatile = volatile;
-            
         }
         
         /**
