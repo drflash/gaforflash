@@ -26,7 +26,8 @@ package com.google.analytics
     import com.google.analytics.core.AllTests;
     import com.google.analytics.data.AllTests;
     import com.google.analytics.external.AllTests;
-    import com.google.analytics.utils.AllTests;    
+    import com.google.analytics.utils.AllTests;   
+    import com.google.analytics.ecommerce.AllTests; 
 
     public class AllTests
     {
@@ -36,7 +37,7 @@ package com.google.analytics
             var suite:TestSuite = new TestSuite( "Google Analytics tests" );
             
             suite.addTestSuite( ConfigurationTest );
-            suite.addTestSuite( BridgeTest );
+  //          suite.addTestSuite( BridgeTest );
             
             /* packages */
             suite.addTest( com.google.analytics.core.AllTests.suite( ) );
@@ -44,6 +45,7 @@ package com.google.analytics
             suite.addTest( com.google.analytics.utils.AllTests.suite( ) );
             suite.addTest( com.google.analytics.campaign.AllTests.suite( ) );
             suite.addTest( com.google.analytics.external.AllTests.suite( ) );
+            suite.addTest( com.google.analytics.ecommerce.AllTests.suite() );
             
             return suite;
         }

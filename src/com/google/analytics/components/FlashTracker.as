@@ -23,6 +23,7 @@ package com.google.analytics.components
     import com.google.analytics.API;
     import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.core.Buffer;
+    import com.google.analytics.core.Ecommerce;
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.IdleTimer;
@@ -85,6 +86,7 @@ package com.google.analytics.components
         private var _dom:HTMLDOM;
         private var _adSense:AdSenseGlobals;
         private var _idleTimer:IdleTimer;
+        private var _ecom:Ecommerce;
         
         //component properties
         private var _account:String      = "";
@@ -280,11 +282,12 @@ package com.google.analytics.components
             _gifRequest = new GIFRequest( config, debug, _buffer, _env );
             
             _idleTimer  = new IdleTimer( config, debug, _display, _buffer );
+            _ecom       = new Ecommerce ( _debug );
             
             use namespace ga_internal;
             _env.url = _display.stage.loaderInfo.url;
             
-            return new Tracker( account, config, debug, _env, _buffer, _gifRequest, _adSense );
+            return new Tracker( account, config, debug, _env, _buffer, _gifRequest, _adSense, _ecom );
         }
         
         /**

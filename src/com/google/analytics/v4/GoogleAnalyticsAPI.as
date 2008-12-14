@@ -360,14 +360,8 @@ package com.google.analytics.v4
          * @param city City to associate with transaction.
          * @param state State to associate with transaction.
          * @param country Country to associate with transaction.
-         * @return The tranaction object that was modified.
          */
-        /* TODO:
-           replace the return Object by a Ecommerce.Transation object (_gat.GA_EComm_.Transactions_),
-           and here a good exemple, even if the JS bridge is used we could reuse such class.
-           maybe do not use Number type for total,tax and shipping as maybe rounding errors could occurs ?
-         */
-        function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):Object;
+        function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):void;
         
         /**
          * Sends both the transaction and item data to the Google Analytics server.

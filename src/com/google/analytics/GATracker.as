@@ -21,13 +21,14 @@
 package com.google.analytics
 {
     import com.google.analytics.core.Buffer;
+    import com.google.analytics.core.Ecommerce;
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
+    import com.google.analytics.core.IdleTimer;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.TrackerCache;
     import com.google.analytics.core.TrackerMode;
     import com.google.analytics.core.ga_internal;
-    import com.google.analytics.core.IdleTimer; 
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.Layout;
     import com.google.analytics.events.AnalyticsEvent;
@@ -76,6 +77,7 @@ package com.google.analytics
         private var _dom:HTMLDOM;
         private var _adSense:AdSenseGlobals;
         private var _idleTimer:IdleTimer;
+        private var _ecom:Ecommerce;
         
         //object properties
         private var _account:String;
@@ -188,7 +190,7 @@ package com.google.analytics
             */
             
             
-            _adSense   = new AdSenseGlobals( debug );
+            _adSense    = new AdSenseGlobals( debug );
             
             _dom        = new HTMLDOM( debug );
             _dom.cacheProperties();
@@ -198,6 +200,7 @@ package com.google.analytics
             _buffer     = new Buffer( config, debug, false );
             _gifRequest = new GIFRequest( config, debug, _buffer, _env );
             _idleTimer  = new IdleTimer( config, debug, _display, _buffer );
+            _ecom       = new Ecommerce ( _debug );
                         
             /* note:
                To be able to obtain the URL of the main SWF containing the GA API
@@ -210,7 +213,7 @@ package com.google.analytics
             use namespace ga_internal;
             _env.url = _display.stage.loaderInfo.url;
             
-            return new Tracker( account, config, debug, _env, _buffer, _gifRequest, _adSense );
+            return new Tracker( account, config, debug, _env, _buffer, _gifRequest, _adSense, _ecom );
         }
         
         /**

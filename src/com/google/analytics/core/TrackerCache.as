@@ -159,13 +159,12 @@ package com.google.analytics.core
         	enqueue("addOrganic", newOrganicEngine, newOrganicKeyword) ;
         }
         
-        public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):Object
+        public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):void
         {
             if ( CACHE_THROW_ERROR )
             {
                 throw new IllegalOperationError("The tracker is not ready and you can use the 'addTrans' method for the moment.") ;             
             }
-            return null;
         }
         
         public function clearIgnoredOrganic():void
