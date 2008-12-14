@@ -385,11 +385,10 @@
          * @param city City to associate with transaction.
          * @param state State to associate with transaction.
          * @param country Country to associate with transaction.
-         * @return The tranaction object that was modified.
          */
-        public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):Object
+        public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):void
         {
-            return _tracker.addTrans(orderId, affiliation, total, tax, shipping, city, state, country);
+            _tracker.addTrans(orderId, affiliation, total, tax, shipping, city, state, country);
         }
         
         /**

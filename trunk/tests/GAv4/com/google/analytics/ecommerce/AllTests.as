@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2008 Adobe Systems Inc., 2008 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,31 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * 
- * Contributor(s):
- *   Marc ALCARAZ <ekameleon@gmail.com>.
- *   Zwetan Kjukov <zwetan@gmail.com>.
  */
 
-package com.google.analytics.core
+package com.google.analytics.ecommerce
 {
-    import buRRRn.ASTUce.framework.*;        
-
+	import buRRRn.ASTUce.framework.*;
+	
     public class AllTests
-    {
-        
-        public static function suite():ITest
+	{
+		
+		public static function suite():ITest
         {
-            var suite:TestSuite = new TestSuite( "Google Analytics core tests" );
+            var suite:TestSuite = new TestSuite( "Google Analytics ecommerce tests" );
             
-            suite.addTestSuite( UtilitiesTest );
-            suite.addTestSuite( OrganicTest );
-            suite.addTestSuite( DocumentInfoTest );
-            suite.addTestSuite( BrowserInfoTest );
-            suite.addTestSuite( TrackerCacheTest );
-            suite.addTestSuite( TrackerModeTest );
-            suite.addTestSuite( EcommerceTest );
-            
+            suite.addTestSuite( TransactionTest );
+            suite.addTestSuite( ItemTest );
+           
             return suite;
         }
-    }
+
+	}
 }

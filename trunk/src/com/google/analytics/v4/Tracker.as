@@ -25,6 +25,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.DocumentInfo;
     import com.google.analytics.core.DomainNameMode;
+    import com.google.analytics.core.Ecommerce;
     import com.google.analytics.core.EventInfo;
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
@@ -33,6 +34,7 @@ package com.google.analytics.v4
     import com.google.analytics.data.X10;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.VisualDebugMode;
+    import com.google.analytics.ecommerce.Transaction;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Protocols;
@@ -77,6 +79,7 @@ package com.google.analytics.v4
         private var _campaign:CampaignManager;
         private var _eventTracker:X10;
         private var _x10Module:X10;
+        private var _ecom:Ecommerce;
         
         /** 
          * Creates a new Tracker instance.
@@ -89,7 +92,7 @@ package com.google.analytics.v4
          */
         public function Tracker( account:String,
                                  config:Configuration, debug:DebugConfiguration,
-                                 info:Environment, buffer:Buffer, gifRequest:GIFRequest, adSense:AdSenseGlobals )
+                                 info:Environment, buffer:Buffer, gifRequest:GIFRequest, adSense:AdSenseGlobals, ecom:Ecommerce )
         {
             _account    = account;
             
@@ -98,7 +101,8 @@ package com.google.analytics.v4
             _info       = info;
             _buffer     = buffer;
             _gifRequest = gifRequest;
-            _adSense    = adSense;
+            _adSense    = adSense;            
+            _ecom       = ecom;
             
             if( !Utils.validateAccount( account ) )
             {
@@ -1216,9 +1220,24 @@ package com.google.analytics.v4
          * @param price Product price (required).
          * @param quantity Purchase quantity (required).
          */        
-        public function addItem(item:String, sku:String, name:String, category:String, price:Number, quantity:int):void
+        public function addItem(id:String, sku:String, name:String, category:String, price:Number, quantity:int):void
         {
-            _debug.warning( "addItem( " + [item,sku,name,category,price,quantity].join( ", " ) + " ) not implemented" );
+        	
+        	var parentTrans:Transaction;
+        	
+        	parentTrans = _ecom.getTransaction( id );
+        	
+        	if ( parentTrans == null )
+        	{
+        		parentTrans = _ecom.addTransaction( id, "", "", "", "", "", "", "" );
+        	}
+        	
+        	parentTrans.addItem( sku, name, category, price.toString(), quantity.toString() );
+        	
+        	if (_debug.active)
+        	{
+            	_debug.info( "addItem( " + [id,sku,name,category,price,quantity].join( ", " ) + " )" );
+         	}
         }
         
         /**
@@ -1237,10 +1256,14 @@ package com.google.analytics.v4
          * @param country Country to associate with transaction.
          * @return The tranaction object that was modified.
          */        
-        public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):Object
+        public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):void
         {
-            _debug.warning( "addTrans( " + [orderId,affiliation,total,tax,shipping,city,state,country].join( ", " ) + " ) not implemented" );
-            return null;
+            _ecom.addTransaction( orderId, affiliation, total.toString(), tax.toString(), shipping.toString(), city, state, country );
+        
+            if (_debug.active) 
+        	{
+            	_debug.info( "addTrans( " + [orderId,affiliation,total,tax,shipping,city,state,country].join( ", " ) + " );" );
+         	}
         }
         
         /**
@@ -1251,7 +1274,32 @@ package com.google.analytics.v4
          */        
         public function trackTrans():void
         {
-            _debug.warning( "trackTrans() not implemented" );
+            _initData();
+         	
+         	var i:Number;
+         	var j:Number;        
+            var searchStrings:Array = new Array();
+            var curTrans:Transaction;
+            
+            if ( _takeSample() )
+            {
+            	for ( i=0; i<_ecom.getTransLength(); i++ )
+            	{
+            		curTrans = _ecom.getTransFromArray( i );
+            		searchStrings.push( curTrans.toGifParams() );		
+            		
+            		for ( j=0; j<curTrans.getItemsLength(); j++ )
+            		{
+            			searchStrings.push( curTrans.getItemFromArray( j ).toGifParams() );	
+            		}           		
+            	}
+            
+				for ( i=0; i<searchStrings.length; i++ )
+				{
+                	_gifRequest.send( _account, searchStrings[i] ); 
+  				}
+  			}   
+            
         }
         
         // ----------------------------------------
