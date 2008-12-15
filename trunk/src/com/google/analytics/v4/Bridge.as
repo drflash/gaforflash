@@ -25,7 +25,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.Utils;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.VisualDebugMode;
-    import com.google.analytics.external.JavascriptProxy;    
+    import com.google.analytics.external.JavascriptProxy; 
     
     /**
      * This api use a Javascript bridge to fill the GATracker properties.
@@ -687,9 +687,8 @@ package com.google.analytics.v4
          * @param city City to associate with transaction.
          * @param state State to associate with transaction.
          * @param country Country to associate with transaction.
-         * @return The tranaction object that was modified.
          */
-        public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):Object
+        public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):void
         {
             _debug.info( "addTrans( " + [orderId,affiliation,total,tax,shipping,city,state,country].join( ", " ) + " )" );
             /* TODO:
@@ -697,7 +696,6 @@ package com.google.analytics.v4
             */
             _call( "_addTrans", orderId, affiliation, total, tax, shipping, city, state, country );
             
-            return null;
         }
         
         /**
