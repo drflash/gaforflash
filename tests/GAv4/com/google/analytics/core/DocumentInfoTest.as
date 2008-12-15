@@ -35,6 +35,7 @@ package com.google.analytics.core
         private var _emptyDocInfo1:DocumentInfo;
         private var _env0:Environment;
         private var _env1:Environment;
+        private var _env2:Environment;
         private var _adSense0:AdSenseGlobals;
         private var _adSense1:AdSenseGlobals;
         
@@ -48,6 +49,7 @@ package com.google.analytics.core
             _config = new Configuration();
             _env0 = new Environment( "http://www.domain.com" );
             _env1 = new FakeEnvironment("",null,"","","a simple title","","/some/path/page.html","?a=1&b=2");
+            _env2 = new FakeEnvironment();
             _adSense0 = new FakeAdSenseGlobals();
             _adSense1 = new FakeAdSenseGlobals( null, "", "12345" );
             _emptyDocInfo0 = new DocumentInfo( _config, _env0, "", null, _adSense0 );
@@ -90,10 +92,11 @@ package com.google.analytics.core
         {
             var docInfo0:DocumentInfo = new DocumentInfo( _config, _env1, "", null, _adSense0 );
             var docInfo1:DocumentInfo = new DocumentInfo( _config, _env1, "", "/some/other/path/index.html", _adSense0 );
+            var docInfo2:DocumentInfo = new DocumentInfo( _config, _env2, "", null, _adSense0 );
             
             assertEquals( "/some/path/page.html?a=1&b=2", docInfo0.utmp );
             assertEquals( "/some/other/path/index.html", docInfo1.utmp );
-            
+            assertEquals( "/", docInfo2.utmp );
         }
         
     }
