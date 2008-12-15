@@ -77,8 +77,9 @@ package com.google.analytics.core
         
         /**
          * This method will collect and return the page URL information based on
-         * the page URL specified by the user if present, and the document's
-         * actual path otherwise.
+         * the page URL specified by the user if present. If there is no parameter,
+         * the URL of the HTML page embedding the SWF will be sent. If 
+         * ExternalInterface.avaliable=false, a default of "/" will be used. 
          *
          * @private
          * @param {String} opt_pageURL (Optional) User-specified Page URL to assign
@@ -94,6 +95,10 @@ package com.google.analytics.core
             if( !pageURL || (pageURL == "") )
             {
                 pageURL = pathname + unescape( search );
+            	if ( pageURL == "" )
+            	{
+            		pageURL = "/";
+            	}
             }
             
             return pageURL;
