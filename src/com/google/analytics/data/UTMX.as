@@ -39,6 +39,8 @@ package com.google.analytics.data
      */
     public class UTMX extends UTMCookie
     {
+        private var _value:String;
+        
         //_udn
         //_uhash
         //_utimeout
@@ -49,8 +51,26 @@ package com.google.analytics.data
             //not implemented yet
             super( "utmx",
                    "__utmx",
-                   ["dn","hash","timeout","tcp"],
-                   Timespan.twoyears * 1000 );
+                   ["value"], 
+                   0 );
+                   
+            _value = "-";       
+        }
+        
+        /**
+         * returns dummy variable
+         */
+        public function get value():String
+        {
+            return _value;
+        }
+        
+        /**
+        * Sets dummy variable.
+        */
+        public function set value( value:String ):void
+        {
+            _value = value;
         }
         
     }

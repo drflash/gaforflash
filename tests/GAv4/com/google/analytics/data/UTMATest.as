@@ -82,7 +82,7 @@ package com.google.analytics.data
         public function testValueOf():void
         {
             assertTrue( _emptyUTMA.isEmpty() );
-            assertEquals( _emptyUTMA.valueOf(), "-.-.-.-.-.-" );
+            assertEquals( _emptyUTMA.valueOf(), "-" );
             
             assertFalse( _utma0.isEmpty() );
             assertEquals( _utma0.valueOf(), "189673714.3125648113755156500.1223210053.1223210053.1223210053.0" ); 
@@ -90,7 +90,7 @@ package com.google.analytics.data
         
         public function testToURLString():void
         {
-            assertEquals( _emptyUTMA.toURLString(), "__utma=-.-.-.-.-.-" );
+            assertEquals( _emptyUTMA.toURLString(), "__utma=-" );
             assertEquals( _utma0.toURLString(), "__utma=189673714.3125648113755156500.1223210053.1223210053.1223210053.0" );
         }
         
