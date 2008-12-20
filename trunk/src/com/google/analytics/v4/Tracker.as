@@ -40,6 +40,9 @@ package com.google.analytics.v4
     import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.URL;
     import com.google.analytics.utils.Variables;
+    
+    import flash.net.URLRequest;
+    import flash.net.navigateToURL;
         
     
     /**
@@ -755,7 +758,7 @@ package com.google.analytics.v4
                 _initData();
                 
                 _buffer.utmv.domainHash = _domainHash;
-                _buffer.utmv.value      = newVal;
+                _buffer.utmv.value      = encodeURI( newVal );
                 
                 if( _debug.verbose )
                 {
@@ -1089,6 +1092,24 @@ package com.google.analytics.v4
         }
         
         /**
+        * This method works in conjunction with the setDomainName() and
+        * setAllowLinker() methods to enable cross-domain user tracking.
+        * The getLinkerURL method returns all the cookie values as a string
+        * 
+        * @param targetUrl URL of target site to send cookie values to.
+        * @param useHash Set to true for passing tracking code variables by using the # anchortag separator rather than the default ? query string separator. (Currently this behavior is for internal Google properties only.)
+        *
+        * @return String containing all cookie data
+        */       
+        public function getLinkerUrl( targetUrl:String = "", useHash:Boolean = false ):String
+        {
+        	_initData();
+        	
+        	_debug.info( "getLinkerUrl( "+ targetUrl +", "+ useHash.toString() +" )" );
+        	return _buffer.getLinkerUrl( targetUrl, useHash );
+        }
+        
+        /**
          * This method works in conjunction with the setDomainName() and
          * setAllowLinker() methods to enable cross-domain user tracking.
          * The link() method passes the cookies from this site to another via URL parameters (HTTP GET).
@@ -1098,9 +1119,25 @@ package com.google.analytics.v4
          * @param useHash Set to true for passing tracking code variables by using the # anchortag separator rather than the default ? query string separator. (Currently this behavior is for internal Google properties only.)
          */
         public function link(targetUrl:String, useHash:Boolean=false):void
-        {
-            _debug.warning( "link( " + [targetUrl,useHash].join( ", " ) + " ) not implemented" );
+        {        	
+			_initData();
+        	
+        	var out:String = _buffer.getLinkerUrl( targetUrl, useHash );
+			var request:URLRequest = new URLRequest( out );			
+
+			// navigate to new location
+			_debug.info( "link( " + [targetUrl,useHash].join( "," ) + " )" );		
+		
+			try
+			{
+			  flash.net.navigateToURL(request, "_top" ); // second argument is target
+			} 
+			catch (e:Error) 
+			{
+			  _debug.warning( "An error occured in link() msg: "+ e.message);
+			} 
         }
+               
         
         /**
          * This method works in conjunction with the setDomainName() and
@@ -1116,7 +1153,7 @@ package com.google.analytics.v4
          */        
         public function linkByPost(formObject:Object, useHash:Boolean=false):void
         {
-            _debug.warning( "linkByPost( " + [formObject,useHash].join( ", " ) + " ) not implemented" );
+            _debug.warning( "linkByPost not implemented in AS3 mode" );
         }
         
         /**

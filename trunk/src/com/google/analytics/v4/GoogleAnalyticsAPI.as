@@ -231,6 +231,18 @@ package com.google.analytics.v4
         function cookiePathCopy(newPath:String):void;
         
         /**
+        * This method works in conjunction with the setDomainName() and
+        * setAllowLinker() methods to enable cross-domain user tracking.
+        * The getLinkerURL method returns all the cookie values as a string
+        * 
+        * @param targetUrl URL of target site to send cookie values to.
+        * @param useHash Set to true for passing tracking code variables by using the # anchortag separator rather than the default ? query string separator. (Currently this behavior is for internal Google properties only.)
+        *
+        * @return String containing all cookie data
+        */       
+        function getLinkerUrl( url:String = "", useHash:Boolean = false ):String;
+        
+        /**
          * This method works in conjunction with the setDomainName() and
          * setAllowLinker() methods to enable cross-domain user tracking.
          * The link() method passes the cookies from this site to another via URL parameters (HTTP GET).

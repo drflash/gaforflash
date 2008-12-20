@@ -25,6 +25,7 @@ package com.google.analytics.core
     import com.google.analytics.data.UTMC;
     import com.google.analytics.data.UTMK;
     import com.google.analytics.data.UTMV;
+    import com.google.analytics.data.UTMX;
     import com.google.analytics.data.UTMZ;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.VisualDebugMode;
@@ -57,6 +58,7 @@ package com.google.analytics.core
         private var _utmb:UTMB;
         private var _utmc:UTMC;
         private var _utmk:UTMK;
+        private var _utmx:UTMX;
         private var _utmv:UTMV;
         private var _utmz:UTMZ;
         
@@ -154,6 +156,12 @@ package com.google.analytics.core
         {
             _utmk = new UTMK();
             _utmk.proxy = this;
+        }
+        
+        private function _createUMTX():void
+        {
+        	_utmx = new UTMX();
+        	_utmx.proxy = this;
         }
         
         private function _createUMTV():void
@@ -325,6 +333,14 @@ package com.google.analytics.core
                     }
                 }
                 
+                //utmx value
+                if( !hasUTMX() )
+                {
+                	_createUMTX();
+                }
+                
+                
+                
                 if( _SO.data.utmv )
                 {
                     if( !hasUTMV() )
@@ -385,11 +401,6 @@ package com.google.analytics.core
                 }
                 
             }
-            else
-            {
-           
-                
-            }
         }
         
         /**
@@ -443,6 +454,20 @@ package com.google.analytics.core
             
             return _utmk;
         }
+        
+         /**
+         * Indicates the utmx value of the buffer.
+         */             
+        public function get utmx():UTMX
+        {
+            if( !hasUTMX() )
+            {
+                _createUMTX();
+            }
+            
+            return _utmx;
+        }
+               
         
         
         /**
@@ -536,6 +561,21 @@ package com.google.analytics.core
             return false;
         }
         
+         /**
+         * Indicates if the buffer contains an UTMV value.
+         */        
+        public function hasUTMX():Boolean
+        {
+            if( _utmx )
+            {
+                return true;
+            }
+            
+            return false;
+        }
+        
+        
+        
         /**
          * Indicates if the buffer contains an UTMZ value.
          */
@@ -586,11 +626,91 @@ package com.google.analytics.core
                 value += utma.valueOf();
                 value += utmb.valueOf();
                 value += utmc.valueOf();
+                value += utmx.valueOf(); //"-";				//for utmx param
                 value += utmz.valueOf();
                 value += utmv.valueOf();
             
             return Utils.generateHash( value );
         }
+        
+        /**
+        * Returns the cookie data as a string
+        */ 
+        public function toLinkerParams():String
+        {
+        	var output:String = "";
+        		output += utma.toURLString();
+        		output += "&"+ utmb.toURLString();
+        		output += "&"+ utmc.toURLString();
+        		output += "&"+ utmx.toURLString(); //__utmx=-";
+        		output += "&"+ utmz.toURLString();
+        		output += "&"+ utmv.toURLString();  
+           		output += "&__utmk=" + generateCookiesHash();
+        	
+        	return output;
+        }
+   
+        /**
+        * Returns the cookie data appended to a URL.
+        */ 
+        public function getLinkerUrl( targetUrl:String = "", useHash:Boolean = false ):String
+        {
+        	var linkerParams:String = toLinkerParams();
+        	var formattedUrl:String = targetUrl;
+        	var urlFields:Array = targetUrl.split("#");
+        	
+        	// if there are linker parameters        	
+        	if ( linkerParams )
+        	{
+       			//Using hash to seperate out linker parameter, and there is no hash in URL, proceed.
+       			if ( useHash ) 
+       			{
+       				if ( 1 >= urlFields.length )
+       				{
+        				formattedUrl += "#" + linkerParams;
+        			}
+        			else //hash exists in URL
+        			{
+        				formattedUrl += "&" + linkerParams; //formatwww.test.com#trail&__utma.....
+        			}
+      			} 
+      			else  // there is no hash in URL
+      			{ 
+        			if (1 >= urlFields.length) 
+        			{
+			            // If there are no query string, then use "?".  if there is already a query string, then use "&".
+			            if ( targetUrl.indexOf("?") > -1 )
+						{
+							formattedUrl += "&";
+						}
+						else
+						{
+							formattedUrl += "?";
+						}
+
+						formattedUrl += linkerParams;    			
+        			} 
+        			else //hash exists in URL
+        			{
+			            //If there are no query string, then use "?".  if there is already a query string, then use "&".			            
+			            formattedUrl = urlFields[0];
+			            
+			           	if ( targetUrl.indexOf("?") > -1 )
+						{
+							formattedUrl += "&";
+						}
+						else
+						{
+							formattedUrl += "?";
+						}
+						
+			            formattedUrl += linkerParams + "#" + urlFields[1];
+        			}
+      			}         			     		
+        	} 
+            return formattedUrl;	
+    	}	        	        	
+    
         
         /**
          * Indicates if the buffer is volatile.

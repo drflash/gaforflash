@@ -365,6 +365,8 @@ package com.google.analytics.data
             var data:Array = [];
             var field:String;
             var value:*;
+            var testData:Array;
+            var testOut:String = "";
             
             for( var i:int = 0; i<fields.length; i++ )
             {
@@ -401,6 +403,11 @@ package com.google.analytics.data
                 }
                 
             }
+            
+            //default to "-" if there is no data
+            if ( isEmpty() )
+            	return "-";
+            
             
             return ""+data.join( "." );
         }

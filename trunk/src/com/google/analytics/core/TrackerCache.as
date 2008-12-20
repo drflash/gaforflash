@@ -264,6 +264,15 @@ package com.google.analytics.core
             enqueue("resetSession");
         }
         
+        public function getLinkerUrl( url:String ="", useHash:Boolean=false ):String
+        {
+            if ( CACHE_THROW_ERROR )
+            {
+                throw new IllegalOperationError("The tracker is not ready and you can use the 'getLinkerUrl' method for the moment.") ;             
+            }
+            return "";        	
+        }
+        
         public function link(targetUrl:String, useHash:Boolean = false):void
         {
         	enqueue("link", targetUrl, useHash) ;
