@@ -5,4 +5,4 @@
 
 <br>
 
-<wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/Documentation.xml" width="400" height="600" border="0" />
+<wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/Documentation.xml" width="800" height="600" border="0" />
