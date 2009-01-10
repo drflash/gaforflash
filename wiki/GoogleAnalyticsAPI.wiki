@@ -11,19 +11,19 @@ getVersion():String;
 resetSession():void;
 setSampleRate( newRate:Number ):void;
 setSessionTimeout( newTimeout:int ):void;
-setVar(newVal:String):void;
-trackPageview(pageURL:String=""):void
+setVar( newVal:String ):void;
+trackPageview( pageURL:String="" ):void
  }}}
 
  * *Campaign Tracking*<br>Methods that you use for setting up and customizing campaign tracking in Google Analytics reporting.
  {{{
-setAllowAnchor(enable:Boolean):void;
-setCampContentKey(newCampContentKey:String):void;
-setCampMediumKey(newCampMedKey:String):void;
-setCampNameKey(newCampNameKey:String):void;
-setCampNOKey(newCampNOKey:String):void;
-setCampSourceKey(newCampSrcKey:String):void;
-setCampTermKey(newCampTermKey:String):void;
-setCampaignTrack(enable:Boolean):void;
-setCookieTimeout(newDefaultTimeout:int):void;
+setAllowAnchor( enable:Boolean ):void;
+setCampContentKey( newCampContentKey:String ):void;
+setCampMediumKey( newCampMedKey:String ):void;
+setCampNameKey( newCampNameKey:String ):void;
+setCampNOKey( newCampNOKey:String ):void;
+setCampSourceKey( newCampSrcKey:String ):void;
+setCampTermKey( newCampTermKey:String ):void;
+setCampaignTrack( enable:Boolean ):void;
+setCookieTimeout( newDefaultTimeout:int ):void;
  }}}
