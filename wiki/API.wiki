@@ -1,7 +1,7 @@
 #summary API reference.
 #sidebar TOC
 
-[source code documentation http://gaforflash.googlecode.com/svn/documentation/index.html]
+[http://gaforflash.googlecode.com/svn/documentation/index.html source code documentation]
 
 <br>
 
