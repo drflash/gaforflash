@@ -1,5 +1,9 @@
 #summary Analytics API.
-#sidebar TOC
+
+note:<br>
+a *-* sign indicate something not implemented<br>
+a *+* sign indicate something added to the AS3 API but that does not exists in the JS API<br>
+a *~* sign indicate something that work differently in the AS3 API compared to the JS API
 
 
 *com.google.analytics.v4.GoogleAnalyticsAPI*
@@ -26,4 +30,16 @@ setCampSourceKey( newCampSrcKey:String ):void;
 setCampTermKey( newCampTermKey:String ):void;
 setCampaignTrack( enable:Boolean ):void;
 setCookieTimeout( newDefaultTimeout:int ):void;
+ }}}
+
+ * *Domains and Directories*<br>Methods that you use for customizing how Google Analytics reporting works across domains,<br>across different hosts, or within sub-directories of a website.
+ {{{
+cookiePathCopy(newPath:String):void;
+getLinkerUrl( url:String = "", useHash:Boolean = false ):String;
+link( targetUrl:String, useHash:Boolean = false ):void;
+linkByPost( formObject:Object, useHash:Boolean = false ):void;
+setAllowHash(enable:Boolean):void;
+-setCampaignTrack(enable:Boolean = true):void;
+setAllowLinker(enable:Boolean):void;
+
  }}}
