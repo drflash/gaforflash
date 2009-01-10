@@ -1,5 +1,4 @@
 #summary API reference.
-#sidebar TOC
 
 [http://gaforflash.googlecode.com/svn/documentation/index.html source code documentation] (as an external page)
 
