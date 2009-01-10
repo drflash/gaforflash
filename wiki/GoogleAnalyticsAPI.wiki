@@ -3,7 +3,8 @@
 note:<br>
 a *-* sign indicate something not implemented<br>
 a *+* sign indicate something added to the AS3 API but that does not exists in the JS API<br>
-a *~* sign indicate something that work differently in the AS3 API compared to the JS API
+a *~* sign indicate something that work differently in the AS3 API compared to the JS API<br>
+a *#* sign indicate something deprecated in the JS API and removed (or not implemented) in the AS3 API
 
 
 *com.google.analytics.v4.GoogleAnalyticsAPI*
@@ -12,11 +13,12 @@ a *~* sign indicate something that work differently in the AS3 API compared to t
  {{{
 getAccount():String;
 getVersion():String;
-resetSession():void;
+#initData():void;
++resetSession():void;
 setSampleRate( newRate:Number ):void;
 setSessionTimeout( newTimeout:int ):void;
 setVar( newVal:String ):void;
-trackPageview( pageURL:String="" ):void
+trackPageview( pageURL:String = "" ):void
  }}}
 
  * *Campaign Tracking*<br>Methods that you use for setting up and customizing campaign tracking in Google Analytics reporting.
@@ -34,12 +36,56 @@ setCookieTimeout( newDefaultTimeout:int ):void;
 
  * *Domains and Directories*<br>Methods that you use for customizing how Google Analytics reporting works across domains,<br>across different hosts, or within sub-directories of a website.
  {{{
-cookiePathCopy(newPath:String):void;
-getLinkerUrl( url:String = "", useHash:Boolean = false ):String;
-link( targetUrl:String, useHash:Boolean = false ):void;
-linkByPost( formObject:Object, useHash:Boolean = false ):void;
-setAllowHash(enable:Boolean):void;
--setCampaignTrack(enable:Boolean = true):void;
-setAllowLinker(enable:Boolean):void;
+-cookiePathCopy( newPath:String ):void;
+~getLinkerUrl( url:String = "", useHash:Boolean = false ):String;
+~link( targetUrl:String, useHash:Boolean = false ):void;
+-linkByPost( formObject:Object, useHash:Boolean = false ):void;
+setAllowHash( enable:Boolean ):void;
+setAllowLinker( enable:Boolean ):void;
+setCookiePath( newCookiePath:String ):void;
+setDomainName( newDomainName:String ):void;
+ }}}
 
+ * *Ecommerce*<br>Methods that you use for customizing ecommerce in Google Analytics reporting.
+ {{{
+addItem( item:String, sku:String, name:String, category:String, price:Number, quantity:int ):void;
+addTrans( orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String ):void;
+trackTrans():void;
+ }}}
+
+ * *Event Tracking*<br>Methods that you use for setting up Event Tracking in Google Analytics reporting.
+ {{{
++createEventTracker( objName:String ):EventTracker;
+#trackEvent( action:String, label:String = null, value:Number = NaN ):Boolean;
+trackEvent( category:String, action:String, label:String = null, value:Number = NaN ):Boolean;
+ }}}
+
+ * *Search Engines and Referrers*<br>Methods that you use for customizing search engines and referral traffic in Google Analytics reporting.
+ {{{
+addIgnoredOrganic( newIgnoredOrganicKeyword:String ):void;
+addIgnoredRef( newIgnoredReferrer:String ):void;
+addOrganic( newOrganicEngine:String, newOrganicKeyword:String ):void;
+clearIgnoredOrganic():void;
+clearIgnoredRef():void;
+clearOrganic():void;
+ }}}
+
+ * *Web Client*<br>Methods that you use to customize web client information tracking in Google Analytics reporting.
+ {{{
+getClientInfo():Boolean;
+getDetectFlash():Boolean;
+getDetectTitle():Boolean;
+setClientInfo( enable:Boolean ):void;
+setDetectFlash( enable:Boolean ):void;
+setDetectTitle( enable:Boolean ):void;
+ }}}
+
+* *Urchin Server*<br>Methods that you use for configuring your server setup when you are using<br>both Google Analytics and the Urchin software to track your website.
+ {{{
+getLocalGifPath():String;
+getServiceMode():ServerOperationMode;
+setLocalGifPath( newLocalGifPath:String ):void;
+setLocalRemoteServerMode():void;
+setLocalServerMode():void;
+setRemoteServerMode():void;
  }}}
