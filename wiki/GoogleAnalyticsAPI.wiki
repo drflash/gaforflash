@@ -5,8 +5,8 @@
 *com.google.analytics.v4.GoogleAnalyticsAPI*
 
  * Basic Configuration<br>
-Methods that you use for customizing all aspects of Google Analytics reporting.
-  {{{
+   Methods that you use for customizing all aspects of Google Analytics reporting.
+ {{{
 getAccount():String;
 getVersion():String;
 resetSession():void;
@@ -14,4 +14,4 @@ setSampleRate( newRate:Number ):void;
 setSessionTimeout( newTimeout:int ):void;
 setVar(newVal:String):void;
 trackPageview(pageURL:String=""):void
-  }}}
+ }}}
