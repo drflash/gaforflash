@@ -82,7 +82,7 @@ setDetectFlash( enable:Boolean ):void;
 setDetectTitle( enable:Boolean ):void;
  }}}
 
-* *Urchin Server*<br>Methods that you use for configuring your server setup when you are using<br>both Google Analytics and the Urchin software to track your website.<br>see: [http://code.google.com/apis/analytics/docs/gaJSApiUrchin.html JS API]
+ * *Urchin Server*<br>Methods that you use for configuring your server setup when you are using<br>both Google Analytics and the Urchin software to track your website.<br>see: [http://code.google.com/apis/analytics/docs/gaJSApiUrchin.html JS API]
  {{{
 getLocalGifPath():String;
 getServiceMode():ServerOperationMode;
