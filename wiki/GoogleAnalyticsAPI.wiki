@@ -1,4 +1,6 @@
-#summary Analytics API.
+#summary Analytics AS3 API.
+
+see: [Analytics JS API http://code.google.com/apis/analytics/docs/gaJSApi.html]
 
 note:<br>
 a *-* sign indicate something not implemented<br>
@@ -9,7 +11,7 @@ a *#* sign indicate something deprecated in the JS API and removed (or not imple
 
 *com.google.analytics.v4.GoogleAnalyticsAPI*
 
- * *Basic Configuration*<br>Methods that you use for customizing all aspects of Google Analytics reporting.
+ * *Basic Configuration*<br>Methods that you use for customizing all aspects of Google Analytics reporting.<br>see: [http://code.google.com/apis/analytics/docs/gaJSApiBasicConfiguration.html JS API]
  {{{
 getAccount():String;
 getVersion():String;
@@ -21,7 +23,7 @@ setVar( newVal:String ):void;
 trackPageview( pageURL:String = "" ):void
  }}}
 
- * *Campaign Tracking*<br>Methods that you use for setting up and customizing campaign tracking in Google Analytics reporting.
+ * *Campaign Tracking*<br>Methods that you use for setting up and customizing campaign tracking in Google Analytics reporting.<br>see: [http://code.google.com/apis/analytics/docs/gaJSApiCampaignTracking.html JS API]
  {{{
 setAllowAnchor( enable:Boolean ):void;
 setCampContentKey( newCampContentKey:String ):void;
@@ -34,7 +36,7 @@ setCampaignTrack( enable:Boolean ):void;
 setCookieTimeout( newDefaultTimeout:int ):void;
  }}}
 
- * *Domains and Directories*<br>Methods that you use for customizing how Google Analytics reporting works across domains,<br>across different hosts, or within sub-directories of a website.
+ * *Domains and Directories*<br>Methods that you use for customizing how Google Analytics reporting works across domains,<br>across different hosts, or within sub-directories of a website.<br>see: [http://code.google.com/apis/analytics/docs/gaJSApiDomainDirectory.html JS API]
  {{{
 -cookiePathCopy( newPath:String ):void;
 ~getLinkerUrl( url:String = "", useHash:Boolean = false ):String;
@@ -46,21 +48,21 @@ setCookiePath( newCookiePath:String ):void;
 setDomainName( newDomainName:String ):void;
  }}}
 
- * *Ecommerce*<br>Methods that you use for customizing ecommerce in Google Analytics reporting.
+ * *Ecommerce*<br>Methods that you use for customizing ecommerce in Google Analytics reporting.<br>see: [http://code.google.com/apis/analytics/docs/gaJSApiEcommerce.html JS API]
  {{{
 addItem( item:String, sku:String, name:String, category:String, price:Number, quantity:int ):void;
 addTrans( orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String ):void;
 trackTrans():void;
  }}}
 
- * *Event Tracking*<br>Methods that you use for setting up Event Tracking in Google Analytics reporting.
+ * *Event Tracking*<br>Methods that you use for setting up Event Tracking in Google Analytics reporting.<br>see: [http://code.google.com/apis/analytics/docs/gaJSApiEventTracking.html JS API]
  {{{
 +createEventTracker( objName:String ):EventTracker;
 #trackEvent( action:String, label:String = null, value:Number = NaN ):Boolean;
 trackEvent( category:String, action:String, label:String = null, value:Number = NaN ):Boolean;
  }}}
 
- * *Search Engines and Referrers*<br>Methods that you use for customizing search engines and referral traffic in Google Analytics reporting.
+ * *Search Engines and Referrers*<br>Methods that you use for customizing search engines and referral traffic in Google Analytics reporting.<br>see: [http://code.google.com/apis/analytics/docs/gaJSApiSearchEngines.html JS API]
  {{{
 addIgnoredOrganic( newIgnoredOrganicKeyword:String ):void;
 addIgnoredRef( newIgnoredReferrer:String ):void;
@@ -70,7 +72,7 @@ clearIgnoredRef():void;
 clearOrganic():void;
  }}}
 
- * *Web Client*<br>Methods that you use to customize web client information tracking in Google Analytics reporting.
+ * *Web Client*<br>Methods that you use to customize web client information tracking in Google Analytics reporting.<br>see: [http://code.google.com/apis/analytics/docs/gaJSApiWebClient.html JS API]
  {{{
 getClientInfo():Boolean;
 getDetectFlash():Boolean;
@@ -80,7 +82,7 @@ setDetectFlash( enable:Boolean ):void;
 setDetectTitle( enable:Boolean ):void;
  }}}
 
-* *Urchin Server*<br>Methods that you use for configuring your server setup when you are using<br>both Google Analytics and the Urchin software to track your website.
+* *Urchin Server*<br>Methods that you use for configuring your server setup when you are using<br>both Google Analytics and the Urchin software to track your website.<br>see: [http://code.google.com/apis/analytics/docs/gaJSApiUrchin.html JS API]
  {{{
 getLocalGifPath():String;
 getServiceMode():ServerOperationMode;
