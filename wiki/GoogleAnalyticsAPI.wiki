@@ -1,6 +1,6 @@
 #summary Analytics AS3 API.
 
-see: [Analytics JS API http://code.google.com/apis/analytics/docs/gaJSApi.html]
+see: [http://code.google.com/apis/analytics/docs/gaJSApi.html Google Analytics JS API]
 
 note:<br>
 a *-* sign indicate something not implemented<br>
