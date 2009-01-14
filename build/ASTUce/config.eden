@@ -5,7 +5,7 @@ showConstructorList = false;
 showAllAsSimpleTrace = false;
 showSimpleTraceDepth = 1;
 
-showPrinterShortTests = false;
+showPrinterShortTests = true;
 showPrinterDetails    = true;
 
 showPrintHeader   = true;

@@ -87,6 +87,19 @@
     
     <!-- general properties of the project -->
     <property file="build/build.properties"/>
+    
+    <condition property="ASTUCE" value="${astuce.mac}">
+        <os family="mac"/>
+    </condition>
+    
+    <condition property="ASTUCE" value="${astuce.win}">
+        <os family="windows" />
+    </condition>
+    
+    <condition property="ASTUCE" value="${astuce.nix}">
+        <os family="unix" />
+    </condition>
+    
     <echo message="${release.fullname} v${release.version}"/>
     
     <condition property="includesource">
@@ -122,7 +135,7 @@
         
     </target>
     
-    <target name="main" depends="clean,init,documentation,library_component,templates,commonfiles,package">
+    <target name="main" depends="clean,init,unit_tests,documentation,library_component,templates,commonfiles,package">
     </target>
     
     <target name="clean-documentation">
@@ -132,6 +145,35 @@
             <fileset dir="${asdoc.output}" includes="**/*" defaultexcludes="false"/>
         </delete>
         -->
+    </target>
+    
+    <target name="unit_tests" description="build and run the Library unit tests">
+        
+        <echo message="building library unit tests" level="verbose" />
+        <mxmlc
+            file="${gaffa.src}/GA_TestRunnerCompact.as"
+            output="${astuce.path}/ga-tests.swf"
+            
+        >
+            <strict>true</strict>
+            <debug>true</debug>
+            <default-size width="128" height="128" />
+            <source-path path-element="${release.tmp}" />
+            <source-path path-element="${gaffa.tests}/GAv4" />
+            <external-library-path dir="${flex.libs}/player" includes="playerglobal.swc" />
+            <external-library-path dir="${gaffa.libs}" includes="maashaack.swc" />
+            <external-library-path dir="${gaffa.libs}" includes="ASTUce.swc" />
+        </mxmlc>
+        
+        <echo message="running library unit tests" level="verbose" />
+        <exec executable="${ASTUCE}" failonerror="true">
+        <!--<arg line="-s" />-->
+            <arg line="-l:ga-tests.swf" />
+            <arg line="com.google.analytics.AllTests" />
+        </exec>
+        
+        <delete file="${astuce.path}/ga-tests.swf"/>
+        
     </target>
     
     <target name="documentation" depends="clean-documentation" description="generate the documentation with asdoc">
