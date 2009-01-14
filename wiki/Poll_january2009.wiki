@@ -1,16 +1,6 @@
 #summary poll of january 2009.
 
-<table border="0">
-<tr>
-<th>
-<td>
 http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=2&output=image&nonsense=image.png
-</td>
-<td>
 http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=3&output=image&nonsense=image.png
-</td>
-</th>
-</tr>
-</table>
 
 <wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/Poll_january2009.xml" width="500" height="1400" border="0" />
