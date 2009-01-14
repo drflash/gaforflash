@@ -1,7 +1,7 @@
 #summary poll of january 2009.
 #labels Featured
 
-http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=5&output=image&nonsense=image.png
+http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=5&output=image&chs=200x125&nonsense=image.png
 http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=4&output=image&nonsense=image.png
 
 <wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/Poll_january2009.xml" width="500" height="1400" border="0" />
