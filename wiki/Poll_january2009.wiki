@@ -2,3 +2,6 @@
 
 http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=2&output=image&nonsense=image.png
 
+
+
+<wiki:gadget url="http://yourproject.googlecode.com/svn/gadgets/Poll_january2009.xml" width="480" height="1075" border="0" />
