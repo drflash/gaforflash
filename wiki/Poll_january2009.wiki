@@ -4,4 +4,4 @@ http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=2&output=imag
 
 
 
-<wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/Poll_january2009.xml" width="480" height="1075" border="0" />
+<wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/Poll_january2009.xml" width="500" height="1200" border="0" />
