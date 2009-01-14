@@ -1,4 +1,5 @@
 #summary poll of january 2009.
+#labels Featured
 
 http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=2&output=image&nonsense=image.png
 http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=3&output=image&nonsense=image.png
