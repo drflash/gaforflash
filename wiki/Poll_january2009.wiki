@@ -5,4 +5,4 @@
 <wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/Poll_january2009.xml" width="500" height="1400" border="0" />
 
 == Results ==
-<wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/Poll_january2009-result.xml" width="500" height="1000" border="0" />
+<wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/Poll_january2009-result.xml" width="600" height="1400" border="0" />
