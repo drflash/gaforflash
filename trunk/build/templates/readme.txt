@@ -22,26 +22,26 @@ To do so you have 2 options:
 
 1. If you have the Adobe Flash IDE currently open, quit the application. 
 
-2. Create a Google directory in the following locations: 
+2. Create a Google directory in the following application-level locations: 
 
    For Flash CS3 users:
-       Windows: C:\Program Files\Adobe\ Adobe Flash CS3\<language>\Configuration\Components 
+       Windows:  C:\Program Files\Adobe\Adobe Flash CS3\<language>\Configuration\Components 
        Mac OS X: Macintosh HD/Applications/Adobe Flash CS3/Configuration/Components 
 
    For Flash CS4 users:
-       Windows: C:\Program Files\Adobe\ Adobe Flash CS4\Common\ Configuration\Components 
-       Mac OS X: Macintosh HD/Applications/Adobe Flash CS4/Common/Configuration/Components 
+       Windows:  C:\Program Files\Adobe\Adobe Flash CS4\<language>\Configuration\Components 
+       Mac OS X: Macintosh HD/Applications/Adobe Flash CS4/Configuration/Components 
 
-3. Navigate to the location where you unzipped the gaforflash component ZIP file and copy the 
+3. Navigate to the location where you unzipped the @project_name@ component ZIP file and copy the 
    following files to the Google folder you created in the previous step: 
-       lib/analytics_flash.swc — The Analytics Component 
-       lib/analytics.swc — The Analytics Library Component 
+       lib/@gaffa.swcfla@ — The Analytics Component 
+       lib/@gaffa.swc@ — The Analytics Library Component 
 
 4. Restart the Flash IDE.
 
-To find and use the gaforflash components, open the components panel by selecting 
+To find and use the @project_name@ components, open the components panel by selecting 
 Window -> Components. There will now be a Google folder which can be expanded to show 
-the gaforflash components. A gaforflash component can now be dragged onto the stage 
+the @project_name@ components. A @project_name@ component can now be dragged onto the stage 
 for use in a Flash project.
 
 Flash CS3/CS4 is now set up to support @project_fullname@.
