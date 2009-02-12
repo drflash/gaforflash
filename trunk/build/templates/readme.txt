@@ -1,24 +1,50 @@
 @project_fullname@
 =========================================
-You can find the latest version of @project_name@ on @project_url@
+The @project_name@ component files are compressed into a single ZIP file 
+that you can download from @project.download@
 
-Installation for Flash CS3
+The @project_name@ components can be used either within Flex builder, or the Flash IDE for 
+AS3 based projects. The installation and usage of the gaforflash components differ depending 
+on which environment you are using. 
+
+Installation for Flash CS3/CS4
 ==========================
-Before you begin to use @project_name@ to add Analytics tracking within Flash CS3,
+Before you begin to use @project_name@ to add Analytics tracking within Flash CS3/CS4,
 you first need to add the @project_name@ SWC to Flash CS3.
 
-To do so:
-1. If you have Flash CS3 currently open, quit the application.
+To do so you have 2 options:
+1. If you have Flash CS3/CS4 currently open, quit the application.
 
-2. Navigate to the location where you unzipped the Google Analytics zip
-   and find the swc (e.g. lib/analytics_flash.swc).
+2. Use the Adobe Extension Manager to install the analytics.mxp extension file. 
+   This will copy all the component library files into the user-based component location
 
-3. Create a "Google" directory in one of the following locations
-   and copy the SWC file there:
-   - (Windows) C:\Program Files\Adobe\ Adobe Flash CS3\language\Configuration\Components
-   - (Mac OS X) Macintosh HD/Applications/Adobe Flash CS3/Configuration/Components
+-or-
 
-Flash CS3 is now set up to support @project_fullname@.
+1. If you have the Adobe Flash IDE currently open, quit the application. 
+
+2. Create a Google directory in the following locations: 
+
+   For Flash CS3 users:
+       Windows: C:\Program Files\Adobe\ Adobe Flash CS3\<language>\Configuration\Components 
+       Mac OS X: Macintosh HD/Applications/Adobe Flash CS3/Configuration/Components 
+
+   For Flash CS4 users:
+       Windows: C:\Program Files\Adobe\ Adobe Flash CS4\Common\ Configuration\Components 
+       Mac OS X: Macintosh HD/Applications/Adobe Flash CS4/Common/Configuration/Components 
+
+3. Navigate to the location where you unzipped the gaforflash component ZIP file and copy the 
+   following files to the Google folder you created in the previous step: 
+       lib/analytics_flash.swc — The Analytics Component 
+       lib/analytics.swc — The Analytics Library Component 
+
+4. Restart the Flash IDE.
+
+To find and use the gaforflash components, open the components panel by selecting 
+Window -> Components. There will now be a Google folder which can be expanded to show 
+the gaforflash components. A gaforflash component can now be dragged onto the stage 
+for use in a Flash project.
+
+Flash CS3/CS4 is now set up to support @project_fullname@.
 
 Alternatively if you want to use @project_name@ in code-only mode
 you can do the same as the above and add the lib/analytics.swc,
@@ -26,16 +52,16 @@ you will then need to drag the "AnalyticsLibrary" component in your Library.
 
 Installation for Flex Builder 3
 ===============================
-Before you can compile your code, you will need to link it to the @project_name@ SWC file.
+Flex builder utilizes .SWC component files on a per-project basis. In order to include 
+the @project_name@ SWC in a Flex Builder project you can either add it to your project library:
 
-To do so:
-1. select Project->Properties.
+1. Select Project->Properties. 
    A Properties dialog box will appear for your project.
-   Click on Flex Build Path and then select the Library Path tab:
+   Click on Flex Build Path and then select the Library Path tab.
 
-2. Click Add SWC... within the Library Path pane.
+2. Click Add SWC... within the Library Path pane. 
    An Add SWC dialog box will appear.
-   Navigate to the location where you unzipped the Google Analytics zip
+   Navigate to the location where you unzipped the Google Analytics zip 
    and select lib/analytics.swc file and click OK.
 
 or
@@ -52,7 +78,7 @@ http://code.google.com/apis/analytics/docs/flashTrackingIntro.html
 and the project wiki for more advanced usage
 @project_wiki@
 
-Problem
+Problems
 =======
 Please send any usage questions to @project_group@
-Please report issues to @project_maintenance@ (precise the version @release_version@)
+Please report issues to @project_maintenance@ (with the precise version @release_version@)
