@@ -265,6 +265,7 @@
         <filter token="project_maintenance" value="${project.maintenance}"/>
         <filter token="release_version" value="${release.version}"/>
         <copy file="${gaffa.template}/readme.txt" todir="${release.dir}" filtering="true" />
+        <copy file="${gaffa.template}/analytics.mxi" todir="${release.dir}" filtering="true" />
     </target>
     
     <!-- include the source code in the release -->
