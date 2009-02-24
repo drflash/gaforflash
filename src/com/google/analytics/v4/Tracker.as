@@ -1523,25 +1523,25 @@ package com.google.analytics.v4
                 success = _eventTracker.setKey( EVENT_TRACKER_PROJECT_ID,
                                                 EVENT_TRACKER_TYPE_KEY_NUM,
                                                 action );
-                
-                if( label && label != "" )
+         
+                if( label)
                 {
                     // event description / label
                     success = _eventTracker.setKey( EVENT_TRACKER_PROJECT_ID,
                                                     EVENT_TRACKER_LABEL_KEY_NUM,
                                                     label );
-                    params = 3;
-                    
-                    // aggregate value
-                    if( !isNaN(value) )
-                    {
-                        success = _eventTracker.setValue( EVENT_TRACKER_PROJECT_ID,
+                    params = 3; 
+                }
+                
+                 // aggregate value
+                 if( !isNaN(value) )
+                 {
+                     success = _eventTracker.setValue( EVENT_TRACKER_PROJECT_ID,
                                                           EVENT_TRACKER_VALUE_VALUE_NUM,
                                                           value );
-                        params = 4;
-                    }
-                    
-                }
+                     params = 4;
+                 }
+                
                 
                 // event tracker is set successfully
                 if( success )
