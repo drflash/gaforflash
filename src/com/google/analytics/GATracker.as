@@ -120,6 +120,10 @@ package com.google.analytics
             {
                 this.config = new Configuration( debug );
             }
+            else
+            {
+            	this.config = config;
+            }
             
             if( autobuild )
             {
