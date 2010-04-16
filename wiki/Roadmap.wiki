@@ -4,10 +4,7 @@
 
 == v1.2 ==
 
- * integrate with AIR
- * test AIR and standalone (flash projector)
- * test AIR 1.0 / 1.1 / 1.5
- * additional tests for Flash Player 10
+see discussion about [http://code.google.com/p/gaforflash/issues/detail?id=71 release 1.2]
 
 release: (TBD)
 
@@ -16,11 +13,7 @@ tags: n/a
 
 == v1.1 ==
 
- * API 100% complete
- * e-commerce
- * linker
-
-discussion: [http://code.google.com/p/gaforflash/issues/detail?id=70 release 1.1]
+see discussion about [http://code.google.com/p/gaforflash/issues/detail?id=70 release 1.1]
 
 release: (TBD)
 
