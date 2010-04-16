@@ -2,6 +2,10 @@
 #labels Phase-Implementation,Featured
 #sidebar TOC
 
+== v2.0 ==
+
+Will be about a restructure of the project, more details when available.
+
 == v1.2 ==
 
 see discussion about [http://code.google.com/p/gaforflash/issues/detail?id=71 release 1.2]
