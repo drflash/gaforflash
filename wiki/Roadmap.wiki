@@ -20,6 +20,8 @@ tags: n/a
  * e-commerce
  * linker
 
+discussion: [http://code.google.com/p/gaforflash/issues/detail?id=70 release 1.1]
+
 release: (TBD)
 
 tags: n/a
