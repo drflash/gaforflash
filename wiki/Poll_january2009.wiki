@@ -4,6 +4,7 @@
 http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=6&output=image&nonsense=image.png
 http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=7&output=image&nonsense=image.png
 
-<!--
+<wiki:comment>
+this was how we were embedding the poll from google doc
 <wiki:gadget url="http://gaforflash.googlecode.com/svn/gadgets/Poll_january2009.xml" width="500" height="1400" border="0" />
--->
+</wiki:comment>
