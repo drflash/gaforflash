@@ -1,15 +1,15 @@
 #summary poll of january 2009.
 #labels Featured
 
-the poll has been closed.
+the poll is now closed.
 
 http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=6&output=image&nonsense=image.png
 http://spreadsheets.google.com/pub?key=pGIxRmvuySOXmnz6y3sCdbA&oid=7&output=image&nonsense=image.png
 
-here the detailled results<br>
-based on 52 votes
+here the detailled results (based on 52 votes)
 
-*what would be an ideal size for the library* (ordered by votes)
+*what would be an ideal size for the library*<br>
+(ordered by votes)
 || size ||  votes || percent ||
 ||  10K || 24 || 45.3% ||
 ||  30K || 14 || 26.4% ||
@@ -17,7 +17,8 @@ based on 52 votes
 || 50K || 5 || 9.4% ||
 || 100K || 0 || 0% ||
 
-*features most wanted* (ordered by votes)
+*features most wanted*<br>
+(ordered by votes)
 || feature || vote || percent || description ||
 || src code || 40 ||  22% || having the source code in distribution file ||
 || better debug || 34 || 18.7% || having a better visual debug ||
