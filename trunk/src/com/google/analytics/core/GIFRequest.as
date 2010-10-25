@@ -16,6 +16,7 @@
  * Contributor(s):
  *   Zwetan Kjukov <zwetan@gmail.com>.
  *   Marc Alcaraz <ekameleon@gmail.com>.
+ *   Nick Mihailovski <nickski15@gmail.com>.
  */
 
 package com.google.analytics.core
@@ -33,7 +34,7 @@ package com.google.analytics.core
     import flash.events.SecurityErrorEvent;
     import flash.net.URLRequest;
     import flash.system.LoaderContext;    
-
+    
     /**
      * Google Analytics Tracker Code (GATC)'s GIF request module.
      * This file encapsulates all the necessary components that are required to
@@ -41,6 +42,14 @@ package com.google.analytics.core
      */
     public class GIFRequest
     {
+        /**
+         * The largest URI request length allowed by Google Analytics
+         * collectors. Requests URI lengths greater than this value will not
+         * be processed by Google Analytics.
+         * @private
+         */ 
+        private static const MAX_REQUEST_LENGTH:Number = 2048;
+      
         private var _config:Configuration;
         private var _debug:DebugConfiguration;
         private var _buffer:Buffer;
@@ -51,7 +60,7 @@ package com.google.analytics.core
         
         private var _count:int;
         private var _alertcount:int;
-        
+
         /**
         * @private
         * contains the list of the different requests
@@ -334,8 +343,22 @@ package com.google.analytics.core
             target.removeEventListener( Event.COMPLETE, onComplete );
         }
         
+        /*
+         * Sends a request to the server. Google Analytics collectors only
+         * support URIs < 2048 characters in length. If the request is too
+         * long, they will not get processed. Instead of sending erroneous
+         * data, this library will silently drop requests greater than the
+         * max request length.
+         * @param request The URLRequest object with the data to send to
+         *     Google Analytics.
+         */
         public function sendRequest( request:URLRequest ):void
         {
+            if (request.url.length > MAX_REQUEST_LENGTH)
+            {
+               _debug.failure("No request sent. URI length too long.");
+               return;
+            }
             
             /* note:
                when the gif request is send too fast
@@ -371,8 +394,8 @@ package com.google.analytics.core
         }
         
         /**
-        * Send the Gif Request to the server(s).
-        */
+         * Send the Gif Request to the server(s).
+         */
         public function send( account:String, variables:Variables = null,
                               force:Boolean = false, rateLimit:Boolean = false ):void
         {
