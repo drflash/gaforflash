@@ -1,2 +1,0 @@
-#summary Flash component.
-#sidebar TOC

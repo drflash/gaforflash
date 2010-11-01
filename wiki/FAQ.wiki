@@ -1,2 +1,0 @@
-#summary Frequently Asked Questions.
-#sidebar TOC

@@ -1,2 +1,0 @@
-#summary Code library.
-#sidebar TOC

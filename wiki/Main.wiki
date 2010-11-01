@@ -2,19 +2,12 @@
 #sidebar TOC
 
 
-[Users Working with gaforflash]<br>
+[GettingStarted Getting Started]<br>
 
 
 [Coders Programming gaforflash]<br>
 
 
-[Components Components organization]<br>
-
 
 [API API reference]<br>
 
-
-[Examples Examples]<br>
-
-
-[Support Support]<br>

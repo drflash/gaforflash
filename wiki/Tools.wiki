@@ -1,2 +1,0 @@
-#summary Get the tools.
-#sidebar TOC

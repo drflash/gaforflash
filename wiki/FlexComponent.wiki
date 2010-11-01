@@ -1,2 +1,0 @@
-#summary Flex component.
-#sidebar TOC

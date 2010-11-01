@@ -1,2 +1,0 @@
-#summary All you need to know to configure the debugging.
-#sidebar TOC

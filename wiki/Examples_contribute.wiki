@@ -1,2 +1,0 @@
-#summary Send us your examples.
-#sidebar TOC
