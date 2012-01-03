@@ -19,7 +19,7 @@
 
 package com.google.analytics.data
 {
-    import buRRRn.ASTUce.framework.TestCase;
+	import library.ASTUce.framework.TestCase;
     
     public class X10Test extends TestCase
     {

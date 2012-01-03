@@ -20,12 +20,12 @@
 
 package com.google.analytics.core
 {
-    import buRRRn.ASTUce.framework.*;        
+	import library.ASTUce.framework.*;
 
     public class AllTests
     {
         
-        public static function suite():ITest
+        public static function suite():Test
         {
             var suite:TestSuite = new TestSuite( "Google Analytics core tests" );
             

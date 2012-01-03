@@ -20,7 +20,7 @@
  
 package com.google.analytics.core 
 {
-    import buRRRn.ASTUce.framework.TestCase;    
+	import library.ASTUce.framework.TestCase;
 
     public class TrackerModeTest extends TestCase 
     {

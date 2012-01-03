@@ -20,8 +20,8 @@
  
 package com.google.analytics.core 
 {
-    import buRRRn.ASTUce.framework.ArrayAssert;
-    import buRRRn.ASTUce.framework.TestCase;
+	import library.ASTUce.framework.ArrayAssert;
+	import library.ASTUce.framework.TestCase;
     
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     

@@ -19,9 +19,9 @@
 
 package com.google.analytics
 {
-    import buRRRn.ASTUce.framework.TestCase;
-    
     import com.google.analytics.v4.Configuration;
+    
+    import library.ASTUce.framework.TestCase;
 
     public class ConfigurationTest extends TestCase
     {

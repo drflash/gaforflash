@@ -1,3 +1,9 @@
+* 1.0.2
+- v1.0.2 small fix (not publicly released)
+- Fixed event tracker to send a value if optional label is not present
+- Fix passing config to GATracker constructor
+- adding a check to not send invalid GET requests
+
 * 1.0.1.319
 - v1.0.1 build fix
 - fixed Event Tracking request

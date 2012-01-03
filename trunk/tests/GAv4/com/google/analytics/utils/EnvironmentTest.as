@@ -19,7 +19,7 @@
 
 package com.google.analytics.utils
 {
-    import buRRRn.ASTUce.framework.TestCase;
+	import library.ASTUce.framework.TestCase;
     
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.external.HTMLDOM;

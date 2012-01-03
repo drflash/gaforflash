@@ -19,7 +19,7 @@
 
 package com.google.analytics.core
 {
-    import buRRRn.ASTUce.framework.TestCase;
+	import library.ASTUce.framework.TestCase;
     
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.FakeEnvironment;

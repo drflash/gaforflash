@@ -17,7 +17,7 @@
 
 package com.google.analytics.ecommerce
 {
-	import buRRRn.ASTUce.framework.TestCase;
+	import library.ASTUce.framework.TestCase;
 	import com.google.analytics.utils.Variables;
 	
 	public class TransactionTest extends TestCase 
