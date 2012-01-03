@@ -1,3 +1,13 @@
+* 1.1.0
+- modified the build
+  made it simpler and faster
+- removed support for "visual" SWC
+  now it's 1 SWC for everyone and you have to initialize the lib by code
+- updated libraries dependencies
+  now we reuse core.swc from the project maashaack
+  see: http://code.google.com/p/maashaack/wiki/core
+  
+
 * 1.0.2
 - v1.0.2 small fix (not publicly released)
 - Fixed event tracker to send a value if optional label is not present
