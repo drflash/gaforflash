@@ -17,10 +17,10 @@
  
 package com.google.analytics.ecommerce
 {
-	import buRRRn.ASTUce.framework.TestCase;
 	import com.google.analytics.utils.Variables;
+	import library.ASTUce.framework.TestCase;
 	
-	public class ItemTest extends TestCase 
+	public class ItemTest extends TestCase
 	{
 		public function ItemTest( name:String="" )
 		{

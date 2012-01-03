@@ -19,7 +19,7 @@
 
 package com.google.analytics.core
 {
-    import buRRRn.ASTUce.framework.TestCase;
+	import library.ASTUce.framework.TestCase;
     
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.external.FakeAdSenseGlobals;

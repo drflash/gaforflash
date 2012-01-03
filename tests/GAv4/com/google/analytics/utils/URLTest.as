@@ -19,7 +19,7 @@
 
 package com.google.analytics.utils
 {
-    import buRRRn.ASTUce.framework.TestCase;
+	import library.ASTUce.framework.TestCase;
 
     public class URLTest extends TestCase
     {

@@ -17,7 +17,7 @@
 
 package com.google.analytics.core
 {
-	import buRRRn.ASTUce.framework.TestCase;
+	import library.ASTUce.framework.TestCase;
 	
 	import com.google.analytics.debug.DebugConfiguration;
 	import com.google.analytics.ecommerce.Transaction;

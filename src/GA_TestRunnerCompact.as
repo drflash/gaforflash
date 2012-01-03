@@ -20,7 +20,7 @@
 
 package
 {
-    import buRRRn.ASTUce.Runner;
+    import library.ASTUce.Runner;
     
     import com.google.analytics.AllTests;
     import flash.display.Sprite;
@@ -31,6 +31,6 @@ package
         {
             Runner.main( com.google.analytics.AllTests.suite( ) );
         }
-
+        
     }
 }

@@ -19,7 +19,7 @@
 
 package com.google.analytics.data
 {
-    import buRRRn.ASTUce.framework.*;
+	import library.ASTUce.framework.*;
     
     public class AllTests
     {
@@ -29,7 +29,7 @@ package com.google.analytics.data
             
         }
         
-        public static function suite():ITest
+        public static function suite():Test
         {
             var suite:TestSuite = new TestSuite( "Google Analytics data tests" );
             

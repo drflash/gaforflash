@@ -19,7 +19,7 @@
 
 package com.google.analytics.campaign
 {
-    import buRRRn.ASTUce.framework.TestCase;
+	import library.ASTUce.framework.TestCase;
     
     import com.google.analytics.data.UTMZ;
     

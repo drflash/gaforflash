@@ -39,7 +39,10 @@ package
     [SWF(width="800", height="600", backgroundColor='0xffffff', frameRate='24', pageTitle='test', scriptRecursionLimit='1000', scriptTimeLimit='60')]
     public class GA_AS3 extends Sprite
     {
-        private var tracker:AnalyticsTracker;
+        private const GA_ID:String = "UA-94526-19";
+		//private const GA_ID:String = "UA-111-222";
+		
+		private var tracker:AnalyticsTracker;
         
         public function GA_AS3()
         {
@@ -52,6 +55,8 @@ package
         private function onButtonClick( event:MouseEvent = null ):void
         {
             trace( "button click" );
+			tracker.trackEvent( "Button", "Click", "TEST", Math.random() );
+			tracker.trackPageview( "/test/button/click/" + Math.random() );
         }
         
         public function onComplete( evt:Event ):void
@@ -89,11 +94,11 @@ package
             
             addChild( b );
             
-            trace( Utils.generateHash( "UA-111-222" ) );
+            trace( Utils.generateHash( GA_ID ) );
             
             //please your own UA to test
             GATracker.autobuild = false;
-            tracker = new GATracker( this, "UA-111-222" );
+            tracker = new GATracker( this, GA_ID );
             tracker.mode = "AS3";
             tracker.visualDebug = true;
             //tracker.debug.verbose = true;
