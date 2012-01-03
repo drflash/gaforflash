@@ -31,6 +31,7 @@ package
        
     */
     [SWF(width="800", height="600", backgroundColor='0xffffff', frameRate='24', pageTitle='example', scriptRecursionLimit='1000', scriptTimeLimit='60')]
+    [ExcludeClass]
     public class gaforflash_example extends Sprite
     {
         /* You need to define a valid GA ID here */

@@ -25,6 +25,11 @@ package
     import com.google.analytics.AllTests;
     import flash.display.Sprite;
     
+    /* note:
+       Run the Google Analytics unit tests
+    */
+    [SWF(width="400", height="400", backgroundColor='0xffffff', frameRate='24', pageTitle='testrunner', scriptRecursionLimit='1000', scriptTimeLimit='60')]
+    [ExcludeClass]
     public class TestRunner extends Sprite
     {
         public function TestRunner()

@@ -24,6 +24,8 @@ package
     /* note:
        to run misc. local test
     */
+    [SWF(width="800", height="600", backgroundColor='0xffffff', frameRate='24', pageTitle='test', scriptRecursionLimit='1000', scriptTimeLimit='60')]
+    [ExcludeClass]
     public class gaforflash_test extends Sprite
     {
         public function gaforflash_test()
