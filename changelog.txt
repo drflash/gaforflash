@@ -1,14 +1,18 @@
 * 1.1.0
-TODO
-+ modified the build
+- modified the build
   made it simpler and faster
-+ removed support for "visual" SWC
+- removed support for "visual" SWC
   now it's 1 SWC for everyone and you have to initialize the lib by code
-+ updated libraries dependencies
-  now we reuse core.swc from the project maashaack
-  see: http://code.google.com/p/maashaack/wiki/core
-+ removed the visual debug
-  now we use the library logd and iinterface
+- updated libraries dependencies
+  now we reuse core.swc, logd.swc, etc. from the project maashaack
+  see:
+   http://code.google.com/p/maashaack/wiki/core
+   http://code.google.com/p/maashaack/wiki/logd
+- removed class UserAgent, replaced by function util core.strings.userAgent()
+- removed class Protocols, replaced by strings
+- removed class URL, replaced by clas util core.uri
+- removed class Version, replaced by core.version
++ a bit more ...
 
 * 1.0.2
 - v1.0.2 small fix (not publicly released)
