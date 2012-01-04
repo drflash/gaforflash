@@ -37,9 +37,11 @@ package com.google.analytics.v4
     import com.google.analytics.ecommerce.Transaction;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.utils.Environment;
-    import com.google.analytics.utils.Protocols;
-    import com.google.analytics.utils.URL;
     import com.google.analytics.utils.Variables;
+    import com.google.analytics.utils.getDomainFromHost;
+    import com.google.analytics.utils.getSubDomainFromHost;
+    
+    import core.uri;
     
     import flash.net.URLRequest;
     import flash.net.navigateToURL;
@@ -443,23 +445,19 @@ package com.google.analytics.v4
          */
         private function _doTracking():Boolean
         {
-            if( (_info.protocol != Protocols.file) &&
-                (_info.protocol != Protocols.none) &&
+        
+            if( (_info.protocol != "file") &&
+                (_info.protocol != "") &&
                 _isNotGoogleSearch() )
-                {
-                    return true;
-                }
+            {
+                return true;
+            }
             
             if( _config.allowLocalTracking )
             {
                 return true;
             }
             
-            /* TODO:
-               add logic for AIR and other running local exe
-               by default a SWF running ina projector or in AIR
-               will have a file:// protocol
-            */
             return false;
         }
         
@@ -490,6 +488,7 @@ package com.google.analytics.v4
          */
         private function _formatReferrer():String
         {
+        
             var referrer:String = _info.referrer;
             
             //if there is no referrer
@@ -501,28 +500,36 @@ package com.google.analytics.v4
             else
             {
                 var domainName:String = _info.domainName;
-                var ref:URL = new URL( referrer );
-                var dom:URL = new URL( "http://" + domainName );
+                //var ref:URL = new URL( referrer );
+                //var dom:URL = new URL( "http://" + domainName );
+                var ref:uri = new uri( referrer );
+                var dom:uri = new uri( "http://" + domainName );
                 
-                if( ref.hostName == domainName )
+                if( ref.host == domainName )
                 {
                     return "-";
                 }
                 
+                var ref_d:String = getDomainFromHost( ref.host );
+                var ref_s:String = getSubDomainFromHost( ref.host );
+                var dom_d:String = getDomainFromHost( dom.host );
+                var dom_s:String = getSubDomainFromHost( dom.host );
+                
                 /* If referrer is in the sub-domain of document,
                    then formatted referrer is set to "0".
                 */
-                if( dom.domain == ref.domain )
+                if( dom_d == ref_d )
                 {
                     //no self-referral
-                    if( dom.subDomain != ref.subDomain )
+                    if( dom_s != ref_s )
                     {
                         referrer = "0";
                     }
                 }
                 
                 //no referrer if referrer is enclosed in square-brackets
-                if( (referrer.charAt(0) == "[") && (referrer.charAt(referrer.length-1)) )
+                if( (referrer.charAt(0) == "[") &&
+                    (referrer.charAt(referrer.length-1) == "]") )
                 {
                     referrer = "-";
                 }
