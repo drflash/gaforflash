@@ -1,18 +1,19 @@
 ﻿
 package com.google.analytics.utils
 {
+    import core.version;
     
     public class FakeEnvironment extends Environment
     {
         private var _appName:String;
-        private var _appVersion:Version;
+        private var _appVersion:version;
         private var _url:String;
         private var _referrer:String;
         private var _documentTitle:String;
         private var _domainName:String;
         private var _locationPath:String;
         private var _locationSearch:String;
-        private var _flashVersion:Version;
+        private var _flashVersion:version;
         private var _language:String;
         private var _languageEncoding:String;
         private var _operatingSystem:String;
@@ -26,11 +27,11 @@ package com.google.analytics.utils
         private var _isInHTML:Boolean;
         private var _isAIR:Boolean;
         
-        public function FakeEnvironment( appName:String = "", appVersion:Version = null,
+        public function FakeEnvironment( appName:String = "", appVersion:version = null,
                                        url:String = "", referrer:String = "",
                                        documentTitle:String = "", domainName:String = "",
                                        locationPath:String = "", locationSearch:String = "",
-                                       flashVersion:Version = null, language:String = "",
+                                       flashVersion:version = null, language:String = "",
                                        languageEncoding:String = "", operatingSystem:String = "",
                                        playerType:String = "", platform:String = "",
                                        protocol:String = null, screenWidth:Number = NaN,
@@ -74,12 +75,12 @@ package com.google.analytics.utils
             _appName = value;
         }
         
-        public override function get appVersion():Version
+        public override function get appVersion():version
         {
             return _appVersion;
         }
         
-        public override function set appVersion( value:Version ):void
+        public override function set appVersion( value:version ):void
         {
             _appVersion = value;
         }
@@ -119,7 +120,7 @@ package com.google.analytics.utils
             return _locationSearch;
         }
         
-        public override function get flashVersion():Version
+        public override function get flashVersion():version
         {
             return _flashVersion;
         }
