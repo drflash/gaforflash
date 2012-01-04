@@ -116,7 +116,7 @@ package com.google.analytics.core
         
         /**
          * Hit id for revenue per page tracking for AdSense.
-         * <p><b>Example :<b><code class="prettyprint">utmhid=2059107202</code></p>
+         * <p><b>Example :</b><code class="prettyprint">utmhid=2059107202</code></p>
          */
         public function get utmhid():String
         {
@@ -125,7 +125,7 @@ package com.google.analytics.core
         
         /**
          * Referral, complete URL.
-         * <p><b>Example :<b><code class="prettyprint">utmr=http://www.example.com/aboutUs/index.php?var=selected</code></p>
+         * <p><b>Example :</b><code class="prettyprint">utmr=http://www.example.com/aboutUs/index.php?var=selected</code></p>
          */
         public function get utmr():String
         {
@@ -139,7 +139,7 @@ package com.google.analytics.core
         
         /**
          * Page request of the current page. 
-         * <p><b>Example :<b><code class="prettyprint">utmp=/testDirectory/myPage.html</code></p>
+         * <p><b>Example :</b><code class="prettyprint">utmp=/testDirectory/myPage.html</code></p>
          */
         public function get utmp():String
         {
