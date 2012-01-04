@@ -546,7 +546,7 @@ package com.google.analytics.v4
                 hash       += _info.appVersion;
                 hash       += _info.language;
                 hash       += _info.platform;
-                hash       += _info.userAgent.toString();
+                hash       += _info.userAgent;
                 hash       += _info.screenWidth+"x"+_info.screenHeight+_info.screenColorDepth;
                 hash       += _info.referrer;
                 
