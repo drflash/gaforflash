@@ -22,7 +22,7 @@ package com.google.analytics.utils
         private var _screenWidth:Number;
         private var _screenHeight:Number;
         private var _screenColorDepth:String;
-        private var _userAgent:UserAgent;
+        private var _userAgent:String;
         private var _isInHTML:Boolean;
         private var _isAIR:Boolean;
         
@@ -35,7 +35,7 @@ package com.google.analytics.utils
                                        playerType:String = "", platform:String = "",
                                        protocol:Protocols = null, screenWidth:Number = NaN,
                                        screenHeight:Number = NaN, screenColorDepth:String = "",
-                                       userAgent:UserAgent = null,
+                                       userAgent:String = null,
                                        isInHTML:Boolean = false,
                                        isAIR:Boolean = false )
         {
@@ -169,12 +169,12 @@ package com.google.analytics.utils
             return _screenColorDepth;
         }
         
-        public override function get userAgent():UserAgent
+        public override function get userAgent():String
         {
             return _userAgent;
         }
         
-        public override function set userAgent( custom:UserAgent ):void
+        public override function set userAgent( custom:String ):void
         {
             _userAgent = custom;
         }
