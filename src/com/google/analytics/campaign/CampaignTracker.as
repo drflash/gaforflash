@@ -22,34 +22,33 @@ package com.google.analytics.campaign
 {
     import com.google.analytics.utils.Variables;
     
-    /**
-     * Campaign tracker object.
-     * Contains all the data associated with a campaign.
-     * 
-     * AdWords:
-     * The following variables
-     * name, source, medium, term, content
-     * are automatically generated for AdWords hits when autotagging
-     * is turned on through the AdWords interface.
-     * 
-     * 
-     * note:
-     * we can not use a CampaignInfo because here the serialization
-     * to URL have to be injected into __utmz and is then a special case.
-     * 
-     * links:
-     * 
-     * Understanding campaign variables: The five dimensions of campaign tracking
-     * http://www.google.com/support/googleanalytics/bin/answer.py?answer=55579&hl=en
-     * 
-     * How does campaign tracking work? 
-     * http://www.google.com/support/googleanalytics/bin/answer.py?hl=en&answer=55540
-     * 
-     * What is A/B Testing and how can it help me?
-     * http://www.google.com/support/googleanalytics/bin/answer.py?answer=55589
-     * 
-     * What information do the filter fields represent?
-     * http://www.google.com/support/googleanalytics/bin/answer.py?hl=en&answer=55588
+    /* Campaign tracker object.
+       Contains all the data associated with a campaign.
+       
+       AdWords:
+       The following variables
+       name, source, medium, term, content
+       are automatically generated for AdWords hits when autotagging
+       is turned on through the AdWords interface.
+       
+       
+       note:
+       we can not use a CampaignInfo because here the serialization
+       to URL have to be injected into __utmz and is then a special case.
+       
+       links:
+       
+       Understanding campaign variables: The five dimensions of campaign tracking
+       http://www.google.com/support/googleanalytics/bin/answer.py?answer=55579&hl=en
+       
+       How does campaign tracking work? 
+       http://www.google.com/support/googleanalytics/bin/answer.py?hl=en&answer=55540
+       
+       What is A/B Testing and how can it help me?
+       http://www.google.com/support/googleanalytics/bin/answer.py?answer=55589
+       
+       What information do the filter fields represent?
+       http://www.google.com/support/googleanalytics/bin/answer.py?hl=en&answer=55588
      */
     public class CampaignTracker
     {
