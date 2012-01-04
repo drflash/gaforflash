@@ -18,7 +18,7 @@ package com.google.analytics.utils
         private var _operatingSystem:String;
         private var _playerType:String;
         private var _platform:String;
-        private var _protocol:Protocols;
+        private var _protocol:String;
         private var _screenWidth:Number;
         private var _screenHeight:Number;
         private var _screenColorDepth:String;
@@ -33,7 +33,7 @@ package com.google.analytics.utils
                                        flashVersion:Version = null, language:String = "",
                                        languageEncoding:String = "", operatingSystem:String = "",
                                        playerType:String = "", platform:String = "",
-                                       protocol:Protocols = null, screenWidth:Number = NaN,
+                                       protocol:String = null, screenWidth:Number = NaN,
                                        screenHeight:Number = NaN, screenColorDepth:String = "",
                                        userAgent:String = null,
                                        isInHTML:Boolean = false,
@@ -149,7 +149,7 @@ package com.google.analytics.utils
             return _platform;
         }
         
-        public override function get protocol():Protocols
+        public override function get protocol():String
         {
             return _protocol;
         }
