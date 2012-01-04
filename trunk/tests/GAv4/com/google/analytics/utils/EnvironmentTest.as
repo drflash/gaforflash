@@ -49,7 +49,7 @@ package com.google.analytics.utils
         {
             var env_empty:Environment = new Environment("","","",null,_dom);
             
-            assertEquals( Protocols.none, env_empty.protocol );
+            assertEquals( "", env_empty.protocol );
             assertEquals( "", env_empty.domainName );
         }
         

@@ -34,7 +34,6 @@ package com.google.analytics.utils
             var suite:TestSuite = new TestSuite( "Google Analytics utils tests" );
             
             suite.addTestSuite( EnvironmentTest );
-            suite.addTestSuite( URLTest );
             suite.addTestSuite( VariablesTest );
             
             return suite;
