@@ -22,22 +22,21 @@ package com.google.analytics.data
 {
     import com.google.analytics.utils.Timespan;
     
-    /**
-     * Urchin Tracking Module Cookie V.
-     * The user defined cookie.
-     * 
-     * This cookie is not normally present in a default configuration of the tracking code.
-     * The __utmv cookie passes the information provided via the setVar() method,
-     * which you use to create a custom user segment.
-     * 
-     * This string is then passed to the Analytics servers in the GIF request URL via the utmcc parameter.
-     * This cookie is only written if you have added the setVar() method for the tracking code on your website page.
-     * 
-     * expiration:
-     * 2 years from set/update.
-     * 
-     * format:
-     * __utmv=<domainHash>.<value>
+    /* Urchin Tracking Module Cookie V.
+       The user defined cookie.
+       
+       This cookie is not normally present in a default configuration of the tracking code.
+       The __utmv cookie passes the information provided via the setVar() method,
+       which you use to create a custom user segment.
+       
+       This string is then passed to the Analytics servers in the GIF request URL via the utmcc parameter.
+       This cookie is only written if you have added the setVar() method for the tracking code on your website page.
+       
+       expiration:
+       2 years from set/update.
+       
+       format:
+       __utmv=<domainHash>.<value>
      */
     public class UTMV extends UTMCookie
     {

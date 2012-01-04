@@ -20,17 +20,16 @@
 
 package com.google.analytics.data
 {
-    /**
-     * Urchin Tracking Module Cookie K.
-     * The Hash cookie.
-     * 
-     * Contains a hash (digest) of all the __utm* values
-     * 
-     * expiration:
-     * Not set.
-     * 
-     * format:
-     * __utmk=<hash>
+    /* Urchin Tracking Module Cookie K.
+       The Hash cookie.
+       
+       Contains a hash (digest) of all the __utm* values
+       
+       expiration:
+       Not set.
+       
+       format:
+       __utmk=<hash>
      */
     public class UTMK extends UTMCookie
     {

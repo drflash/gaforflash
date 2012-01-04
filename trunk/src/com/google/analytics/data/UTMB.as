@@ -22,25 +22,24 @@ package com.google.analytics.data
 {
     import com.google.analytics.utils.Timespan;
     
-    /**
-     * Urchin Tracking Module Cookie B.
-     * The session timeout cookie.
-     * 
-     * This cookie is used to establish and continue a user session with your site.
-     * When a user views a page on your site, the Google Analytics code attempts to update this cookie.
-     * If it does not find the cookie, a new one is written and a new session is established.
-     * 
-     * Each time a user visits a different page on your site, this cookie is updated to expire in 30 minutes,
-     * thus continuing a single session for as long as user activity continues within 30-minute intervals.
-     * 
-     * This cookie expires when a user pauses on a page on your site for longer than 30 minutes.
-     * You can modify the default length of a user session with the setSessionTimeout() method.
-     * 
-     * expiration:
-     * 30 minutes from set/update.
-     * 
-     * format:
-     * __utmb=<domainHash>.<trackCount>.<token>.<lastTime>
+    /* Urchin Tracking Module Cookie B.
+       The session timeout cookie.
+       
+       This cookie is used to establish and continue a user session with your site.
+       When a user views a page on your site, the Google Analytics code attempts to update this cookie.
+       If it does not find the cookie, a new one is written and a new session is established.
+       
+       Each time a user visits a different page on your site, this cookie is updated to expire in 30 minutes,
+       thus continuing a single session for as long as user activity continues within 30-minute intervals.
+       
+       This cookie expires when a user pauses on a page on your site for longer than 30 minutes.
+       You can modify the default length of a user session with the setSessionTimeout() method.
+       
+       expiration:
+       30 minutes from set/update.
+       
+       format:
+       __utmb=<domainHash>.<trackCount>.<token>.<lastTime>
      */
     public class UTMB extends UTMCookie
     {
