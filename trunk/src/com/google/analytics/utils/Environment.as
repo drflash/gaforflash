@@ -26,6 +26,7 @@ package com.google.analytics.utils
     
     import core.strings.userAgent;
     import core.uri;
+    import core.version;
     
     import flash.system.Capabilities;
     import flash.system.Security;
@@ -41,7 +42,7 @@ package com.google.analytics.utils
         
         private var _protocol:String;
         private var _appName:String;
-        private var _appVersion:Version;
+        private var _appVersion:version;
         private var _userAgent:String;
         private var _url:String;
         
@@ -55,7 +56,7 @@ package com.google.analytics.utils
         public function Environment( url:String = "", app:String = "", version:String = "",
                                      debug:DebugConfiguration = null, dom:HTMLDOM = null )
         {
-            var v:Version;
+            var v:core.version;
             
             if( app == "" )
             {
@@ -75,7 +76,7 @@ package com.google.analytics.utils
             }
             else
             {
-                v = Version.fromString( version );
+                v = getVersionFromString( version );
             }
             
             _url        = url;
@@ -120,7 +121,7 @@ package com.google.analytics.utils
         /**
          * Indicates the version of the application.
          */
-        public function get appVersion():Version
+        public function get appVersion():version
         {
             return _appVersion;
         }
@@ -128,7 +129,7 @@ package com.google.analytics.utils
         /**
          * @private
          */
-        public function set appVersion( value:Version ):void
+        public function set appVersion( value:version ):void
         {
             _appVersion = value;
             _defineUserAgent();
@@ -270,9 +271,9 @@ package com.google.analytics.utils
          * </pre>
          * @return the flash version object representation of the application.
          */
-        public function get flashVersion():Version
+        public function get flashVersion():version
         {
-            var v:Version = Version.fromString( Capabilities.version.split( " " )[1], "," ) ;
+            var v:version = getVersionFromString( Capabilities.version.split( " " )[1], "," ) ;
             return v ;
         }
         
