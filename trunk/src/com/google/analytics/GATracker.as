@@ -36,17 +36,17 @@ package com.google.analytics
     import com.google.analytics.external.HTMLDOM;
     import com.google.analytics.external.JavascriptProxy;
     import com.google.analytics.utils.Environment;
-    import com.google.analytics.utils.Version;
     import com.google.analytics.v4.Bridge;
     import com.google.analytics.v4.Configuration;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
     
+    import core.version;
+    
     import flash.display.DisplayObject;
     import flash.events.Event;
-    import flash.events.EventDispatcher;    
+    import flash.events.EventDispatcher;
     
-    /* force import for type in the includes */
     EventTracker;
     ServerOperationMode;
     
@@ -92,7 +92,7 @@ package com.google.analytics
         /**
          * The version of the tracker.
          */
-        public static var version:Version = API.version;
+        public static var version:core.version = API.version;
         
         /**
          * Creates a new GATracker instance.
