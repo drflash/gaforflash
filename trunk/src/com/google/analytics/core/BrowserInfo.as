@@ -22,12 +22,10 @@ package com.google.analytics.core
 {
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Variables;
-    import com.google.analytics.utils.Version;
     import com.google.analytics.v4.Configuration;
-
-    /**
-     * The BrowserInfo class.
-     */
+    
+    import core.version;
+    
     public class BrowserInfo
     {
         private var _config:Configuration;
@@ -97,7 +95,7 @@ package com.google.analytics.core
         {
             if( _config.detectFlash )
             {
-                var v:Version = _info.flashVersion;
+                var v:version = _info.flashVersion;
                 return v.major+"."+v.minor+" r"+v.build;
             }
             
