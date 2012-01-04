@@ -45,18 +45,18 @@ package com.google.analytics.core
         private var _lastMove:int;
         private var _inactivity:Number;
         
+        /* note:
+           the timer will loop every <delay> seconds
+           on each loop
+           we compare the <last mouse move time> to the <current time>
+           and if the result is equal or bigger than the
+           <inativity> seconds we start a sessionTimer
+           -> if the mouse move again we reset the sessionTimer
+           -> if the mouse does not move till we reach the end of the sessionTimeout
+              we reset the session
+        */
         /**
         * Create an instance of the IdleTimer
-        * 
-        * note:
-        * the timer will loop every <delay> seconds
-        * on each loop
-        * we compare the <last mouse move time> to the <current time>
-        * and if the result is equal or bigger than the
-        * <inativity> seconds we start a sessionTimer
-        * -> if the mouse move again we reset the sessionTimer
-        * -> if the mouse does not move till we reach the end of the sessionTimeout
-        *    we reset the session
         * 
         * @param delay number of seconds to check for idle
         * @param inactivity number of seconds to check for inactivity
