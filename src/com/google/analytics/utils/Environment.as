@@ -20,11 +20,12 @@
 
 package com.google.analytics.utils
 {
-    import core.strings.userAgent;
-    
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.external.HTMLDOM;
+    
+    import core.strings.userAgent;
+    import core.uri;
     
     import flash.system.Capabilities;
     import flash.system.Security;
@@ -38,7 +39,7 @@ package com.google.analytics.utils
         private var _debug:DebugConfiguration;
         private var _dom:HTMLDOM;
         
-        private var _protocol:Protocols;
+        private var _protocol:String;
         private var _appName:String;
         private var _appVersion:Version;
         private var _userAgent:String;
@@ -90,60 +91,13 @@ package com.google.analytics.utils
          */
         private function _findProtocol():void
         {
-            var p:Protocols = Protocols.none;
+            _protocol = "";
             
-            if(_url != "")
+            if( _url != "" )
             {
-                // file://
-                // http://
-                // https://
-                var URL:String = _url.toLowerCase();
-                var test:String = URL.substr(0,5);
-                
-                switch( test )
-                {
-                    case "file:":
-                    {
-                        p = Protocols.file;
-                        break;
-                    }
-                    case "http:":
-                    {
-                        p = Protocols.HTTP;
-                        break;
-                    }
-                    case "https":
-                    {
-                        if(URL.charAt(5) == ":")
-                        {
-                            p = Protocols.HTTPS;
-                        }
-                        break;
-                    } 
-                    default:
-                    {
-                        _protocol = Protocols.none;
-                    }
-                }
+                var url:uri = new uri( _url );
+                _protocol = url.scheme;
             }
-            
-            /*TODO:
-              if _url is not found (if someone forgot to add the tracker to the display list)
-              we could use the alternative to get the dom.location and find the protocol from that string
-              off course only if we have access to ExternalInterface
-            */
-            
-            
-            var _proto:String = _dom.protocol;
-            
-            var proto:String = (p.toString()+":").toLowerCase();
-            
-            if( _proto && _proto != proto && _debug )
-            {
-                _debug.warning( "Protocol mismatch: SWF="+proto+", DOM="+_proto );
-            }
-            
-            _protocol = p;
         }
 
         /**
@@ -209,7 +163,7 @@ package com.google.analytics.utils
                 return _referrer;
             }
             
-            if( protocol == Protocols.file )
+            if( protocol == "file" )
             {
                 return "localhost";
             }
@@ -237,37 +191,18 @@ package com.google.analytics.utils
          */
         public function get domainName():String
         {
-            if( protocol == Protocols.HTTP ||
-                protocol == Protocols.HTTPS )
+            if( (protocol == "http") ||
+                (protocol == "https") )
             {
-                var URL:String = _url.toLowerCase();
-                var str:String;
-                var end:int;
-                
-                if( protocol == Protocols.HTTP )
-                {
-                    str = URL.split( "http://" ).join( "" );
-                }
-                else if( protocol == Protocols.HTTPS )
-                {
-                    str = URL.split( "https://" ).join( "" );
-                }
-                
-                end = str.indexOf( "/" );
-                
-                if( end > -1 )
-                {
-                    str = str.substring(0,end);
-                }
-                
-                return str;
+                var url:uri = new uri( _url.toLowerCase() );
+                return url.host;
             }
-        
-            if( protocol == Protocols.file )
+            
+            if( protocol == "file" )
             {
                 return "localhost";
             }
-        
+            
             return "";
         }
         
@@ -276,7 +211,6 @@ package com.google.analytics.utils
          */
         public function isAIR():Boolean
         {
-            //return (playerType == "Desktop") && (Security.sandboxType.toString() == "application");
             return Security.sandboxType == "application";
         }
         
@@ -432,7 +366,7 @@ package com.google.analytics.utils
         /**
          * Indicates the Protocols object of this local info.
          */
-        public function get protocol():Protocols
+        public function get protocol():String
         {
             if(!_protocol)
             {
