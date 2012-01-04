@@ -86,7 +86,7 @@ package com.google.analytics.core
          * you would set the domain name as follows : 
          * <pre class="prettyprint">
          * pageTracker.setDomainName( new Domain( DomainName.custom, ".example.com" ) ) ;
-         * </pre>
+         * </p>
          */
         public static const custom:DomainNameMode  = new DomainNameMode( 2, "custom" );
 
