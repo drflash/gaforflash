@@ -19,13 +19,14 @@
 
 package com.google.analytics.core
 {
+	import com.google.analytics.utils.Environment;
+	import com.google.analytics.utils.FakeEnvironment;
+	import com.google.analytics.utils.Variables;
+	import com.google.analytics.v4.Configuration;
+	
+	import core.version;
+	
 	import library.ASTUce.framework.TestCase;
-    
-    import com.google.analytics.utils.Environment;
-    import com.google.analytics.utils.FakeEnvironment;
-    import com.google.analytics.utils.Variables;
-    import com.google.analytics.utils.Version;
-    import com.google.analytics.v4.Configuration;    
 
     public class BrowserInfoTest extends TestCase
     {
@@ -47,7 +48,7 @@ package com.google.analytics.core
         public function setUp():void
         {
             _config = new Configuration();
-            _env0 = new FakeEnvironment("",null,"","","","","","",new Version(9,0,115,0),"en-GB","UTF-8","","","",null,800,600,"24");
+            _env0 = new FakeEnvironment("",null,"","","","","","",new version(9,0,115,0),"en-GB","UTF-8","","","",null,800,600,"24");
             _browserInfo0 = new BrowserInfo( _config, _env0 );
         }
         
