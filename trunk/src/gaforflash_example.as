@@ -35,7 +35,8 @@ package
     public class gaforflash_example extends Sprite
     {
         /* You need to define a valid GA ID here */
-        private const GA_ID:String = "UA-111-222";
+        //private const GA_ID:String = "UA-111-222";
+        private const GA_ID:String = "UA-94526-19";
         
         public var tracker:AnalyticsTracker;
         
@@ -102,7 +103,7 @@ package
                and once the GATracker build
                the cached functions will run in batch
             */
-            tracker.trackPageview( "/before/setup" );
+            //tracker.trackPageview( "/before/setup" );
             
             _gasetup();
             
