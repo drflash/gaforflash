@@ -57,7 +57,7 @@ package com.google.analytics.utils
         {
             var env_local:Environment = new Environment( "file://someFolder/someFile.swf","","",null,_dom);
             
-            assertEquals( Protocols.file, env_local.protocol );
+            assertEquals( "file", env_local.protocol );
             assertEquals( "localhost", env_local.domainName );
         }
         
@@ -65,7 +65,7 @@ package com.google.analytics.utils
         {
             var env_http:Environment = new Environment( "http://www.domain.com/file.swf","","",null,_dom);
             
-            assertEquals( Protocols.HTTP, env_http.protocol );
+            assertEquals( "http", env_http.protocol );
             assertEquals( "www.domain.com", env_http.domainName );
         }
         
@@ -73,7 +73,7 @@ package com.google.analytics.utils
         {
             var env_https:Environment = new Environment( "https://www.domain.com/secure/file.swf","","",null,_dom);
             
-            assertEquals( Protocols.HTTPS, env_https.protocol );
+            assertEquals( "https", env_https.protocol );
             assertEquals( "www.domain.com", env_https.domainName );
         }
         
