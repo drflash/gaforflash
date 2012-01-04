@@ -394,7 +394,7 @@ package com.google.analytics.v4
         * This option is disabled by default.
         * 
         * Typically, campaign tracking URLs are comprised of the question mark (?) separator
-        * and the ampersand (&) as delimiters for the key/value pairs that make up the query.
+        * and the ampersand (&amp;) as delimiters for the key/value pairs that make up the query.
         * By enabling this option, your campaign tracking URLs can use a pound (#) sign
         * instead of the question mark (?).
         * 
