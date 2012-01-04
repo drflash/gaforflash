@@ -24,7 +24,6 @@ package com.google.analytics.core
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.VisualDebugMode;
     import com.google.analytics.utils.Environment;
-    import com.google.analytics.utils.Protocols;
     import com.google.analytics.utils.Variables;
     import com.google.analytics.v4.Configuration;
     
@@ -509,11 +508,13 @@ package com.google.analytics.core
                              /* get remote address (depending on protocol),
                                 then append rest of metrics / data
                              */
-                             if( _info.protocol == Protocols.HTTPS )
+                             //if( _info.protocol == Protocols.HTTPS )
+                             if( _info.protocol == "https" )
                              {
                                  remoteImage.url = _config.secureRemoteGIFpath;
                              }
-                             else if( _info.protocol == Protocols.HTTP )
+                             //else if( _info.protocol == Protocols.HTTP )
+                             else if( _info.protocol == "http" )
                              {
                                  remoteImage.url = _config.remoteGIFpath;
                              }
