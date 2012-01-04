@@ -83,10 +83,10 @@ package com.google.analytics.core
          * Custom is used to set explicitly to your domain name if your website spans multiple hostnames,
          * and you want to track visitor behavior across all hosts.
          * <p>For example, if you have two hosts : <code>server1.example.com</code> and <code>server2.example.com</code>,
-         * you would set the domain name as follows : 
+         * you would set the domain name as follows : </p>
          * <pre class="prettyprint">
          * pageTracker.setDomainName( new Domain( DomainName.custom, ".example.com" ) ) ;
-         * </p>
+         * </pre>
          */
         public static const custom:DomainNameMode  = new DomainNameMode( 2, "custom" );
 
