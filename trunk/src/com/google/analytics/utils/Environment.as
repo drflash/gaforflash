@@ -20,6 +20,8 @@
 
 package com.google.analytics.utils
 {
+    import core.strings.userAgent;
+    
     import com.google.analytics.core.ga_internal;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.external.HTMLDOM;
@@ -39,7 +41,7 @@ package com.google.analytics.utils
         private var _protocol:Protocols;
         private var _appName:String;
         private var _appVersion:Version;
-        private var _userAgent:UserAgent;
+        private var _userAgent:String;
         private var _url:String;
         
         /**
@@ -158,7 +160,7 @@ package com.google.analytics.utils
         public function set appName( value:String ):void
         {
             _appName = value;
-            userAgent.applicationProduct = value;
+            _defineUserAgent();
         }
         
         /**
@@ -175,7 +177,8 @@ package com.google.analytics.utils
         public function set appVersion( value:Version ):void
         {
             _appVersion = value;
-            userAgent.applicationVersion = value.toString(4);
+            _defineUserAgent();
+            
         }
         
         /**
@@ -273,8 +276,9 @@ package com.google.analytics.utils
          */
         public function isAIR():Boolean
         {
-            return (playerType == "Desktop") && (Security.sandboxType.toString() == "application");
-        }        
+            //return (playerType == "Desktop") && (Security.sandboxType.toString() == "application");
+            return Security.sandboxType == "application";
+        }
         
         /**
          * Indicates if the SWF is embeded in an HTML page.
@@ -501,22 +505,22 @@ package com.google.analytics.utils
             return color;
         }
         
+        private function _defineUserAgent():void
+        {
+            _userAgent = core.strings.userAgent( appName + "/" + appVersion.toString(4) );
+        }
+        
         /**
          * Defines a custom user agent.
          * <p>For case where the user would want to define its own application name and version 
          * it is possible to change appName and appVersion which are in sync with 
          * applicationProduct and applicationVersion properties.</p>
          */
-        public function get userAgent():UserAgent
+        public function get userAgent():String
         {
-            /* note:
-               if we change appName then we update applicationProduct
-               if we change appVersion then we update applicationVersion
-               but the inverse is not true.
-            */
             if( !_userAgent )
             {
-                 _userAgent = new UserAgent(this, appName, appVersion.toString(4));
+                 _defineUserAgent();
             }
             
             return _userAgent;
@@ -525,10 +529,10 @@ package com.google.analytics.utils
         /**
          * @private
          */
-        public function set userAgent( custom:UserAgent ):void
+        public function set userAgent( custom:String ):void
         {
             _userAgent = custom;
         }
-                
+        
     }
 }
