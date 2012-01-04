@@ -24,10 +24,10 @@ package com.google.analytics.campaign
     import com.google.analytics.core.OrganicReferrer;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.VisualDebugMode;
-    import com.google.analytics.utils.Protocols;
-    import com.google.analytics.utils.URL;
     import com.google.analytics.utils.Variables;
     import com.google.analytics.v4.Configuration;
+    
+    import core.uri;
     
     /**
      * The CampaignManager class.
@@ -81,15 +81,12 @@ package com.google.analytics.campaign
                 return true;
             }
             
-            if( referrer.indexOf("://") > -1 )
+            var url:uri = new uri( referrer );
+            
+            if( (url.scheme == "file") ||
+                (url.scheme == "") )
             {
-                var url:URL = new URL( referrer );
-                
-                if( (url.protocol == Protocols.file) ||
-                    (url.protocol == Protocols.none) )
-                    {
-                    return true;
-                    }
+                return true;
             }
             
             return false;
@@ -102,18 +99,14 @@ package com.google.analytics.campaign
          */
         public static function isFromGoogleCSE( referrer:String, config:Configuration ):Boolean
         {
-            var url:URL = new URL( referrer );
+            var url:uri = new uri( referrer );
             
-            // verify that the referrer is google cse search query.
-            if( url.hostName.indexOf( config.google ) > -1 )
+            if( url.host.indexOf( config.google ) > -1 )
             {
-                if( url.search.indexOf( config.googleSearchParam+"=" ) > -1 )
+                if( (url.path == "/"+config.googleCsePath ) &&
+                    (url.query.indexOf( config.googleSearchParam+"=" ) > -1) )
                 {
-                    // check if this is google custom search engine.
-                    if( url.path == "/"+config.googleCsePath )
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
             
@@ -288,27 +281,21 @@ package com.google.analytics.campaign
                 return camp;
             }
             
-            var ref:URL = new URL( _referrer );
-            var name:String = "";
+            var ref:uri = new uri( _referrer );
+            var name:String;
             
-            if( ref.hostName != "" )
+            if( (ref.host != "") && (ref.host.indexOf(".") > -1) )
             {
-                if( ref.hostName.indexOf( "." ) > -1 )
+                var tmp:Array = ref.host.split( "." );
+                
+                switch( tmp.length )
                 {
-                    var tmp:Array = ref.hostName.split( "." );
+                    case 2:
+                    name = tmp[0];
+                    break;
                     
-                    switch( tmp.length)
-                    {
-                        case 2:
-                        // case: http://domain.com
-                        name = tmp[0];
-                        break;
-                        
-                        case 3:
-                        //case: http://www.domain.com
-                        name = tmp[1];
-                        break;
-                    }
+                    case 3:
+                    name = tmp[1];
                 }
             }
             
@@ -318,7 +305,7 @@ package com.google.analytics.campaign
                 var currentOrganicSource:OrganicReferrer = _config.organic.getReferrerByName( name );
                 
                 // extract keyword value from query string
-                var keyword:String = _config.organic.getKeywordValue( currentOrganicSource, ref.search );
+                var keyword:String = _config.organic.getKeywordValue( currentOrganicSource, ref.query );
                 
                 camp = new CampaignTracker();
                 camp.source = currentOrganicSource.engine;
@@ -349,9 +336,11 @@ package com.google.analytics.campaign
             }
             
             // get host name from referrer
-            var ref:URL = new URL( _referrer );
-            var hostname:String = ref.hostName;
+            var ref:uri = new uri( _referrer );
+            var hostname:String = ref.host;
             var content:String  = ref.path;
+            
+            if( content == "" ) { content = "/"; } //fix empty path
             
             if( hostname.indexOf( "www." ) == 0 )
             {
