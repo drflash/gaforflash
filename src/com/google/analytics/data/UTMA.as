@@ -22,23 +22,22 @@ package com.google.analytics.data
 {
     import com.google.analytics.utils.Timespan;
     
-    /**
-     * Urchin Tracking Module Cookie A.
-     * The visitor tracking cookie.
-     * 
-     * This cookie is typically written to the browser upon the first visit to your site from that web browser.
-     * If the cookie has been deleted by the browser operator, and the browser subsequently visits your site,
-     * a new __utma cookie is written with a different unique ID.
-     * 
-     * This cookie is used to determine unique visitors to your site and it is updated with each page view.
-     * Additionally, this cookie is provided with a unique ID that Google Analytics uses to ensure both the
-     * validity and accessibility of the cookie as an extra security measure.
-     * 
-     * expiration:
-     * 2 years from set/update.
-     * 
-     * format:
-     * __utma=<domainHash>.<sessionId>.<firstTime>.<lastTime>.<currentTime>.<sessionCount>
+    /* Urchin Tracking Module Cookie A.
+       The visitor tracking cookie.
+       
+       This cookie is typically written to the browser upon the first visit to your site from that web browser.
+       If the cookie has been deleted by the browser operator, and the browser subsequently visits your site,
+       a new __utma cookie is written with a different unique ID.
+       
+       This cookie is used to determine unique visitors to your site and it is updated with each page view.
+       Additionally, this cookie is provided with a unique ID that Google Analytics uses to ensure both the
+       validity and accessibility of the cookie as an extra security measure.
+       
+       expiration:
+       2 years from set/update.
+       
+       format:
+       __utma=<domainHash>.<sessionId>.<firstTime>.<lastTime>.<currentTime>.<sessionCount>
      */
     public class UTMA  extends UTMCookie
     {

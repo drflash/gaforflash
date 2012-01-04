@@ -22,21 +22,20 @@ package com.google.analytics.data
 {
     import com.google.analytics.utils.Timespan;
     
-    /**
-     * Urchin Tracking Module Cookie Z.
-     * The campaign tracking cookie.
-     * 
-     * This cookie stores the type of referral used by the visitor to reach your site,
-     * whether via a direct method, a referring link, a website search, or a campaign such as an ad or an email link.
-     * 
-     * It is used to calculate search engine traffic, ad campaigns and page navigation within your own site.
-     * The cookie is updated with each page view to your site.
-     * 
-     * expiration:
-     * 6 months from set/update.
-     * 
-     * format:
-     * __utmz=<domainHash>.<campaignCreation>.<campaignSessions>.<responseCount>.<campaignTracking>
+    /* Urchin Tracking Module Cookie Z.
+       The campaign tracking cookie.
+       
+       This cookie stores the type of referral used by the visitor to reach your site,
+       whether via a direct method, a referring link, a website search, or a campaign such as an ad or an email link.
+       
+       It is used to calculate search engine traffic, ad campaigns and page navigation within your own site.
+       The cookie is updated with each page view to your site.
+       
+       expiration:
+       6 months from set/update.
+       
+       format:
+       __utmz=<domainHash>.<campaignCreation>.<campaignSessions>.<responseCount>.<campaignTracking>
      */
     public class UTMZ extends UTMCookie
     {
