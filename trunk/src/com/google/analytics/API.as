@@ -19,7 +19,7 @@
 
 package com.google.analytics
 {
-    import com.google.analytics.utils.Version;
+    import core.version;
     
     public class API
     {
@@ -30,7 +30,7 @@ package com.google.analytics
         * note:
         * each components share the same code base and so the same version
         */
-        public static var version:Version = new Version();
+        public static var version:core.version = new core.version();
         include "version.properties"
         version.revision = "$Rev$ ".split( " " )[1];
         
