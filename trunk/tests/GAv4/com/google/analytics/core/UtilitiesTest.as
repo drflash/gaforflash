@@ -13,6 +13,7 @@ package com.google.analytics.core
 {
 	import library.ASTUce.framework.TestCase;
     
+    import com.google.analytics.core.generateHash;
     import com.google.analytics.core.validateAccount;
 
     public class UtilitiesTest extends TestCase
@@ -25,11 +26,11 @@ package com.google.analytics.core
         
         public function testGenerateHash():void
         {
-            var h0:int = Utils.generateHash(undefined);
-            var h1:int = Utils.generateHash(null);
-            var h2:int = Utils.generateHash("");
-            var h3:int = Utils.generateHash("http://www.google.com");
-            var h4:int = Utils.generateHash("https://www.google.com");
+            var h0:int = generateHash(undefined);
+            var h1:int = generateHash(null);
+            var h2:int = generateHash("");
+            var h3:int = generateHash("http://www.google.com");
+            var h4:int = generateHash("https://www.google.com");
             
             assertEquals(1, h0);
             assertEquals(1, h1);
