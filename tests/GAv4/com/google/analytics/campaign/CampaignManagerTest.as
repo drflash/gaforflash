@@ -22,7 +22,7 @@ package com.google.analytics.campaign
 	import library.ASTUce.framework.TestCase;
     
     import com.google.analytics.core.Buffer;
-    import com.google.analytics.core.Utils;
+    import com.google.analytics.core.generateHash;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.v4.Configuration;
     
@@ -52,7 +52,7 @@ package com.google.analytics.campaign
             _debug = new DebugConfiguration();
             _config = new Configuration( _debug );
             _buffer = new Buffer( _config, _debug, true );
-            _domainHash = Utils.generateHash( "www.domain.com" );
+            _domainHash = generateHash( "www.domain.com" );
             _referrer0  = "http://www.otherdomain.com";
             _referrer1  = "http://www.google.com?q=search+me";
             _referrer2  = "http://www.otherdomain.com/hello/world";

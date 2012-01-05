@@ -32,6 +32,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.Utils;
     import com.google.analytics.core.generate32bitRandom;
+    import com.google.analytics.core.generateHash;
     import com.google.analytics.core.validateAccount;
     import com.google.analytics.data.X10;
     import com.google.analytics.debug.DebugConfiguration;
@@ -559,7 +560,7 @@ package com.google.analytics.v4
                 hash       += _info.screenWidth+"x"+_info.screenHeight+_info.screenColorDepth;
                 hash       += _info.referrer;
                 
-            return Utils.generateHash(hash);
+            return generateHash( hash );
         }
         
         /**
@@ -604,7 +605,7 @@ package com.google.analytics.v4
             
             if( _config.allowDomainHash )
             {
-                return Utils.generateHash( _config.domainName );
+                return generateHash( _config.domainName );
             }
             else
             {

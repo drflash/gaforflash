@@ -630,7 +630,7 @@ package com.google.analytics.core
                 value += utmz.valueOf();
                 value += utmv.valueOf();
             
-            return Utils.generateHash( value );
+            return generateHash( value );
         }
         
         /**
