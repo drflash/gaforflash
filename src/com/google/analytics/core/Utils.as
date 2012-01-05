@@ -111,14 +111,5 @@ package com.google.analytics.core
             return str;
         }
         
-        /**
-         * Checks if the paramater is a GA account ID.
-         */
-        public static function validateAccount( account:String ):Boolean
-        {
-            var rel:RegExp = /^UA-[0-9]*-[0-9]*$/;
-            return rel.test(account);
-        }
-        
     }
 }

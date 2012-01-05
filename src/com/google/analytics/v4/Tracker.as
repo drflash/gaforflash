@@ -31,6 +31,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.Utils;
+    import com.google.analytics.core.validateAccount;
     import com.google.analytics.data.X10;
     import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.debug.VisualDebugMode;
@@ -109,7 +110,7 @@ package com.google.analytics.v4
             _adSense    = adSense;            
             _ecom       = ecom;
             
-            if( !Utils.validateAccount( account ) )
+            if( !validateAccount( account ) )
             {
                 var msg:String = "Account \"" + account + "\" is not valid." ;
                 _debug.warning( msg );
