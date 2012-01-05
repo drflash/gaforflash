@@ -25,16 +25,6 @@ package com.google.analytics.core
      */
     public class Utils
     {
-  
-        /**
-         * Generates a 32bit random number.
-         * @return 32bit random number.
-         */
-        public static function generate32bitRandom():int
-        {
-            return Math.round( Math.random() * 0x7fffffff ) ;
-        }
-        
         /**
          * Generate hash for input string. This is a global method, since it does not need 
          * to access any instance variables, and it is being used everywhere in the GATC module.

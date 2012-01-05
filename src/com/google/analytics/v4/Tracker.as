@@ -31,6 +31,7 @@ package com.google.analytics.v4
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.Utils;
+    import com.google.analytics.core.generate32bitRandom;
     import com.google.analytics.core.validateAccount;
     import com.google.analytics.data.X10;
     import com.google.analytics.debug.DebugConfiguration;
@@ -570,7 +571,7 @@ package com.google.analytics.v4
          */
         private function _getUniqueSessionId():Number
         {
-            var sessionID:Number = (Utils.generate32bitRandom() ^ _generateUserDataHash()) * 0x7fffffff;
+            var sessionID:Number = (generate32bitRandom() ^ _generateUserDataHash()) * 0x7fffffff;
             _debug.info( "Session ID: " + sessionID, VisualDebugMode.geek );
             return sessionID;
         }

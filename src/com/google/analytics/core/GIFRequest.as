@@ -108,7 +108,7 @@ package com.google.analytics.core
          */
         public function get utmn():String
         {
-            return Utils.generate32bitRandom() as String;
+            return generate32bitRandom() as String;
         }
         
         /**
@@ -447,7 +447,7 @@ package com.google.analytics.core
                     
                     
                     variables.utmwv = utmwv;
-                    variables.utmn  = Utils.generate32bitRandom();
+                    variables.utmn  = utmn;
                     
                     if( _info.domainName != "" )
                     {
