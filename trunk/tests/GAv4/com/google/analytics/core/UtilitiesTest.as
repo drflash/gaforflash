@@ -13,7 +13,7 @@ package com.google.analytics.core
 {
 	import library.ASTUce.framework.TestCase;
     
-    import com.google.analytics.core.Utils;    
+    import com.google.analytics.core.validateAccount;
 
     public class UtilitiesTest extends TestCase
     {
@@ -46,12 +46,12 @@ package com.google.analytics.core
             var id5:String = "UA-12";
             var id6:String = "UA-12-12-1";
             
-            assertEquals( true,  Utils.validateAccount(id1) );
-            assertEquals( false, Utils.validateAccount(id2) );
-            assertEquals( false, Utils.validateAccount(id3) );
-            assertEquals( false, Utils.validateAccount(id4) );
-            assertEquals( false, Utils.validateAccount(id5) );
-            assertEquals( false, Utils.validateAccount(id6) );
+            assertEquals( true,  validateAccount(id1) );
+            assertEquals( false, validateAccount(id2) );
+            assertEquals( false, validateAccount(id3) );
+            assertEquals( false, validateAccount(id4) );
+            assertEquals( false, validateAccount(id5) );
+            assertEquals( false, validateAccount(id6) );
         }
     }
     
