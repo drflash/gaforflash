@@ -30,7 +30,6 @@ package com.google.analytics.v4
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
     import com.google.analytics.core.ServerOperationMode;
-    import com.google.analytics.core.Utils;
     import com.google.analytics.core.generate32bitRandom;
     import com.google.analytics.core.generateHash;
     import com.google.analytics.core.validateAccount;
