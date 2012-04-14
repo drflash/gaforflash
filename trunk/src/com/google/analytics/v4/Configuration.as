@@ -119,16 +119,6 @@ package com.google.analytics.v4
         public var sessionTimeout:Number = Timespan.thirtyminutes;
         
         /**
-        * Default idle timer loop time in seconds (30 seconds).
-        */
-        public var idleLoop:Number    = 30;
-        
-        /**
-        * Default idle timer inactivity time in seconds (1 minute).
-        */
-        public var idleTimeout:Number = 60;
-        
-        /**
          * Upper limit for number of href anchor tags to examine.  
          * <p>If this number is set to -1, then we will examine all the href anchor tags.</p>
          * <p>In other words, a -1 value indicates that there is no upper limit.</p>
