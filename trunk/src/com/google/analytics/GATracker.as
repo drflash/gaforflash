@@ -24,7 +24,6 @@ package com.google.analytics
     import com.google.analytics.core.Ecommerce;
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.GIFRequest;
-    import com.google.analytics.core.IdleTimer;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.TrackerCache;
     import com.google.analytics.core.TrackerMode;
@@ -76,7 +75,6 @@ package com.google.analytics
         private var _jsproxy:JavascriptProxy;
         private var _dom:HTMLDOM;
         private var _adSense:AdSenseGlobals;
-        private var _idleTimer:IdleTimer;
         private var _ecom:Ecommerce;
         
         //object properties
@@ -203,7 +201,6 @@ package com.google.analytics
             
             _buffer     = new Buffer( config, debug, false );
             _gifRequest = new GIFRequest( config, debug, _buffer, _env );
-            _idleTimer  = new IdleTimer( config, debug, _display, _buffer );
             _ecom       = new Ecommerce ( _debug );
                         
             /* note:
