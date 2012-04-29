@@ -22,9 +22,11 @@ package
     import com.google.analytics.AnalyticsTracker;
     import com.google.analytics.GATracker;
     import com.google.analytics.core.TrackerMode;
+    import com.google.analytics.log;
     
     import flash.display.Sprite;
     import flash.events.Event;
+    import flash.system.System;
     
     /* note:
        Basic example
@@ -37,12 +39,29 @@ package
         /* You need to define a valid GA ID here */
         //private const GA_ID:String = "UA-111-222";
         private const GA_ID:String = "UA-94526-19";
+        //private const GA_ID:String = "";
         
         public var tracker:AnalyticsTracker;
         
         public function gaforflash_example()
         {
             super();
+            
+            /* note:
+               here how to override logger configuration
+               see: com.google.analytics.log
+            */
+            var cfg:Object = { sep: " ", //char separator
+                               mode: "clean", // "raw", "clean", "data", "short"
+                               tag: true, //use tag
+                               time: false  //use time
+                             };
+            log.config( cfg );
+            log.level = log.VERBOSE;
+            //log.level = log.DEBUG;
+            //log.level = log.WARN;
+            //log.level = log.ERROR;
+            //log.level = log.SUPPRESS;
             
             if( stage )
             {
@@ -78,6 +97,7 @@ package
             
             /* we configure the tracker */
             tracker.mode = TrackerMode.AS3;
+            tracker.config.enableErrorChecking = true;
             tracker.config.sessionTimeout = 60;
             tracker.config.conversionTimeout = 180;
             
