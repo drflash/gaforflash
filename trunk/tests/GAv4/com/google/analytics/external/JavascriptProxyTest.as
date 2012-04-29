@@ -21,8 +21,6 @@ package com.google.analytics.external
 {
 	import library.ASTUce.framework.TestCase;
     
-    import com.google.analytics.debug.DebugConfiguration;
-    
     /**
     * those tests requires
     * - to be run with a SWF embedded in HTML
@@ -30,7 +28,6 @@ package com.google.analytics.external
     */
     public class JavascriptProxyTest extends TestCase
     {
-        private var _debug:DebugConfiguration;
         private var _proxy:JavascriptProxy;
         
         public function JavascriptProxyTest(name:String="")
@@ -40,10 +37,7 @@ package com.google.analytics.external
         
         public function setUp():void
         {
-            _debug = new DebugConfiguration();
-            _debug.traceOutput = false;
-            
-            _proxy = new JavascriptProxy( _debug );
+            _proxy = new JavascriptProxy();
         }
         
         public function testCall():void

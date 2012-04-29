@@ -19,8 +19,6 @@
 
 package com.google.analytics.external
 {
-    import com.google.analytics.debug.DebugConfiguration;
-    
     public class FakeAdSenseGlobals extends AdSenseGlobals
     {
         private var _gaGlobal:Object;
@@ -32,7 +30,7 @@ package com.google.analytics.external
         public function FakeAdSenseGlobals( gaGlobal:Object = null, dh:String = "",
                                             hid:String = "", sid:String = "", vid:String = "" )
         {
-            super( new DebugConfiguration() );
+            super();
             _gaGlobal = gaGlobal;
             _dh       = dh;
             _hid      = hid;

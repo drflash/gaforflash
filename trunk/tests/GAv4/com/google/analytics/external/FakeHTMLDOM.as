@@ -1,6 +1,5 @@
 ﻿package com.google.analytics.external
 {
-    import com.google.analytics.debug.DebugConfiguration;    
     
     public class FakeHTMLDOM extends HTMLDOM
     {
@@ -22,7 +21,7 @@
                                      referrer:String = "", title:String = "" )
         {
  
-            super( new DebugConfiguration() );
+            super();
             
             _host = host;
             _language = language;

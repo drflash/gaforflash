@@ -19,16 +19,14 @@
 
 package com.google.analytics.campaign
 {
+	import com.google.analytics.core.Buffer;
+	import com.google.analytics.core.generateHash;
+	import com.google.analytics.v4.Configuration;
+	
 	import library.ASTUce.framework.TestCase;
-    
-    import com.google.analytics.core.Buffer;
-    import com.google.analytics.core.generateHash;
-    import com.google.analytics.debug.DebugConfiguration;
-    import com.google.analytics.v4.Configuration;
     
     public class CampaignManagerTest extends TestCase
     {
-        private var _debug:DebugConfiguration;
         private var _config:Configuration;
         private var _buffer:Buffer;
         private var _domainHash:Number;
@@ -49,19 +47,18 @@ package com.google.analytics.campaign
         
         public function setUp():void
         {
-            _debug = new DebugConfiguration();
-            _config = new Configuration( _debug );
-            _buffer = new Buffer( _config, _debug, true );
+            _config = new Configuration();
+            _buffer = new Buffer( _config, true );
             _domainHash = generateHash( "www.domain.com" );
             _referrer0  = "http://www.otherdomain.com";
             _referrer1  = "http://www.google.com?q=search+me";
             _referrer2  = "http://www.otherdomain.com/hello/world";
             _timestamp  = Math.round((new Date()).getTime() / 1000);
             
-            _cm_noref = new CampaignManager( _config, _debug, _buffer, _domainHash, "", _timestamp );
-            _cm0 = new CampaignManager( _config, _debug, _buffer, _domainHash, _referrer0, _timestamp );
-            _cm1 = new CampaignManager( _config, _debug, _buffer, _domainHash, _referrer1, _timestamp );
-            _cm2 = new CampaignManager( _config, _debug, _buffer, _domainHash, _referrer2, _timestamp );
+            _cm_noref = new CampaignManager( _config, _buffer, _domainHash, "", _timestamp );
+            _cm0 = new CampaignManager( _config, _buffer, _domainHash, _referrer0, _timestamp );
+            _cm1 = new CampaignManager( _config, _buffer, _domainHash, _referrer1, _timestamp );
+            _cm2 = new CampaignManager( _config, _buffer, _domainHash, _referrer2, _timestamp );
         }
         
         public function testIsInvalidReferrer():void
