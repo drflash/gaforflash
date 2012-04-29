@@ -19,11 +19,10 @@
 
 package com.google.analytics
 {
-    import buRRRn.ASTUce.framework.TestCase;
-    
-    import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.external.JavascriptProxy;
     import com.google.analytics.v4.Bridge;
+    
+    import library.ASTUce.framework.TestCase;
     
     /**
     * those tests requires
@@ -35,7 +34,6 @@ package com.google.analytics
     public class BridgeTest extends TestCase
     {
         private var _js:JavascriptProxy;
-        private var _debug:DebugConfiguration;
         private var _bridge:Bridge;
         
         public function BridgeTest(name:String="")
@@ -45,10 +43,7 @@ package com.google.analytics
         
         public function setUp():void
         {
-            _debug = new DebugConfiguration();
-            _debug.traceOutput = false;
-            
-            _js = new JavascriptProxy( _debug );
+            _js = new JavascriptProxy();
             
             if( !_js.isAvailable() )
             {
@@ -81,7 +76,7 @@ package com.google.analytics
                 return;
             }
             
-            _bridge = new Bridge( "pT", _debug, _js );
+            _bridge = new Bridge( "pT", _js );
             
             assertTrue( _bridge.hasTrackingAccount( "pT" ) );
             assertEquals( "UA-332-1", _bridge.getAccount() );
@@ -94,7 +89,7 @@ package com.google.analytics
                 return;
             }
             
-            _bridge = new Bridge( "x.y.z", _debug, _js );
+            _bridge = new Bridge( "x.y.z", _js );
             
             assertTrue( _bridge.hasTrackingAccount( "x.y.z" ) );
             assertEquals( "UA-321-0", _bridge.getAccount() );
@@ -109,7 +104,7 @@ package com.google.analytics
             
             try
             {
-                _bridge = new Bridge( "foobar", _debug, _js );
+                _bridge = new Bridge( "foobar", _js );
             }
             catch( e:Error )
             {
@@ -125,7 +120,7 @@ package com.google.analytics
             {
                 return;
             }
-            _bridge = new Bridge( "UA-332-1", _debug, _js );
+            _bridge = new Bridge( "UA-332-1", _js );
             
             assertTrue( _bridge.hasTrackingAccount( "UA-332-1" ) );
             assertEquals( "UA-332-1", _bridge.getAccount() );

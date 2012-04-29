@@ -17,16 +17,13 @@
 
 package com.google.analytics.core
 {
-	import library.ASTUce.framework.TestCase;
-	
-	import com.google.analytics.debug.DebugConfiguration;
 	import com.google.analytics.ecommerce.Transaction;
+	import library.ASTUce.framework.TestCase;
 	
 	public class EcommerceTest extends TestCase 
 	{
 		
 		private var _ecom:Ecommerce;
-		private var _debug:DebugConfiguration;
 		
 		public function EcommerceTest(name:String="")
 		{
@@ -35,8 +32,7 @@ package com.google.analytics.core
 		
 		public function setUp():void
 		{
-			_debug = new DebugConfiguration();
-			_ecom = new Ecommerce( _debug );
+			_ecom = new Ecommerce();
 		}
 		
 		public function testAddTransaction():void

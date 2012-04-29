@@ -19,17 +19,15 @@
 
 package com.google.analytics.utils
 {
+	import com.google.analytics.external.HTMLDOM;
+	
 	import library.ASTUce.framework.TestCase;
-    
-    import com.google.analytics.debug.DebugConfiguration;
-    import com.google.analytics.external.HTMLDOM;
     
     //import com.google.analytics.external.FakeHTMLDOM;
     //import com.google.analytics.external.HTMLDOM;
     
     public class EnvironmentTest extends TestCase
     {
-        private var _debug:DebugConfiguration;
         private var _dom:HTMLDOM;
         
         public function EnvironmentTest( name:String="" )
@@ -39,15 +37,12 @@ package com.google.analytics.utils
         
         public function setUp():void
         {
-            _debug = new DebugConfiguration();
-            _debug.traceOutput = false;
-            
-            _dom = new HTMLDOM( _debug );
+            _dom = new HTMLDOM();
         }
         
         public function testBasicEmpty():void
         {
-            var env_empty:Environment = new Environment("","","",null,_dom);
+            var env_empty:Environment = new Environment("","","",_dom);
             
             assertEquals( "", env_empty.protocol );
             assertEquals( "", env_empty.domainName );
@@ -55,7 +50,7 @@ package com.google.analytics.utils
         
         public function testBasicLocal():void
         {
-            var env_local:Environment = new Environment( "file://someFolder/someFile.swf","","",null,_dom);
+            var env_local:Environment = new Environment( "file://someFolder/someFile.swf","","",_dom);
             
             assertEquals( "file", env_local.protocol );
             assertEquals( "localhost", env_local.domainName );
@@ -63,7 +58,7 @@ package com.google.analytics.utils
         
         public function testBasicHTTP():void
         {
-            var env_http:Environment = new Environment( "http://www.domain.com/file.swf","","",null,_dom);
+            var env_http:Environment = new Environment( "http://www.domain.com/file.swf","","",_dom);
             
             assertEquals( "http", env_http.protocol );
             assertEquals( "www.domain.com", env_http.domainName );
@@ -71,7 +66,7 @@ package com.google.analytics.utils
         
         public function testBasicHTTPS():void
         {
-            var env_https:Environment = new Environment( "https://www.domain.com/secure/file.swf","","",null,_dom);
+            var env_https:Environment = new Environment( "https://www.domain.com/secure/file.swf","","",_dom);
             
             assertEquals( "https", env_https.protocol );
             assertEquals( "www.domain.com", env_https.domainName );
