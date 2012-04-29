@@ -20,10 +20,9 @@
 
 package com.google.analytics
 {
-    import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.v4.Configuration;
     import com.google.analytics.v4.GoogleAnalyticsAPI;
-    
+      
     import flash.events.IEventDispatcher;
     
     /**
@@ -35,32 +34,22 @@ package com.google.analytics
         /**
          * Indicates the account value of the tracking.
          */
-        function get account():String ;
+        function get account():String;
         
         /**
          * @private
          */
-        function set account( value:String ):void ;
+        function set account( value:String ):void;
         
         /**
          * Determinates the Configuration object of the tracker.
          */
-        function get config():Configuration ;
+        function get config():Configuration;
         
         /**
          * @private
          */
         function set config( value:Configuration ):void;
-        
-        /**
-         * Determinates the DebugConfiguration of the tracker. 
-         */
-        function get debug():DebugConfiguration ;
-        
-        /**
-         * @private
-         */
-        function set debug( value:DebugConfiguration ):void;
         
         /**
          * Indicates the mode of the tracking "AS3" or "Bridge".
@@ -71,22 +60,23 @@ package com.google.analytics
         /**
          * @private
          */
-        function set mode( value:String ):void ;
+        function set mode( value:String ):void;
         
         /**
-         * Indicates if the tracker use a visual debug.
+         * Returns the list of requests made during the session.
+         * @see com.google.analytics.core.GIFRequest
          */
-        function get visualDebug():Boolean ;
-        
-        /**
-         * @private
-         */
-        function set visualDebug( value:Boolean ):void ;
+        function get requests():Array;
         
         /**
         * Indicates if the tracker is ready.
         */
         function isReady():Boolean;
+        
+        /**
+        * Remove the requests stored during the session.
+        */
+        function clearRequests():void;
         
     }
 }

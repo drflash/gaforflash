@@ -20,7 +20,9 @@
 
 package com.google.analytics.external
 {
-    import com.google.analytics.debug.DebugConfiguration;
+    import com.google.analytics.log;
+    
+    import core.Logger;
     
     import flash.external.ExternalInterface;
     import flash.system.Capabilities;
@@ -30,11 +32,7 @@ package com.google.analytics.external
      */
     public class JavascriptProxy
     {
-        
-        /**
-         * @private
-         */
-        private var _debug:DebugConfiguration;
+        private var _log:Logger;
         
         /**
          * @private
@@ -164,11 +162,11 @@ package com.google.analytics.external
         
         /**
          * Creates a new JavascriptProxy instance.
-         * @param debug The DebugConfiguration reference of this object.
          */
-        public function JavascriptProxy( debug:DebugConfiguration )
+        public function JavascriptProxy()
         {
-            _debug = debug;
+            LOG::P{ _log = log.tag( "JavascriptProxy" ); }
+            LOG::P{ _log.v( "constructor()" ); }
         }
         
         /**
@@ -176,11 +174,13 @@ package com.google.analytics.external
          */
         public function call( functionName:String, ...args:Array ):*
         {
+            LOG::P{ _log.v( "call()" ); }
+            
             if( isAvailable() )
             {
                 try
                 {
-                    if( _debug.javascript && _debug.verbose )
+                    LOG::P
                     {
                         var output:String = "";
                             output  = "Flash->JS: "+ functionName;
@@ -190,7 +190,8 @@ package com.google.analytics.external
                             output += args.join(",");
                         } 
                         output += " )";
-                        _debug.info( output );
+                        
+                        _log.i( output );
                     }
                     
                     args.unshift( functionName );
@@ -198,17 +199,11 @@ package com.google.analytics.external
                 }
                 catch( e:SecurityError )
                 {
-                    if( _debug.javascript )
-                    {
-                        _debug.warning( "ExternalInterface is not allowed.\nEnsure that allowScriptAccess is set to \"always\" in the Flash embed HTML." );
-                    }
+                    LOG::P{ _log.w( "ExternalInterface is not allowed.\nEnsure that allowScriptAccess is set to \"always\" in the Flash embed HTML." ); }
                 }
                 catch( e:Error )
                 {
-                    if( _debug.javascript )
-                    {
-                        _debug.warning( "ExternalInterface failed to make the call\nreason: " + e.message );
-                    }
+                    LOG::P{ _log.w( "ExternalInterface failed to make the call\nreason: " + e.message ); }
                 }
             }
             return null;
@@ -219,6 +214,8 @@ package com.google.analytics.external
          */
         public function executeBlock( data:String ):void
         {
+            LOG::P{ _log.v( "executeBlock( " + data + " )" ); }
+            
             if( isAvailable() )
             {
                 try
@@ -227,17 +224,11 @@ package com.google.analytics.external
                 }
                 catch( e:SecurityError )
                 {
-                    if( _debug.javascript )
-                    {
-                        _debug.warning( "ExternalInterface is not allowed.\nEnsure that allowScriptAccess is set to \"always\" in the Flash embed HTML." );
-                    }
+                    LOG::P{ _log.w( "ExternalInterface is not allowed.\nEnsure that allowScriptAccess is set to \"always\" in the Flash embed HTML." ); }
                 }
                 catch( e:Error )
                 {
-                    if( _debug.javascript )
-                    {
-                        _debug.warning( "ExternalInterface failed to make the call\nreason: " + e.message );
-                    }
+                    LOG::P{ _log.w( "ExternalInterface failed to make the call\nreason: " + e.message ); }
                 }
             }
         }        
@@ -248,6 +239,8 @@ package com.google.analytics.external
          */        
         public function getProperty( name:String ):*
         {
+            LOG::P{ _log.v( "getProperty( " + name + " )" ); }
+            
             /* note:
                we use a little trick here 
                we can not diretly get a property from JS
@@ -264,6 +257,8 @@ package com.google.analytics.external
          */
         public function getPropertyString( name:String ):String
         {
+            LOG::P{ _log.v( "getPropertyString( " + name + " )" ); }
+            
             return call( name + ".toString" ); 
         }
         
@@ -272,6 +267,8 @@ package com.google.analytics.external
          */
         public function hasProperty( path:String ):Boolean
         {
+            LOG::P{ _log.v( "hasProperty( " + path + " )" ); }
+            
             return call( hasProperty_js, path ); 
         }        
         
@@ -280,14 +277,17 @@ package com.google.analytics.external
          */
         public function isAvailable():Boolean
         {
+            LOG::P{ _log.v( "isAvailable()" ); }
+            
             var available:Boolean = ExternalInterface.available;
+            LOG::P{ _log.i( "ExternalInterface.available = " + available ); }
             
             if( available && (Capabilities.playerType == "External") )
             {
                 /* note:
                    ExternalInterface is available when testing
                    from the Flash IDE (publish)
-                   to allow testing loally we desactivate it
+                   to allow testing locally we desactivate it
                 */
                 available = false;
             }
@@ -295,9 +295,9 @@ package com.google.analytics.external
             /* note:
                we want to notify only once that ExternalInterface is not available.
             */
-            if( !available && _debug.javascript && _notAvailableWarning )
+            if( !available && _notAvailableWarning )
             {
-                _debug.warning( "ExternalInterface is not available." );
+                LOG::P{ _log.w( "ExternalInterface is not available." ); }
                 _notAvailableWarning = false;
             }
             
@@ -309,6 +309,8 @@ package com.google.analytics.external
          */
         public function setProperty( path:String, value:* ):void
         {
+            LOG::P{ _log.v( "setProperty( " + [path,value].join( ", " ) + " )" ); }
+            
             call( setProperty_js, path, value ); 
         }
         
@@ -317,6 +319,8 @@ package com.google.analytics.external
          */
         public function setPropertyByReference( path:String, target:String ):void
         {
+            LOG::P{ _log.v( "setPropertyByReference( " + [path,target].join( ", " ) + " )" ); }
+            
             call( setPropertyRef_js, path, target );
         }
         

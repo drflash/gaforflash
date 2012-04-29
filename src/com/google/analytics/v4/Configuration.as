@@ -25,8 +25,10 @@ package com.google.analytics.v4
     import com.google.analytics.core.DomainNameMode;
     import com.google.analytics.core.Organic;
     import com.google.analytics.core.ServerOperationMode;
-    import com.google.analytics.debug.DebugConfiguration;
+    import com.google.analytics.log;
     import com.google.analytics.utils.Timespan;
+    
+    import core.Logger;
     
     /**
      * Google Analytic Tracker Code (GATC)'s configuration / state component.
@@ -34,8 +36,7 @@ package com.google.analytics.v4
      */
     public class Configuration
     {
-        
-        private var _debug:DebugConfiguration;
+        private var _log:Logger;
         
         private var _version:String = "4.3as";
         
@@ -210,13 +211,23 @@ package com.google.analytics.v4
         public var allowLocalTracking:Boolean = true;
         
         /**
+         * Specifies whether errors encountered by the library are reported to the application.
+         * 
+         * When enableErrorChecking is <code>true</code>, the default, methods can throw errors.
+         * 
+         * When enableErrorChecking is <code>false</code> the errors are not reported.
+         */
+        public var enableErrorChecking:Boolean = true;
+        
+        /**
          * Creates a new Configuration instance.
          */
-        public function Configuration( debug:DebugConfiguration = null )
+        public function Configuration()
         {
-            _debug = debug;
+            LOG::P{ _log = log.tag( "Configuration" ); }
+            LOG::P{ _log.v( "constructor()" ); }
             
-            _domain = new Domain( DomainNameMode.auto, "", _debug );
+            _domain = new Domain( DomainNameMode.auto, "" );
             serverMode = ServerOperationMode.remote;
             
             _initOrganicSources();
@@ -227,6 +238,8 @@ package com.google.analytics.v4
          */
         private function _initOrganicSources():void
         {
+            LOG::P{ _log.v( "_initOrganicSources()" ); }
+            
             addOrganicSource( google,            googleSearchParam );
             addOrganicSource( "yahoo",          "p"                );
             addOrganicSource( "msn",            "q"                );
@@ -375,16 +388,15 @@ package com.google.analytics.v4
          */
         public function addOrganicSource(engine:String, keyword:String):void
         {
+            LOG::P{ _log.v( "addOrganicSource( " + [engine,keyword].join( ", " ) + " )" ); }
+            
             try
             {
                 _organic.addSource( engine, keyword );
             }
             catch( e:Error )
             {
-                if( _debug && _debug.active )
-                {
-                    _debug.warning( e.message );
-                }
+                LOG::P{ _log.w( e.message ); }
             }
         }
         

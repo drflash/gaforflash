@@ -20,7 +20,10 @@
 
 package com.google.analytics.campaign
 {
+    import com.google.analytics.log;
     import com.google.analytics.utils.Variables;
+    
+    import core.Logger;
     
     /* Campaign tracker object.
        Contains all the data associated with a campaign.
@@ -52,19 +55,8 @@ package com.google.analytics.campaign
      */
     public class CampaignTracker
     {
-        
-        /**
-         * @private
-         */ 
-        private function _addIfNotEmpty( arr:Array, field:String, value:String ):void
-        {
-            if( value != "" )
-            {
-                value = value.split( "+" ).join( "%20" );
-                value = value.split( " " ).join( "%20" );
-                arr.push( field + value );
-            }
-        }
+        /** @private */
+        private var _log:Logger;
         
         /**
          * The campaign code or id can be used to refer to a campaign lookup table,
@@ -140,6 +132,9 @@ package com.google.analytics.campaign
         public function CampaignTracker( id:String = "", source:String = "", clickId:String = "",
                                          name:String = "", medium:String = "", term:String = "", content:String = "" )
         {
+            LOG::P{ _log = log.tag( "CampaignTracker" ); }
+            LOG::P{ _log.v( "constructor()" ); }
+            
             this.id      = id;
             this.source  = source;
             this.clickId = clickId;
@@ -150,17 +145,32 @@ package com.google.analytics.campaign
         }
         
         /**
+         * @private
+         */ 
+        private function _addIfNotEmpty( arr:Array, field:String, value:String ):void
+        {
+            LOG::P{ _log.v( "_addIfNotEmpty()" ); }
+            
+            if( value != "" )
+            {
+                value = value.split( "+" ).join( "%20" );
+                value = value.split( " " ).join( "%20" );
+                arr.push( field + value );
+            }
+        }
+        
+        /**
          * Returns a flag indicating whether this tracker object is valid.
          * A tracker object is considered to be valid if and only if one of id, source or clickId is present.
          */
         public function isValid():Boolean
         {
-            if( (id != "") ||
-                (source != "") ||
-                (clickId != "") )
-                {
-                    return true;
-                }
+            LOG::P{ _log.v( "isValid()" ); }
+            
+            if( (id != "") || (source != "") || (clickId != "") )
+            {
+                return true;
+            }
             
             return false;
         }
@@ -173,6 +183,8 @@ package com.google.analytics.campaign
          */
         public function fromTrackerString( tracker:String ):void
         {
+            LOG::P{ _log.v( "fromTrackerString()" ); }
+            
             /* note:
                we are basically deserializing the utmz.campaignTracking property
             */
@@ -234,6 +246,8 @@ package com.google.analytics.campaign
          */
         public function toTrackerString():String
         {
+            LOG::P{ _log.v( "toTrackerString()" ); }
+            
             var data:Array = [];
                 
                 /* for each value, append key=value if and only if

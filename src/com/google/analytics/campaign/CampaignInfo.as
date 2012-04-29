@@ -20,22 +20,23 @@
 
 package com.google.analytics.campaign
 {
-    import com.google.analytics.utils.Variables;    
+    import com.google.analytics.log;
+    import com.google.analytics.utils.Variables;
+    
+    import core.Logger;
 
     /**
      * The CampaingInfo class.
      */
     public class CampaignInfo
     {
+        /** @private */
+        private var _log:Logger;
         
-        /**
-         * @private
-         */
+        /** @private */
         private var _empty:Boolean;
         
-        /**
-         * @private
-         */
+        /** @private */
         private var _new:Boolean;
         
         /**
@@ -45,6 +46,9 @@ package com.google.analytics.campaign
          */
         public function CampaignInfo( empty:Boolean = true, newCampaign:Boolean = false )
         {
+            LOG::P{ _log = log.tag( "CampaignInfo" ); }
+            LOG::P{ _log.v( "constructor()" ); }
+            
             _empty = empty;
             _new   = newCampaign;
         }
@@ -54,7 +58,7 @@ package com.google.analytics.campaign
          */
         public function get utmcn():String
         {
-            return "1";
+            return isNew() ? "1": "0";
         }
         
         /**
@@ -62,7 +66,7 @@ package com.google.analytics.campaign
          */
         public function get utmcr():String
         {
-            return "1";
+            return isNew() ? "0": "1";
         }
         
         /**
@@ -70,6 +74,8 @@ package com.google.analytics.campaign
          */
         public function isEmpty():Boolean
         {
+            LOG::P{ _log.v( "isEmpty()" ); }
+            
             return _empty;
         }
         
@@ -78,23 +84,33 @@ package com.google.analytics.campaign
          */
         public function isNew():Boolean
         {
+            LOG::P{ _log.v( "isNew()" ); }
+            
             return _new;
         }
         
+        /**
+         * Returns a Variables object representation.
+         * @return a Variables object representation.
+         */
         public function toVariables():Variables
         {
+            LOG::P{ _log.v( "toVariables()" ); }
+            
             var variables:Variables = new Variables();
                 variables.URIencode = true;
                 
-                if( !isEmpty() && isNew() )
+            if( !isEmpty() )
+            {
+                if( isNew() )
                 {
                     variables.utmcn = utmcn;
                 }
-                
-                if( !isEmpty() && !isNew() )
+                else
                 {
                     variables.utmcr = utmcr;
                 }
+            }
             
             return variables;
         }
@@ -105,6 +121,8 @@ package com.google.analytics.campaign
          */
         public function toURLString():String
         {
+            LOG::P{ _log.v( "toURLString()" ); }
+            
             var v:Variables = toVariables();
             return v.toString();
         }

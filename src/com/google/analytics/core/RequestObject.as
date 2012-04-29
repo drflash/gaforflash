@@ -39,7 +39,6 @@ package com.google.analytics.core
         public function RequestObject( request:URLRequest )
         {
             start = getTimer();
-            
             this.request = request;
         }
         
@@ -48,11 +47,7 @@ package com.google.analytics.core
          */
         public function get duration():int
         {
-            if( !hasCompleted() )
-            {
-                return 0;
-            }
-            
+            if( !hasCompleted() ) { return 0; }
             return end - start;
         }
         

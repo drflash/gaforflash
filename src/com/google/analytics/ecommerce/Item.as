@@ -17,11 +17,15 @@
  
 package com.google.analytics.ecommerce
 {
+	import com.google.analytics.log;
 	import com.google.analytics.utils.Variables;
+	
+	import core.Logger;
 	
 	public class Item
 	{
-		
+		private var _log:Logger;
+        
 		private var _id:String;
 		private var _sku:String;
 		private var _name:String;
@@ -43,21 +47,49 @@ package com.google.analytics.ecommerce
  		*
  		* @constructor
  		*/
-		public function Item(id:String, 
-							 sku:String,
-							 name:String,
-							 category:String,
-							 price:String,
-							 quantity:String)
-		{		
-			this._id = id;
-			this._sku = sku;
-			this._name = name;
-			this._category = category;
-			this._price = price;
-			this._quantity = quantity;
+		public function Item( id:String, sku:String, name:String, category:String, price:String, quantity:String )
+		{
+            LOG::P{ _log = log.tag( "Item" ); }
+            LOG::P{ _log.v( "constructor()" ); }
+            
+			_id       = id;
+			_sku      = sku;
+			_name     = name;
+			_category = category;
+			_price    = price;
+			_quantity = quantity;
 		}	
 		
+        /** Id of transaction this item belongs to */
+		public function get id():String { return _id; }
+        /** @private */
+        public function set id( value:String ):void { _id = value; }
+        
+        /** SKU code for item */
+		public function get sku():String { return _sku; }
+        /** @private */
+        public function set sku( value:String ):void { _sku = value; }
+        
+        /** Product name */
+		public function get name():String { return _name; }
+        /** @private */
+        public function set name( value:String ):void { _name = value; }
+        
+        /** Product category */
+		public function get category():String { return _category; }
+        /** @private */
+        public function set category( value:String ):void { _category = value; }
+        
+        /** Product price */
+		public function get price():String { return _price; }
+        /** @private */
+        public function set price( value:String ):void { _price = value; }
+        
+        /** Purchase quantity */
+		public function get quantity():String { return _quantity; }
+        /** @private */
+		public function set quantity( value:String ):void { _quantity = value; }
+        
 		/**
 		 * Converts this items object to gif parameters.
 		 *
@@ -68,82 +100,22 @@ package com.google.analytics.ecommerce
 		 */		
 		public function toGifParams():Variables
 		{
+            LOG::P{ _log.v( "toGifParams()" ); }
+            
 			var vars:Variables = new Variables();
-			vars.URIencode = true;
-			vars.post = [ "utmt", "utmtid", "utmipc", "utmipn", "utmiva", "utmipr", "utmiqt" ];
+			    vars.URIencode = true;
+			    vars.post = [ "utmt", "utmtid", "utmipc", "utmipn", "utmiva", "utmipr", "utmiqt" ];
 			
-			vars.utmt = "item";
-			vars.utmtid = _id;
-			vars.utmipc = _sku;
-			vars.utmipn = _name;
-			vars.utmiva = _category;
-			vars.utmipr = _price;
-			vars.utmiqt = _quantity;	 
+			    vars.utmt   = "item";
+			    vars.utmtid = _id;
+			    vars.utmipc = _sku;
+			    vars.utmipn = _name;
+			    vars.utmiva = _category;
+			    vars.utmipr = _price;
+			    vars.utmiqt = _quantity;	 
 			 
-			return vars; 
-			 
-	/*		  return "&" + [
-		      "utmt=item",
-		      "utmtid=" + encodeURIComponent(_id),
-		      "utmipc=" + encodeURIComponent(_sku),
-		      "utmipn=" + encodeURIComponent(_name),
-		      "utmiva=" + encodeURIComponent(_category),
-      		  "utmipr=" + encodeURIComponent(_price),
-      	      "utmiqt=" + encodeURIComponent(_quantity)
-  			  ].join("&");
-	*/
+			return vars;
 		}
-		
-		//getter methods
-		public function get id():String
-		{
-			return _id;
-		}
-		public function get sku():String
-		{
-			return _sku;
-		}		
-		public function get name():String
-		{
-			return _name;
-		}		
-		public function get category():String
-		{
-			return _category;
-		}		
-		public function get price():String
-		{
-			return _price;
-		}		
-		public function get quantity():String
-		{
-			return _quantity;
-		}
-		
-		//setter methods
-		public function set id( value:String ):void
-		{
-			_id = value; 
-		}
-		public function set sku( value:String ):void
-		{
-			_sku = value; 
-		}		
-		public function set name( value:String ):void
-		{
-			_name = value; 
-		}
-		public function set category( value:String ):void
-		{
-			_category = value; 
-		}
-		public function set price( value:String ):void
-		{
-			_price = value; 
-		}
-		public function set quantity( value:String ):void
-		{
-			_quantity = value; 
-		}				
+        
 	}
 }				 

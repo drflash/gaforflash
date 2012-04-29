@@ -28,8 +28,6 @@ package com.google.analytics
     import com.google.analytics.core.TrackerCache;
     import com.google.analytics.core.TrackerMode;
     import com.google.analytics.core.ga_internal;
-    import com.google.analytics.debug.DebugConfiguration;
-    import com.google.analytics.debug.Layout;
     import com.google.analytics.events.AnalyticsEvent;
     import com.google.analytics.external.AdSenseGlobals;
     import com.google.analytics.external.HTMLDOM;
@@ -40,6 +38,7 @@ package com.google.analytics
     import com.google.analytics.v4.GoogleAnalyticsAPI;
     import com.google.analytics.v4.Tracker;
     
+    import core.Logger;
     import core.version;
     
     import flash.display.DisplayObject;
@@ -60,6 +59,8 @@ package com.google.analytics
      */
     public class GATracker implements AnalyticsTracker
     {
+        private var _log:Logger;
+        
         private var _ready:Boolean = false;
         
         private var _display:DisplayObject;
@@ -68,7 +69,6 @@ package com.google.analytics
         
         //factory
         private var _config:Configuration;
-        private var _debug:DebugConfiguration;
         private var _env:Environment;
         private var _buffer:Buffer;
         private var _gifRequest:GIFRequest;
@@ -80,7 +80,6 @@ package com.google.analytics
         //object properties
         private var _account:String;
         private var _mode:String;
-        private var _visualDebug:Boolean;
 
         /**
          * Indicates if the tracker is automatically build.
@@ -98,25 +97,21 @@ package com.google.analytics
          * being placed in a display list.</p>
          */
         public function GATracker( display:DisplayObject, account:String,
-                                   mode:String = "AS3", visualDebug:Boolean = false,
-                                   config:Configuration = null, debug:DebugConfiguration = null )
+                                   mode:String = "AS3",  config:Configuration = null )
         {
+            LOG::P{ _log = log.tag( "GATracker" ); }
+            LOG::P{ _log.v( "constructor()" ); }
+            
             _display = display;
             _eventDispatcher = new EventDispatcher( this ) ;
             _tracker = new TrackerCache();
             
             this.account     = account;
             this.mode        = mode;
-            this.visualDebug = visualDebug;
-            
-            if( !debug )
-            {
-                this.debug = new DebugConfiguration();
-            }
             
             if( !config )
             {
-                this.config = new Configuration( debug );
+                this.config = new Configuration();
             }
             else
             {
@@ -135,13 +130,9 @@ package com.google.analytics
          */
         private function _factory():void
         {
-            _jsproxy = new JavascriptProxy( debug );
+            LOG::P{ _log.v( "_factory()" ); }
             
-            if( visualDebug )
-            {
-                debug.layout = new Layout( debug, _display );
-                debug.active = visualDebug;
-            }
+            _jsproxy = new JavascriptProxy();
             
             var activeTracker:GoogleAnalyticsAPI;
             var cache:TrackerCache = _tracker as TrackerCache;
@@ -181,7 +172,8 @@ package com.google.analytics
         */
         private function _trackerFactory():GoogleAnalyticsAPI
         {
-            debug.info( "GATracker (AS3) v" + version +"\naccount: " + account );
+            LOG::P{ _log.v( "_trackerFactory()" ); }
+            LOG::P{ _log.i( "GATracker (AS3) v" + version +" account: " + account ); }
             
             /* note:
                for unit testing and to avoid 2 different branches AIR/Flash
@@ -192,17 +184,17 @@ package com.google.analytics
             */
             
             
-            _adSense    = new AdSenseGlobals( debug );
+            _adSense    = new AdSenseGlobals();
             
-            _dom        = new HTMLDOM( debug );
+            _dom        = new HTMLDOM();
             _dom.cacheProperties();
             
-            _env        = new Environment( "", "", "", debug, _dom );
+            _env        = new Environment( "", "", "", _dom );
             
-            _buffer     = new Buffer( config, debug, false );
-            _gifRequest = new GIFRequest( config, debug, _buffer, _env );
-            _ecom       = new Ecommerce ( _debug );
-                        
+            _buffer     = new Buffer( config, false );
+            _gifRequest = new GIFRequest( config, _buffer, _env );
+            _ecom       = new Ecommerce();
+            
             /* note:
                To be able to obtain the URL of the main SWF containing the GA API
                we need to be able to access the stage property of a DisplayObject,
@@ -214,7 +206,7 @@ package com.google.analytics
             use namespace ga_internal;
             _env.url = _display.stage.loaderInfo.url;
             
-            return new Tracker( account, config, debug, _env, _buffer, _gifRequest, _adSense, _ecom );
+            return new Tracker( account, config, _env, _buffer, _gifRequest, _adSense, _ecom );
         }
         
         /**
@@ -225,66 +217,28 @@ package com.google.analytics
         */
         private function _bridgeFactory():GoogleAnalyticsAPI
         {
-            debug.info( "GATracker (Bridge) v" + version +"\naccount: " + account );
-            return new Bridge( account, _debug, _jsproxy );
+            LOG::P{ _log.v( "_bridgeFactory()" ); }
+            LOG::P{ _log.i( "GATracker (Bridge) v" + version +" account: " + account ); }
+            
+            return new Bridge( account, config, _jsproxy );
         }
         
         
         /**
          * Indicates the account value of the tracking.
          */
-        public function get account():String
-        {
-            return _account;
-        }
+        public function get account():String { return _account; }
         
-        /**
-         * @private
-         */
-        public function set account( value:String ):void
-        {
-            _account = value;
-        }
+        /** @private */
+        public function set account( value:String ):void { _account = value; }
         
         /**
          * Determinates the Configuration object of the tracker.
          */        
-        public function get config():Configuration
-        {
-            return _config;
-        }
+        public function get config():Configuration { return _config; }
         
-        /**
-         * @private
-         */        
-        public function set config( value:Configuration ):void
-        {
-            _config = value;
-        }
-
-        /**
-         * Determinates the DebugConfiguration of the tracker. 
-         */        
-        public function get debug():DebugConfiguration
-        {
-            return _debug;
-        }
-        
-        /**
-         * @private
-         */        
-        public function set debug( value:DebugConfiguration ):void
-        {
-            _debug = value;
-        }        
-
-        /**
-         * Indicates if the tracker is ready to use.
-         */
-        public function isReady():Boolean
-        {
-            return _ready;
-        }
+        /** @private */        
+        public function set config( value:Configuration ):void { _config = value; }
         
         /**
          * Indicates the mode of the tracking "AS3" or "Bridge".
@@ -303,27 +257,45 @@ package com.google.analytics
         }
         
         /**
-         * Indicates if the tracker use a visual debug.
-         */        
-        public function get visualDebug():Boolean
+         * Returns the list of requests made during the session.
+         * @see com.google.analytics.core.GIFRequest
+         */
+        public function get requests():Array
         {
-            return _visualDebug;
+            if( mode == TrackerMode.AS3 )
+            {
+                return _gifRequest.requests;
+            }
+            
+            return [];
         }
         
         /**
-         * @private
-         */        
-        public function set visualDebug( value:Boolean ):void
+         * Indicates if the tracker is ready to use.
+         */
+        public function isReady():Boolean
         {
-            _visualDebug = value;
+            return _ready;
         }
         
-
+        /**
+        * Remove the requests stored during the session.
+        */
+        public function clearRequests():void
+        {
+            if( mode == TrackerMode.AS3 )
+            {
+                _gifRequest.clearRequests();
+            }
+        }
+        
         /**
          * Builds the tracker.
          */
         public function build():void
         {
+            LOG::P{ _log.v( "build()" ); }
+            
             if( !isReady() )
             {
                 _factory();
@@ -343,6 +315,8 @@ package com.google.analytics
         public function addEventListener( type:String, listener:Function, useCapture:Boolean = false, priority:int = 0,
                                           useWeakReference:Boolean = false):void
         {
+            LOG::P{ _log.v( "addEventListener()" ); }
+            
             _eventDispatcher.addEventListener( type, listener, useCapture, priority, useWeakReference );
         } 
         
@@ -353,6 +327,8 @@ package com.google.analytics
          */        
         public function dispatchEvent( event:Event ):Boolean
         {
+            LOG::P{ _log.v( "dispatchEvent( " + event + " )" ); }
+            
             return _eventDispatcher.dispatchEvent( event );
         }
         
@@ -362,6 +338,8 @@ package com.google.analytics
          */         
         public function hasEventListener( type:String ):Boolean
         {
+            LOG::P{ _log.v( "hasEventListener()" ); }
+            
             return _eventDispatcher.hasEventListener( type );
         }
         
@@ -374,6 +352,8 @@ package com.google.analytics
          */        
         public function removeEventListener( type:String, listener:Function, useCapture:Boolean = false ):void
         {
+            LOG::P{ _log.v( "removeEventListener()" ); }
+            
             _eventDispatcher.removeEventListener( type, listener, useCapture );
         }
         
@@ -384,6 +364,8 @@ package com.google.analytics
          */        
         public function willTrigger( type:String ):Boolean
         {
+            LOG::P{ _log.v( "willTrigger( " + type + " ) = " + (_eventDispatcher.willTrigger( type )) ); }
+            
             return _eventDispatcher.willTrigger( type );
         }        
         
