@@ -100,7 +100,7 @@
             target-player="${local.flashplayerversion}"
         >
             <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
-            <load-config filename="${basedir}/build/config.xml"/>
+            <load-config filename="${basedir}/build/config-debug.xml"/>
             <namespace uri="${project.namespace}" manifest="${basedir}/${project.manifest}" />
             <include-namespaces uri="${project.namespace}" />
             <debug>true</debug>
