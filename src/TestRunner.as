@@ -19,10 +19,12 @@
 
 package
 {
-    import library.ASTUce.Runner;
-    
     import com.google.analytics.AllTests;
+    import com.google.analytics.log;
+    
     import flash.display.Sprite;
+    
+    import library.ASTUce.Runner;
     
     /* note:
        Run the Google Analytics unit tests
@@ -33,6 +35,9 @@ package
     {
         public function TestRunner()
         {
+            //we don;t want any logs when running the unit tests
+            log.level = log.SUPPRESS;
+            
             Runner.main( com.google.analytics.AllTests.suite( ) );
         }
         
