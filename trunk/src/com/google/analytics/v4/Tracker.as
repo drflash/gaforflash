@@ -34,15 +34,15 @@ package com.google.analytics.v4
     import com.google.analytics.core.generateHash;
     import com.google.analytics.core.validateAccount;
     import com.google.analytics.data.X10;
-    import com.google.analytics.debug.DebugConfiguration;
-    import com.google.analytics.debug.VisualDebugMode;
     import com.google.analytics.ecommerce.Transaction;
     import com.google.analytics.external.AdSenseGlobals;
+    import com.google.analytics.log;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Variables;
     import com.google.analytics.utils.getDomainFromHost;
     import com.google.analytics.utils.getSubDomainFromHost;
     
+    import core.Logger;
     import core.uri;
     
     import flash.net.URLRequest;
@@ -56,6 +56,8 @@ package com.google.analytics.v4
     {
         /* DON'T CHANGE THE ORDER OF THE VARS */
         
+        private var _log:Logger;
+        
         //params
         private var _account:String;
         private var _domainHash:Number;
@@ -67,7 +69,6 @@ package com.google.analytics.v4
         
         //factory
         private var _config:Configuration;
-        private var _debug:DebugConfiguration;
         private var _info:Environment;
         private var _buffer:Buffer;
         private var _gifRequest:GIFRequest;
@@ -91,20 +92,23 @@ package com.google.analytics.v4
         /** 
          * Creates a new Tracker instance.
          * @param account Urchin Account to record metrics in.
+         * @param config The configuration.
          * @param info The LocalInfo reference of this tracker.
          * @param buffer The Buffer reference of this tracker.
          * @param gifRequest The GifRequest of this tracker.
          * @param adSense The optional adsense global object.
-         * @param layout The optional Layout object.
+         * @param ecom The Ecommerce object.
          */
         public function Tracker( account:String,
-                                 config:Configuration, debug:DebugConfiguration,
-                                 info:Environment, buffer:Buffer, gifRequest:GIFRequest, adSense:AdSenseGlobals, ecom:Ecommerce )
+                                 config:Configuration, info:Environment, buffer:Buffer,
+                                 gifRequest:GIFRequest, adSense:AdSenseGlobals, ecom:Ecommerce )
         {
+            LOG::P{ _log = log.tag( "Tracker" ); }
+            LOG::P{ _log.v( "constructor()" ); }
+            
             _account    = account;
             
             _config     = config;
-            _debug      = debug;
             _info       = info;
             _buffer     = buffer;
             _gifRequest = gifRequest;
@@ -114,15 +118,17 @@ package com.google.analytics.v4
             if( !validateAccount( account ) )
             {
                 var msg:String = "Account \"" + account + "\" is not valid." ;
-                _debug.warning( msg );
-                throw new Error( msg );
+                
+                LOG::P{ _log.e( msg ); }
+                if( _config.enableErrorChecking ) { throw new Error( msg ); }
             }
             
-  //          _initData();
         }
         
         private function _initData():void
         {
+            LOG::P{ _log.v( "_initData()" ); }
+            
             // initialize initial data
             if( !_hasInitData )
             {
@@ -136,15 +142,13 @@ package com.google.analytics.v4
                 //define the timestamp for start of the session
                 _timeStamp  = Math.round((new Date()).getTime() / 1000);
                 
-                if( _debug.verbose )
-                {
-                    var data0:String = "";
-                        data0 += "_initData 0";
-                        data0 += "\ndomain name: " + _config.domainName;
-                        data0 += "\ndomain hash: " + _domainHash;
-                        data0 += "\ntimestamp:   " + _timeStamp + " ("+new Date(_timeStamp*1000)+")";
-                    _debug.info( data0, VisualDebugMode.geek );
-                }
+                var data0:String = "";
+                    data0 += "_initData 0";
+                    data0 += "\ndomain name: " + _config.domainName;
+                    data0 += "\ndomain hash: " + _domainHash;
+                    data0 += "\ntimestamp:   " + _timeStamp + " ("+new Date(_timeStamp*1000)+")";
+                
+                LOG::P{ _log.d( data0 ); }
             }
             
             if( _doTracking() )
@@ -166,21 +170,19 @@ package com.google.analytics.v4
                     
                     // cache browser info
                     _browserInfo = new BrowserInfo( _config, _info );
-                    _debug.info( "browserInfo: " + _browserInfo.toURLString(), VisualDebugMode.advanced );
+                    LOG::P{ _log.i( "browserInfo: " + _browserInfo.toURLString() ); }
                     
                     // cache campaign info
                     if( _config.campaignTracking )
                     {
-                        _campaign = new CampaignManager( _config, _debug, _buffer,
+                        _campaign = new CampaignManager( _config, _buffer,
                                                          _domainHash, _formatedReferrer, _timeStamp );
                        
                         _campaignInfo = _campaign.getCampaignInformation( _info.locationSearch, _noSessionInformation );
-
                         
-                        _debug.info( "campaignInfo: " + _campaignInfo.toURLString(), VisualDebugMode.advanced );
-						_debug.info("Search: "+ _info.locationSearch);
-						_debug.info("CampaignTrackig: "+ _buffer.utmz.campaignTracking);                    
-                    
+                        LOG::P{ _log.i( "CampaignInfo: " + _campaignInfo.toURLString() ); }
+                        LOG::P{ _log.i( "Search: "+ _info.locationSearch ); }
+                        LOG::P{ _log.i( "CampaignTracking: "+ _buffer.utmz.campaignTracking ); }
                     }
                 }
                 
@@ -197,21 +199,19 @@ package com.google.analytics.v4
             if( _config.hasSiteOverlay )
             {
                 //init GASO
-                _debug.warning( "Site Overlay is not supported" );
+                LOG::P{ _log.w( "Site Overlay is not supported" ); }
             }
             
-            if( _debug.verbose )
-            {
-                var data:String = "";
-                    data += "_initData (misc)";
-                    data += "\nflash version: " + _info.flashVersion.toString(4);
-                    data += "\nprotocol: " + _info.protocol;
-                    data += "\ndefault domain name (auto): \"" + _info.domainName +"\"";
-                    data += "\nlanguage: " + _info.language;
-                    data += "\ndomain hash: " + _getDomainHash();
-                    data += "\nuser-agent: " + _info.userAgent;
-                _debug.info( data, VisualDebugMode.geek );
-            }
+            var data:String = "";
+                data += "_initData (misc)";
+                data += "\nflash version: " + _info.flashVersion.toString(4);
+                data += "\nprotocol: " + _info.protocol;
+                data += "\ndefault domain name (auto): \"" + _info.domainName +"\"";
+                data += "\nlanguage: " + _info.language;
+                data += "\ndomain hash: " + _getDomainHash();
+                data += "\nuser-agent: " + _info.userAgent;
+            
+            LOG::P{ _log.i( data ); }
         }
         
         /**
@@ -224,7 +224,8 @@ package com.google.analytics.v4
          */
         private function _handleCookie():void
         {
-        	  	
+        	LOG::P{ _log.v( "_handleCookie()" ); }
+            
             //Linker functionalities are enabled.
             if( _config.allowLinker )
             {
@@ -269,6 +270,7 @@ package com.google.analytics.v4
                 //We already have __utma value stored in document cookie.
                 if( _buffer.hasUTMA() && !_buffer.utma.isEmpty() )
                 {
+                    LOG::P{ _log.i( "found existing utma" ); }
                     /* Either __utmb, __utmc, or both are missing from document cookie.  We
                        take the existing __utma value, and update with new session
                        information.  And then we indicate that there is no session information
@@ -280,11 +282,7 @@ package com.google.analytics.v4
                         _noSessionInformation = true;
                     }
                     
-                    if( _debug.verbose )
-                    {
-                        _debug.info( "from cookie " + _buffer.utma.toString(), VisualDebugMode.geek );
-                    }
-                    
+                    LOG::P{ _log.d( "from cookie, utma = " + _buffer.utma.toString() ); }
                 }
                 /* We don't have __utma value already stored in document cookie.  We are not
                    going to construct a new __utma value.  Also indicate that there is no
@@ -292,7 +290,7 @@ package com.google.analytics.v4
                 */
                 else
                 {
-                    _debug.info( "create a new utma", VisualDebugMode.advanced );
+                    LOG::P{ _log.i( "create a new utma" ); }
                     _buffer.utma.domainHash   = _domainHash;
                     _buffer.utma.sessionId    = _getUniqueSessionId();
                     _buffer.utma.firstTime    = _timeStamp;
@@ -300,10 +298,7 @@ package com.google.analytics.v4
                     _buffer.utma.currentTime  = _timeStamp;
                     _buffer.utma.sessionCount = 1;
                     
-                    if( _debug.verbose )
-                    {
-                        _debug.info( _buffer.utma.toString(), VisualDebugMode.geek );
-                    }
+                    LOG::P{ _log.d( "utma = " + _buffer.utma.toString() ); }
                     
                     _noSessionInformation = true;
                     _isNewVisitor         = true;
@@ -328,14 +323,11 @@ package com.google.analytics.v4
                 {
                     _buffer.utma.currentTime = Number( _adSense.sid );
                     
-                    if( _debug.verbose )
-                        {
-                            var data0:String = "";
-                                data0 += "AdSense sid found\n";
-                                data0 += "Override currentTime("+_buffer.utma.currentTime+") from AdSense sid("+Number(_adSense.sid)+")";
-                            
-                            _debug.info( data0, VisualDebugMode.geek );
-                        }
+                    var data0:String = "";
+                        data0 += "AdSense sid found\n";
+                        data0 += "Override currentTime("+_buffer.utma.currentTime+") from AdSense sid("+Number(_adSense.sid)+")";
+                    
+                    LOG::P{ _log.i( data0 ); }
                 }
                 
                 //For new visitors, copy over all the info from the AdSense globals.
@@ -348,14 +340,11 @@ package com.google.analytics.v4
                     {
                         _buffer.utma.lastTime = Number( _adSense.sid );
                         
-                        if( _debug.verbose )
-                        {
-                            var data1:String = "";
-                                data1 += "AdSense sid found (new visitor)\n";
-                                data1 += "Override lastTime("+_buffer.utma.lastTime+") from AdSense sid("+Number(_adSense.sid)+")";
-                            
-                            _debug.info( data1, VisualDebugMode.geek );
-                        }
+                        var data1:String = "";
+                            data1 += "AdSense sid found (new visitor)\n";
+                            data1 += "Override lastTime("+_buffer.utma.lastTime+") from AdSense sid("+Number(_adSense.sid)+")";
+                        
+                        LOG::P{ _log.i( data1 ); }
                     }
                     
                     /* Over-write visitor id, and first session timestamp with visitor id
@@ -367,21 +356,15 @@ package com.google.analytics.v4
                         _buffer.utma.sessionId = Number( vid[0] );
                         _buffer.utma.firstTime = Number( vid[1] );
                         
-                        if( _debug.verbose )
-                        {
-                            var data2:String = "";
-                                data2 += "AdSense vid found (new visitor)\n";
-                                data2 += "Override sessionId("+_buffer.utma.sessionId+") from AdSense vid("+Number( vid[0] )+")\n";
-                                data2 += "Override firstTime("+_buffer.utma.firstTime+") from AdSense vid("+Number( vid[1] )+")";
-                            
-                            _debug.info( data2, VisualDebugMode.geek );
-                        }
+                        var data2:String = "";
+                            data2 += "AdSense vid found (new visitor)\n";
+                            data2 += "Override sessionId("+_buffer.utma.sessionId+") from AdSense vid("+Number( vid[0] )+")\n";
+                            data2 += "Override firstTime("+_buffer.utma.firstTime+") from AdSense vid("+Number( vid[1] )+")";
+                        
+                        LOG::P{ _log.i( data2 ); }
                     }
                     
-                    if( _debug.verbose )
-                    {
-                        _debug.info( "AdSense modified : " + _buffer.utma.toString(), VisualDebugMode.geek );
-                    }
+                    LOG::P{ _log.i( "AdSense modified : utma = " + _buffer.utma.toString() ); }
                 }
                 
             }
@@ -408,12 +391,8 @@ package com.google.analytics.v4
             
             _buffer.utmc.domainHash = _domainHash;
             
-            if( _debug.verbose )
-            {
-                _debug.info( _buffer.utmb.toString(), VisualDebugMode.advanced );
-                _debug.info( _buffer.utmc.toString(), VisualDebugMode.advanced );
-            }
-            
+            LOG::P{ _log.i( "utmb = " + _buffer.utmb.toString() ); }
+            LOG::P{ _log.i( "utmc = " + _buffer.utmc.toString() ); }
         }
         
         /**
@@ -423,6 +402,8 @@ package com.google.analytics.v4
          */
         private function _isNotGoogleSearch():Boolean
         {
+            LOG::P{ _log.v( "_isNotGoogleSearch()" ); }
+            
             var domainName:String = _config.domainName;
             
             var g0:Boolean = domainName.indexOf( "www.google." ) < 0;
@@ -447,7 +428,8 @@ package com.google.analytics.v4
          */
         private function _doTracking():Boolean
         {
-        
+            LOG::P{ _log.v( "_doTracking()" ); }
+            
             if( (_info.protocol != "file") &&
                 (_info.protocol != "") &&
                 _isNotGoogleSearch() )
@@ -469,6 +451,8 @@ package com.google.analytics.v4
          */
         private function _updateDomainName():void
         {
+            LOG::P{ _log.v( "_updateDomainName()" ); }
+            
             if( _config.domain.mode == DomainNameMode.auto )
             {
                 var domainName:String = _info.domainName;
@@ -482,7 +466,7 @@ package com.google.analytics.v4
             }
             
             _config.domainName = _config.domain.name.toLowerCase();
-            _debug.info( "domain name: " + _config.domainName, VisualDebugMode.advanced );
+            LOG::P{ _log.i( "domain name: " + _config.domainName ); }
         }
         
         /**
@@ -490,17 +474,20 @@ package com.google.analytics.v4
          */
         private function _formatReferrer():String
         {
-        
+            LOG::P{ _log.v( "_formatReferrer()" ); }
+            
             var referrer:String = _info.referrer;
             
             //if there is no referrer
             if( (referrer == "") || (referrer == "localhost") )
             {
+                LOG::P{ _log.i( "no referrer found" ); }
                 referrer = "-";
             }
             //if there is a referrer
             else
             {
+                LOG::P{ _log.i( "referrer found" ); }
                 var domainName:String = _info.domainName;
                 //var ref:URL = new URL( referrer );
                 //var dom:URL = new URL( "http://" + domainName );
@@ -537,7 +524,7 @@ package com.google.analytics.v4
                 }
             }
             
-            _debug.info( "formated referrer: " + referrer, VisualDebugMode.advanced );
+            LOG::P{ _log.d( "formated referrer = " + referrer ); }
             return referrer;
         }
         
@@ -550,6 +537,8 @@ package com.google.analytics.v4
          */
         private function _generateUserDataHash():Number
         {
+            LOG::P{ _log.v( "_generateUserDataHash()" ); }
+            
             var hash:String = "";
                 hash       += _info.appName;
                 hash       += _info.appVersion;
@@ -571,8 +560,11 @@ package com.google.analytics.v4
          */
         private function _getUniqueSessionId():Number
         {
+            LOG::P{ _log.v( "_getUniqueSessionId()" ); }
+            
             var sessionID:Number = (generate32bitRandom() ^ _generateUserDataHash()) * 0x7fffffff;
-            _debug.info( "Session ID: " + sessionID, VisualDebugMode.geek );
+            LOG::P{ _log.d( "Session ID = " + sessionID ); }
+            
             return sessionID;
         }
         
@@ -593,6 +585,8 @@ package com.google.analytics.v4
          */
         private function _getDomainHash():Number
         {
+            LOG::P{ _log.v( "_getDomainHash()" ); }
+            
             if( !_config.domainName || (_config.domainName == "") ||
                 _config.domain.mode == DomainNameMode.none )
             {
@@ -617,10 +611,9 @@ package com.google.analytics.v4
         */
         private function _visitCode():Number
         {
-            if( _debug.verbose )
-            {
-                _debug.info( "visitCode: " + _buffer.utma.sessionId, VisualDebugMode.geek );
-            }
+            LOG::P{ _log.v( "_visitCode()" ); }
+            LOG::P{ _log.d( "visitCode = " + _buffer.utma.sessionId + " (utma sessionID" ); }
+            
             return _buffer.utma.sessionId;
         }
         
@@ -637,6 +630,9 @@ package com.google.analytics.v4
          */
         private function _takeSample():Boolean
         {
+            LOG::P{ _log.v( "_takeSample()" ); }
+            LOG::P{ _log.d( "takeSample: (" + (_visitCode() % 10000) + ") < (" + (_config.sampleRate * 10000) + ")" ); }
+            
             /* note:
                be carefull here
                GA.js sampleRate returns 0 to 100
@@ -659,10 +655,6 @@ package com.google.analytics.v4
                to all the users that visit the web site, it's not the sampleRate
                of data taken from only 1 user.
             */
-            if( _debug.verbose )
-            {
-                _debug.info( "takeSample: (" +(_visitCode() % 10000)+ ") < (" +(_config.sampleRate * 10000)+ ")", VisualDebugMode.geek );
-            }
             return (_visitCode() % 10000) < (_config.sampleRate * 10000);
         }
         
@@ -681,7 +673,8 @@ package com.google.analytics.v4
          */
         public function getAccount():String
         {
-            _debug.info( "getAccount()" );
+            LOG::P{ _log.v( "getAccount()" ); }
+            
             return _account;
         }
         
@@ -691,7 +684,8 @@ package com.google.analytics.v4
          */       
         public function getVersion():String
         {
-            _debug.info( "getVersion()" );
+            LOG::P{ _log.v( "getVersion()" ); }
+            
             return _config.version;
         }
         
@@ -700,8 +694,10 @@ package com.google.analytics.v4
          */
         public function resetSession():void
         {
-            _debug.info( "resetSession()" );
+            LOG::P{ _log.v( "resetSession()" ); }
+            
             _buffer.resetCurrentSession();
+            _gifRequest.clearRequests();
         }
         
         /**
@@ -715,16 +711,15 @@ package com.google.analytics.v4
          */        
         public function setSampleRate(newRate:Number):void
         {
+            LOG::P{ _log.v( "setSampleRate( " + newRate + " )" ); }
+            
             if( newRate < 0 )
             {
-                _debug.warning( "sample rate can not be negative, ignoring value." );
-            }
-            else
-            {
-                _config.sampleRate = newRate;
+                LOG::P{ _log.w( "sample rate can not be negative, ignoring value." ); }
+                return;
             }
             
-            _debug.info( "setSampleRate( " + _config.sampleRate + " )" );
+            _config.sampleRate = newRate;
         }
         
         /**
@@ -745,8 +740,9 @@ package com.google.analytics.v4
          */        
         public function setSessionTimeout(newTimeout:int):void
         {
+            LOG::P{ _log.v( "setSessionTimeout( " + newTimeout + " )" ); }
+            
             _config.sessionTimeout = newTimeout;
-            _debug.info( "setSessionTimeout( " + _config.sessionTimeout + " )" );
         }
         
         /**
@@ -760,21 +756,17 @@ package com.google.analytics.v4
          * 
          * @param newVal New user defined value to set.
          */
-        public function setVar(newVal:String):void
+        public function setVar( newVal:String ):void
         {
+            LOG::P{ _log.v( "setVar( " + newVal + " )" ); }
+            
             if( (newVal != "") && _isNotGoogleSearch() )
             {
                 _initData();
                 
                 _buffer.utmv.domainHash = _domainHash;
                 _buffer.utmv.value      = encodeURI( newVal );
-                
-                if( _debug.verbose )
-                {
-                    _debug.info( _buffer.utmv.toString(), VisualDebugMode.geek );
-                }
-                
-                _debug.info( "setVar( " + newVal + " )" );
+                LOG::P{ _log.v( "utmv = " + _buffer.utmv.toString() ); }
                 
                 if( _takeSample() )
                 {
@@ -784,11 +776,10 @@ package com.google.analytics.v4
                     _gifRequest.send( _account, variables );
                 }
                 
+                return;
             }
-            else
-            {
-                _debug.warning( "setVar \"" + newVal + "\" is ignored" );
-            }
+            
+            LOG::P{ _log.w( "setVar() is ignored" ); }
         }
         
         /**
@@ -800,9 +791,10 @@ package com.google.analytics.v4
          * 
          * @param pageURL Optional parameter to indicate what page URL to track metrics under. When using this option, use a beginning slash (/) to indicate the page URL.
          */        
-        public function trackPageview(pageURL:String=""):void
+        public function trackPageview( pageURL:String="" ):void
         {
-            _debug.info( "trackPageview( " + pageURL + " )" );
+            LOG::P{ _log.v( "trackPageview( " + pageURL + " )" ); }
+            
             //Do nothing if we decided to not track this page.
             if( _doTracking() )
             {
@@ -814,11 +806,10 @@ package com.google.analytics.v4
                 _trackMetrics( pageURL );
                 
                 _noSessionInformation = false;
+                return;
             }
-            else
-            {
-                _debug.warning( "trackPageview( " + pageURL + " ) failed" );
-            }
+            
+            LOG::P{ _log.w( "trackPageview() failed" ); }
         }
         
         /**
@@ -831,11 +822,13 @@ package com.google.analytics.v4
          */
         private function _renderMetricsSearchVariables( pageURL:String = "" ):Variables
         {
+            LOG::P{ _log.v( "_renderMetricsSearchVariables( " + pageURL + " )" ); }
+            
             var variables:Variables = new Variables();
                 variables.URIencode = true;
                 
             var docInfo:DocumentInfo = new DocumentInfo( _config, _info, _formatedReferrer, pageURL, _adSense );
-            _debug.info( "docInfo: " + docInfo.toURLString(), VisualDebugMode.geek );
+            LOG::P{ _log.d( "docInfo = " + docInfo.toURLString() ); }
             
             var campvars:Variables;
             
@@ -860,6 +853,8 @@ package com.google.analytics.v4
          */
         private function _trackMetrics( pageURL:String = "" ):void
         {
+            LOG::P{ _log.v( "_trackMetrics( " + pageURL + " )" ); }
+            
             if( _takeSample() )
             {
                 //gif request parameters
@@ -901,8 +896,9 @@ package com.google.analytics.v4
         */        
         public function setAllowAnchor(enable:Boolean):void
         {
+            LOG::P{ _log.v( "setAllowAnchor( " + enable + " )" ); }
+            
             _config.allowAnchor = enable;
-            _debug.info( "setAllowAnchor( " + _config.allowAnchor + " )" );
         }
         
         /**
@@ -915,18 +911,10 @@ package com.google.analytics.v4
          */        
         public function setCampContentKey(newCampContentKey:String):void
         {
+            LOG::P{ _log.v( "setCampContentKey( " + newCampContentKey + " )" ); }
+            
             _config.campaignKey.UCCT = newCampContentKey;
-            
-            var msg:String = "setCampContentKey( " + _config.campaignKey.UCCT + " )";
-            
-            if( _debug.mode == VisualDebugMode.geek )
-            {
-                _debug.info( msg + " [UCCT]" );
-            }
-            else
-            {
-                _debug.info( msg );
-            }
+            LOG::P{ _log.d( "UCCT = " + _config.campaignKey.UCCT ); }
         }
         
         /**
@@ -938,18 +926,10 @@ package com.google.analytics.v4
          */
         public function setCampMediumKey(newCampMedKey:String):void
         {
+            LOG::P{ _log.v( "setCampMediumKey( " + newCampMedKey + " )" ); }
+            
             _config.campaignKey.UCMD = newCampMedKey;
-            
-            var msg:String = "setCampMediumKey( " + _config.campaignKey.UCMD + " )";
-            
-            if( _debug.mode == VisualDebugMode.geek )
-            {
-                _debug.info( msg + " [UCMD]" );
-            }
-            else
-            {
-                _debug.info( msg );
-            }
+            LOG::P{ _log.d( "UCMD = " + _config.campaignKey.UCMD ); }
         }
         
         /**
@@ -961,18 +941,10 @@ package com.google.analytics.v4
          */
         public function setCampNameKey(newCampNameKey:String):void
         {
+            LOG::P{ _log.v( "setCampNameKey( " + newCampNameKey + " )" ); }
+            
             _config.campaignKey.UCCN = newCampNameKey;
-            
-            var msg:String = "setCampNameKey( " + _config.campaignKey.UCCN + " )";
-            
-            if( _debug.mode == VisualDebugMode.geek )
-            {
-                _debug.info( msg + " [UCCN]" );
-            }
-            else
-            {
-                _debug.info( msg );
-            }
+            LOG::P{ _log.d( "UCCN = " + _config.campaignKey.UCCN ); }
         }
         
         /**
@@ -992,18 +964,10 @@ package com.google.analytics.v4
          */
         public function setCampNOKey(newCampNOKey:String):void
         {
+            LOG::P{ _log.v( "setCampNOKey( " + newCampNOKey + " )" ); }
+            
             _config.campaignKey.UCNO = newCampNOKey;
-            
-            var msg:String = "setCampNOKey( " + _config.campaignKey.UCNO + " )";
-            
-            if( _debug.mode == VisualDebugMode.geek )
-            {
-                _debug.info( msg + " [UCNO]" );
-            }
-            else
-            {
-                _debug.info( msg );
-            }
+            LOG::P{ _log.d( "UCNO = " + _config.campaignKey.UCNO ); }
         }
         
         /**
@@ -1015,18 +979,10 @@ package com.google.analytics.v4
          */
         public function setCampSourceKey(newCampSrcKey:String):void
         {
+            LOG::P{ _log.v( "setCampSourceKey( " + newCampSrcKey + " )" ); }
+            
             _config.campaignKey.UCSR = newCampSrcKey;
-            
-            var msg:String = "setCampSourceKey( " + _config.campaignKey.UCSR + " )";
-            
-            if( _debug.mode == VisualDebugMode.geek )
-            {
-                _debug.info( msg + " [UCSR]" );
-            }
-            else
-            {
-                _debug.info( msg );
-            }
+            LOG::P{ _log.d( "UCSR = " + _config.campaignKey.UCSR ); }
         }
         
         /**
@@ -1037,18 +993,10 @@ package com.google.analytics.v4
          */
         public function setCampTermKey(newCampTermKey:String):void
         {
+            LOG::P{ _log.v( "setCampTermKey( " + newCampTermKey + " )" ); }
+            
             _config.campaignKey.UCTR = newCampTermKey;
-            
-            var msg:String = "setCampTermKey( " + _config.campaignKey.UCTR + " )";
-            
-            if( _debug.mode == VisualDebugMode.geek )
-            {
-                _debug.info( msg + " [UCTR]" );
-            }
-            else
-            {
-                _debug.info( msg );
-            }
+            LOG::P{ _log.d( "UCTR = " + _config.campaignKey.UCTR ); }
         }
         
         /**
@@ -1061,8 +1009,9 @@ package com.google.analytics.v4
          */        
         public function setCampaignTrack( enable:Boolean ):void
         {
+            LOG::P{ _log.v( "setCampaignTrack( " + enable + " )" ); }
+            
             _config.campaignTracking = enable;
-            _debug.info( "setCampaignTrack( " + _config.campaignTracking + " )" );
         }
         
         /**
@@ -1077,8 +1026,9 @@ package com.google.analytics.v4
          */
         public function setCookieTimeout(newDefaultTimeout:int):void
         {
+            LOG::P{ _log.v( "setCookieTimeout( " + newDefaultTimeout + " )" ); }
+            
             _config.conversionTimeout = newDefaultTimeout;
-            _debug.info( "setCookieTimeout( " + _config.conversionTimeout + " )" );
         }
         
         // ----------------------------------------
@@ -1095,9 +1045,11 @@ package com.google.analytics.v4
          * 
          * @param newPath New path to store GATC cookies under.
          */
-        public function cookiePathCopy(newPath:String):void
+        public function cookiePathCopy( newPath:String ):void
         {
-            _debug.warning( "cookiePathCopy( " + newPath + " ) not implemented" );
+            LOG::P{ _log.v( "cookiePathCopy( " + newPath + " )" ); }
+            LOG::P{ _log.d( "cookiePathCopy() not implemented" ); }
+            
         }
         
         /**
@@ -1112,9 +1064,9 @@ package com.google.analytics.v4
         */       
         public function getLinkerUrl( targetUrl:String = "", useHash:Boolean = false ):String
         {
+            LOG::P{ _log.v( "getLinkerUrl( "+ [targetUrl,useHash].join(", ") +" )" ); }
+            
         	_initData();
-        	
-        	_debug.info( "getLinkerUrl( "+ targetUrl +", "+ useHash.toString() +" )" );
         	return _buffer.getLinkerUrl( targetUrl, useHash );
         }
         
@@ -1127,23 +1079,31 @@ package com.google.analytics.v4
          * @param targetUrl URL of target site to send cookie values to.
          * @param useHash Set to true for passing tracking code variables by using the # anchortag separator rather than the default ? query string separator. (Currently this behavior is for internal Google properties only.)
          */
-        public function link(targetUrl:String, useHash:Boolean=false):void
-        {        	
+        public function link( targetUrl:String, useHash:Boolean=false ):void
+        {
+            LOG::P{ _log.v( "link( "+ [targetUrl,useHash].join(", ") +" )" ); }
+            
 			_initData();
         	
         	var out:String = _buffer.getLinkerUrl( targetUrl, useHash );
 			var request:URLRequest = new URLRequest( out );			
-
-			// navigate to new location
-			_debug.info( "link( " + [targetUrl,useHash].join( "," ) + " )" );		
-		
+            
+            /* TODO:
+               - check the protocol, do we want to only allow http:, https:
+                 but not allow javascript: , ftp: etc. ?
+               - what about AIR ? especially AIR on mobile
+                 with protocole like sms:, tel:
+               - also on Android
+                 vipaccess:, connectpro:, market:
+               - do we allow to customise _top to _self, _parent, _blank ?
+            */
 			try
 			{
-			  flash.net.navigateToURL(request, "_top" ); // second argument is target
+			  flash.net.navigateToURL( request, "_top" ); // second argument is target
 			} 
-			catch (e:Error) 
+			catch( e:Error ) 
 			{
-			  _debug.warning( "An error occured in link() msg: "+ e.message);
+              LOG::P{ _log.e( "An error occured in link() msg: "+ e.message ); }
 			} 
         }
                
@@ -1160,9 +1120,11 @@ package com.google.analytics.v4
          * @param formObject Form object encapsulating the POST request.
          * @param useHash Set to true for passing tracking code variables by using the # anchortag separator rather than the default ? query string separator.
          */        
-        public function linkByPost(formObject:Object, useHash:Boolean=false):void
+        public function linkByPost( formObject:Object, useHash:Boolean=false ):void
         {
-            _debug.warning( "linkByPost not implemented in AS3 mode" );
+            LOG::P{ _log.v( "linkByPost( " + [formObject,useHash].join(", ") + " )" ); }
+            LOG::P{ _log.d( "linkByPost() not implemented" ); }
+            
         }
         
         /**
@@ -1178,10 +1140,11 @@ package com.google.analytics.v4
          * 
          * @param enable If this parameter is set to true, then domain hashing is enabled. Else, domain hashing is disabled. True by default.
          */        
-        public function setAllowHash(enable:Boolean):void
+        public function setAllowHash( enable:Boolean ):void
         {
+            LOG::P{ _log.v( "setAllowHash( " + enable + " )" ); }
+            
             _config.allowDomainHash = enable;
-            _debug.info( "setAllowHash( " + _config.allowDomainHash + " )" );
         }
         
         /**
@@ -1191,10 +1154,11 @@ package com.google.analytics.v4
          * 
          * @param enable If this parameter is set to true, then linker is enabled. Else, linker is disabled.
          */        
-        public function setAllowLinker(enable:Boolean):void
+        public function setAllowLinker( enable:Boolean ):void
         {
+            LOG::P{ _log.v( "setAllowLinker( " + enable + " )" ); }
+            
             _config.allowLinker = enable;
-            _debug.info( "setAllowLinker( " + _config.allowLinker + " )" );
         }
         
         /**
@@ -1213,8 +1177,9 @@ package com.google.analytics.v4
          */        
         public function setCookiePath(newCookiePath:String):void
         {
+            LOG::P{ _log.v( "setCookiePath( " + newCookiePath + " )" ); }
+            
             _config.cookiePath = newCookiePath;
-            _debug.info( "setCookiePath( " + _config.cookiePath + " )" );
         }
         
         /**
@@ -1227,6 +1192,8 @@ package com.google.analytics.v4
          */        
         public function setDomainName(newDomainName:String):void
         {
+            LOG::P{ _log.v( "setDomainName( " + newDomainName + " )" ); }
+            
             if( newDomainName == "auto" )
             {
                 _config.domain.mode = DomainNameMode.auto;
@@ -1242,7 +1209,6 @@ package com.google.analytics.v4
             }
             
             _updateDomainName();
-            _debug.info( "setDomainName( " + _config.domainName + " )" );
         }
         
         // ----------------------------------------
@@ -1268,7 +1234,8 @@ package com.google.analytics.v4
          */        
         public function addItem(id:String, sku:String, name:String, category:String, price:Number, quantity:int):void
         {
-        	
+        	LOG::P{ _log.v( "addItem( " + [id,sku,name,category,price,quantity].join( ", " ) + " )" ); }
+            
         	var parentTrans:Transaction;
         	
         	parentTrans = _ecom.getTransaction( id );
@@ -1279,11 +1246,6 @@ package com.google.analytics.v4
         	}
         	
         	parentTrans.addItem( sku, name, category, price.toString(), quantity.toString() );
-        	
-        	if (_debug.active)
-        	{
-            	_debug.info( "addItem( " + [id,sku,name,category,price,quantity].join( ", " ) + " )" );
-         	}
         }
         
         /**
@@ -1304,12 +1266,9 @@ package com.google.analytics.v4
          */        
         public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):void
         {
+            LOG::P{ _log.v( "addTrans( " + [orderId,affiliation,total,tax,shipping,city,state,country].join( ", " ) + " );" ); }
+            
             _ecom.addTransaction( orderId, affiliation, total.toString(), tax.toString(), shipping.toString(), city, state, country );
-        
-            if (_debug.active) 
-        	{
-            	_debug.info( "addTrans( " + [orderId,affiliation,total,tax,shipping,city,state,country].join( ", " ) + " );" );
-         	}
         }
         
         /**
@@ -1320,6 +1279,8 @@ package com.google.analytics.v4
          */        
         public function trackTrans():void
         {
+            LOG::P{ _log.v( "trackTrans()" ); }
+            
             _initData();
          	
          	var i:Number;
@@ -1452,7 +1413,9 @@ package com.google.analytics.v4
          *     instance.
          */
         private function _sendXEvent( opt_xObj:X10 = null ):void
-        {            
+        {
+            LOG::P{ _log.v( "_sendXEvent()" ); }
+            
             if( _takeSample() )
             {
                 var searchVariables:Variables = new Variables();
@@ -1483,7 +1446,8 @@ package com.google.analytics.v4
          */
         public function createEventTracker( objName:String ):EventTracker
         {
-            _debug.info( "createEventTracker( " + objName + " )" );
+            LOG::P{ _log.v( "createEventTracker( " + objName + " )" ); }
+            
             return new EventTracker( objName, this );
         }
         
@@ -1511,6 +1475,8 @@ package com.google.analytics.v4
          */
         public function trackEvent( category:String, action:String, label:String = null, value:Number = NaN ):Boolean
         {
+            LOG::P{ _log.v( "trackEvent( " + [category,action,label,value].join( ", " ) + " )" ); }
+            
         	_initData();
         	
             var success:Boolean = true;
@@ -1519,6 +1485,8 @@ package com.google.analytics.v4
             // If event tracking call is valid
             if( (category != "") && (action != "") )
             {
+                LOG::P{ _log.d(  "event tracking call is valid" ); }
+                
                 // clear event tracker data
                 _eventTracker.clearKey( EVENT_TRACKER_PROJECT_ID );
                 _eventTracker.clearValue( EVENT_TRACKER_PROJECT_ID );
@@ -1555,7 +1523,7 @@ package com.google.analytics.v4
                 // event tracker is set successfully
                 if( success )
                 {
-                    _debug.info( "valid event tracking call\ncategory: "+category+"\naction: "+action, VisualDebugMode.geek );
+                    LOG::P{ _log.i(  "event tracking success" ); }
                     _sendXEvent( _eventTracker );
                 }
                 
@@ -1563,23 +1531,27 @@ package com.google.analytics.v4
             else
             {
                 // event tracking call is not valid, failed!
-                _debug.warning( "event tracking call is not valid, failed!\ncategory: "+category+"\naction: "+action, VisualDebugMode.geek );
+                LOG::P{ _log.d(  "event tracking call is not valid" ); }
+                LOG::P{ _log.e(  "event tracking failed" ); }
                 success = false;
             }
             
-            switch( params )
+            LOG::P
             {
-                case 4:
-                _debug.info( "trackEvent( " + [category,action,label,value].join( ", " ) + " )" );
-                break;
-                
-                case 3:
-                _debug.info( "trackEvent( " + [category,action,label].join( ", " ) + " )" );
-                break;
-                
-                case 2:
-                default:
-                _debug.info( "trackEvent( " + [category,action].join( ", " ) + " )" );
+                switch( params )
+                {
+                    case 4:
+                    _log.d( "trackEvent( " + [category,action,label,value].join( ", " ) + " ) - 4 params" );
+                    break;
+                    
+                    case 3:
+                    _log.d( "trackEvent( " + [category,action,label].join( ", " ) + " ) - 3 params" );
+                    break;
+                    
+                    case 2:
+                    default:
+                    _log.d( "trackEvent( " + [category,action].join( ", " ) + " ) - 2 params" );
+                }
             }
             
             return success;
@@ -1602,7 +1574,8 @@ package com.google.analytics.v4
          */
         public function addIgnoredOrganic(newIgnoredOrganicKeyword:String):void
         {
-            _debug.info( "addIgnoredOrganic( " + newIgnoredOrganicKeyword + " )" );
+            LOG::P{ _log.v( "addIgnoredOrganic( " + newIgnoredOrganicKeyword + " )" ); }
+            
             _config.organic.addIgnoredKeyword( newIgnoredOrganicKeyword );
         }
         
@@ -1619,7 +1592,8 @@ package com.google.analytics.v4
          */
         public function addIgnoredRef(newIgnoredReferrer:String):void
         {
-            _debug.info( "addIgnoredRef( " + newIgnoredReferrer + " )" );
+            LOG::P{ _log.v( "addIgnoredRef( " + newIgnoredReferrer + " )" ); }
+            
             _config.organic.addIgnoredReferral( newIgnoredReferrer );
         }
         
@@ -1633,7 +1607,8 @@ package com.google.analytics.v4
          */
         public function addOrganic(newOrganicEngine:String, newOrganicKeyword:String):void
         {
-            _debug.info( "addOrganic( " + [newOrganicEngine,newOrganicKeyword].join( ", " ) + " )" );
+            LOG::P{ _log.v( "addOrganic( " + [newOrganicEngine,newOrganicKeyword].join( ", " ) + " )" ); }
+            
             _config.organic.addSource(newOrganicEngine, newOrganicKeyword);
         }
         
@@ -1642,7 +1617,8 @@ package com.google.analytics.v4
          */
         public function clearIgnoredOrganic():void
         {
-            _debug.info( "clearIgnoredOrganic()" );
+            LOG::P{ _log.v( "clearIgnoredOrganic()" ); }
+            
             _config.organic.clearIgnoredKeywords();
         }
         
@@ -1651,7 +1627,8 @@ package com.google.analytics.v4
          */
         public function clearIgnoredRef():void
         {
-            _debug.info( "clearIgnoredRef()" );
+            LOG::P{ _log.v( "clearIgnoredRef()" ); }
+            
             _config.organic.clearIgnoredReferrals();
         }
         
@@ -1661,7 +1638,8 @@ package com.google.analytics.v4
          */
         public function clearOrganic():void
         {
-            _debug.info( "clearOrganic()" );
+            LOG::P{ _log.v( "clearOrganic()" ); }
+            
             _config.organic.clearEngines();
         }
         
@@ -1673,7 +1651,8 @@ package com.google.analytics.v4
          */
         public function getClientInfo():Boolean
         {
-            _debug.info( "getClientInfo()" );
+            LOG::P{ _log.v( "getClientInfo()" ); }
+            
             return _config.detectClientInfo;
         }
         
@@ -1685,7 +1664,8 @@ package com.google.analytics.v4
          */
         public function getDetectFlash():Boolean
         {
-            _debug.info( "getDetectFlash()" );
+            LOG::P{ _log.v( "getDetectFlash()" ); }
+            
             return _config.detectFlash;
         }
         
@@ -1696,7 +1676,8 @@ package com.google.analytics.v4
          */
         public function getDetectTitle():Boolean
         {
-            _debug.info( "getDetectTitle()" );
+            LOG::P{ _log.v( "getDetectTitle()" ); }
+            
             return _config.detectTitle;
         }
         
@@ -1712,8 +1693,9 @@ package com.google.analytics.v4
          */
         public function setClientInfo(enable:Boolean):void
         {
+            LOG::P{ _log.v( "setClientInfo( " + enable + " )" ); }
+            
             _config.detectClientInfo = enable;
-            _debug.info( "setClientInfo( " + _config.detectClientInfo + " )" );
         }
         
         /**
@@ -1728,8 +1710,9 @@ package com.google.analytics.v4
          */
         public function setDetectFlash(enable:Boolean):void
         {
+            LOG::P{ _log.v( "setDetectFlash( " + enable + " )" ); }
+            
             _config.detectFlash = enable;
-            _debug.info( "setDetectFlash( " + _config.detectFlash + " )" );
         }
         
         /**
@@ -1748,8 +1731,9 @@ package com.google.analytics.v4
          */
         public function setDetectTitle(enable:Boolean):void
         {
+            LOG::P{ _log.v( "setDetectTitle( " + enable + " )" ); }
+            
             _config.detectTitle = enable;
-            _debug.info( "setDetectTitle( " + _config.detectTitle + " )" );
         }
         
         // ----------------------------------------
@@ -1765,7 +1749,8 @@ package com.google.analytics.v4
          */
         public function getLocalGifPath():String
         {
-            _debug.info( "getLocalGifPath()" );
+            LOG::P{ _log.v( "getLocalGifPath()" ); }
+            
             return _config.localGIFpath;
         }
         
@@ -1778,7 +1763,8 @@ package com.google.analytics.v4
          */
         public function getServiceMode():ServerOperationMode
         {
-            _debug.info( "getServiceMode()" );
+            LOG::P{ _log.v( "getServiceMode()" ); }
+            
             return _config.serverMode;
         }
         
@@ -1792,8 +1778,9 @@ package com.google.analytics.v4
          */
         public function setLocalGifPath(newLocalGifPath:String):void
         {
+            LOG::P{ _log.v( "setLocalGifPath( " + newLocalGifPath + " )" ); }
+            
             _config.localGIFpath = newLocalGifPath;
-            _debug.info( "setLocalGifPath( " + _config.localGIFpath + " )" );
         }
         
         /**
@@ -1805,8 +1792,9 @@ package com.google.analytics.v4
          */
         public function setLocalRemoteServerMode():void
         {
+            LOG::P{ _log.v( "setLocalRemoteServerMode()" ); }
+            
             _config.serverMode = ServerOperationMode.both;
-            _debug.info( "setLocalRemoteServerMode()" );
         }
         
         /**
@@ -1817,8 +1805,9 @@ package com.google.analytics.v4
          */
         public function setLocalServerMode():void
         {
+            LOG::P{ _log.v( "setLocalServerMode()" ); }
+            
             _config.serverMode = ServerOperationMode.local;
-            _debug.info( "setLocalServerMode()" );
         }
         
         /**
@@ -1828,8 +1817,9 @@ package com.google.analytics.v4
          */
         public function setRemoteServerMode():void
         {
+            LOG::P{ _log.v( "setRemoteServerMode()" ); }
+            
             _config.serverMode = ServerOperationMode.remote;
-            _debug.info( "setRemoteServerMode()" );
         }
         
     }

@@ -20,15 +20,20 @@
 package com.google.analytics.core
 {
     import com.google.analytics.external.AdSenseGlobals;
+    import com.google.analytics.log;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Variables;
     import com.google.analytics.v4.Configuration;
+    
+    import core.Logger;
     
     /**
      * The DocumentInfo class.
      */
     public class DocumentInfo
     {
+        private var _log:Logger;
+        
         private var _config:Configuration;
         private var _info:Environment;
         private var _adSense:AdSenseGlobals;
@@ -42,6 +47,9 @@ package com.google.analytics.core
         public function DocumentInfo( config:Configuration, info:Environment, formatedReferrer:String,
                                       pageURL:String = null, adSense:AdSenseGlobals = null )
         {
+            LOG::P{ _log = log.tag( "DocumentInfo" ); }
+            LOG::P{ _log.v( "constructor()" ); }
+            
             _config  = config;
             _info    = info;
             _utmr    = formatedReferrer;
@@ -58,6 +66,8 @@ package com.google.analytics.core
          */
         private function _generateHitId():Number
         {
+            LOG::P{ _log.v( "_generateHitId()" ); }
+            
             var hid:Number;
             
             //have hid in DOM
@@ -89,6 +99,8 @@ package com.google.analytics.core
          */
         private function _renderPageURL( pageURL:String = "" ):String
         {
+            LOG::P{ _log.v( "_renderPageURL()" ); }
+            
             var pathname:String = _info.locationPath;
             var search:String   = _info.locationSearch;
             
@@ -149,9 +161,11 @@ package com.google.analytics.core
         /**
          * Returns a Variables object representation.
          * @return a Variables object representation.
-         */        
+         */       
         public function toVariables():Variables
         {
+            LOG::P{ _log.v( "toVariables()" ); }
+            
             var variables:Variables = new Variables();
                 variables.URIencode = true;
                 
@@ -173,6 +187,8 @@ package com.google.analytics.core
          */
         public function toURLString():String
         {
+            LOG::P{ _log.v( "toURLString()" ); }
+            
             var v:Variables = toVariables();
             return v.toString();
         }

@@ -20,8 +20,9 @@
 
 package com.google.analytics.core
 {
-    import com.google.analytics.debug.DebugConfiguration;
-    import com.google.analytics.debug.VisualDebugMode;
+    import com.google.analytics.log;
+    
+    import core.Logger;
     
     
     /**
@@ -29,21 +30,21 @@ package com.google.analytics.core
      */
     public class Domain
     {
+        private var _log:Logger;
         
         private var _mode:DomainNameMode;
         
         private var _name:String;
-        
-        private var _debug:DebugConfiguration;
         
         /**
          * Creates a new Domain instance.
          * @param mode
          * @param name The name of the domain
          */
-        public function Domain( mode:DomainNameMode = null, name:String = "", debug:DebugConfiguration = null )
+        public function Domain( mode:DomainNameMode = null, name:String = "" )
         {
-            _debug = debug;
+            LOG::P{ _log = log.tag( "Domain" ); }
+            LOG::P{ _log.v( "constructor()" ); }
             
             if( mode == null )
             {
@@ -94,10 +95,14 @@ package com.google.analytics.core
          */
         public function set name( value:String ):void
         {
-            if( (value.charAt(0) != ".") && _debug )
+            LOG::P
             {
-                _debug.warning( "missing leading period \".\", cookie will only be accessible on " + value, VisualDebugMode.geek );
+                if( value.charAt(0) != "." )
+                {
+                    _log.w( "missing leading period \".\", cookie will only be accessible on " + value );
+                }
             }
+            
             _name = value ;
         }
 

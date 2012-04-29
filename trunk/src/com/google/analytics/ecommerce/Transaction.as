@@ -17,10 +17,15 @@
  
 package com.google.analytics.ecommerce
 {
+	import com.google.analytics.log;
 	import com.google.analytics.utils.Variables;
+	
+	import core.Logger;
 	
 	public class Transaction
 	{
+        private var _log:Logger;
+        
 		private var _items:Array;
 		
 		private var _id:String;
@@ -32,16 +37,13 @@ package com.google.analytics.ecommerce
 		private var _state:String;
 		private var _country:String;
 		
-		//holds all the data of this
-		private var _vars:Variables;
-		
 	    /**
 		 * @class Transaction object for e-commerce module.  This encapsulates all the
 		 *     necessary logic for manipulating a transaction.
 		 *
 		 * @private
 		 * @param {String} orderId Internal unique order id number for this transaction.
-		 * @param {String} affiliation Optional partner or store affiliation (undefined if absent)
+		 * @param {String} affiliation Optional partner or store affiliation (undefined if absent).
 		 * @param {String} total Total dollar amount of the transaction.
 		 * @param {String} tax Tax amount of the transaction.
 		 * @param {String} shipping Shipping charge for the transaction.
@@ -51,28 +53,65 @@ package com.google.analytics.ecommerce
 		 *
 		 * @constructor
 		 */					
-		public function Transaction(id:String,
-									affiliation:String,
-									total:String,
-									tax:String,
-									shipping:String,
-									city:String,
-									state:String,
-									country:String)
+		public function Transaction( id:String, affiliation:String, total:String, tax:String,
+									 shipping:String, city:String, state:String, country:String )
 		{
-			this._id = id;
-			this._affiliation = affiliation;
-			this._total = total;
-			this._tax = tax;
-			this._shipping = shipping;
-			this._city = city;
-			this._state = state;
-			this._country = country;
+            LOG::P{ _log = log.tag( "Transaction" ); }
+            LOG::P{ _log.v( "constructor()" ); }
+            
+			_id          = id;
+			_affiliation = affiliation;
+			_total       = total;
+			_tax         = tax;
+			_shipping    = shipping;
+			_city        = city;
+			_state       = state;
+			_country     = country;
 		
 			_items = new Array();
 			
-		}		
+		}
 		
+        /** Internal unique order id number for this transaction. */
+		public function get id():String { return _id; }
+        /** @private */
+        public function set id( value: String ):void { _id = value; }
+        
+        /** affiliation Optional partner or store affiliation. */
+		public function get affiliation():String { return _affiliation; }
+        /** @private */
+        public function set affiliation( value: String ):void { _affiliation = value; }
+        
+        /** Total dollar amount of the transaction. */
+		public function get total():String { return _total; }
+        /** @private */
+        public function set total( value: String ):void { _total = value; }
+        
+        /** Tax amount of the transaction. */
+		public function get tax():String { return _tax; }
+        /** @private */
+        public function set tax( value: String ):void { _tax = value; }
+        
+        /** Shipping charge for the transaction. */
+		public function get shipping():String { return _shipping; }
+        /** @private */
+        public function set shipping( value: String ):void { _shipping = value; }
+        
+        /** City to associate with transaction. */
+		public function get city():String { return _city; }
+        /** @private */
+        public function set city( value: String ):void { _city = value; }
+        
+        /** State to associate with transaction. */
+		public function get state():String { return _state; }
+        /** @private */
+        public function set state( value: String ):void { _state = value; }
+        
+        /** Country to associate with transaction. */
+		public function get country():String { return _country; }
+		/** @private */
+        public function set country( value: String ):void { _country = value; }
+        
 		/**
 	 	* Converts this transactions object to gif parameters.
 	 	*
@@ -80,24 +119,26 @@ package com.google.analytics.ecommerce
 	 	* @returns {String} GIF request parameters for this transaction.
 	 	*/
 		public function toGifParams():Variables
-		{		
+		{
+            LOG::P{ _log.v( "toGifParams()" ); }
+            
 			var vars:Variables = new Variables();
-			vars.URIencode = true;
-			
-			vars.utmt = "tran";  //always present for transactions
-			vars.utmtid = id;
-			vars.utmtst = affiliation;
-			vars.utmtto = total;
-			vars.utmttx = tax;
-			vars.utmtsp = shipping;
-			vars.utmtci = city;
-			vars.utmtrg = state;
-			vars.utmtco = country;
-		
-			vars.post = [ "utmtid", "utmtst", "utmtto", "utmttx", "utmtsp", "utmtci", "utmtrg", "utmtco"  ];
+			    vars.URIencode = true;
+			    
+    			vars.utmt = "tran";  //always present for transactions
+    			vars.utmtid = id;
+    			vars.utmtst = affiliation;
+    			vars.utmtto = total;
+    			vars.utmttx = tax;
+    			vars.utmtsp = shipping;
+    			vars.utmtci = city;
+    			vars.utmtrg = state;
+    			vars.utmtco = country;
+    		
+    			vars.post = [ "utmtid", "utmtst", "utmtto", "utmttx", "utmtsp", "utmtci", "utmtrg", "utmtco"  ];
 		
 			return vars;
-		};
+		}
 		
 		/**
 		 * Adds a transaction item to the parent transaction object. Requires the
@@ -114,27 +155,22 @@ package com.google.analytics.ecommerce
 		 * @param {String} price Product price (required).
 		 * @param {String} quantity Purchase quantity (required).
 		 */		
-		public function addItem(sku:String,
-								name:String,
-								category:String,
-								price:String,
-								quantity:String):void
+		public function addItem( sku:String, name:String, category:String, price:String, quantity:String ):void
 		{
+			LOG::P{ _log.v( "addItem( " + [sku,name,category,price,quantity].join(", ") + " )" ); }
+            
+			var newItem:Item = getItem( sku );
 			
-			var newItem:Item;
-			
-			newItem = getItem( sku );
-			
-			if ( newItem == null )
+			if( newItem == null )
 			{
 				newItem = new Item( _id, sku, name, category, price, quantity );			
 				_items.push( newItem );				
 			}
 			else
 			{
-				newItem.name = name;
+				newItem.name     = name;
 				newItem.category = category;
-				newItem.price = price;
+				newItem.price    = price;
 				newItem.quantity = quantity;	
 			}	
 		}
@@ -149,6 +185,8 @@ package com.google.analytics.ecommerce
 	    */				
 		public function getItem( sku:String ):Item
 		{
+            LOG::P{ _log.v( "constructor()" ); }
+            
 			var i:Number;
 			
 			for( i=0; i<_items.length; i++ )
@@ -168,84 +206,17 @@ package com.google.analytics.ecommerce
 		 */ 
 		public function getItemsLength():Number
 		{
+            LOG::P{ _log.v( "constructor()" ); }
+            
 			return _items.length;
 		}
 		
 		public function getItemFromArray( i:Number ):Item
 		{
+            LOG::P{ _log.v( "constructor()" ); }
+            
 			return _items[i];
 		}
-
-
-		// getter functions for entire object
-		public function get id():String
-		{
-			return _id;
-		}
-		public function get affiliation():String
-		{
-			return _affiliation;
-		}
-		public function get total():String
-		{
-			return _total;
-		}
-		public function get tax():String
-		{
-			return _tax;
-		}
-		public function get shipping():String
-		{
-			return _shipping;
-		}
-		public function get city():String
-		{
-			return _city;
-		}
-		public function get state():String
-		{
-			return _state;
-		}
-		public function get country():String
-		{
-			return _country;
-		}
-		
-		
-		// setter functions for entire object	
-			
-		public function set id( value: String ):void
-		{
-			_id = value;
-		}
-		public function set affiliation( value: String ):void
-		{
-			_affiliation = value;
-		}
-		public function set total( value: String ):void
-		{
-			_total = value;
-		}
-		public function set tax( value: String ):void
-		{
-			_tax = value;
-		}		
-		public function set shipping( value: String ):void
-		{
-			_shipping = value;
-		}
-		public function set city( value: String ):void
-		{
-			_city = value;
-		}
-		public function set state( value: String ):void
-		{
-			_state = value;
-		}
-		public function set country( value: String ):void
-		{
-			_country = value;
-		}
-
+        
 	}
 }

@@ -23,17 +23,20 @@ package com.google.analytics.v4
     import com.google.analytics.core.EventTracker;
     import com.google.analytics.core.ServerOperationMode;
     import com.google.analytics.core.validateAccount;
-    import com.google.analytics.debug.DebugConfiguration;
-    import com.google.analytics.debug.VisualDebugMode;
-    import com.google.analytics.external.JavascriptProxy; 
+    import com.google.analytics.external.JavascriptProxy;
+    import com.google.analytics.log;
+    
+    import core.Logger;
     
     /**
      * This api use a Javascript bridge to fill the GATracker properties.
      */
     public class Bridge implements GoogleAnalyticsAPI
     {
+        private var _log:Logger;
+        
         private var _account:String;
-        private var _debug:DebugConfiguration;
+        private var _config:Configuration;
         private var _proxy:JavascriptProxy;
         
         private var _hasGATracker:Boolean = false ;
@@ -138,10 +141,15 @@ package com.google.analytics.v4
          * 
          * @param account Urchin Account to record metrics in.
          */
-        public function Bridge( account:String, debug:DebugConfiguration, jsproxy:JavascriptProxy )
+        public function Bridge( account:String,
+                                config:Configuration, jsproxy:JavascriptProxy )
         {
+            LOG::P{ _log = log.tag( "Bridge" ); }
+            LOG::P{ _log.v( "constructor()" ); }
+            
             _account = account;
-            _debug   = debug;
+            
+            _config  = config;
             _proxy   = jsproxy;
             
             if( !_checkGAJS() )
@@ -150,19 +158,19 @@ package com.google.analytics.v4
                     msg0 += "ga.js not found, be sure to check if\n";
                     msg0 += "<script src=\"http://www.google-analytics.com/ga.js\"></script>\n";
                     msg0 += "is included in the HTML.";
-                _debug.warning( msg0 );
-                throw new Error( msg0 );
+                
+                LOG::P{ _log.e( msg0 ); }
+                if( _config.enableErrorChecking ) { throw new Error( msg0 ); }
             }
             
             if( !_hasGATracker )
             {
-                if( _debug.javascript && _debug.verbose )
-                {
-                    var msg1:String = ""; 
-                        msg1 += "The Google Analytics tracking code was not found on the container page\n";
-                        msg1 += "we create it";
-                    _debug.info( msg1, VisualDebugMode.advanced );
-                }
+                var msg1:String = ""; 
+                    msg1 += "The Google Analytics tracking code was not found on the container page\n";
+                    msg1 += "we create it";
+                
+                LOG::P{ _log.i( msg1 ); }
+                
                 _injectTrackingObject();
             }
             
@@ -182,8 +190,8 @@ package com.google.analytics.v4
                         msg2 += "JS Object \"" + account + "\" doesn't exist in DOM\n";
                         msg2 += "Bridge object not created.";
                     
-                    _debug.warning( msg2 );
-                    throw new Error( msg2 );
+                    LOG::P{ _log.e( msg2 ); }
+                    if( _config.enableErrorChecking ) { throw new Error( msg2 ); }
                 }
             }
             
@@ -286,7 +294,8 @@ package com.google.analytics.v4
          */
         public function getAccount():String
         {
-            _debug.info( "getAccount()" );
+            LOG::P{ _log.v( "getAccount()" ); }
+            
             return _call( "_getAccount" );
         }
         
@@ -296,7 +305,8 @@ package com.google.analytics.v4
          */
         public function getVersion():String
         {
-            _debug.info( "getVersion()" );
+            LOG::P{ _log.v( "getVersion()" ); }
+            
             return _call( "_getVersion" );
         }
         
@@ -305,12 +315,14 @@ package com.google.analytics.v4
          */
         public function resetSession():void
         {
+            LOG::P{ _log.v( "resetSession()" ); }
+            LOG::P{ _log.d( "resetSession() not implemented" ); }
+            
             /* note:
                not implemented
                we could inject some JS to force the reset
                of the utmb and utmc cookies on the JS side
             */
-            _debug.warning( "resetSession() not implemented" );
         }
         
         /**
@@ -326,7 +338,8 @@ package com.google.analytics.v4
          */
         public function setSampleRate(newRate:Number):void
         {
-            _debug.info( "setSampleRate( " + newRate + " )" );
+            LOG::P{ _log.v( "setSampleRate( " + newRate + " )" ); }
+            
             _call( "_setSampleRate", newRate );
         }
         
@@ -348,7 +361,8 @@ package com.google.analytics.v4
          */
         public function setSessionTimeout(newTimeout:int):void
         {
-            _debug.info( "setSessionTimeout( " + newTimeout + " )" );
+            LOG::P{ _log.v( "setSessionTimeout( " + newTimeout + " )" ); }
+            
             _call( "_setSessionTimeout", newTimeout );
         }
         
@@ -365,7 +379,8 @@ package com.google.analytics.v4
          */
         public function setVar(newVal:String):void
         {
-            _debug.info( "setVar( " + newVal + " )" );
+            LOG::P{ _log.v( "setVar( " + newVal + " )" ); }
+            
             _call( "_setVar", newVal );
         }
         
@@ -380,7 +395,8 @@ package com.google.analytics.v4
          */
         public function trackPageview(pageURL:String=""):void
         {
-            _debug.info( "trackPageview( " + pageURL + " )" );
+            LOG::P{ _log.v( "trackPageview( " + pageURL + " )" ); }
+            
             _call( "_trackPageview", pageURL );
         }
         
@@ -402,7 +418,8 @@ package com.google.analytics.v4
         */
         public function setAllowAnchor(enable:Boolean):void
         {
-            _debug.info( "setAllowAnchor( " + enable + " )" );
+            LOG::P{ _log.v( "setAllowAnchor( " + enable + " )" ); }
+            
             _call( "_setAllowAnchor", enable );
         }
         
@@ -416,7 +433,8 @@ package com.google.analytics.v4
          */
         public function setCampContentKey(newCampContentKey:String):void
         {
-            _debug.info( "setCampContentKey( " + newCampContentKey + " )" );
+            LOG::P{ _log.v( "setCampContentKey( " + newCampContentKey + " )" ); }
+            
             _call( "_setCampContentKey", newCampContentKey );
         }
         
@@ -429,7 +447,8 @@ package com.google.analytics.v4
          */
         public function setCampMediumKey(newCampMedKey:String):void
         {
-            _debug.info( "setCampMediumKey( " + newCampMedKey + " )" );
+            LOG::P{ _log.v( "setCampMediumKey( " + newCampMedKey + " )" ); }
+            
             _call( "_setCampMediumKey", newCampMedKey );
         }
         
@@ -442,7 +461,8 @@ package com.google.analytics.v4
          */
         public function setCampNameKey(newCampNameKey:String):void
         {
-            _debug.info( "setCampNameKey( " + newCampNameKey + " )" );
+            LOG::P{ _log.v( "setCampNameKey( " + newCampNameKey + " )" ); }
+            
             _call( "_setCampNameKey", newCampNameKey );
         }
         
@@ -463,7 +483,8 @@ package com.google.analytics.v4
          */
         public function setCampNOKey( newCampNOKey:String ):void
         {
-            _debug.info( "setCampNOKey( " + newCampNOKey + " )" );
+            LOG::P{ _log.v( "setCampNOKey( " + newCampNOKey + " )" ); }
+            
             _call( "_setCampNOKey", newCampNOKey );
         }
         
@@ -476,7 +497,8 @@ package com.google.analytics.v4
          */
         public function setCampSourceKey(newCampSrcKey:String):void
         {
-            _debug.info( "setCampSourceKey( " + newCampSrcKey + " )" );
+            LOG::P{ _log.v( "setCampSourceKey( " + newCampSrcKey + " )" ); }
+            
             _call( "_setCampSourceKey", newCampSrcKey );
         }
         
@@ -488,7 +510,8 @@ package com.google.analytics.v4
          */
         public function setCampTermKey(newCampTermKey:String):void
         {
-            _debug.info( "setCampTermKey( " + newCampTermKey + " )" );
+            LOG::P{ _log.v( "setCampTermKey( " + newCampTermKey + " )" ); }
+            
             _call( "_setCampTermKey", newCampTermKey );
         }
         
@@ -502,7 +525,8 @@ package com.google.analytics.v4
          */
         public function setCampaignTrack(enable:Boolean):void
         {
-            _debug.info( "setCampaignTrack( " + enable + " )" );
+            LOG::P{ _log.v( "setCampaignTrack( " + enable + " )" ); }
+            
             _call( "_setCampaignTrack", enable );
         }
         
@@ -518,7 +542,8 @@ package com.google.analytics.v4
          */
         public function setCookieTimeout(newDefaultTimeout:int):void
         {
-            _debug.info( "setCookieTimeout( " + newDefaultTimeout + " )" );
+            LOG::P{ _log.v( "setCookieTimeout( " + newDefaultTimeout + " )" ); }
+            
             _call( "_setCookieTimeout", newDefaultTimeout );
         }
         
@@ -539,7 +564,8 @@ package com.google.analytics.v4
          */
         public function cookiePathCopy(newPath:String):void
         {
-            _debug.info( "cookiePathCopy( " + newPath + " )" );
+            LOG::P{ _log.v( "cookiePathCopy( " + newPath + " )" ); }
+            
             _call( "_cookiePathCopy", newPath );
         }
    
@@ -553,10 +579,11 @@ package com.google.analytics.v4
         *
         * @return String containing all cookie data
         */        
-        public function getLinkerUrl(url:String = "", useHash:Boolean=false):String
+        public function getLinkerUrl( targetUrl:String = "", useHash:Boolean=false ):String
         {
-        	_debug.info( "getLinkerUrl("+ url +", "+ useHash +")" );
-        	return _call( "_getLinkerUrl", url, useHash );
+        	LOG::P{ _log.v( "getLinkerUrl("+ [targetUrl,useHash].join(", ") +")" ); }
+            
+        	return _call( "_getLinkerUrl", targetUrl, useHash );
         }
         
         /**
@@ -568,9 +595,10 @@ package com.google.analytics.v4
          * @param targetUrl URL of target site to send cookie values to.
          * @param useHash Set to true for passing tracking code variables by using the # anchortag separator rather than the default ? query string separator. (Currently this behavior is for internal Google properties only.)
          */
-        public function link(targetUrl:String, useHash:Boolean=false):void
+        public function link( targetUrl:String, useHash:Boolean=false ):void
         {
-            _debug.info( "link( " + targetUrl +", " + useHash + " )" );
+            LOG::P{ _log.v( "link( " + [targetUrl,useHash].join(", ") + " )" ); }
+            
             _call( "_link", targetUrl, useHash );
         }
         
@@ -586,9 +614,11 @@ package com.google.analytics.v4
          * @param formObject Form object encapsulating the POST request.  
          * @param useHash Set to true for passing tracking code variables by using the # anchortag separator rather than the default ? query string separator.
          */
-        public function linkByPost(formObject:Object, useHash:Boolean=false):void
+        public function linkByPost( formObject:Object, useHash:Boolean=false ):void
         {
-            _debug.warning( "linkByPost( " + formObject +", " + useHash + " ) not implemented" );
+            LOG::P{ _log.v( "linkByPost( " + [formObject,useHash].join(", ") + " )" ); }
+            LOG::P{ _log.d( "linkByPost() not implemented" ); }
+            
             /* TODO:
                this might not make any sense to provide..
                ie what form object would we provide?
@@ -611,7 +641,8 @@ package com.google.analytics.v4
          */
         public function setAllowHash( enable:Boolean ):void
         {
-            _debug.info( "setAllowHash( " + enable + " )" );
+            LOG::P{ _log.v( "setAllowHash( " + enable + " )" ); }
+            
             _call( "_setAllowHash" , enable ) ;
         }
         
@@ -623,7 +654,8 @@ package com.google.analytics.v4
          */
         public function setAllowLinker( enable:Boolean ):void
         {
-            _debug.info( "setAllowLinker( " + enable + " )" );
+            LOG::P{ _log.v( "setAllowLinker( " + enable + " )" ); }
+            
             _call( "_setAllowLinker", enable ) ;
         }
         
@@ -643,7 +675,8 @@ package com.google.analytics.v4
          */
         public function setCookiePath(newCookiePath:String):void
         {
-            _debug.info( "setCookiePath( " + newCookiePath + " )" );
+            LOG::P{ _log.v( "setCookiePath( " + newCookiePath + " )" ); }
+            
             _call( "_setCookiePath", newCookiePath );
         }
         
@@ -657,7 +690,8 @@ package com.google.analytics.v4
          */
         public function setDomainName(newDomainName:String):void
         {
-            _debug.info( "setDomainName( " + newDomainName + " )" );
+            LOG::P{ _log.v( "setDomainName( " + newDomainName + " )" ); }
+            
             _call( "_setDomainName", newDomainName );
         }
         
@@ -685,7 +719,8 @@ package com.google.analytics.v4
          */
         public function addItem(item:String, sku:String, name:String, category:String, price:Number, quantity:int):void
         {
-            _debug.info( "addItem( " + [item,sku,name,category,price,quantity].join( ", " ) + " )" );
+            LOG::P{ _log.v( "addItem( " + [item,sku,name,category,price,quantity].join( ", " ) + " )" ); }
+            
             _call( "_addItem", item, sku, name, category, price, quantity );
         }
         
@@ -706,7 +741,8 @@ package com.google.analytics.v4
          */
         public function addTrans(orderId:String, affiliation:String, total:Number, tax:Number, shipping:Number, city:String, state:String, country:String):void
         {
-            _debug.info( "addTrans( " + [orderId,affiliation,total,tax,shipping,city,state,country].join( ", " ) + " )" );
+            LOG::P{ _log.v( "addTrans( " + [orderId,affiliation,total,tax,shipping,city,state,country].join( ", " ) + " )" ); }
+            
             /* TODO:
                decide if we want to return an actual transaction object from this ?
             */
@@ -722,7 +758,8 @@ package com.google.analytics.v4
          */
         public function trackTrans():void
         {
-            _debug.info( "trackTrans()" );
+            LOG::P{ _log.v( "trackTrans()" ); }
+            
             _call( "_trackTrans" );
         }
         
@@ -732,7 +769,8 @@ package com.google.analytics.v4
         
         public function createEventTracker( objName:String ):EventTracker
         {
-            _debug.info( "createEventTracker( " + objName + " )" );
+            LOG::P{ _log.v( "createEventTracker( " + objName + " )" ); }
+            
             /* note:
                we don't need to forward to a JS call
                as ultimately the EventTracker.trackEvent()
@@ -775,16 +813,16 @@ package com.google.analytics.v4
             switch( param )
             {
                 case 4:
-                _debug.info( "trackEvent( " + [category,action,label,value].join( ", " ) + " )" );
+                LOG::P{ _log.v( "trackEvent( " + [category,action,label,value].join( ", " ) + " )" ); }
                 return _call( "_trackEvent", category, action, label, value );
                 
                 case 3:
-                _debug.info( "trackEvent( " + [category,action,label].join( ", " ) + " )" );
+                LOG::P{ _log.v( "trackEvent( " + [category,action,label].join( ", " ) + " )" ); }
                 return _call( "_trackEvent", category, action, label );
                 
                 case 2:
                 default:
-                _debug.info( "trackEvent( " + [category,action].join( ", " ) + " )" );
+                LOG::P{ _log.v( "trackEvent( " + [category,action].join( ", " ) + " )" ); }
                 return _call( "_trackEvent", category, action );
             }
             
@@ -807,7 +845,8 @@ package com.google.analytics.v4
          */
         public function addIgnoredOrganic(newIgnoredOrganicKeyword:String):void
         {
-            _debug.info( "addIgnoredOrganic( " + newIgnoredOrganicKeyword + " )" );
+            LOG::P{ _log.v( "addIgnoredOrganic( " + newIgnoredOrganicKeyword + " )" ); }
+            
             _call( "_addIgnoredOrganic", newIgnoredOrganicKeyword );
         }
         
@@ -824,7 +863,8 @@ package com.google.analytics.v4
          */
         public function addIgnoredRef(newIgnoredReferrer:String):void
         {
-            _debug.info( "addIgnoredRef( " + newIgnoredReferrer + " )" );
+            LOG::P{ _log.v( "addIgnoredRef( " + newIgnoredReferrer + " )" ); }
+            
             _call( "_addIgnoredRef", newIgnoredReferrer );
         }
         
@@ -838,7 +878,8 @@ package com.google.analytics.v4
          */
         public function addOrganic(newOrganicEngine:String, newOrganicKeyword:String):void
         {
-            _debug.info( "addOrganic( " + [newOrganicEngine,newOrganicKeyword].join( ", " ) + " )" );
+            LOG::P{ _log.v( "addOrganic( " + [newOrganicEngine,newOrganicKeyword].join( ", " ) + " )" ); }
+            
             _call( "_addOrganic", newOrganicEngine );
         }
         
@@ -847,7 +888,8 @@ package com.google.analytics.v4
          */
         public function clearIgnoredOrganic():void
         {
-            _debug.info( "clearIgnoredOrganic()" );
+            LOG::P{ _log.v( "clearIgnoredOrganic()" ); }
+            
             _call( "_clearIgnoreOrganic" );
         }
         
@@ -856,7 +898,8 @@ package com.google.analytics.v4
          */
         public function clearIgnoredRef():void
         {
-            _debug.info( "clearIgnoredRef()" );
+            LOG::P{ _log.v( "clearIgnoredRef()" ); }
+            
             _call( "_clearIgnoreRef" );
         }
         
@@ -866,7 +909,8 @@ package com.google.analytics.v4
          */
         public function clearOrganic():void
         {
-            _debug.info( "clearOrganic()" );
+            LOG::P{ _log.v( "clearOrganic()" ); }
+            
             _call( "_clearOrganic" );
         }
         
@@ -878,7 +922,8 @@ package com.google.analytics.v4
          */
         public function getClientInfo():Boolean
         {
-            _debug.info( "getClientInfo()" );
+            LOG::P{ _log.v( "getClientInfo()" ); }
+            
             return _call( "_getClientInfo" );
         }
         
@@ -890,7 +935,8 @@ package com.google.analytics.v4
          */
         public function getDetectFlash():Boolean
         {
-            _debug.info( "getDetectFlash()" );
+            LOG::P{ _log.v( "getDetectFlash()" ); }
+            
             return _call( "_getDetectFlash" );
         }
         
@@ -901,7 +947,8 @@ package com.google.analytics.v4
          */
         public function getDetectTitle():Boolean
         {
-            _debug.info( "getDetectTitle()" );
+            LOG::P{ _log.v( "getDetectTitle()" ); }
+            
             return _call( "_getDetectTitle" );
         }
         
@@ -917,7 +964,8 @@ package com.google.analytics.v4
          */
         public function setClientInfo(enable:Boolean):void
         {
-            _debug.info( "setClientInfo( " + enable + " )" );
+            LOG::P{ _log.v( "setClientInfo( " + enable + " )" ); }
+            
             _call( "_setClientInfo", enable );
         }
         
@@ -933,7 +981,8 @@ package com.google.analytics.v4
          */
         public function setDetectFlash(enable:Boolean):void
         {
-            _debug.info( "setDetectFlash( " + enable + " )" );
+            LOG::P{ _log.v( "setDetectFlash( " + enable + " )" ); }
+            
             _call( "_setDetectFlash", enable );
         }
         
@@ -953,7 +1002,8 @@ package com.google.analytics.v4
          */
         public function setDetectTitle(enable:Boolean):void
         {
-            _debug.info( "setDetectTitle( " + enable + " )" );
+            LOG::P{ _log.v( "setDetectTitle( " + enable + " )" ); }
+            
             _call( "_setDetectTitle", enable );
         }
         
@@ -971,7 +1021,8 @@ package com.google.analytics.v4
          */
         public function getLocalGifPath():String
         {
-            _debug.info( "getLocalGifPath()" );
+            LOG::P{ _log.v( "getLocalGifPath()" ); }
+            
             return _call( "_getLocalGifPath" );
         }
         
@@ -984,7 +1035,8 @@ package com.google.analytics.v4
          */
         public function getServiceMode():ServerOperationMode
         {
-            _debug.info( "getServiceMode()" );
+            LOG::P{ _log.v( "getServiceMode()" ); }
+            
             return _call( "_getServiceMode" );
         }
         
@@ -998,7 +1050,8 @@ package com.google.analytics.v4
          */
         public function setLocalGifPath(newLocalGifPath:String):void
         {
-            _debug.info( "setLocalGifPath( " + newLocalGifPath + " )" );
+            LOG::P{ _log.v( "setLocalGifPath( " + newLocalGifPath + " )" ); }
+            
             _call( "_setLocalGifPath", newLocalGifPath );
         }
         
@@ -1011,7 +1064,8 @@ package com.google.analytics.v4
          */
         public function setLocalRemoteServerMode():void
         {
-            _debug.info( "setLocalRemoteServerMode()" );
+            LOG::P{ _log.v( "setLocalRemoteServerMode()" ); }
+            
             _call( "_setLocalRemoteServerMode" );
         }
         
@@ -1024,7 +1078,8 @@ package com.google.analytics.v4
          */
         public function setLocalServerMode():void
         {
-            _debug.info( "setLocalServerMode()" );
+            LOG::P{ _log.v( "setLocalServerMode()" ); }
+            
             _call( "_setLocalServerMode" );
         }
         
@@ -1035,7 +1090,8 @@ package com.google.analytics.v4
          */
         public function setRemoteServerMode():void
         {
-            _debug.info( "setRemoteServerMode()" );
+            LOG::P{ _log.v( "setRemoteServerMode()" ); }
+            
             _call( "_setRemoteServerMode" );
         }
         

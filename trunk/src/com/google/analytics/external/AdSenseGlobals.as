@@ -19,13 +19,16 @@
 
 package com.google.analytics.external
 {
-    import com.google.analytics.debug.DebugConfiguration;    
+    import com.google.analytics.log;
+    
+    import core.Logger;
 
     /**
     * Globals used by AdSense for revenue per page tracking.
     */
     public class AdSenseGlobals extends JavascriptProxy
     {
+        private var _log:Logger;
         
         /**
          * @private
@@ -54,11 +57,13 @@ package com.google.analytics.external
         
         /**
          * Creates a new AdSenseGlobals instance.
-         * @param debug The DebugConfiguration reference of this instance.
          */
-        public function AdSenseGlobals( debug:DebugConfiguration )
+        public function AdSenseGlobals()
         {
-            super( debug );
+            super();
+            
+            LOG::P{ _log = log.tag( "AdSenseGlobals" ); }
+            LOG::P{ _log.v( "constructor()" ); }
         }
         
         /**
@@ -66,6 +71,8 @@ package com.google.analytics.external
          */
         private function _verify():void
         {
+            LOG::P{ _log.v( "_verify()" ); }
+            
             if( !_gaGlobalVerified )
             {
                 executeBlock( gaGlobal_js );
@@ -79,10 +86,9 @@ package com.google.analytics.external
          */
         public function get gaGlobal():Object
         {
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            LOG::P{ _log.v( "get gaGlobal()" ); }
+            if( !isAvailable() ) { return null; }
+            
             _verify();
             return getProperty( "gaGlobal" );
         }
@@ -92,10 +98,8 @@ package com.google.analytics.external
          */
         public function get dh():String
         {
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            LOG::P{ _log.v( "get dh()" ); }
+            if( !isAvailable() ) { return null; }
             
             _verify();
             return getProperty( "gaGlobal.dh" );
@@ -106,10 +110,8 @@ package com.google.analytics.external
          */
         public function get hid():String
         {
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            LOG::P{ _log.v( "get hid()" ); }
+            if( !isAvailable() ) { return null; }
             
             _verify();
             return getProperty( "gaGlobal.hid" );
@@ -120,10 +122,8 @@ package com.google.analytics.external
          */
         public function set hid( value:String ):void
         {
-            if( !isAvailable() )
-            {
-                return;
-            }
+            LOG::P{ _log.v( "set hid( " + value + " )" ); }
+            if( !isAvailable() ) { return; }
             
             _verify();
             setProperty( "gaGlobal.hid", value );
@@ -134,10 +134,8 @@ package com.google.analytics.external
          */
         public function get sid():String
         {
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            LOG::P{ _log.v( "get sid()" ); }
+            if( !isAvailable() ) { return null; }
             
             _verify();
             return getProperty( "gaGlobal.sid" );
@@ -148,10 +146,8 @@ package com.google.analytics.external
          */
         public function set sid( value:String ):void
         {
-            if( !isAvailable() )
-            {
-                return;
-            }
+            LOG::P{ _log.v( "set sid( " + value + " )" ); }
+            if( !isAvailable() ) { return; }
             
             _verify();
             setProperty( "gaGlobal.sid", value );
@@ -163,10 +159,8 @@ package com.google.analytics.external
          */
         public function get vid():String
         {
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            LOG::P{ _log.v( "get vid()" ); }
+            if( !isAvailable() ) { return null; }
             
             _verify();
             return getProperty( "gaGlobal.vid" );
@@ -177,10 +171,8 @@ package com.google.analytics.external
          */
         public function set vid( value:String ):void
         {
-            if( !isAvailable() )
-            {
-                return;
-            }
+            LOG::P{ _log.v( "set vid( " + value + " )" ); }
+            if( !isAvailable() ) { return; }
             
             _verify();
             setProperty( "gaGlobal.vid", value );

@@ -27,9 +27,10 @@ package com.google.analytics.core
     import com.google.analytics.data.UTMV;
     import com.google.analytics.data.UTMX;
     import com.google.analytics.data.UTMZ;
-    import com.google.analytics.debug.DebugConfiguration;
-    import com.google.analytics.debug.VisualDebugMode;
+    import com.google.analytics.log;
     import com.google.analytics.v4.Configuration;
+    
+    import core.Logger;
     
     import flash.events.NetStatusEvent;
     import flash.net.SharedObject;
@@ -40,8 +41,9 @@ package com.google.analytics.core
      */
     public dynamic class Buffer
     {
+        private var _log:Logger;
+        
         private var _config:Configuration;
-        private var _debug:DebugConfiguration;
         
         private var _SO:SharedObject;
         private var _OBJ:Object;
@@ -64,17 +66,22 @@ package com.google.analytics.core
         
         private function _onFlushStatus( event:NetStatusEvent ):void
         {
-            _debug.info("User closed permission dialog...");
+            LOG::P{ _log.v( "_onFlushStatus()" ); }
             
-            switch( event.info.code )
+            LOG::P{ _log.i( "User closed permission dialog..." ); }
+            
+            LOG::P
             {
-                case "SharedObject.Flush.Success":
-                _debug.info("User granted permission -- value saved.");
-                break;
-                
-                case "SharedObject.Flush.Failed":
-                _debug.info("User denied permission -- value not saved.");
-                break;
+                switch( event.info.code )
+                {
+                    case "SharedObject.Flush.Success":
+                    _log.i( "User granted permission -- value saved." );
+                    break;
+                    
+                    case "SharedObject.Flush.Failed":
+                    _log.i( "User denied permission -- value not saved." );
+                    break;
+                }
             }
             
             _SO.removeEventListener( NetStatusEvent.NET_STATUS, _onFlushStatus );
@@ -82,6 +89,8 @@ package com.google.analytics.core
         
         private function _clearUTMA():void
         {
+            LOG::P{ _log.v( "_clearUTMA()" ); }
+            
             _utma = null;
             
             if( !isVolatile() )
@@ -94,6 +103,8 @@ package com.google.analytics.core
         
         private function _clearUTMB():void
         {
+            LOG::P{ _log.v( "_clearUTMB()" ); }
+            
             _utmb = null;
             
             if( !isVolatile() )
@@ -106,12 +117,16 @@ package com.google.analytics.core
         
         private function _clearUTMC():void
         {
+            LOG::P{ _log.v( "_clearUTMC()" ); }
+            
             _utmc = null;
             //utmc is not saved in SO
         }
         
         private function _clearUTMV():void
         {
+            LOG::P{ _log.v( "_clearUTMV()" ); }
+            
             _utmv = null;
             
             if( !isVolatile() )
@@ -124,6 +139,8 @@ package com.google.analytics.core
         
         private function _clearUTMZ():void
         {
+            LOG::P{ _log.v( "_clearUTMZ()" ); }
+            
             _utmz = null;
             
             if( !isVolatile() )
@@ -136,42 +153,56 @@ package com.google.analytics.core
         
         private function _createUMTA():void
         {
+            LOG::P{ _log.v( "_createUMTA()" ); }
+            
             _utma = new UTMA();
             _utma.proxy = this;
         }
         
         private function _createUMTB():void
         {
+            LOG::P{ _log.v( "_createUMTB()" ); }
+            
             _utmb = new UTMB();
             _utmb.proxy = this;
         }
         
         private function _createUMTC():void
         {
+            LOG::P{ _log.v( "_createUMTC()" ); }
+            
             _utmc = new UTMC();
             //_utmc.proxy = this;
         }
         
         private function _createUMTK():void
         {
+            LOG::P{ _log.v( "_createUMTK()" ); }
+            
             _utmk = new UTMK();
             _utmk.proxy = this;
         }
         
         private function _createUMTX():void
         {
+            LOG::P{ _log.v( "_createUMTX()" ); }
+            
         	_utmx = new UTMX();
         	_utmx.proxy = this;
         }
         
         private function _createUMTV():void
         {
+            LOG::P{ _log.v( "_createUMTV()" ); }
+            
             _utmv = new UTMV();
             _utmv.proxy = this;
         }
         
         private function _createUMTZ():void
         {
+            LOG::P{ _log.v( "_createUMTZ()" ); }
+            
             _utmz = new UTMZ();
             _utmz.proxy = this;
         }
@@ -179,17 +210,17 @@ package com.google.analytics.core
         /**
          * Creates a new Buffer instance.
          * @param config The Configuration reference use in the Buffer to set it.
-         * @param debug The DebugConfiguration reference of the Buffer.
          * @param volatile If true no use of SharedObject, only in-memory data.
          * @param data Can be used to inject data into OBJ or SO.
          */
-        public function Buffer( config:Configuration, debug:DebugConfiguration, volatile:Boolean = false, data:Object = null )
+        public function Buffer( config:Configuration, volatile:Boolean = false, data:Object = null )
         {
+            LOG::P{ _log = log.tag( "Buffer" ); }
+            LOG::P{ _log.v( "constructor()" ); }
             
             // note : data should be used to inject the data from the query string
             
             _config = config;
-            _debug  = debug;
             _data = data;
             
             /* note:
@@ -228,6 +259,8 @@ package com.google.analytics.core
         */
         public function createSO():void 
         {
+            LOG::P{ _log.v( "createSO()" ); }
+            
         	UTMZ.defaultTimespan = _config.conversionTimeout;
         	UTMB.defaultTimespan = _config.sessionTimeout;        	
         	
@@ -238,12 +271,11 @@ package com.google.analytics.core
             	{
             		_SO = SharedObject.getLocal( _config.cookieName, _config.cookiePath );
              	}
-                catch(e:Error)
+                catch( e:Error )
                 {
-                	if( _debug.active)
-                    {
-                		_debug.warning( "Shared Object "+ _config.cookieName +" failed to be set\nreason: " + e.message );
-                    }
+                    var msg:String = "Shared Object "+ _config.cookieName +" failed to be set\nreason: " + e.message;
+                    LOG::P{ _log.e( msg ); }
+                    if( _config.enableErrorChecking ) { throw new Error( msg ); }
                 }
                 
                 
@@ -253,26 +285,18 @@ package com.google.analytics.core
                 */
                 var saveSO:Boolean = false;
                 
+                //utma value
                 if( _SO.data.utma )
                 {
-                    if( !hasUTMA() )
-                    {
-                        _createUMTA();
-                    }
+                    if( !hasUTMA() ) { _createUMTA(); }
                     
                     _utma.fromSharedObject( _SO.data.utma );
                     
-                    if( _debug.verbose )
-                    {
-                        _debug.info( "found: " + _utma.toString(true), VisualDebugMode.geek );
-                    }
+                    LOG::P{ _log.i( "utma = " + _utma.toString(true) ); }
                     
                     if( _utma.isExpired() )
                     {
-                        if( _debug.verbose )
-                            {
-                                _debug.warning( "UTMA has expired", VisualDebugMode.advanced );
-                            }
+                        LOG::P{ _log.w( "UTMA has expired" ); }
                         
                         _clearUTMA();
                         saveSO = true;
@@ -282,24 +306,15 @@ package com.google.analytics.core
                 
                 if( _SO.data.utmb )
                 {
-                    if( !hasUTMB() )
-                    {
-                        _createUMTB();
-                    }
+                    if( !hasUTMB() ) { _createUMTB(); }
                     
                     _utmb.fromSharedObject( _SO.data.utmb );
                     
-                    if( _debug.verbose )
-                    {
-                        _debug.info( "found: " + _utmb.toString(true), VisualDebugMode.geek );
-                    }
+                    LOG::P{ _log.i( "utmb = " + _utmb.toString(true) ); }
                     
                     if( _utmb.isExpired() )
                     {
-                        if( _debug.verbose )
-                            {
-                                _debug.warning( "UTMB has expired", VisualDebugMode.advanced );
-                            }
+                        LOG::P{ _log.w( "UTMB has expired" ); }
                         
                         _clearUTMB();
                         saveSO = true;
@@ -320,47 +335,27 @@ package com.google.analytics.core
                 
                 if( _SO.data.utmk )
                 {
-                    if( !hasUTMK() )
-                    {
-                        _createUMTK();
-                    }
+                    if( !hasUTMK() ) { _createUMTK(); }
                     
                     _utmk.fromSharedObject( _SO.data.utmk );
                     
-                    if( _debug.verbose )
-                    {
-                        _debug.info( "found: " + _utmk.toString(), VisualDebugMode.geek );
-                    }
+                    LOG::P{ _log.i( "utmk = " + _utmk.toString() ); }
                 }
                 
                 //utmx value
-                if( !hasUTMX() )
-                {
-                	_createUMTX();
-                }
-                
-                
+                if( !hasUTMX() ) { _createUMTX(); }
                 
                 if( _SO.data.utmv )
                 {
-                    if( !hasUTMV() )
-                    {
-                        _createUMTV();
-                    }
+                    if( !hasUTMV() ) { _createUMTV(); }
                     
                     _utmv.fromSharedObject( _SO.data.utmv );
                     
-                    if( _debug.verbose )
-                    {
-                        _debug.info( "found: " + _utmv.toString(true), VisualDebugMode.geek );
-                    }
+                    LOG::P{ _log.i( "utmv = " + _utmv.toString(true) ); }
                     
                     if( _utmv.isExpired() )
                     {
-                        if( _debug.verbose )
-                            {
-                                _debug.warning( "UTMV has expired", VisualDebugMode.advanced );
-                            }
+                        LOG::P{ _log.w( "UTMV has expired" ); }
                         
                         _clearUTMV();
                         saveSO = true;
@@ -370,24 +365,15 @@ package com.google.analytics.core
                 
                 if( _SO.data.utmz )
                 {
-                    if( !hasUTMZ() )
-                    {
-                        _createUMTZ();
-                    }
+                    if( !hasUTMZ() ) { _createUMTZ(); }
                     
                     _utmz.fromSharedObject( _SO.data.utmz );
                     
-                    if( _debug.verbose )
-                    {
-                        _debug.info( "found: " + _utmz.toString(true), VisualDebugMode.geek );
-                    }
+                    LOG::P{ _log.i( "utmz = " + _utmz.toString(true) ); }
                     
                     if( _utmz.isExpired() )
                     {
-                        if( _debug.verbose )
-                            {
-                                _debug.warning( "UTMZ has expired", VisualDebugMode.advanced );
-                            }
+                        LOG::P{ _log.w( "UTMZ has expired" ); }
                         
                         _clearUTMZ();
                         saveSO = true;
@@ -395,11 +381,7 @@ package com.google.analytics.core
                     
                 }
                 
-                if( saveSO )
-                {
-                    save();
-                }
-                
+                if( saveSO ) { save(); }
             }
         }
         
@@ -408,11 +390,9 @@ package com.google.analytics.core
          */
         public function get utma():UTMA
         {
-            if( !hasUTMA() )
-            {
-                _createUMTA();
-            }
+            LOG::P{ _log.v( "get utma()" ); }
             
+            if( !hasUTMA() ) { _createUMTA(); }
             return _utma;
         }
         
@@ -421,11 +401,9 @@ package com.google.analytics.core
          */         
         public function get utmb():UTMB
         {
-            if( !hasUTMB() )
-            {
-                _createUMTB();
-            }
+            LOG::P{ _log.v( "get utmb()" ); }
             
+            if( !hasUTMB() ) { _createUMTB(); }
             return _utmb;
         }
         
@@ -434,11 +412,9 @@ package com.google.analytics.core
          */ 
         public function get utmc():UTMC
         {
-            if( !hasUTMC() )
-            {
-                _createUMTC();
-            }
+            LOG::P{ _log.v( "get utmc()" ); }
             
+            if( !hasUTMC() ) { _createUMTC(); }
             return _utmc;
         }
         
@@ -447,11 +423,9 @@ package com.google.analytics.core
          */             
         public function get utmk():UTMK
         {
-            if( !hasUTMK() )
-            {
-                _createUMTK();
-            }
+            LOG::P{ _log.v( "get utmk()" ); }
             
+            if( !hasUTMK() ) { _createUMTK(); }
             return _utmk;
         }
         
@@ -460,26 +434,20 @@ package com.google.analytics.core
          */             
         public function get utmx():UTMX
         {
-            if( !hasUTMX() )
-            {
-                _createUMTX();
-            }
+            LOG::P{ _log.v( "get utmx()" ); }
             
+            if( !hasUTMX() ) { _createUMTX(); }
             return _utmx;
         }
-               
-        
         
         /**
          * Indicates the utmv value of the buffer.
          */        
         public function get utmv():UTMV
         {
-            if( !hasUTMV() )
-            {
-                _createUMTV();
-            }
+            LOG::P{ _log.v( "get utmv()" ); }
             
+            if( !hasUTMV() ) { _createUMTV(); }
             return _utmv;
         }
         
@@ -488,11 +456,9 @@ package com.google.analytics.core
          */
         public function get utmz():UTMZ
         {
-            if( !hasUTMZ() )
-            {
-                _createUMTZ();
-            }
+            LOG::P{ _log.v( "get utmz()" ); }
             
+            if( !hasUTMZ() ) { _createUMTZ(); }
             return _utmz;
         }
         
@@ -501,11 +467,9 @@ package com.google.analytics.core
          */          
         public function hasUTMA():Boolean
         {
-            if( _utma )
-            {
-                return true;
-            }
+            LOG::P{ _log.v( "hasUTMA()" ); }
             
+            if( _utma ) { return true; }
             return false;
         }
         
@@ -514,11 +478,9 @@ package com.google.analytics.core
          */           
         public function hasUTMB():Boolean
         {
-            if( _utmb )
-            {
-                return true;
-            }
+            LOG::P{ _log.v( "hasUTMB()" ); }
             
+            if( _utmb ) { return true; }
             return false;
         }
         
@@ -527,11 +489,9 @@ package com.google.analytics.core
          */         
         public function hasUTMC():Boolean
         {
-            if( _utmc )
-            {
-                return true;
-            }
+            LOG::P{ _log.v( "hasUTMC()" ); }
             
+            if( _utmc ) { return true; }
             return false;
         }
         
@@ -540,11 +500,9 @@ package com.google.analytics.core
          */
         public function hasUTMK():Boolean
         {
-            if( _utmk )
-            {
-                return true;
-            }
+            LOG::P{ _log.v( "hasUTMK()" ); }
             
+            if( _utmk ) { return true; }
             return false;
         }
         
@@ -553,39 +511,31 @@ package com.google.analytics.core
          */        
         public function hasUTMV():Boolean
         {
-            if( _utmv )
-            {
-                return true;
-            }
+            LOG::P{ _log.v( "hasUTMV()" ); }
             
+            if( _utmv ) { return true; }
             return false;
         }
         
-         /**
+        /**
          * Indicates if the buffer contains an UTMV value.
          */        
         public function hasUTMX():Boolean
         {
-            if( _utmx )
-            {
-                return true;
-            }
+            LOG::P{ _log.v( "hasUTMX()" ); }
             
+            if( _utmx ) { return true; }
             return false;
         }
-        
-        
         
         /**
          * Indicates if the buffer contains an UTMZ value.
          */
         public function hasUTMZ():Boolean
         {
-            if( _utmz )
-            {
-                return true;
-            }
+            LOG::P{ _log.v( "hasUTMZ()" ); }
             
+            if( _utmz ) { return true; }
             return false;
         }
         
@@ -594,6 +544,8 @@ package com.google.analytics.core
          */
         public function update( name:String, value:* ):void
         {
+            LOG::P{ _log.v( "update( " + [name,value].join(", ") + " )" ); }
+            
             if( isVolatile() )
             {
                 _OBJ[name] = value;
@@ -609,6 +561,8 @@ package com.google.analytics.core
          */
         public function clearCookies():void
         {
+            LOG::P{ _log.v( "clearCookies()" ); }
+            
             utma.reset();
             utmb.reset();
             utmc.reset();
@@ -622,6 +576,8 @@ package com.google.analytics.core
          */
         public function generateCookiesHash():Number
         {
+            LOG::P{ _log.v( "generateCookiesHash()" ); }
+            
             var value:String = "";
                 value += utma.valueOf();
                 value += utmb.valueOf();
@@ -638,6 +594,8 @@ package com.google.analytics.core
         */ 
         public function toLinkerParams():String
         {
+            LOG::P{ _log.v( "toLinkerParams()" ); }
+            
         	var output:String = "";
         		output += utma.toURLString();
         		output += "&"+ utmb.toURLString();
@@ -655,6 +613,8 @@ package com.google.analytics.core
         */ 
         public function getLinkerUrl( targetUrl:String = "", useHash:Boolean = false ):String
         {
+            LOG::P{ _log.v( "getLinkerUrl( " + [targetUrl,useHash].join(", ") + " )" ); }
+            
         	var linkerParams:String = toLinkerParams();
         	var formattedUrl:String = targetUrl;
         	var urlFields:Array = targetUrl.split("#");
@@ -717,16 +677,16 @@ package com.google.analytics.core
          */
         public function isVolatile():Boolean
         {
+            LOG::P{ _log.v( "isVolatile()" ); }
+            
             return _volatile;
         }
         
         public function isGenuine():Boolean
         {
-            if( !hasUTMK() )
-            {
-                return true;
-            }
+            LOG::P{ _log.v( "isGenuine()" ); }
             
+            if( !hasUTMK() ) { return true;}
             return (utmk.hash == generateCookiesHash() );
         }
         
@@ -735,10 +695,7 @@ package com.google.analytics.core
          */
         public function updateUTMA( timestamp:Number ):void
         {
-            if( _debug.verbose )
-            {
-                _debug.info( "updateUTMA( "+timestamp+" )", VisualDebugMode.advanced );
-            }
+            LOG::P{ _log.v( "updateUTMA( " + timestamp + " )" ); }
             
             // if __utma value is not empty, update
             if( !utma.isEmpty() )
@@ -746,7 +703,6 @@ package com.google.analytics.core
                 // update session count
                 if( isNaN( utma.sessionCount ) )
                 {
-                    
                     utma.sessionCount = 1;
                 }
                 else
@@ -759,6 +715,8 @@ package com.google.analytics.core
                 
                 // current session time is now
                 utma.currentTime = timestamp;
+                
+                LOG::P{ _log.i( "utma = " + utma.toString(true) ); }
             }
         }
         
@@ -768,6 +726,8 @@ package com.google.analytics.core
         */
         public function resetCurrentSession():void
         {
+            LOG::P{ _log.v( "resetCurrentSession()" ); }
+            
             _clearUTMB();
             _clearUTMC();
             save();
@@ -778,6 +738,8 @@ package com.google.analytics.core
          */
         public function save():void
         {
+            LOG::P{ _log.v( "save()" ); }
+            
             //we save only when using SharedObject
             if( !isVolatile() )
             {
@@ -793,21 +755,21 @@ package com.google.analytics.core
                        This error might occur if the user has permanently disallowed local
                        information storage for objects from this domain. 
                     */
-                    _debug.warning( "Error...Could not write SharedObject to disk" );
+                    LOG::P{ _log.e( "Error...Could not write SharedObject to disk" ); }
                 }
                 
                 switch( flushStatus )
                 {
                     case SharedObjectFlushStatus.PENDING:
                     {
-                        _debug.info( "Requesting permission to save object..." );
+                        LOG::P{ _log.i( "Requesting permission to save object..." ); }
                         _SO.addEventListener( NetStatusEvent.NET_STATUS, _onFlushStatus );
                         break;
                     }
                     
                     case SharedObjectFlushStatus.FLUSHED:
                     {
-                        _debug.info( "Value flushed to disk." );
+                        LOG::P{ _log.i( "Value flushed to disk." ); }
                         break;
                     }
                 }

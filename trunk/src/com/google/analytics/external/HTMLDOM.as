@@ -20,7 +20,9 @@
 
 package com.google.analytics.external
 {
-    import com.google.analytics.debug.DebugConfiguration;
+    import com.google.analytics.log;
+    
+    import core.Logger;
     
     
     /**
@@ -28,6 +30,7 @@ package com.google.analytics.external
      */
     public class HTMLDOM extends JavascriptProxy
     {
+        private var _log:Logger;
         
         private var _host:String;
         private var _language:String;
@@ -68,9 +71,12 @@ package com.google.analytics.external
         /**
          * Creates a new HTMLDOM instance.
          */
-        public function HTMLDOM( debug:DebugConfiguration )
+        public function HTMLDOM()
         {
-            super( debug );
+            super();
+            LOG::P{ _log = log.tag( "HTMLDOM" ); }
+            LOG::P{ _log.v( "constructor()" ); }
+            
         }
         
         /**
@@ -78,10 +84,9 @@ package com.google.analytics.external
          */
         public function cacheProperties():void
         {
-            if( !isAvailable() )
-            {
-                return;
-            }
+            LOG::P{ _log.v( "cacheProperties()" ); }
+            
+            if( !isAvailable() ) { return; }
             
             var obj:Object = call( cache_properties_js );
             
@@ -105,6 +110,8 @@ package com.google.analytics.external
          */
         public function get host():String
         {
+            LOG::P{ _log.v( "get host()" ); }
+            
             /* note:
                same logic applies for all properties
                
@@ -119,15 +126,9 @@ package com.google.analytics.external
                fetch the property and cache it
             */
             
-            if( _host )
-            {
-                return _host;
-            }
+            if( _host ) { return _host; }
             
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            if( !isAvailable() ) { return null; }
             
             _host = getProperty( "document.location.host" );
             
@@ -139,15 +140,11 @@ package com.google.analytics.external
          */
         public function get language():String
         {
-            if( _language )
-            {
-                return _language;
-            }
+            LOG::P{ _log.v( "get language()" ); }
             
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            if( _language ) { return _language; }
+            
+            if( !isAvailable() ) { return null; }
             
             var lang:String = getProperty( "navigator.language" );
             
@@ -166,15 +163,11 @@ package com.google.analytics.external
          */        
         public function get characterSet():String
         {
-            if( _characterSet )
-            {
-                return _characterSet;
-            }
+            LOG::P{ _log.v( "get characterSet()" ); }
             
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            if( _characterSet ) { return _characterSet; }
+            
+            if( !isAvailable() ) { return null; }
             
             var cs:String = getProperty( "document.characterSet" );
             
@@ -194,15 +187,11 @@ package com.google.analytics.external
          */
         public function get colorDepth():String
         {
-            if( _colorDepth )
-            {
-                return _colorDepth;
-            }
+            LOG::P{ _log.v( "get colorDepth()" ); }
             
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            if( _colorDepth ) { return _colorDepth; }
+            
+            if( !isAvailable() ) { return null; }
             
             _colorDepth = getProperty( "window.screen.colorDepth" );
             
@@ -215,15 +204,11 @@ package com.google.analytics.external
          */     
         public function get location():String
         {
-            if( _location )
-            {
-                return _location;
-            }
+            LOG::P{ _log.v( "get location()" ); }
             
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            if( _location ) { return _location; }
+            
+            if( !isAvailable() ) { return null; }
             
             _location = getPropertyString( "document.location" );
             
@@ -236,15 +221,11 @@ package com.google.analytics.external
          */
         public function get pathname():String
         {
-            if( _pathname )
-            {
-                return _pathname;
-            }
+            LOG::P{ _log.v( "get pathname()" ); }
             
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            if( _pathname ) { return _pathname; }
+            
+            if( !isAvailable() ) { return null; }
             
             _pathname = getProperty( "document.location.pathname" );
             
@@ -256,15 +237,11 @@ package com.google.analytics.external
          */       
         public function get protocol():String
         {
-            if( _protocol )
-            {
-                return _protocol;
-            }
+            LOG::P{ _log.v( "get protocol()" ); }
             
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            if( _protocol ) { return _protocol; }
+            
+            if( !isAvailable() ) { return null; }
             
             _protocol = getProperty( "document.location.protocol" );
             
@@ -276,15 +253,11 @@ package com.google.analytics.external
          */        
         public function get search():String
         {
-            if( _search )
-            {
-                return _search;
-            }
+            LOG::P{ _log.v( "get search()" ); }
             
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            if( _search ) { return _search; }
+            
+            if( !isAvailable() ) { return null; }
             
             _search = getProperty( "document.location.search" );
             
@@ -297,15 +270,11 @@ package com.google.analytics.external
          */
         public function get referrer():String
         {
-            if( _referrer )
-            {
-                return _referrer;
-            }
+            LOG::P{ _log.v( "get referrer()" ); }
             
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            if( _referrer ) { return _referrer; }
+            
+            if( !isAvailable() ) { return null; }
             
             _referrer = getProperty( "document.referrer" );
             
@@ -318,15 +287,11 @@ package com.google.analytics.external
          */
         public function get title():String
         {
-            if( _title )
-            {
-                return _title;
-            }
+            LOG::P{ _log.v( "get title()" ); }
             
-            if( !isAvailable() )
-            {
-                return null;
-            }
+            if( _title ) { return _title; }
+            
+            if( !isAvailable() ) { return null; }
             
             _title = getProperty( "document.title" );
             

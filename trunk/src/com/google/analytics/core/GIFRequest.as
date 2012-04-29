@@ -21,18 +21,21 @@
 
 package com.google.analytics.core
 {
-    import com.google.analytics.debug.DebugConfiguration;
-    import com.google.analytics.debug.VisualDebugMode;
+    import com.google.analytics.log;
     import com.google.analytics.utils.Environment;
     import com.google.analytics.utils.Variables;
     import com.google.analytics.v4.Configuration;
     
+    import core.Logger;
+    import core.version;
+    
     import flash.display.Loader;
+    import flash.display.LoaderInfo;
     import flash.events.Event;
     import flash.events.IOErrorEvent;
     import flash.events.SecurityErrorEvent;
     import flash.net.URLRequest;
-    import flash.system.LoaderContext;    
+    import flash.system.LoaderContext;
     
     /**
      * Google Analytics Tracker Code (GATC)'s GIF request module.
@@ -48,17 +51,16 @@ package com.google.analytics.core
          * @private
          */ 
         private static const MAX_REQUEST_LENGTH:Number = 2048;
-      
+        
+        private var _log:Logger;
+        
         private var _config:Configuration;
-        private var _debug:DebugConfiguration;
         private var _buffer:Buffer;
         private var _info:Environment;
         
         private var _utmac:String;
-        private var _lastRequest:URLRequest;
         
         private var _count:int;
-        private var _alertcount:int;
 
         /**
         * @private
@@ -72,17 +74,150 @@ package com.google.analytics.core
         /**
          * Creates a new GIFRequest instance.
          */
-        public function GIFRequest( config:Configuration, debug:DebugConfiguration, buffer:Buffer, info:Environment )
+        public function GIFRequest( config:Configuration, buffer:Buffer, info:Environment )
         {
+            LOG::P{ _log = log.tag( "GIFRequest" ); }
+            LOG::P{ _log.v( "constructor()" ); }
+            
             _config = config;
-            _debug  = debug;
             _buffer = buffer;
             _info   = info;
             
-            _count      = 0;
-            _alertcount = 0;
-            _requests   = [];
+            clearRequests();
         }
+        
+        private function onSecurityError( event:SecurityErrorEvent ):void
+        {
+            LOG::P{ _log.v( "onSecurityError()" ); }
+            
+            var info:LoaderInfo = event.target as LoaderInfo;
+            var name:String     = info.loader.name;
+            var url:String      = info.url;
+            
+            var ro:RequestObject = _requests[ name ];
+                ro.complete();
+            
+            _cleanAndRemove( info );
+            
+            LOG::P{ _log.i( "Gif Request #" + name + " not sent" ); }
+            LOG::P{ _log.e( "SecurityError on \"" + url + "\":\n" + event.text ); }
+        }
+        
+        private function onIOError( event:IOErrorEvent ):void
+        {
+            LOG::P{ _log.v( "onIOError()" ); }
+            
+            var info:LoaderInfo = event.target as LoaderInfo;
+            var name:String     = info.loader.name;
+            var url:String      = info.url;
+            
+            var ro:RequestObject = _requests[ name ];
+                ro.complete();
+            
+            _cleanAndRemove( info );
+            
+            LOG::P{ _log.i( "Gif Request #" + name + " not sent" ); }
+            LOG::P{ _log.e( "IOError on \"" + url + "\":\n" + event.text ); }
+        }
+        
+        private function onComplete( event:Event ):void
+        {
+            LOG::P{ _log.v( "onComplete()" ); }
+            
+            var info:LoaderInfo = event.target as LoaderInfo;
+            var name:String     = info.loader.name;
+            var url:String      = info.url;
+            
+            
+            
+            var ro:RequestObject = _requests[ name ];
+                ro.complete();
+            
+            _cleanAndRemove( info );
+            
+            LOG::P{ _log.i( "Gif Request #" + name + " sent" ); }
+            LOG::P{ _log.d( url ); }
+        }
+        
+        private function _cleanAndRemove( info:LoaderInfo ):void
+        {
+            LOG::P{ _log.v( "_cleanAndRemove()" ); }
+            
+            info.loader.contentLoaderInfo.removeEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
+            info.loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, onComplete );
+            info.loader.contentLoaderInfo.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
+            
+            var FP10:version    = new version( 10, 0 );
+            var current:version = _info.flashVersion;
+            
+            if( current < FP10 )
+            {
+                info.loader.unload();
+            }
+            else
+            {
+                info.loader["unloadAndStop"]( true );
+            }
+            
+        }
+        
+        private function _sendLocalRequest( variables:Variables ):void
+        {
+            LOG::P{ _log.v( "_sendLocalRequest()" ); }
+            
+            var localPath:String = _info.locationSWFPath;
+ 
+            if( localPath.lastIndexOf( "/" ) > 0 )
+            {
+                localPath = localPath.substring( 0, localPath.lastIndexOf( "/" ) );
+            }
+            
+            var localImage:URLRequest = new URLRequest();
+            
+            if( _config.localGIFpath.indexOf( "http" ) == 0 )
+            {
+                localImage.url  = _config.localGIFpath;
+            }
+            else
+            {
+                localImage.url  = localPath + _config.localGIFpath;
+            }
+            
+            //localImage.data = variables;
+            localImage.url +=  "?"+variables.toString();
+            sendRequest( localImage );
+        }
+        
+        private function _sendRemoteRequest( variables:Variables ):void
+        {
+            LOG::P{ _log.v( "_sendRemoteRequest()" ); }
+            
+            var remoteImage:URLRequest = new URLRequest();
+            
+            /* get remote address (depending on protocol),
+               then append rest of metrics / data
+            */
+            if( _info.protocol == "https" )
+            {
+                remoteImage.url = _config.secureRemoteGIFpath;
+            }
+            else if( _info.protocol == "http" )
+            {
+                remoteImage.url = _config.remoteGIFpath;
+            }
+            else
+            {
+                remoteImage.url = _config.remoteGIFpath;
+            }
+            
+            variables.utmac = utmac;
+            variables.utmcc = encodeURIComponent(utmcc);
+            
+            //remoteImage.data = variables;
+            remoteImage.url +=  "?"+variables.toString();
+            sendRequest( remoteImage );
+        }
+        
         
         /**
          * Account String. Appears on all requests.
@@ -164,7 +299,27 @@ package com.google.analytics.core
             }
             
             //delimit cookies by "+"
+            //NOTE: forgot to URLEncode ?
             return cookies.join( "+" );
+        }
+        
+        /**
+         * Returns an array of request objects.
+         */
+        public function get requests():Array
+        {
+            return _requests;
+        }
+        
+        /**
+         * reset the array of requests.
+         */
+        public function clearRequests():void
+        {
+            LOG::P{ _log.v( "clearRequests()" ); }
+            
+            _count = 0;
+            _requests = [];
         }
         
         /**
@@ -184,16 +339,14 @@ package com.google.analytics.core
          */
         public function updateToken():void
         {
+            LOG::P{ _log.v( "updateToken()" ); }
+            
             var timestamp:Number = new Date().getTime();
             var tokenDelta:Number;
             
             // calculate the token count increase since last update
             tokenDelta = (timestamp - _buffer.utmb.lastTime) * (_config.tokenRate / 1000);
-            
-            if( _debug.verbose )
-            {
-                _debug.info( "tokenDelta: " + tokenDelta, VisualDebugMode.geek );
-            }
+            LOG::P{ _log.i( "tokenDelta: " + tokenDelta ); }
             
             // only update token when there is a change
             if( tokenDelta >= 1 )
@@ -202,144 +355,8 @@ package com.google.analytics.core
                 _buffer.utmb.token    = Math.min( Math.floor( _buffer.utmb.token + tokenDelta ) , _config.bucketCapacity );
                 _buffer.utmb.lastTime = timestamp;
                 
-                if( _debug.verbose )
-                {
-                    _debug.info( _buffer.utmb.toString(), VisualDebugMode.geek );
-                }
-                
+                LOG::P{ _log.i( "utmb = " + _buffer.utmb.toString() ); }
             }
-        }
-        
-        private function _debugSend( request:URLRequest ):void
-        {
-            var data:String = "";
-            
-            switch( _debug.mode )
-            {
-                case VisualDebugMode.geek:
-                data = "Gif Request #" + _alertcount + ":\n" + request.url;
-                break;
-                
-                case VisualDebugMode.advanced:
-                var url:String = request.url;
-                if( url.indexOf( "?" ) > -1 )
-                    {
-                        url = url.split( "?" )[0];
-                    }
-                    url = _shortenURL( url );
-                
-                
-                data = "Send Gif Request #" + _alertcount + ":\n" + url + " ?";
-                break;
-                
-                case VisualDebugMode.basic:
-                default:
-                data = "Send " + _config.serverMode.toString() + " Gif Request #" + _alertcount + " ?";
-                
-            }
-            
-            _debug.alertGifRequest( data, request, this );
-            _alertcount++;
-        }
-        
-        private function _shortenURL( url:String ):String
-        {
-            if( url.length > 60 )
-            {
-                var paths:Array = url.split( "/" );
-                while( url.length > 60 )
-                {
-                    paths.shift();
-                    url = "../" + paths.join("/");
-                }
-            }
-            
-            return url;
-        }
-        
-        public function onSecurityError( event:SecurityErrorEvent ):void
-        {
-            if( _debug.GIFRequests )
-            {
-                _debug.failure( event.text );
-            }
-        }
-        
-        public function onIOError( event:IOErrorEvent ):void
-        {
-            var url:String = _lastRequest.url;
-            var id:String = String(_requests.length-1);
-//            
-//            trace( _requests[ id ].toString() );
-//            trace( "\n"+url + "\n" + _requests[ id ].request.url );
-            
-            var msg:String = "Gif Request #" + id + " failed";
-            
-            if( _debug.GIFRequests )
-            {
-                if( !_debug.verbose )
-                {
-                    if( url.indexOf( "?" ) > -1 )
-                    {
-                        url = url.split( "?" )[0];
-                    }
-                    url = _shortenURL( url );
-                }
-                
-                if( int(_debug.mode) > int(VisualDebugMode.basic) )
-                {
-                    msg += " \"" + url + "\" does not exists or is unreachable";
-                }
-                
-                _debug.failure( msg );
-            }
-            else
-            {
-                _debug.warning( msg );
-            }
-            
-            _removeListeners( event.target );
-        }
-        
-        public function onComplete( event:Event ):void
-        {
-            var id:String = event.target.loader.name;
-            _requests[ id ].complete();
-            
-            var msg:String = "Gif Request #" + id + " sent";
-            
-            var url:String = _requests[ id ].request.url;
-            
-            if( _debug.GIFRequests )
-            {
-                if( !_debug.verbose )
-                {
-                    if( url.indexOf( "?" ) > -1 )
-                    {
-                        url = url.split( "?" )[0];
-                    }
-                    url = _shortenURL( url );
-                }
-                
-                if( int(_debug.mode) > int(VisualDebugMode.basic) )
-                {
-                    msg += " to \"" + url + "\"";
-                }
-                
-                _debug.success( msg );
-            }
-            else
-            {
-                _debug.info( msg );
-            }
-            
-            _removeListeners( event.target );
-        }
-        
-        private function _removeListeners( target:Object ):void
-        {
-            target.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
-            target.removeEventListener( Event.COMPLETE, onComplete );
         }
         
         /*
@@ -353,9 +370,11 @@ package com.google.analytics.core
          */
         public function sendRequest( request:URLRequest ):void
         {
-            if (request.url.length > MAX_REQUEST_LENGTH)
+            LOG::P{ _log.v( "sendRequest()" ); }
+            
+            if( request.url.length > MAX_REQUEST_LENGTH )
             {
-               _debug.failure("No request sent. URI length too long.");
+               LOG::P{ _log.e( "No request sent. URI length too long." ); }
                return;
             }
             
@@ -376,10 +395,10 @@ package com.google.analytics.core
                 
             var context:LoaderContext = new LoaderContext( false );
             
-            loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
-            loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onComplete );
+                loader.contentLoaderInfo.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
+                loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
+                loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onComplete );
             
-            _lastRequest = request;
             _requests[ loader.name ] = new RequestObject( request );
             
             try
@@ -388,7 +407,7 @@ package com.google.analytics.core
             }
             catch( e:Error )
             {
-                _debug.failure( "\"Loader.load()\" could not instanciate Gif Request" );
+                LOG::P{ _log.e( "\"Loader.load()\" could not instanciate Gif Request" ); }
             }
         }
         
@@ -398,12 +417,11 @@ package com.google.analytics.core
         public function send( account:String, variables:Variables = null,
                               force:Boolean = false, rateLimit:Boolean = false ):void
         {
+            LOG::P{ _log.v( "send( " + [account,variables,force,rateLimit].join(", ") + " )" ); }
+            
              _utmac = account;
              
-             if( !variables )
-             {
-                 variables = new Variables();
-             }
+             if( !variables ) { variables = new Variables(); }
              
              variables.URIencode = false;
              variables.pre  = [ "utmwv", "utmn", "utmhn", "utmt", "utme",
@@ -411,10 +429,7 @@ package com.google.analytics.core
                                 "utmfl", "utmdt", "utmhid", "utmr", "utmp" ];
              variables.post = [ "utmcc" ];
              
-             if( _debug.verbose )
-             {
-                 _debug.info( "tracking: " + _buffer.utmb.trackCount+"/"+_config.trackingLimitPerSession, VisualDebugMode.geek );
-             }
+             LOG::P{ _log.i( "tracking: " + _buffer.utmb.trackCount+"/"+_config.trackingLimitPerSession ); }
              
              /* Only send request if
                 1. We havn't reached the limit yet.
@@ -440,10 +455,7 @@ package com.google.analytics.core
                     //increment request count
                     _buffer.utmb.trackCount += 1;
                     
-                    if( _debug.verbose )
-                    {
-                        _debug.info( _buffer.utmb.toString(), VisualDebugMode.geek );
-                    }
+                    LOG::P{ _log.i( "utmb = " + _buffer.utmb.toString() ); }
                     
                     
                     variables.utmwv = utmwv;
@@ -459,86 +471,30 @@ package com.google.analytics.core
                         variables.utmsp = _config.sampleRate * 100;
                     }
                     
-                     /* If service mode is send to local (or both),
-                        then we'll sent metrics via a local GIF request.
-                     */
-                     if( (_config.serverMode == ServerOperationMode.local) ||
-                         (_config.serverMode == ServerOperationMode.both) )
-                         {
-                             var localPath:String = _info.locationSWFPath;
-                             
-                             if( localPath.lastIndexOf( "/" ) > 0 )
-                             {
-                                 localPath = localPath.substring(0,localPath.lastIndexOf( "/" ));
-                             }
-                             
-                             var localImage:URLRequest = new URLRequest();
-                             
-                             if( _config.localGIFpath.indexOf( "http" ) == 0 )
-                             {
-                                 localImage.url  = _config.localGIFpath;
-                             }
-                             else
-                             {
-                                 localImage.url  = localPath + _config.localGIFpath;
-                             }
-                                 
-                                 
-                                 //localImage.data = variables;
-                                 localImage.url +=  "?"+variables.toString();
-                             
-                             if( _debug.active && _debug.GIFRequests )
-                             {
-                                 _debugSend( localImage );
-                             }
-                             else
-                             {
-                                 sendRequest( localImage );
-                             }
-                         }
-                     
-                     /* If service mode is set to remote (or both),
-                        then we'll sent metrics via a remote GIF request.
-                     */
-                     if( (_config.serverMode == ServerOperationMode.remote) ||
-                         (_config.serverMode == ServerOperationMode.both) )
-                         {
-                             var remoteImage:URLRequest = new URLRequest();
-                             
-                             /* get remote address (depending on protocol),
-                                then append rest of metrics / data
-                             */
-                             //if( _info.protocol == Protocols.HTTPS )
-                             if( _info.protocol == "https" )
-                             {
-                                 remoteImage.url = _config.secureRemoteGIFpath;
-                             }
-                             //else if( _info.protocol == Protocols.HTTP )
-                             else if( _info.protocol == "http" )
-                             {
-                                 remoteImage.url = _config.remoteGIFpath;
-                             }
-                             else
-                             {
-                                 remoteImage.url = _config.remoteGIFpath;
-                             }
-                             
-                             variables.utmac = utmac;
-                             variables.utmcc = encodeURIComponent(utmcc);
-                             
-                             //remoteImage.data = variables;
-                             remoteImage.url +=  "?"+variables.toString();
-                             
-                             if( _debug.active && _debug.GIFRequests )
-                             {
-                                 _debugSend( remoteImage );
-                             }
-                             else
-                             {
-                                 sendRequest( remoteImage );
-                             }
-                             
-                         }
+                    switch( _config.serverMode )
+                    {
+                        /* If service mode is send to local,
+                           then we'll sent metrics via a local GIF request.
+                        */
+                        case ServerOperationMode.local:
+                        _sendLocalRequest( variables );
+                        break;
+                        
+                        /* If service mode is set to remote,
+                           then we'll sent metrics via a remote GIF request.
+                        */
+                        case ServerOperationMode.remote:
+                        _sendRemoteRequest( variables );
+                        break;
+                        
+                        /* If service mode is set to both,
+                           then we'll sent metrics via a local and remote GIF request.
+                        */
+                        case ServerOperationMode.both:
+                        _sendLocalRequest( variables );
+                        _sendRemoteRequest( variables );
+                        break;
+                    }
                     
                 }
                 

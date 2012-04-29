@@ -22,11 +22,11 @@ package com.google.analytics.campaign
 {
     import com.google.analytics.core.Buffer;
     import com.google.analytics.core.OrganicReferrer;
-    import com.google.analytics.debug.DebugConfiguration;
-    import com.google.analytics.debug.VisualDebugMode;
+    import com.google.analytics.log;
     import com.google.analytics.utils.Variables;
     import com.google.analytics.v4.Configuration;
     
+    import core.Logger;
     import core.uri;
     
     /**
@@ -34,12 +34,19 @@ package com.google.analytics.campaign
      */
     public class CampaignManager
     {
+        /** @private */
+        private var _log:Logger;
+        
+        /** @private */
         private var _config:Configuration;
-        private var _debug:DebugConfiguration;
+        /** @private */
         private var _buffer:Buffer;
         
+        /** @private */
         private var _domainHash:Number;
+        /** @private */
         private var _referrer:String;
+        /** @private */
         private var _timeStamp:Number;
         
         /**
@@ -50,11 +57,13 @@ package com.google.analytics.campaign
         /**
          * Creates a new CampaignManager instance.
          */
-        public function CampaignManager( config:Configuration, debug:DebugConfiguration, buffer:Buffer,
+        public function CampaignManager( config:Configuration, buffer:Buffer,
                                          domainHash:Number, referrer:String, timeStamp:Number )
         {
+            LOG::P{ _log = log.tag( "CampaignManager" ); }
+            LOG::P{ _log.v( "constructor()" ); }
+            
             _config     = config;
-            _debug      = debug;
             _buffer     = buffer;
             
             _domainHash = domainHash;
@@ -74,6 +83,8 @@ package com.google.analytics.campaign
          */
         public static function isInvalidReferrer( referrer:String ):Boolean
         {
+            LOG::P{ log.v( "CampaignManager.isInvalidReferrer( " + referrer + " )" ); }
+            
             if( (referrer == "") ||
                 (referrer == "-") ||
                 (referrer == "0") )
@@ -99,6 +110,8 @@ package com.google.analytics.campaign
          */
         public static function isFromGoogleCSE( referrer:String, config:Configuration ):Boolean
         {
+            LOG::P{ log.v( "CampaignManager.isFromGoogleCSE( " + [referrer,config].join(", ") + " )" ); }
+            
             var url:uri = new uri( referrer );
             
             if( url.host.indexOf( config.google ) > -1 )
@@ -139,6 +152,8 @@ package com.google.analytics.campaign
          */
         public function getCampaignInformation( search:String, noSessionInformation:Boolean ):CampaignInfo
         {
+            LOG::P{ _log.v( "getCampaignInformation( " + [search,noSessionInformation].join(", ") + " )" ); }
+            
             var campInfo:CampaignInfo = new CampaignInfo();
             var campaignTracker:CampaignTracker;
             var duplicateCampaign:Boolean = false;
@@ -250,7 +265,7 @@ package com.google.analytics.campaign
                 _buffer.utmz.responseCount    = responseCount;
                 _buffer.utmz.campaignTracking = campaignTracker.toTrackerString();
                 
-                _debug.info( _buffer.utmz.toString(), VisualDebugMode.geek );
+                LOG::P{ _log.i( "utmz = " + _buffer.utmz.toString() ); }
                 
                 // indicate new campaign
                 campInfo = new CampaignInfo( false, true );
@@ -272,6 +287,8 @@ package com.google.analytics.campaign
          */
         public function getOrganicCampaign():CampaignTracker
         {
+            LOG::P{ _log.v( "getOrganicCampaign()" ); }
+            
             var camp:CampaignTracker;
             
             // if there is no referrer, or referrer is not a valid URL, or the referrer
@@ -326,6 +343,8 @@ package com.google.analytics.campaign
          */
         public function getReferrerCampaign():CampaignTracker
         {
+            LOG::P{ _log.v( "getReferrerCampaign()" ); }
+            
             var camp:CampaignTracker;
             
             // if there is no referrer, or referrer is not a valid URL, or the referrer
@@ -363,6 +382,8 @@ package com.google.analytics.campaign
          */
         public function getDirectCampaign():CampaignTracker
         {
+            LOG::P{ _log.v( "getDirectCampaign()" ); }
+            
             var camp:CampaignTracker = new CampaignTracker();
                 camp.source = "(direct)";
                 camp.name   = "(direct)";
@@ -376,6 +397,8 @@ package com.google.analytics.campaign
          */
         public function hasNoOverride( search:String ):Boolean
         {
+            LOG::P{ _log.v( "hasNoOverride( " + search + " )" ); }
+            
             var key:CampaignKey = _config.campaignKey;
             
             if( search == "" )
@@ -384,7 +407,7 @@ package com.google.analytics.campaign
             }
             
             var variables:Variables = new Variables( search );
-            var value:String           = "";
+            var value:String        = "";
             
             if( variables.hasOwnProperty( key.UCNO ) )
             {
@@ -420,6 +443,8 @@ package com.google.analytics.campaign
          */
         public function isIgnoredKeyword( tracker:CampaignTracker ):Boolean
         {
+            LOG::P{ _log.v( "isIgnoredKeyword( " + tracker + " )" ); }
+            
             // organic campaign, try to match ignored keywords
             if( tracker && (tracker.medium == "organic") )
             {
@@ -444,6 +469,8 @@ package com.google.analytics.campaign
          */
         public function isIgnoredReferral( tracker:CampaignTracker ):Boolean
         {
+            LOG::P{ _log.v( "isIgnoredReferral( " + tracker + " )" ); }
+            
             // referral campaign, try to match ignored domains
             if( tracker && (tracker.medium == "referral") )
             {
@@ -455,6 +482,8 @@ package com.google.analytics.campaign
         
         public function isValid( tracker:CampaignTracker ):Boolean
         {
+            LOG::P{ _log.v( "isValid( " + tracker + " )" ); }
+            
             if( tracker && tracker.isValid() )
             {
                 return true;
@@ -472,6 +501,8 @@ package com.google.analytics.campaign
         */
         public function getTrackerFromSearchString( search:String ):CampaignTracker
         {
+            LOG::P{ _log.v( "getTrackerFromSearchString( " + search + " )" ); }
+            
             var organicCampaign:CampaignTracker = getOrganicCampaign();
             var camp:CampaignTracker            = new CampaignTracker();
             var key:CampaignKey                 = _config.campaignKey;

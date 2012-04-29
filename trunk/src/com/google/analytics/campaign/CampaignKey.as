@@ -20,18 +20,25 @@
 
 package com.google.analytics.campaign
 {
+    import com.google.analytics.log;
+    
+    import core.Logger;
+
     /**
      * The CampaignKey class.
      */
     public class CampaignKey
     {
+        /** @private */
+        private var _log:Logger;
         
         /**
          * Creates a new CampaignKey instance.
          */
         public function CampaignKey()
         {
-            
+            LOG::P{ _log = log.tag( "CampaignKey" ); }
+            LOG::P{ _log.v( "constructor()" ); }
         }
         
         public var UCCN:String   = "utm_campaign";

@@ -21,7 +21,6 @@
 package com.google.analytics.utils
 {
     import com.google.analytics.core.ga_internal;
-    import com.google.analytics.debug.DebugConfiguration;
     import com.google.analytics.external.HTMLDOM;
     
     import core.strings.userAgent;
@@ -37,7 +36,6 @@ package com.google.analytics.utils
      */
     public class Environment
     {
-        private var _debug:DebugConfiguration;
         private var _dom:HTMLDOM;
         
         private var _protocol:String;
@@ -53,8 +51,7 @@ package com.google.analytics.utils
          * @param version The application version
          * @param dom the HTMLDOM reference.
          */
-        public function Environment( url:String = "", app:String = "", version:String = "",
-                                     debug:DebugConfiguration = null, dom:HTMLDOM = null )
+        public function Environment( url:String = "", app:String = "", version:String = "", dom:HTMLDOM = null )
         {
             var v:core.version;
             
@@ -83,7 +80,6 @@ package com.google.analytics.utils
             _appName    = app;
             _appVersion = v;
             
-            _debug      = debug;
             _dom        = dom;
         }
         
@@ -133,7 +129,6 @@ package com.google.analytics.utils
         {
             _appVersion = value;
             _defineUserAgent();
-            
         }
         
         /**
@@ -442,7 +437,7 @@ package com.google.analytics.utils
         
         private function _defineUserAgent():void
         {
-            _userAgent = core.strings.userAgent( appName + "/" + appVersion.toString(4) );
+            _userAgent = core.strings.userAgent( appName + "/" + appVersion.toString(4), false, false, true );
         }
         
         /**
