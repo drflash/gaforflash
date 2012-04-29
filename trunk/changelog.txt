@@ -10,9 +10,13 @@
    http://code.google.com/p/maashaack/wiki/logd
 - removed class UserAgent, replaced by function util core.strings.userAgent()
 - removed class Protocols, replaced by strings
-- removed class URL, replaced by clas util core.uri
+- removed class URL, replaced by class util core.uri
 - removed class Version, replaced by core.version
-+ a bit more ...
+- removed IdleTimer
+- removed the package com.google.analytics.debug
+- replaced the log system with logd library
+- added singleton com.google.analytics.log
+- refactored GIFRequest
 
 * 1.0.2
 - v1.0.2 small fix (not publicly released)
