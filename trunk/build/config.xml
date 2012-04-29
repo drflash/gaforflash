@@ -7,12 +7,8 @@
         for the the compiler to take into account the changes
         -->
         <define append="true">
-            <name>GA::DEBUG</name>
+            <name>LOG::P</name>
             <value>false</value>
-        </define>
-        <define append="true">
-            <name>GA::RELEASE</name>
-            <value>true</value>
         </define>
    </compiler>
 </flex-config>
