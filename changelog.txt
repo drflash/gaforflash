@@ -17,6 +17,13 @@
 - replaced the log system with logd library
 - added singleton com.google.analytics.log
 - refactored GIFRequest
+- AnalyticsTracker interface changed
+  removed get/set debug
+  removed get/set visualdebug
+  added function get requests():Array;
+  added function clearRequests():void;
+- updated GATracker to reflect AnalyticsTracker interface changes
+
 
 * 1.0.2
 - v1.0.2 small fix (not publicly released)
