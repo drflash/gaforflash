@@ -200,6 +200,7 @@ package com.google.analytics.v4
             {
                 //init GASO
                 LOG::P{ _log.w( "Site Overlay is not supported" ); }
+                (void); //to prevent ASDoc to complain if logs not included
             }
             
             var data:String = "";
